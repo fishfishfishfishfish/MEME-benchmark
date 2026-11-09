@@ -1,0 +1,1555 @@
+{
+  "episode_id": 19,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Narvex Cloud",
+    "after": "Zephyra Platform"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "docker_image",
+    "log_drain_endpoint",
+    "ci_config",
+    "monitoring_url",
+    "staging_url",
+    "dockerfile_path",
+    "deploy_command"
+  ],
+  "filler_entities": [
+    "test_coverage_target",
+    "onboarding_guide",
+    "release_cadence",
+    "changelog_location",
+    "meeting_day"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Narvex Cloud",
+      "after": "Zephyra Platform",
+      "task": "C"
+    },
+    "docker_image": {
+      "before": "korinth-repo/aurora:stable",
+      "after": null,
+      "task": null
+    },
+    "log_drain_endpoint": {
+      "before": "drain.zephyra.io/proj-42",
+      "after": "logs.korinth.dev/aurora",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "ci_config": {
+      "before": "orinthal-build.yml",
+      "after": "deleted",
+      "task": "E"
+    },
+    "monitoring_url": {
+      "before": "observe.velturis.io/aurora",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "staging_url": {
+      "before": "staging.narvex.internal/aurora",
+      "after": null,
+      "task": null
+    },
+    "dockerfile_path": {
+      "before": "infra/korinth/Dockerfile",
+      "after": null,
+      "task": "B",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "deploy_command": {
+      "before": "korinth release --prod",
+      "after": "zephyra push --target prod",
+      "task": "A",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "error_log": {
+      "before": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+      "after": null,
+      "task": "G"
+    },
+    "package_manager": {
+      "before": "Karnex Pack",
+      "after": "Synthari Modules",
+      "task": "H",
+      "history": [
+        "Karnex Pack",
+        "Veltrion Pkg",
+        "Synthari Modules"
+      ]
+    },
+    "oncall_rotation": {
+      "before": "volunteer-based with weekly signup",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#aurora-pager",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "wiki.aurora.dev/incident-response",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "85% line coverage required",
+      "after": null,
+      "task": "filler"
+    },
+    "onboarding_guide": {
+      "before": "wiki.aurora.dev/getting-started",
+      "after": null,
+      "task": "filler"
+    },
+    "release_cadence": {
+      "before": "monthly first Monday",
+      "after": null,
+      "task": "filler"
+    },
+    "changelog_location": {
+      "before": "GitHub Releases page",
+      "after": null,
+      "task": "filler"
+    },
+    "meeting_day": {
+      "before": "every Wednesday 10am",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "log_drain_endpoint",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "monitoring_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "package_manager"
+      ],
+      "entity_values": {
+        "package_manager": [
+          "Karnex Pack",
+          "Veltrion Pkg",
+          "Synthari Modules"
+        ]
+      },
+      "question_template": "List all package managers we've used over time, from earliest to latest.",
+      "gold_answer": "Karnex Pack, Veltrion Pkg, Synthari Modules",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "log_drain_endpoint"
+      ],
+      "entity_values": {
+        "log_drain_endpoint": "logs.korinth.dev/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our log drain endpoint?",
+      "gold_answer": "logs.korinth.dev/aurora",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "zephyra push --target prod"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "zephyra push --target prod",
+      "notes": "Cascade from ci_config (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "monitoring_url"
+      ],
+      "entity_values": {
+        "monitoring_url": "observe.velturis.io/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our monitoring URL?",
+      "gold_answer": "Uncertain — previously 'observe.velturis.io/aurora', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "infra/korinth/Dockerfile"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "Uncertain — previously 'infra/korinth/Dockerfile', but docker_image changed",
+      "notes": "Cascade from docker_image (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "ci_config"
+      ],
+      "entity_values": {
+        "ci_config": "orinthal-build.yml"
+      },
+      "question_template": "What's our CI configuration?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "oncall_rotation",
+        "alert_channel",
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "oncall_rotation": "volunteer-based with weekly signup",
+        "alert_channel": "#aurora-pager",
+        "incident_runbook_url": "wiki.aurora.dev/incident-response"
+      },
+      "question_template": "What do you know about our on-call setup? Tell me everything.",
+      "gold_answer": "On-call is volunteer-based with weekly signup, alerts go to #aurora-pager, and runbook is at wiki.aurora.dev/incident-response.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 19,
+  "evidence_sessions": 5,
+  "filler_sessions": 14,
+  "total_tokens": 35089,
+  "evidence_tokens": 2960,
+  "filler_tokens": 32129,
+  "evidence_session_indices": [
+    3,
+    6,
+    10,
+    13,
+    15
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_28431",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How do I negotiate with LTA about my project's detrainment device? They are being difficult "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Negotiating with a regulatory agency like LTA can be challenging, but here are some tips to help you navigate the process:</p><ol><li><p>Understand the regulations: Start by thoroughly reviewing the regulations that govern your project's detrainment device. Familiarize yourself with the requirements and guidelines set by the LTA, and make sure your device meets all the necessary standards.</p></li><li><p>Know your rights: As a developer, you have the right to be heard and to present your case to the LTA. Don't be afraid to assert your rights, but always do so in a respectful and professional manner.</p></li><li><p>Gather information: Make sure you have all the necessary information about your project and its detrainment device. This might include technical specifications, safety data, and testing results. Be prepared to present this information to the LTA in a clear and concise manner.</p></li><li><p>Identify the issues: Identify the specific issues that are causing the LTA to be difficult. Is there a particular aspect of your project or device that they are concerned about? Once you have identified the issues, you can begin to address them in a systematic and strategic way.</p></li><li><p>Be open to compromise: Negotiation is all about finding a mutually acceptable solution. Be willing to listen to the concerns of the LTA and be open to compromise where possible. This might mean modifying your device, adjusting your project timeline, or implementing additional safety measures.</p></li><li><p>Seek professional help: If you are finding it difficult to negotiate with the LTA, consider seeking the help of a professional negotiator or regulatory consultant. They can provide you with expert advice and guidance on how to navigate the negotiation process effectively.</p></li></ol><p>Remember that negotiation with a regulatory agency like LTA can be a time-consuming and complex process. Be patient, persistent, and professional, and always keep your focus on finding a mutually acceptable solution.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "LTA and SMRT cannot agree on an acceptable weight for the detrainment device. How do I resolve this issue?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>When negotiating with regulatory agencies like LTA and stakeholders like SMRT, disagreements over specific requirements are common. Here are some steps you can take to resolve the issue:</p><ol><li><p>Understand the perspectives: Take time to understand the reasoning behind LTA and SMRT's respective positions on the acceptable weight for the detrainment device. This will allow you to better address their concerns and find a mutually acceptable solution.</p></li><li><p>Review the regulations: Review the applicable regulations and guidelines to ensure that you fully understand the requirements for the detrainment device's weight. If necessary, consult with experts or regulatory consultants to help interpret the regulations.</p></li><li><p>Gather data: Compile data and research to support your position on the acceptable weight for the detrainment device. This could include studies, technical data, or safety data that demonstrate the feasibility and safety of the device at a certain weight.</p></li><li><p>Evaluate alternatives: Consider alternatives that could satisfy the requirements of both LTA and SMRT. This could include modifications to the device, additional safety measures, or adjusting the project timeline.</p></li><li><p>Engage in open communication: Communicate with LTA and SMRT in an open and transparent manner, listening to their concerns and explaining your perspective. Be willing to collaborate and find a compromise that is mutually acceptable.</p></li><li><p>Seek mediation: If negotiations are unsuccessful, consider engaging a mediator to help resolve the dispute. A mediator can facilitate open communication between parties and help to find a mutually acceptable solution.</p></li></ol><p>It's important to approach negotiations with LTA and SMRT in a professional and respectful manner. By gathering data, reviewing regulations, and engaging in open communication, you can work towards finding a solution that meets the requirements of all stakeholders involved.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "My train's AC propulsion system inverter keeps tripping the trackside power supply due to the switching frequencies of the inverter affecting one of the protection relays. What viable solutions are there?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>There are a few possible solutions to this issue:</p><ol><li><p>Adjust the switching frequencies: If the inverter's switching frequencies are causing the protection relay to trip, it may be possible to adjust the frequencies to avoid interference. This could involve changing the settings on the inverter or modifying the control system to reduce the impact on the trackside power supply.</p></li><li><p>Add filters: Another solution is to add filters to the inverter's output to reduce the high-frequency harmonics that are causing the interference. These filters can be designed to match the characteristics of the protection relay and can be installed between the inverter and the trackside power supply.</p></li><li><p>Use a different inverter: If the current inverter cannot be adjusted or filtered sufficiently, it may be necessary to replace it with a different model that has better compatibility with the protection relay and the trackside power supply.</p></li><li><p>Implement backup power: In situations where the inverter is causing frequent trips of the trackside power supply, it may be necessary to implement backup power sources, such as battery banks or diesel generators, to provide power to the train in case of a trip.</p></li><li><p>Install isolation transformers: Installing isolation transformers between the inverter and the trackside power supply can help to protect against interference and reduce the risk of trips.</p></li><li><p>Collaborate with experts: Consulting with experts in the field of electrical engineering and power systems can help to identify the root cause of the problem and find the most appropriate solution.</p></li></ol><p>It's important to consider the cost and feasibility of each solution and work with relevant stakeholders, such as the train manufacturer, to determine the best course of action. Regular maintenance and testing of the AC propulsion system can also help to identify and prevent similar issues in the future.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If the base frequency of the power supply is 50Hz, and the switching frequency of the inverter is 1850Hz, what is an acceptable harmonic distortion level that my traction system can introduce into the system? What kind of filters should I be adding to the system, either on the propulsion system or the trackside power supply?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The acceptable harmonic distortion level for a traction system can depend on various factors such as the specific regulations in the region, the type of power supply system, and the requirements of the protection relay. In general, the International Electrotechnical Commission (IEC) recommends that the total harmonic distortion (THD) for current harmonics should not exceed 5% for a public power supply system with a rated voltage of up to 35 kV.</p><p>To reduce the harmonic distortion level introduced by the traction system, you can consider adding filters to the system. The type of filters that may be suitable depends on the specific application and requirements of the system. Some options for filters that can be used include:</p><ol><li><p>Passive harmonic filters: These filters consist of a combination of inductors and capacitors that are designed to reduce the harmonic distortion of the system. Passive harmonic filters can be placed either on the propulsion system or the trackside power supply.</p></li><li><p>Active harmonic filters: Active harmonic filters use power electronics to actively filter the harmonic distortion in real-time. These filters can be more effective at reducing harmonic distortion compared to passive filters, but are generally more expensive.</p></li><li><p>Hybrid filters: These filters combine passive and active filter elements to achieve a balance between cost and effectiveness. Hybrid filters can be used to reduce the harmonic distortion level of the system while keeping costs reasonable.</p></li></ol><p>It's important to consult with experts in electrical engineering and power systems to determine the most appropriate type of filter for your specific application. Additionally, regular maintenance and testing of the AC propulsion system can help to identify and prevent similar issues in the future.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_5654",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how can I write an apache storm bolt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-0 markdown prose dark:prose-invert break-words dark\"><p>An Apache Storm bolt is a piece of code that is used to process data in an Apache Storm topology. To write a bolt, you will need to create a new Java class and extend the <code>IRichBolt</code> interface from the Apache Storm library. You can then implement the <code>prepare()</code>, <code>execute()</code>, and <code>cleanup()</code> methods to define the behavior of your bolt. In the <code>execute()</code> method, you can use the <code>Tuple</code> object that is passed to the method to access the input data and perform any necessary processing. Once you have implemented your bolt, you can add it to a topology and run it in a Storm cluster to process data streams in real-time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Could you give me an example"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-1 markdown prose dark:prose-invert break-words dark\"><p>Sure, here is an example of a simple Apache Storm bolt that counts the number of words in each tuple that it receives:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-java\"><span class=\"hljs-keyword\">import</span> org.apache.storm.task.OutputCollector;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.task.TopologyContext;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.topology.OutputFieldsDeclarer;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.topology.base.BaseRichBolt;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.tuple.Fields;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.tuple.Tuple;\n<span class=\"hljs-keyword\">import</span> org.apache.storm.tuple.Values;\n\n<span class=\"hljs-keyword\">import</span> java.util.Map;\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">WordCounterBolt</span> <span class=\"hljs-keyword\">extends</span> <span class=\"hljs-title class_\">BaseRichBolt</span> {\n\n    <span class=\"hljs-keyword\">private</span> OutputCollector collector;\n\n    <span class=\"hljs-meta\">@Override</span>\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">prepare</span><span class=\"hljs-params\">(Map&lt;String, Object&gt; config, TopologyContext context, OutputCollector collector)</span> {\n        <span class=\"hljs-built_in\">this</span>.collector = collector;\n    }\n\n    <span class=\"hljs-meta\">@Override</span>\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">execute</span><span class=\"hljs-params\">(Tuple tuple)</span> {\n        <span class=\"hljs-comment\">// Get the sentence from the tuple</span>\n        <span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">sentence</span> <span class=\"hljs-operator\">=</span> tuple.getStringByField(<span class=\"hljs-string\">\"sentence\"</span>);\n\n        <span class=\"hljs-comment\">// Split the sentence into words</span>\n        String[] words = sentence.split(<span class=\"hljs-string\">\" \"</span>);\n\n        <span class=\"hljs-comment\">// Emit the count of words in the sentence</span>\n        collector.emit(<span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">Values</span>(words.length));\n    }\n\n    <span class=\"hljs-meta\">@Override</span>\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">cleanup</span><span class=\"hljs-params\">()</span> {\n        <span class=\"hljs-comment\">// This is called when the bolt is being shutdown</span>\n    }\n\n    <span class=\"hljs-meta\">@Override</span>\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">declareOutputFields</span><span class=\"hljs-params\">(OutputFieldsDeclarer declarer)</span> {\n        <span class=\"hljs-comment\">// Declare the fields that this bolt will emit</span>\n        declarer.declare(<span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">Fields</span>(<span class=\"hljs-string\">\"word_count\"</span>));\n    }\n\n}\n</code></div></div></pre><p>This bolt receives tuples that contain a <code>sentence</code> field and emits a new tuple with a single <code>word_count</code> field that contains the number of words in the sentence. You can add this bolt to a topology and connect it to a spout that emits sentences to process the data stream in real-time.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 12:42"
+    },
+    {
+      "session_id": "sharegpt_28152",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Hola. Por favor, muestráme un código en Python que sea posible ejecutar en Jupyter que haga lo siguiente: tomar como entrada dos números. Al primero de ellos le calcula la raíz cuadrada, el segundo lo eleva al cuadrado, y finalmente devuelve la suma de ambos. ¡Gracias!"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Hola, aquí tienes un código de Python que puedes ejecutar en Jupyter para realizar la tarea que mencionas:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> math\n\n<span class=\"hljs-comment\"># Función que toma dos números como entrada y devuelve la suma de la raíz cuadrada del primero y el segundo al cuadrado</span>\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">calcular_suma</span>(<span class=\"hljs-params\">num1, num2</span>):\n    raiz_cuadrada = math.sqrt(num1)\n    al_cuadrado = num2 ** <span class=\"hljs-number\">2</span>\n    suma = raiz_cuadrada + al_cuadrado\n    <span class=\"hljs-keyword\">return</span> suma\n\n<span class=\"hljs-comment\"># Solicitar al usuario que ingrese dos números</span>\nnumero1 = <span class=\"hljs-built_in\">float</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Ingrese el primer número: \"</span>))\nnumero2 = <span class=\"hljs-built_in\">float</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Ingrese el segundo número: \"</span>))\n\n<span class=\"hljs-comment\"># Calcular la suma usando la función calcular_suma</span>\nresultado = calcular_suma(numero1, numero2)\n\n<span class=\"hljs-comment\"># Mostrar el resultado</span>\n<span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">f\"La suma de la raíz cuadrada del primer número y el segundo número al cuadrado es: <span class=\"hljs-subst\">{resultado}</span>\"</span>)\n</code></div></div></pre><p>Puedes copiar y pegar este código en una celda de Jupyter y ejecutarlo. El programa solicitará que ingreses dos números y luego mostrará la suma de la raíz cuadrada del primer número y el segundo número al cuadrado.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Ahora, por favor, explícame paso a paso cómo puedo usar ese código en Jupyter, sabiendo que yo no tengo ninguna experiencia con Jupyter. ¿Serías tan amable?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Claro, estaré encantado de ayudarte a ejecutar el código en Jupyter paso a paso. Primero, necesitas instalar Jupyter Notebook en tu computadora. A continuación, te guío a través del proceso:</p><ol><li>Instalar Jupyter Notebook:<ul><li>Si no tienes Python en tu computadora, primero instala la distribución de Anaconda, que incluye Python, Jupyter Notebook y otros paquetes útiles para el análisis de datos y la ciencia. Puedes descargarlo desde aquí: <a href=\"https://www.anaconda.com/products/distribution\" target=\"_new\">https://www.anaconda.com/products/distribution</a></li><li>Sigue las instrucciones de instalación para tu sistema operativo (Windows, macOS, Linux).</li></ul></li><li>Ejecutar Jupyter Notebook:<ul><li>Una vez instalado Anaconda, abre el \"Anaconda Navigator\" desde el menú de inicio de tu sistema operativo.</li><li>Haz clic en \"Launch\" debajo del ícono de Jupyter Notebook en la ventana del Anaconda Navigator. Esto abrirá una nueva ventana en tu navegador predeterminado con la interfaz de Jupyter Notebook.</li></ul></li><li>Crear un nuevo cuaderno de Jupyter Notebook:<ul><li>En la interfaz de Jupyter Notebook, ve a la esquina superior derecha y haz clic en \"New\" y luego selecciona \"Python 3\" (o la versión que corresponda) en el menú desplegable. Se abrirá un nuevo cuaderno en otra pestaña del navegador.</li></ul></li><li>Escribir y ejecutar el código en el cuaderno:<ul><li>Verás una celda vacía en el cuaderno. Copia y pega el código que te proporcioné en la respuesta anterior en esa celda.</li><li>Para ejecutar la celda, selecciona la celda haciendo clic en ella y luego presiona <code>Shift + Enter</code> en tu teclado. Esto ejecutará el código en la celda y mostrará el resultado debajo de ella.</li><li>La celda te pedirá que ingreses dos números. Introduce el primer número y presiona Enter, luego introduce el segundo número y presiona Enter nuevamente. El programa calculará la suma y mostrará el resultado.</li></ul></li></ol><p>¡Eso es todo! Ahora has ejecutado tu primer código en Jupyter Notebook. Puedes agregar más celdas y experimentar con diferentes códigos en Python usando este entorno interactivo. Para agregar una nueva celda, haz clic en el botón \"+\" en la barra de herramientas superior o selecciona \"Insert\" en la barra de menú y luego \"Insert Cell Below\" o \"Insert Cell Above\" según lo necesites.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "¿No es posible usar Jupyter sin instalar nada en mi computadora? ¿No hay ya algún entorno web listo para usar?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sí, hay varias opciones de entornos web que te permiten usar Jupyter sin instalar nada en tu computadora. Uno de los más populares es Google Colaboratory (Colab). Google Colab es un servicio gratuito que te permite crear y ejecutar cuadernos de Jupyter en la nube. A continuación, te guío a través del proceso para ejecutar tu código en Google Colab:</p><ol><li><p>Ve al sitio web de Google Colab: <a href=\"https://colab.research.google.com/\" target=\"_new\">https://colab.research.google.com/</a></p><ul><li>Si no estás conectado a tu cuenta de Google, te pedirá que inicies sesión.</li></ul></li><li><p>Crear un nuevo cuaderno de Google Colab:</p><ul><li>Una vez en la página de inicio de Google Colab, haz clic en el botón \"Archivo\" en la esquina superior izquierda y selecciona \"Nuevo cuaderno\". Se abrirá un nuevo cuaderno en otra pestaña del navegador.</li></ul></li><li><p>Escribir y ejecutar el código en el cuaderno:</p><ul><li>Verás una celda vacía en el cuaderno. Copia y pega el código que te proporcioné en la respuesta anterior en esa celda.</li><li>Para ejecutar la celda, selecciona la celda haciendo clic en ella y luego presiona <code>Shift + Enter</code> en tu teclado. Esto ejecutará el código en la celda y mostrará el resultado debajo de ella.</li><li>La celda te pedirá que ingreses dos números. Introduce el primer número y presiona Enter, luego introduce el segundo número y presiona Enter nuevamente. El programa calculará la suma y mostrará el resultado.</li></ul></li></ol><p>Con Google Colab, puedes ejecutar cuadernos de Jupyter sin instalar nada en tu computadora, y también puedes guardar tus cuadernos en Google Drive para acceder a ellos más tarde desde cualquier dispositivo con conexión a Internet.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 14:32"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's on-call rotation is volunteer-based with weekly signup. It’s a bit informal, but it lets everyone choose their own weeks. How do you manage on-call duties in your projects? Any tools you recommend?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like your team has a flexible approach to on-call duties, which can be great for accommodating personal schedules. For managing on-call rotations, many teams find it helpful to use shared calendars or dedicated tools that allow easy signups and visibility into who is on-call when. It might also be beneficial to establish some guidelines or documentation to ensure everyone understands the expectations and responsibilities during their on-call weeks. Have you considered implementing any specific tools or practices to streamline the process further?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's package manager is Karnex Pack. We've found it smooth for handling dependencies and versioning. What are some best practices for managing package dependencies, especially in a team setting?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that Karnex Pack is working well for your team. In a team setting, it's important to keep your dependencies organized and up to date. Regularly reviewing and updating your dependencies can help mitigate security vulnerabilities and ensure compatibility. Establishing a process for dependency updates, such as assigning someone to monitor changes or scheduling periodic reviews, can keep everyone aligned. Also, maintaining clear documentation on the purpose of each dependency can help new team members understand the context better. Are there specific challenges you've faced with dependency management that you'd like to address?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Narvex Cloud. It's been reliable for our needs, but I'm curious about best practices for deployment strategies. What do you think works well for ensuring smooth deployments, especially in a cloud environment?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that Narvex Cloud has been reliable for your team. In cloud environments, using a deployment strategy that minimizes downtime and reduces risk is key. Techniques like blue-green deployments or canary releases can help you gradually roll out changes, allowing for quick rollbacks if something goes wrong. Additionally, incorporating automated testing into your deployment pipeline can catch issues early and ensure that only stable code goes live. Monitoring your deployments closely can also help you identify any performance issues right after a release. Have you tried any specific strategies so far, or are you looking to implement something new?"
+        },
+        {
+          "role": "user",
+          "content": "The team releases monthly on the first Monday. This regular schedule helps us stay organized and ensures that everyone is aware of when updates will happen. Do you have any tips for managing release cycles effectively? What kind of processes or tools do you use to keep track of features and bugs leading up to a release?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a regular release schedule is a solid approach for keeping everyone aligned and prepared. To manage your release cycles effectively, consider implementing a clear roadmap that outlines upcoming features and bug fixes. This transparency helps the team prioritize work and stay focused on what's essential for each release. Using project management tools can also be beneficial for tracking progress, assigning tasks, and managing timelines. Additionally, conducting regular check-ins or sprint reviews can keep everyone updated on the status of features and any potential blockers. What tools are you currently using to manage your features and bugs?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "oncall_rotation",
+          "value": "volunteer-based with weekly signup",
+          "original_seed": "Our on-call rotation is volunteer-based with weekly signup",
+          "fact_text": "The team's on-call rotation is volunteer-based with weekly signup.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Karnex Pack",
+          "original_seed": "Our package manager is Karnex Pack",
+          "fact_text": "The team's package manager is Karnex Pack.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "deploy_target",
+          "value": "Narvex Cloud",
+          "original_seed": "We deploy to Narvex Cloud",
+          "fact_text": "The team deploys to Narvex Cloud.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "release_cadence",
+          "value": "monthly first Monday",
+          "original_seed": "We release monthly first Monday",
+          "fact_text": "The team releases monthly on the first Monday.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 11:10"
+    },
+    {
+      "session_id": "sharegpt_12246",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is encapsulating payload security in network security "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Encapsulating payload security is a technique used in network security to protect data as it is transmitted across a network. The idea behind encapsulation is to wrap the original payload or message inside another packet, adding extra layers of security and making it more difficult for unauthorized users to access the data.</p><p>One common example of encapsulating payload security is the use of virtual private networks (VPNs). When data is transmitted over a VPN, it is encapsulated in an additional layer of data that includes encryption and authentication information. This additional layer of data, or encapsulating packet, helps ensure that the original payload is protected from interception or tampering while it is in transit.</p><p>Another example of encapsulating payload security is Secure Sockets Layer/Transport Layer Security (SSL/TLS) encryption used in web browsing. When you visit a website that uses SSL/TLS encryption, your web browser and the web server establish a secure connection by exchanging encryption keys and certificates. Any data that is transmitted between your browser and the server is then encapsulated in an SSL/TLS packet, which helps to protect the data from being intercepted or tampered with.</p><p>Overall, encapsulating payload security is an important technique in network security that helps ensure that sensitive data is protected as it is transmitted across a network. By adding extra layers of security to the data, encapsulation can help prevent unauthorized access or tampering, helping to ensure the privacy and integrity of the data.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is encapsulating security payload in network security"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Encapsulating Security Payload (ESP) is a protocol used in network security to provide confidentiality, integrity, and authentication for data that is transmitted over an IP network. ESP is a layer 3 protocol that is used to encapsulate the payload of IP packets, adding additional security features to protect the contents of the packet.</p><p>The main function of ESP is to provide encryption for the payload of IP packets. When an IP packet is sent over a network using ESP, the payload of the packet is encrypted before it is transmitted. This ensures that the data is protected from eavesdropping and interception by unauthorized users.</p><p>In addition to encryption, ESP also provides integrity checking and authentication for the data. This is achieved through the use of digital signatures and message authentication codes (MACs), which are applied to the encrypted payload of the IP packet. These signatures and MACs allow the recipient of the packet to verify that the contents of the packet have not been modified in transit and that they originated from the sender who claimed to have sent them.</p><p>Overall, encapsulating security payload (ESP) is an important protocol in network security, providing confidentiality, integrity, and authentication for data that is transmitted over an IP network. By encrypting and protecting the payload of IP packets, ESP helps to prevent unauthorized access to sensitive data, ensuring the privacy and security of the data being transmitted.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 02:27"
+    },
+    {
+      "session_id": "sharegpt_25010",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please use Boston Housing data in R. Please read your full Boston Housing data as in Lecture, Lab, and Case Practices with sample size n=506.\na.\t(1pt, R) conduct a random sampling using 13966664 to set the seed. Randomly sample a training data set that contains 50% of the original data and save it as Boston.train, and set the rest 50% aside as testing data and save it as Boston.test.\nUse the 50% Boston.train data to build the model and use the Boston.test to test the model.\n\nb.\t(1pt) Plot the boxplot of your “medv” response variable of the training data. Copy and paste your boxplot into your WORD file.\n\n\nc.\t(1pt) Build a linear model with all the variables and call it a Full Model. Report the corresponding in-sample model mean squared error (MSE) and save it as “MSE.full”. Report the corresponding in-sample model average sum squared error (ASE) and save it as “ASE.full”.\n\n\nd.\t(2pts) Obtain and report the out-of-sample MSPE of the testing data for the full model.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>a. Randomly sample a training data set that contains 50% of the original data and save it as Boston.train, and set the rest 50% aside as testing data and save it as Boston.test.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">set<span class=\"hljs-selector-class\">.seed</span>(<span class=\"hljs-number\">13966664</span>)\nn &lt;- <span class=\"hljs-built_in\">nrow</span>(Boston)\ntrain_index &lt;- <span class=\"hljs-built_in\">sample</span>(n, floor(n/<span class=\"hljs-number\">2</span>))\nBoston<span class=\"hljs-selector-class\">.train</span> &lt;- Boston<span class=\"hljs-selector-attr\">[train_index, ]</span>\nBoston<span class=\"hljs-selector-class\">.test</span> &lt;- Boston<span class=\"hljs-selector-attr\">[-train_index, ]</span>\n</code></div></div></pre><p>b. Plot the boxplot of the “medv” response variable of the training data.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">bash</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-bash\">boxplot(Boston.train<span class=\"hljs-variable\">$medv</span>, main = <span class=\"hljs-string\">\"Boxplot of medv\"</span>, ylab = <span class=\"hljs-string\">\"medv\"</span>)\n</code></div></div></pre><p>c. Build a linear model with all the variables and call it a Full Model. Report the corresponding in-sample model mean squared error (MSE) and save it as “MSE.full”. Report the corresponding in-sample model average sum squared error (ASE) and save it as “ASE.full”.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">Full_Model &lt;- <span class=\"hljs-built_in\">lm</span>(medv ~ ., data = Boston.train)\n<span class=\"hljs-selector-tag\">summary</span>(Full_Model)\n\nMSE<span class=\"hljs-selector-class\">.full</span> &lt;- <span class=\"hljs-built_in\">mean</span>(Full_Model$residuals^<span class=\"hljs-number\">2</span>)\nASE<span class=\"hljs-selector-class\">.full</span> &lt;- <span class=\"hljs-built_in\">sum</span>(Full_Model$residuals^<span class=\"hljs-number\">2</span>)/<span class=\"hljs-built_in\">nrow</span>(Boston.train)\n</code></div></div></pre><p>d. Obtain and report the out-of-sample MSPE of the testing data for the full model.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">y_test &lt;- Boston<span class=\"hljs-selector-class\">.test</span><span class=\"hljs-variable\">$medv</span>\ny_pred &lt;- <span class=\"hljs-built_in\">predict</span>(Full_Model, newdata = Boston.test)\nMSPE &lt;- <span class=\"hljs-built_in\">mean</span>((y_test - y_pred)^<span class=\"hljs-number\">2</span>)\nMSPE\n</code></div></div></pre><p>The out-of-sample MSPE of the testing data for the full model is 22.26112.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "e.\t(2pts) Conduct a stepwise variable selection with BIC and report your selected variables.\n\n\n \nf.\t(2pts) Report the corresponding in-sample model MSE and in-sample model ASE and save it as “MSE.stepBIC” and “ASE.stepBIC”.\n\n\n\ng.\t(1pt) Obtain and report the out-of-sample MSPE of the testing data for the stepwise BIC selected model.\n\n\n\nh.\t(1pt) Compare your in-sample ASE for the full model and the stepwise BIC selected model, what do you conclude?\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>e. Conduct a stepwise variable selection with BIC and report your selected variables.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">Step_Model_BIC &lt;- <span class=\"hljs-built_in\">step</span>(Full_Model, direction = \"both\", k = log(nrow(Boston.train)), trace = <span class=\"hljs-number\">0</span>)\nselected_variables &lt;- <span class=\"hljs-built_in\">names</span>(Step_Model_BIC$coefficients)<span class=\"hljs-selector-attr\">[-1]</span>\nselected_variables\n</code></div></div></pre><p>The selected variables are \"rm\", \"nox\", \"dis\", \"rad\", \"tax\", \"ptratio\", and \"lstat\".</p><p>f. Report the corresponding in-sample model MSE and in-sample model ASE and save it as “MSE.stepBIC” and “ASE.stepBIC”.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">MSE<span class=\"hljs-selector-class\">.stepBIC</span> &lt;- <span class=\"hljs-built_in\">mean</span>(Step_Model_BIC$residuals^<span class=\"hljs-number\">2</span>)\nASE<span class=\"hljs-selector-class\">.stepBIC</span> &lt;- <span class=\"hljs-built_in\">sum</span>(Step_Model_BIC$residuals^<span class=\"hljs-number\">2</span>)/<span class=\"hljs-built_in\">nrow</span>(Boston.train)\n</code></div></div></pre><p>g. Obtain and report the out-of-sample MSPE of the testing data for the stepwise BIC selected model.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">y_pred_stepBIC &lt;- <span class=\"hljs-built_in\">predict</span>(Step_Model_BIC, newdata = Boston.test)\nMSPE_stepBIC &lt;- <span class=\"hljs-built_in\">mean</span>((y_test - y_pred_stepBIC)^<span class=\"hljs-number\">2</span>)\nMSPE_stepBIC\n</code></div></div></pre><p>The out-of-sample MSPE of the testing data for the stepwise BIC selected model is 24.02518.</p><p>h. Compare your in-sample ASE for the full model and the stepwise BIC selected model, what do you conclude?</p><p>The ASE for the full model is 22.351, and the ASE for the stepwise BIC selected model is 25.01711. We can conclude that the in-sample fit of the full model is better than that of the stepwise BIC selected model. However, we should also consider the out-of-sample performance of the models to make a final decision.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i.\t(1pt) Compare your in-sample MSE for the full model and the stepwise BIC selected model, what do you conclude?\n\n\n\nj.\t(1pt) Compare your out-of-sample MSPE for the full model and the stepwise BIC selected model, what do you conclude?\nk.\t(2pts) Which criterion would be best to use to compare these two models, ASE, MSE, or MSPE? Why?\n\n\nl.\t(2pts) Perform two-fold cross-validation cv.glm() on the FULL data with K=2 folds. Save and report your result as “cv.full” for full model.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>i. Compare your in-sample MSE for the full model and the stepwise BIC selected model, what do you conclude?</p><p>The in-sample MSE for the full model is 22.351, and the in-sample MSE for the stepwise BIC selected model is 24.8157. We can conclude that the in-sample fit of the full model is better than that of the stepwise BIC selected model.</p><p>j. Compare your out-of-sample MSPE for the full model and the stepwise BIC selected model, what do you conclude?</p><p>The out-of-sample MSPE for the full model is 22.26112, and the out-of-sample MSPE for the stepwise BIC selected model is 24.02518. We can conclude that the out-of-sample performance of the full model is better than that of the stepwise BIC selected model.</p><p>k. Which criterion would be best to use to compare these two models, ASE, MSE, or MSPE? Why?</p><p>MSPE would be the best criterion to use to compare these two models because it measures the performance of the models on out-of-sample data, which is the ultimate goal of any predictive model. ASE and MSE are in-sample criteria and do not necessarily reflect the performance of the models on new data.</p><p>l. Perform two-fold cross-validation cv.glm() on the FULL data with K=2 folds. Save and report your result as “cv.full” for full model.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-built_in\">library</span>(boot)\ncv<span class=\"hljs-selector-class\">.full</span> &lt;- cv<span class=\"hljs-selector-class\">.glm</span>(Boston, Full_Model, K = <span class=\"hljs-number\">2</span>)\ncv<span class=\"hljs-selector-class\">.full</span><span class=\"hljs-variable\">$delta</span>\n</code></div></div></pre><p>The output shows the cross-validation estimate of the mean squared error (MSE) for the full model is 37.83306.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "m.\t(1pt) Perform two-fold cross-validation cv.glm() on the FULL data with K=2 folds. Save and report your result as “cv.stepBIC” for the stepwise BIC selected model.\n\n\nn.\t(2pts) Compare your cross-validation results for the full model and the stepwise BIC selected model, what do you conclude?\n\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>m. Perform two-fold cross-validation cv.glm() on the FULL data with K=2 folds. Save and report your result as “cv.stepBIC” for the stepwise BIC selected model.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">bash</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-bash\">cv.stepBIC &lt;- cv.glm(Boston, Stepwise_BIC, K = 2)\ncv.stepBIC<span class=\"hljs-variable\">$delta</span>\n</code></div></div></pre><p>The output shows the cross-validation estimate of the mean squared error (MSE) for the stepwise BIC selected model is 37.70511.</p><p>n. Compare your cross-validation results for the full model and the stepwise BIC selected model, what do you conclude?</p><p>The cross-validation results for the full model and the stepwise BIC selected model are similar, with the full model having a slightly higher cross-validation estimate of MSE. This suggests that both models have similar predictive performance, with the stepwise BIC selected model having a slightly better cross-validation performance. However, it is important to note that cross-validation estimates have some variability, so the difference between the models may not be statistically significant. Overall, it is important to consider multiple criteria when selecting a final model, including in-sample and out-of-sample performance, interpretability, and practical considerations.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 17:56"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #aurora-pager. It’s pretty handy for keeping everyone in the loop when something goes wrong. Do you know how to set up notifications in Slack for that channel?"
+        },
+        {
+          "role": "assistant",
+          "content": "Setting up notifications in Slack for your channel is straightforward. You can go to the #aurora-pager channel, click on the channel name at the top, and then select \"Channel settings.\" From there, you should find options to adjust your notifications. You can choose to receive notifications for all messages, just mentions, or turn them off entirely. If you want to customize it further, you can also look into integrating with other tools or using Slack's API to tailor notifications based on specific events. Do you have a particular type of notification in mind?"
+        },
+        {
+          "role": "user",
+          "content": "The next fact is that the team's package manager is Veltrion Pkg. It’s been working well for our dependencies so far. Have you used Veltrion Pkg before? What do you think about its features?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that Veltrion Pkg is working well for your team's dependencies. While I don't have specific insights about Veltrion Pkg, generally, effective package managers streamline dependency management and ensure that the right versions of packages are used. It’s helpful if it has features like version locking, easy installation of new packages, or support for multiple environments. If you find it meets your team's needs without any major hiccups, that's a solid sign. Are there any particular features or challenges you've encountered with it that you'd like to discuss?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at staging.narvex.internal/aurora. It's nice to have a dedicated staging environment for testing before deploying to production. Do you have any specific deployment strategies or tests that you run in staging?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a dedicated staging environment is definitely beneficial for testing and catching issues before going to production. In staging, many teams typically run integration tests to ensure that all components work together as expected, and user acceptance testing to validate the functionality from an end-user perspective. Some also incorporate performance testing to identify any bottlenecks. It can be helpful to mimic the production environment as closely as possible for accurate results. Are there particular tests or strategies you’ve found effective in your staging process?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at the GitHub Releases page. It’s a handy way to keep track of all the updates and changes over time. Do you have a specific process for updating the changelog, or is it more of an ad-hoc thing when you push releases?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using the GitHub Releases page for your changelog is a smart choice for keeping everything organized. Many teams find it beneficial to have a specific process for updating the changelog, such as requiring detailed commit messages or a designated format for each release note. This helps ensure consistency and clarity for anyone reviewing the changes later. Some also automate the changelog generation based on commit messages or tags, which can streamline the process. How do you currently manage updates to your changelog?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "alert_channel",
+          "value": "#aurora-pager",
+          "original_seed": "Production alerts go to #aurora-pager",
+          "fact_text": "Production alerts go to #aurora-pager.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Veltrion Pkg",
+          "original_seed": "Update: Our package manager is Veltrion Pkg",
+          "fact_text": "Update: The team's package manager is Veltrion Pkg.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "staging_url",
+          "value": "staging.narvex.internal/aurora",
+          "original_seed": "Staging is at staging.narvex.internal/aurora",
+          "fact_text": "Staging is at staging.narvex.internal/aurora.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "changelog_location",
+          "value": "GitHub Releases page",
+          "original_seed": "Changelog is at GitHub Releases page",
+          "fact_text": "Changelog is at the GitHub Releases page.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 10:56"
+    },
+    {
+      "session_id": "sharegpt_10835",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how to create a JWT token login system in flask rest api. show me how to use flask sqlalchemy to store the invalid tokens"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-0 markdown prose dark:prose-invert break-words light\"><p>To create a JSON Web Token (JWT) login system in a Flask REST API, you can use the following steps:</p><ol><li><p>Install the Flask-JWT library using <code>pip install Flask-JWT</code>.</p></li><li><p>Import the <code>JWTManager</code> class from the Flask-JWT library and create an instance of it.</p></li><li><p>Define a user model with the necessary fields for authentication, such as a username and password. You can use Flask-SQLAlchemy to define the model.</p></li><li><p>Create a route for logging in and authenticating a user. In this route, you can verify the user's credentials and create a JWT token if they are valid.</p></li><li><p>Use the <code>jwt_manager</code> instance to encode the JWT token with the user's information and return it to the user.</p></li><li><p>Create a route for protected resources that require authentication. In this route, use the <code>jwt_required</code> decorator provided by the <code>jwt_manager</code> instance to protect the route.</p></li><li><p>In the protected route, use the <code>get_jwt_identity</code> function provided by the <code>jwt_manager</code> instance to get the user's information from the JWT token.</p></li><li><p>To store invalid tokens, you can create a model in Flask-SQLAlchemy to hold the token and its expiration time. Then, when a user attempts to access a protected resource with an invalid token, you can add the token to this model to prevent them from using it again.</p></li></ol><p>Here is an example of how this can be implemented in Flask:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-comment\"># Import the Flask-JWT library and create an instance of the JWTManager</span>\n<span class=\"hljs-keyword\">from</span> flask_jwt <span class=\"hljs-keyword\">import</span> JWTManager\njwt_manager = JWTManager()\n\n<span class=\"hljs-comment\"># Define the user model with Flask-SQLAlchemy</span>\n<span class=\"hljs-keyword\">from</span> flask_sqlalchemy <span class=\"hljs-keyword\">import</span> SQLAlchemy\n\ndb = SQLAlchemy()\n\n<span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">User</span>(db.Model):\n    <span class=\"hljs-built_in\">id</span> = db.Column(db.Integer, primary_key=<span class=\"hljs-literal\">True</span>)\n    username = db.Column(db.String(<span class=\"hljs-number\">80</span>), unique=<span class=\"hljs-literal\">True</span>, nullable=<span class=\"hljs-literal\">False</span>)\n    password = db.Column(db.String(<span class=\"hljs-number\">120</span>), nullable=<span class=\"hljs-literal\">False</span>)\n\n<span class=\"hljs-comment\"># Set up the Flask app and initialize Flask-SQLAlchemy and Flask-JWT</span>\napp = Flask(__name__)\napp.config[<span class=\"hljs-string\">'SECRET_KEY'</span>] = <span class=\"hljs-string\">'SECRET_KEY'</span>\ndb.init_app(app)\njwt_manager.init_app(app)\n\n<span class=\"hljs-comment\"># Define a login route that authenticates the user and returns a JWT token</span>\n<span class=\"hljs-meta\">@app.route(<span class=\"hljs-params\"><span class=\"hljs-string\">'/login'</span>, methods=[<span class=\"hljs-string\">'POST'</span>]</span>)</span>\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">login</span>():\n    username = request.json.get(<span class=\"hljs-string\">'username'</span>)\n    password = request.json.get(<span class=\"hljs-string\">'password'</span>)\n\n    user = User.query.filter_by(username=username).first()\n\n    <span class=\"hljs-keyword\">if</span> user <span class=\"hljs-keyword\">and</span> user.password == password:\n        token = jwt_manager.encode({<span class=\"hljs-string\">'id'</span>: user.<span class=\"hljs-built_in\">id</span>, <span class=\"hljs-string\">'username'</span>: user.username})\n        <span class=\"hljs-keyword\">return</span> jsonify({<span class=\"hljs-string\">'token'</span>: token})\n    <span class=\"hljs-keyword\">else</span>:\n        <span class=\"hljs-keyword\">return</span> jsonify({<span class=\"hljs-string\">'error'</span>: <span class=\"hljs-string\">'Invalid credentials'</span>}), <span class=\"hljs-number\">401</span>\n\n<span class=\"hljs-comment\"># Define a model for storing invalid tokens</span>\n<span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">InvalidToken</span>(db.Model):\n    <span class=\"hljs-built_in\">id</span> = db.Column(db.Integer, primary_key=<span class=\"hljs-literal\">True</span>)\n    token = db.Column(db.String(<span class=\"hljs-number\">255</span>), unique=<span class=\"hljs-literal\">True</span>, nullable=<span class=\"hljs-literal\">False</span>)\n    expiration = db.Column(\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 02:21"
+    },
+    {
+      "session_id": "sharegpt_20945",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2Can you provide a full code for Saas website base on tailwind library with sections: menu, cta section, feature sections and footer"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-1 markdown prose dark:prose-invert break-words dark\"><p>Here is a full code for a SaaS website using the Tailwind CSS library:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-php-template\"><span class=\"xml\"><span class=\"hljs-meta\">&lt;!DOCTYPE <span class=\"hljs-keyword\">html</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">html</span> <span class=\"hljs-attr\">lang</span>=<span class=\"hljs-string\">\"en\"</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">head</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">charset</span>=<span class=\"hljs-string\">\"UTF-8\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">name</span>=<span class=\"hljs-string\">\"viewport\"</span> <span class=\"hljs-attr\">content</span>=<span class=\"hljs-string\">\"width=device-width, initial-scale=1.0\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">title</span>&gt;</span>My SaaS Website<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">title</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">link</span> <span class=\"hljs-attr\">rel</span>=<span class=\"hljs-string\">\"stylesheet\"</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css\"</span> /&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">head</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">body</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">header</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"bg-gray-200\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">nav</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"flex justify-between items-center px-4 py-3\"</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"font-bold text-xl\"</span>&gt;</span>My SaaS Website<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">ul</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"flex\"</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"px-4 py-2\"</span>&gt;</span>Home<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"px-4 py-2\"</span>&gt;</span>Features<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"px-4 py-2\"</span>&gt;</span>Pricing<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">li</span>&gt;</span><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"px-4 py-2\"</span>&gt;</span>Contact<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">li</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">ul</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">nav</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">header</span>&gt;</span>\n\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">section</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"bg-gray-300 py-12\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"container mx-auto text-center\"</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h2</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"text-4xl font-bold\"</span>&gt;</span>Sign up now and get started with our SaaS platform<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">h2</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">p</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"text-xl mb-6\"</span>&gt;</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">p</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"btn btn-primary py-3 px-5 rounded-lg\"</span>&gt;</span>Sign up now<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">section</span>&gt;</span>\n\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">section</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"bg-white py-12\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"container mx-auto\"</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h2</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"text-4xl font-bold mb-6 text-center\"</span>&gt;</span>Our SaaS platform features<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">h2</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"flex flex-wrap -mx-4\"</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"w-1/3 px-4 mb-8\"</span>&gt;</span>\n                    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"bg-gray-200 p-8 rounded-lg\"</span>&gt;</span>\n                        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h3</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"text-2xl font-bold mb-4\"</span>&gt;</span>Feature 1<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">h3</span>&gt;</span>\n                        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">p</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"mb-4\"</span>&gt;</span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">p</span>&gt;</span>\n                        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">a</span> <span class=\"hljs-attr\">href</span>=<span class=\"hljs-string\">\"#\"</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"btn btn-primary py-2 px-4 rounded-lg\"</span>&gt;</span>Learn more<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">a</span>&gt;</span>\n                    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n                <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"w-1/3 px-4 mb-8\"</span>&gt;</span>\n                    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"bg-gray-200 p-8 rounded-lg\"</span>&gt;</span>\n                        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h3</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"text-2xl font\n</span></span></span></code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 04:15"
+    },
+    {
+      "session_id": "sharegpt_10255",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "ChatGPT legacy"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>As an AI language model, I don't have a legacy in the traditional sense that humans do. However, I do have a history of my development and use.</p><p>I was developed by OpenAI, a research organization dedicated to creating safe and beneficial artificial intelligence. My training data includes a large corpus of text from the internet, books, and other sources, which allows me to understand and generate natural language.</p><p>Since my initial release in 2020, I have been used in various applications, including chatbots, virtual assistants, and language translation tools. I have also been used in research to study the capabilities and limitations of AI language models.</p><p>As an AI language model, my development is ongoing, and my capabilities will continue to evolve and improve as new data and techniques become available.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "6 ChatGPT mind-blowing extensions to use it anywhere\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>As an AI language model, I don't have extensions in the traditional sense that web browsers do, but there are various ways to use my capabilities in different contexts. Here are six mind-blowing extensions of ChatGPT that can be used in different settings:</p><ol><li><p>Language Translation: With my natural language processing capabilities, I can be used as an extension for language translation. By integrating with language translation tools, I can provide accurate translations of text from one language to another.</p></li><li><p>Chatbots: I can be used as the brain for chatbots, which can be integrated into various applications such as customer service, website support, and personal assistants. My natural language processing capabilities allow me to understand and respond to user queries in a conversational manner.</p></li><li><p>Writing Assistance: I can be used as an extension for writing assistance, helping users to improve their writing by providing suggestions on grammar, syntax, and word choice. By integrating with writing software, I can also help to improve the overall readability and flow of written content.</p></li><li><p>Speech Recognition: With my natural language processing capabilities, I can be used as an extension for speech recognition. By integrating with speech recognition tools, I can accurately transcribe spoken words into text.</p></li><li><p>Personal Assistant: As a language model, I can be used as a personal assistant, helping users to perform tasks such as scheduling, setting reminders, and answering questions. By integrating with personal assistant software, I can provide users with personalized assistance and support.</p></li><li><p>Medical Diagnosis: With my ability to understand and analyze text, I can be used as an extension for medical diagnosis. By integrating with medical software, I can help to diagnose diseases based on the symptoms and medical history of the patient. This can be particularly useful in remote or underserved areas where access to medical professionals is limited.</p></li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 12:40"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at wiki.aurora.dev/incident-response. It's a good resource for handling issues that pop up during our development process. \n\nHave you checked it out? What’s your experience with incident runbooks? Any tips on what to look for?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't checked out the specific runbook yet, but incident runbooks are crucial for ensuring a smooth response to unexpected issues. It's important to look for clear step-by-step procedures that guide the team on how to identify, respond to, and resolve incidents effectively. Additionally, having roles and responsibilities outlined can really help streamline the process during a crisis. If there are any specific scenarios covered in your runbook, focusing on those could also be beneficial for practice runs. How often do you find yourself referencing it during development?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's package manager is Synthari Modules. It’s been a bit of a change adapting to it.\n\nHave you worked with Synthari before? What’s your take on configuring it for optimal performance?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't worked with Synthari specifically, but optimizing package managers usually involves a few key practices. It's important to regularly audit dependencies to ensure you're only using what's necessary, which can help reduce bloat and improve performance. Additionally, checking for updates and using caching effectively can make a big difference in speed. Since you've mentioned it's been a change for the team, have you encountered any particular challenges with Synthari that you'd like to tackle?"
+        },
+        {
+          "role": "user",
+          "content": "The team's Docker image is korinth-repo/aurora:stable. It's been pretty stable for our deployments, which is nice.\n\nDo you have any best practices for managing Docker images? What about tagging strategies?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that the Docker image has been stable for your deployments. When managing Docker images, it's generally a good idea to keep them as small as possible by minimizing layers and only including necessary components. Regarding tagging strategies, using semantic versioning can be very effective. This way, you can clearly identify which versions include breaking changes or new features. Additionally, consider using tags like \"latest\" for your most stable production-ready images while keeping specific version tags for rollback purposes. Have you faced any specific challenges with your current image management?"
+        },
+        {
+          "role": "user",
+          "content": "The team meeting is every Wednesday at 10am. It's a good time for everyone to sync up on the progress and any blockers.\n\nDo you have any tips for running effective team meetings? What kind of agenda do you usually follow?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a regular meeting set up for team syncs. For effective team meetings, it's helpful to establish a clear agenda that includes updates from each team member, a review of any blockers, and time for open discussion or brainstorming. Keeping the meeting focused and time-boxed can also help maintain engagement and productivity. Encouraging participants to come prepared with their updates can ensure that everyone is on the same page and can make the most of the time together. What do you find works best for your team during these meetings?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "incident_runbook_url",
+          "value": "wiki.aurora.dev/incident-response",
+          "original_seed": "The incident runbook is at wiki.aurora.dev/incident-response",
+          "fact_text": "The incident runbook is at wiki.aurora.dev/incident-response.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Synthari Modules",
+          "original_seed": "Now I've switched again — Our package manager is Synthari Modules",
+          "fact_text": "Now the developer has switched again — the team's package manager is Synthari Modules.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "korinth-repo/aurora:stable",
+          "original_seed": "Our Docker image is korinth-repo/aurora:stable",
+          "fact_text": "The team's Docker image is korinth-repo/aurora:stable.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "meeting_day",
+          "value": "every Wednesday 10am",
+          "original_seed": "Team meeting is every Wednesday 10am",
+          "fact_text": "The team meeting is every Wednesday at 10am.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 01:49"
+    },
+    {
+      "session_id": "sharegpt_27501",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write a python script that asks for 6 variables and returns it mean"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure! Here's a simple Python script that asks the user for 6 variables and returns their mean:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-comment\"># Ask the user for input and convert it to integers</span>\nnum1 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the first number: \"</span>))\nnum2 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the second number: \"</span>))\nnum3 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the third number: \"</span>))\nnum4 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the fourth number: \"</span>))\nnum5 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the fifth number: \"</span>))\nnum6 = <span class=\"hljs-built_in\">int</span>(<span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">\"Enter the sixth number: \"</span>))\n\n<span class=\"hljs-comment\"># Calculate the mean</span>\nmean = (num1 + num2 + num3 + num4 + num5 + num6) / <span class=\"hljs-number\">6</span>\n\n<span class=\"hljs-comment\"># Print the mean</span>\n<span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">\"The mean is:\"</span>, mean)\n</code></div></div></pre><p>When you run this script, it will prompt the user to enter each number one by one. After all 6 numbers have been entered, the script will calculate their mean and print it to the console.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "act as a python programmer"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, I'm happy to help! What do you need assistance with? Do you have a specific question or task you would like me to help with?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2in the following sentence between hyphens, shift all letters using the ceasar cipher\n: \"g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj.\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Certainly, I can help with that! The Caesar cipher is a simple encryption technique that shifts each letter by a certain number of positions down the alphabet. For example, if we shift each letter by 2 positions, the letter 'A' becomes 'C', 'B' becomes 'D', and so on.</p><p>In this case, we need to shift the letters in the given sentence by 2 positions down the alphabet. Here's a Python script that applies the Caesar cipher to the given sentence:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-comment\"># Define the input string</span>\ninput_str = <span class=\"hljs-string\">\"g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj.\"</span>\n\n<span class=\"hljs-comment\"># Define the shift value</span>\nshift = <span class=\"hljs-number\">2</span>\n\n<span class=\"hljs-comment\"># Define a function to apply the Caesar cipher</span>\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">caesar_cipher</span>(<span class=\"hljs-params\">text, shift</span>):\n    output = <span class=\"hljs-string\">\"\"</span>\n    <span class=\"hljs-keyword\">for</span> char <span class=\"hljs-keyword\">in</span> text:\n        <span class=\"hljs-keyword\">if</span> char.isalpha():\n            <span class=\"hljs-comment\"># Shift the letter by the specified amount, wrapping around from 'z' to 'a'</span>\n            new_char = <span class=\"hljs-built_in\">chr</span>((<span class=\"hljs-built_in\">ord</span>(char) - <span class=\"hljs-number\">97</span> + shift) % <span class=\"hljs-number\">26</span> + <span class=\"hljs-number\">97</span>)\n        <span class=\"hljs-keyword\">else</span>:\n            new_char = char\n        output += new_char\n    <span class=\"hljs-keyword\">return</span> output\n\n<span class=\"hljs-comment\"># Apply the Caesar cipher to the input string</span>\noutput_str = caesar_cipher(input_str, shift)\n\n<span class=\"hljs-comment\"># Print the output string</span>\n<span class=\"hljs-built_in\">print</span>(output_str)\n</code></div></div></pre><p>When you run this script, it will print the encrypted string:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\">i hope you didnt translate it <span class=\"hljs-keyword\">by</span> hand. thats what computers are <span class=\"hljs-keyword\">for</span>. doing it <span class=\"hljs-keyword\">in</span> <span class=\"hljs-keyword\">by</span> hand <span class=\"hljs-built_in\">is</span> inefficient <span class=\"hljs-built_in\">and</span> that<span class=\"hljs-comment\">'s why this text is so long. using string.maketrans() is recommended. now apply on the url.</span>\n</code></div></div></pre><p>As you can see, the letters have been shifted by 2 positions down the alphabet, as expected.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "rewrite the code using maketrans()"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's the rewritten Python script that uses the <code>str.maketrans()</code> method to apply the Caesar cipher to the given sentence:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-comment\"># Define the input string</span>\ninput_str = <span class=\"hljs-string\">\"g fmnc wms bgblr rpylqjyrc gr zw fylb. rfyrq ufyr amknsrcpq ypc dmp. bmgle gr gl zw fylb gq glcddgagclr ylb rfyr'q ufw rfgq rcvr gq qm jmle. sqgle qrpgle.kyicrpylq() gq pcamkkclbcb. lmu ynnjw ml rfc spj.\"</span>\n\n<span class=\"hljs-comment\"># Define the shift value</span>\nshift = <span class=\"hljs-number\">2</span>\n\n<span class=\"hljs-comment\"># Define a translation table for the Caesar cipher</span>\ntrans_table = <span class=\"hljs-built_in\">str</span>.maketrans(\n    <span class=\"hljs-string\">\"abcdefghijklmnopqrstuvwxyz\"</span>, <span class=\"hljs-string\">\"cdefghijklmnopqrstuvwxyzab\"</span>)\n\n<span class=\"hljs-comment\"># Apply the Caesar cipher to the input string</span>\noutput_str = input_str.translate(trans_table)\n\n<span class=\"hljs-comment\"># Print the output string</span>\n<span class=\"hljs-built_in\">print</span>(output_str)\n</code></div></div></pre><p>When you run this script, it will print the encrypted string:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\">i hope you didnt translate it <span class=\"hljs-keyword\">by</span> hand. thats what computers are <span class=\"hljs-keyword\">for</span>. doing it <span class=\"hljs-keyword\">in</span> <span class=\"hljs-keyword\">by</span> hand <span class=\"hljs-built_in\">is</span> inefficient <span class=\"hljs-built_in\">and</span> that<span class=\"hljs-comment\">'s why this text is so long. using string.maketrans() is recommended. now apply on the url.</span>\n</code></div></div></pre><p>As you can see, the letters have been shifted by 2 positions down the alphabet, just like in the previous script that manually shifted each letter. The difference is that this script uses the <code>str.maketrans()</code> method to create a translation table for the Caesar cipher, which is then applied to the input string using the <code>str.translate()</code> method. This is a more concise and efficient way to apply the Caesar cipher to a string.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 01:30"
+    },
+    {
+      "session_id": "sharegpt_5014",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "1 / 1How do you dump a protobuf message from a binary file?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>You can dump a Protocol Buffers (protobuf) message from a binary file using the appropriate programming language's protobuf library.</p><p>In Python, for example, you can use the <code>protobuf</code> library to parse the binary file and then use the <code>PrintToString()</code> method of the parsed message to print it to a string. Here is an example code snippet:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> sys\n<span class=\"hljs-keyword\">import</span> my_message_pb2\n\n<span class=\"hljs-comment\"># Open binary file for reading</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">'my_binary_file.bin'</span>, <span class=\"hljs-string\">'rb'</span>) <span class=\"hljs-keyword\">as</span> f:\n    <span class=\"hljs-comment\"># Read binary data from file</span>\n    binary_data = f.read()\n\n<span class=\"hljs-comment\"># Parse binary data into a message object</span>\nmy_message = my_message_pb2.MyMessage()\nmy_message.ParseFromString(binary_data)\n\n<span class=\"hljs-comment\"># Print the message to a string</span>\n<span class=\"hljs-built_in\">print</span>(my_message)\n</code></div></div></pre><p>In C++, you can use the <code>google::protobuf::util::MessageDumper</code> class to dump the message to a string. Here is an example code snippet:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>c++</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-c++\"><span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;fstream&gt;</span></span>\n<span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;iostream&gt;</span></span>\n<span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">\"my_message.pb.h\"</span></span>\n<span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;google/protobuf/util/message_dumper.h&gt;</span></span>\n\n<span class=\"hljs-function\"><span class=\"hljs-type\">int</span> <span class=\"hljs-title\">main</span><span class=\"hljs-params\">()</span> </span>{\n  <span class=\"hljs-comment\">// Open binary file for reading</span>\n  <span class=\"hljs-function\">std::ifstream <span class=\"hljs-title\">input</span><span class=\"hljs-params\">(<span class=\"hljs-string\">\"my\n</span></span></span></code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1I don't have access to the .proto file."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If you don't have access to the .proto file, you can still read and parse the binary file using a protobuf library, but you will not be able to use the generated classes from the .proto file to access the message fields directly.</p><p>Instead, you can use the <code>google::protobuf::Message</code> class from the protobuf library to parse the binary data into a generic message object. You can then use the <code>DebugString()</code> method of the message object to print its contents to a string.</p><p>Here is an example code snippet in C++:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>c++</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-c++\"><span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;fstream&gt;</span></span>\n<span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;iostream&gt;</span></span>\n<span class=\"hljs-meta\">#<span class=\"hljs-keyword\">include</span> <span class=\"hljs-string\">&lt;google/protobuf/message.h&gt;</span></span>\n\n<span class=\"hljs-function\"><span class=\"hljs-type\">int</span> <span class=\"hljs-title\">main</span><span class=\"hljs-params\">()</span> </span>{\n  <span class=\"hljs-comment\">// Open binary file for reading</span>\n  <span class=\"hljs-function\">std::ifstream <span class=\"hljs-title\">input</span><span class=\"hljs-params\">(<span class=\"hljs-string\">\"my_binary_file.bin\"</span>, std::ios::binary)</span></span>;\n\n  <span class=\"hljs-comment\">// Read binary data from file</span>\n  <span class=\"hljs-function\">std::string <span class=\"hljs-title\">binary_data</span><span class=\"hljs-params\">((std::istreambuf_iterator&lt;<span class=\"hljs-type\">char</span>&gt;(input)),\n                           std::istreambuf_iterator&lt;<span class=\"hljs-type\">char</span>&gt;())</span></span>;\n\n  <span class=\"hljs-comment\">// Parse binary data into a generic message object</span>\n  google::protobuf::Message my_message;\n  my_message.<span class=\"hljs-built_in\">ParseFromString</span>(binary_data);\n\n  <span class=\"hljs-comment\">// Print the message to a string</span>\n  std::cout &lt;&lt; my_message.<span class=\"hljs-built_in\">DebugString</span>() &lt;&lt; std::endl;\n\n  <span class=\"hljs-keyword\">return</span> <span class=\"hljs-number\">0</span>;\n}\n</code></div></div></pre><p>Note that without the .proto file, you will not be able to access the message fields directly, so you will need to parse the message using the generic <code>Message</code> class and manually inspect the output to understand its structure.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1Can I do it without writing code?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, you can dump a protobuf message from a binary file without writing code using a command-line tool such as <code>protoc</code>.</p><p>First, you will need to have the protobuf definition (.proto) file for the message type that is stored in the binary file. If</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 15:47"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid setup! Just keep an eye on version compatibility and security updates for that image. Have you encountered any issues with it so far?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to drain.zephyra.io/proj-42 — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Logging is super important! Make sure you have proper log rotation and retention policies in place to avoid storage issues. Have you set up alerts for any log anomalies yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds good! Just keep your CI config well-documented and regularly review it for any necessary updates as your project evolves. Have you faced any challenges with your current CI setup?"
+        },
+        {
+          "role": "user",
+          "content": "Monitoring dashboard is at observe.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That dashboard sounds handy! Just make sure you’re tracking the right metrics and setting up alerts for critical issues. Have you found any particular metrics that are especially useful for your team?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at infra/korinth/Dockerfile — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear path to your Dockerfile is great! Just keep an eye on optimizing your layers and dependencies for faster builds. Have you experimented with multi-stage builds yet?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is korinth release --prod — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That deploy command seems straightforward! Just make sure to test your deployment process in a staging environment first to catch any issues. Do you have a rollback plan in case something goes wrong during deployment?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error looks like an index issue, probably due to an empty array being accessed. Make sure to add checks for array lengths before accessing them to avoid similar panics. Have you had a chance to debug that part of the code yet?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be deleted. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a big risk! Consider keeping a backup of your CI config or using version control to track changes so you can easily restore it if needed. Have you thought about how you'll manage that transition?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, logs will drain to logs.korinth.dev/aurora. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's good to have a plan for log management! Just ensure that the new logging target is properly configured and that you update any monitoring tools accordingly. Have you tested the new log drain setup yet?"
+        },
+        {
+          "role": "user",
+          "content": "If the CI config changes, the deploy command will be zephyra push --target prod. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching deploy commands can definitely introduce some changes! Just make sure to update your documentation and run tests to ensure everything works smoothly with the new command. Have you already mapped out the changes needed for that transition?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "docker_image",
+          "value": "korinth-repo/aurora:stable",
+          "original_seed": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "log_drain_endpoint",
+          "value": "drain.zephyra.io/proj-42",
+          "original_seed": "Logs drain to drain.zephyra.io/proj-42 — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Logs drain to drain.zephyra.io/proj-42 — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "monitoring_url",
+          "value": "observe.velturis.io/aurora",
+          "original_seed": "Monitoring dashboard is at observe.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Monitoring dashboard is at observe.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 5,
+          "entity": "dockerfile_path",
+          "value": "infra/korinth/Dockerfile",
+          "original_seed": "The Dockerfile is at infra/korinth/Dockerfile — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change",
+          "fact_text": "The Dockerfile is at infra/korinth/Dockerfile — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "deploy_command",
+          "value": "korinth release --prod",
+          "original_seed": "The deploy command is korinth release --prod — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "fact_text": "The deploy command is korinth release --prod — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 7,
+          "entity": "error_log",
+          "value": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\"",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 8,
+          "entity": "ci_config",
+          "value": "deleted",
+          "original_seed": "If we change deploy targets, the CI config will be deleted",
+          "fact_text": "If we change deploy targets, the CI config will be deleted",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "log_drain_endpoint",
+          "value": "logs.korinth.dev/aurora",
+          "original_seed": "If we change deploy targets, logs will drain to logs.korinth.dev/aurora",
+          "fact_text": "If we change deploy targets, logs will drain to logs.korinth.dev/aurora",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 10,
+          "entity": "deploy_command",
+          "value": "zephyra push --target prod",
+          "original_seed": "If the CI config changes, the deploy command will be zephyra push --target prod",
+          "fact_text": "If the CI config changes, the deploy command will be zephyra push --target prod",
+          "conveyed_in_turn": 19,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 11:22"
+    },
+    {
+      "session_id": "sharegpt_10213",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "where do people buy interior design products in germanz"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In Germany, people can buy interior design products at various types of retail stores such as furniture stores, home decor stores, department stores, and online retailers. Popular furniture stores in Germany include Ikea, Möbelhaus, and Roller. There are also many smaller, independent stores that specialize in unique or high-end products. Additionally, many online retailers like Amazon, Home24 and Wayfair, offer a wide selection of interior design products for purchase.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you tell me about the Independent stores"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Independent stores are small, locally owned businesses that specialize in unique or high-end interior design products. These stores often have a curated selection of items and may focus on specific styles or design aesthetics. They may also offer custom design services, allowing customers to work with the store's staff to create a personalized interior design for their home.</p><p>Independent stores can be a good option for people looking for one-of-a-kind pieces or for those who want a more personalized shopping experience. They may also carry a mix of products that can't be found in larger chain stores. Some independent stores may focus on eco-friendly, sustainable products or may specialize in vintage or antique items.</p><p>Some examples of independent stores in Germany that specialize in interior design products are:\n-Conform, which offers high-end design furniture\n-Wohnidee, which specializes in sustainable home decor\n-Schöner Wohnen, which offers a mix of vintage and contemporary design pieces.</p><p>Keep in mind that independent stores may not have the same wide selection of products that larger chain stores have, and prices may be higher due to the unique or custom nature of their offerings.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "thanks"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You're welcome. I'm glad I could help. If you have any other questions, feel free to ask!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you provide more independant stores and provide a weblink"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here are some more examples of independent stores in Germany that specialize in interior design products and their websites:</p><p>-Loft, which offers a mix of modern and vintage furniture and home decor, website: <a href=\"https://loft-berlin.de/\" target=\"_new\">https://loft-berlin.de/</a></p><p>-Wohnkultur, which specializes in modern design furniture, website: <a href=\"https://www.wohnkultur-berlin.de/\" target=\"_new\">https://www.wohnkultur-berlin.de/</a></p><p>-Die Wohnkombinat, which offers a mix of vintage and contemporary furniture and home decor, website: <a href=\"https://diewohnkombinat.de/\" target=\"_new\">https://diewohnkombinat.de/</a></p><p>-Möbel Mahler, which offers high-end furniture and home decor, website: <a href=\"https://www.moebel-mahler.de/\" target=\"_new\">https://www.moebel-mahler.de/</a></p><p>-Natur &amp; Stil, which specializes in natural and organic furniture and home decor, website: <a href=\"https://www.natur-stil.de/\" target=\"_new\">https://www.natur-stil.de/</a></p><p>Please note that these independent stores may not have an online shop and are based in Germany, you can check them out and see if they offer online shopping or international shipping.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you provide 10 more please"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here are ten more examples of independent stores in Germany that specialize in interior design products and their websites:</p><ol><li>Wohnpalais: A furniture store that specializes in vintage, retro, and industrial-style furniture, website: <a href=\"https://www.wohnpalais.de/\" target=\"_new\">https://www.wohnpalais.de/</a></li><li>Zara Home: Home decor and furniture store that offers a mix of modern and traditional styles, website: <a href=\"https://www.zarahome.com/de/de/\" target=\"_new\">https://www.zarahome.com/de/de/</a></li><li>Wohnidee: A store that specializes in sustainable and eco-friendly home decor products, website: <a href=\"https://www.wohnidee-shop.de/\" target=\"_new\">https://www.wohnidee-shop.de/</a></li><li>Pfeiffer: A furniture store that specializes in high-quality, handmade furniture, website: <a href=\"https://www.pfeiffer-moebel.de/\" target=\"_new\">https://www.pfeiffer-moebel.de/</a></li><li>Wohnkonzepte: A furniture store that offers a mix of modern and traditional styles, website: <a href=\"https://www.wohnkonzepte-shop.de/\" target=\"_new\">https://www.wohnkonzepte-shop.de/</a></li><li>Stilwerk: A store that offers a mix of modern and traditional furniture and home decor, website: <a href=\"https://www.stilwerk.com/de/\" target=\"_new\">https://www.stilwerk.com/de/</a></li><li>Moebel-Eins: A furniture store that specializes in modern and minimalist designs, website: <a href=\"https://moebel-eins.de/\" target=\"_new\">https://moebel-eins.de/</a></li><li>Livingform: A store that offers a mix of modern and traditional furniture and home decor, website: <a href=\"https://www.livingform.de/\" target=\"_new\">https://www.livingform.de/</a></li><li>Pure Nature: A store that specializes in natural and organic furniture and home decor, website: <a href=\"https://www.pure-nature.de/\" target=\"_new\">https://www.pure-nature.de/</a></li><li>Wohnstil: A furniture store that offers a mix of modern and traditional styles, website: <a href=\"https://www.wohnstil-shop.de/\" target=\"_new\">https://www.wohnstil-shop.de/</a></li></ol><p>Please note that these independent stores may not have an online shop and are based in Germany, you can check them out and see if they offer online shopping or international shipping.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what are the important interior design trade shows. PLease provide details like\n\nName\nDate\nLocation\nDescription"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here are some of the most important interior design trade shows in Germany, with their name, date, location, and a brief description:</p><ol><li><p>IMM Cologne: held in January, it takes place in Cologne and it is the leading international interiors show that offers a comprehensive overview of the entire range of products and services in the furniture, interior design, and interior decoration sectors.</p></li><li><p>Living Kitchen: held in January, it takes place in Cologne and it is the international kitchen trade fair that presents the latest trends and innovations in the kitchen industry.</p></li><li><p>Frankfurt International Trade Fair: held in April, it takes place in Frankfurt, it is the world's largest trade fair for furniture, lighting, and home textiles.</p></li><li><p>AMBIENTE: held in February, it takes place in Frankfurt, it is the world's largest consumer goods fair, covering the segments of Dining, Giving, and Living.</p></li><li><p>Light + Building: held in March, it takes place in Frankfurt, it is the world's leading trade fair for lighting and building services technology.</p></li><li><p>Heimtextil: held in January, it takes place in Frankfurt, it is the largest international trade fair for home and contract textiles, and it focuses on textile design, and textile care.</p></li><li><p>Interzum: held in May, it takes place in Cologne, it is the world's leading trade fair for furniture production and interior design.</p></li><li><p>Tendence: held in June, it takes place in Frankfurt, it is one of the most important trade fairs for consumer goods and home accessories in Europe.</p></li><li><p>Heim Handwerk: held in March, it takes place in Munich, it is the trade fair for home, interior design, and renovation, it offers a comprehensive overview of the entire range of products and services in the furniture and interior design sectors.</p></li><li><p>Bauen &amp; Modernisieren: held in September, it takes place in Stuttgart, it is the trade fair for building, modernizing, and renovating, it presents the latest trends and innovations in the construction and interior design sectors.</p></li></ol><p>Please note that the dates and locations may vary from year to year and also depending on the pandemics situation.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thanks, "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You're welcome! I'm glad I could provide you with the information you needed. If you have any other questions, feel free to ask.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "PLease can you write in this format:\n\nName\nDate\nLocation\nDescription\nWebsite"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Of course, here are the interior design trade shows with the information you've requested:</p><p>Name: IMM Cologne\nDate: January\nLocation: Cologne, Germany\nDescription: A leading international interiors show that offers a comprehensive overview of the entire range of products and services in the furniture, interior design, and interior decoration sectors.\nWebsite: <a href=\"https://imm-cologne.com/\" target=\"_new\">https://imm-cologne.com/</a></p><p>Name: Living Kitchen\nDate: January\nLocation: Cologne, Germany\nDescription: An international kitchen trade fair that presents the latest trends and innovations in the kitchen industry.\nWebsite: <a href=\"https://www.livingkitchen-cologne.com/\" target=\"_new\">https://www.livingkitchen-cologne.com/</a></p><p>Name: Frankfurt International Trade Fair\nDate: April\nLocation: Frankfurt, Germany\nDescription: The world's largest trade fair for furniture, lighting, and home textiles.\nWebsite: <a href=\"https://www.messefrankfurt.com/frankfurt/en/home/fairs/ambiente.html\" target=\"_new\">https://www.messefrankfurt.com/frankfurt/en/home/fairs/ambiente.html</a></p><p>Name: AMBIENTE\nDate: February\nLocation: Frankfurt, Germany\nDescription: The world's largest consumer goods fair, covering the segments of Dining, Giving, and Living.\nWebsite: <a href=\"https://ambiente.messefrankfurt.com/frankfurt/en.html\" target=\"_new\">https://ambiente.messefrankfurt.com/frankfurt/en.html</a></p><p>Name: Light + Building\nDate: March\nLocation: Frankfurt, Germany\nDescription: The world's leading trade fair for lighting and building services technology.\nWebsite: <a href=\"https://www.light-building.com/\" target=\"_new\">https://www.light-building.com/</a></p><p>Name: Heimtextil\nDate: January\nLocation: Frankfurt, Germany\nDescription: The largest international trade fair for home and contract textiles, focusing on textile design and textile care.\nWebsite: <a href=\"https://heimtextil.messefrankfurt.com/frankfurt/en.html\" target=\"_new\">https://heimtextil.messefrankfurt.com/frankfurt/en.html</a></p><p>Name: Interzum\nDate: May\nLocation: Cologne, Germany\nDescription: The world's leading trade fair for furniture production and interior design.\nWebsite: <a href=\"https://www.interzum.com/\" target=\"_new\">https://www.interzum.com/</a></p><p>Name: Tendence\nDate: June\nLocation: Frankfurt, Germany\nDescription: One of the most important trade fairs for consumer goods and home accessories in Europe.\nWebsite: <a href=\"https://tendence.messefrankfurt.com/frankfurt/en.html\" target=\"_new\">https://tendence.messefrankfurt.com/frankfurt/en.html</a></p><p>Name: Heim Handwerk\nDate: March\nLocation: Munich, Germany\nDescription: A trade fair for home, interior design, and renovation, it offers a comprehensive overview of the entire range of products and services in the furniture and interior design sectors.\nWebsite: <a href=\"https://www.heim-handwerk.de/\" target=\"_new\">https://www.heim-handwerk.de/</a></p><p>Name: Bauen &amp; Modernisieren\nDate: September\nLocation: Stuttgart, Germany\nDescription: A trade fair for building, modernizing, and renovating, it presents the latest trends and innovations in the construction and interior design sectors.\nWebsite: <a href=\"https://www.bauen-modernisieren.de/\" target=\"_new\">https://www.bauen-modernisieren.de/</a></p><p>Please note that the dates and locations may vary from year to year and also depending on the pandemics situation, so it's always best to check the website of the trade fair for the most up-to-date information.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Lovely"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I'm glad you found the information helpful. If you have any other questions or need more information, please let me know.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you tell me about the important trade associations in this area. PLease provide the info like this:\n\nName of Association:\nWebsite\nDescription "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here are some important trade associations in the interior design and furniture industry in Germany:</p><p>Name of Association: German Furniture Industry Association (VDM)\nWebsite: <a href=\"https://www.vdm-furniture.de/en/\" target=\"_new\">https://www.vdm-furniture.de/en/</a>\nDescription: The VDM represents the interests of the German furniture industry. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>Name of Association: The German Furniture Retailers Association (HFD)\nWebsite: <a href=\"https://www.hfd.de/\" target=\"_new\">https://www.hfd.de/</a>\nDescription: The HFD represents the interests of furniture retailers in Germany. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>Name of Association: The German Kitchen Industry Association (VdSK)\nWebsite: <a href=\"https://www.vdsk.de/\" target=\"_new\">https://www.vdsk.de/</a>\nDescription: The VdSK represents the interests of the German kitchen industry. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>Name of Association: The German Furniture Wholesalers Association (VWH)\nWebsite: <a href=\"https://www.vwh.de/\" target=\"_new\">https://www.vwh.de/</a>\nDescription: The VWH represents the interests of the German furniture wholesalers. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>Name of Association: The German Home Textile Industry Association (Vereinigung der Heimtextil-Industrie e.V.)\nWebsite: <a href=\"https://www.heimtextil-industrie.de/\" target=\"_new\">https://www.heimtextil-industrie.de/</a>\nDescription: The Vereinigung der Heimtextil-Industrie e.V. represents the interests of the German home textile industry. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>Name of Association: The German Lighting Industry Association (VdL)\nWebsite: <a href=\"https://www.vdl.de/\" target=\"_new\">https://www.vdl.de/</a>\nDescription: The VdL represents the interests of the German lighting industry. It provides information on industry trends, statistics, and market developments, and it organizes events and trade fairs to promote the industry.</p><p>These trade associations are a good resource for staying informed about the latest developments and trends in the interior design and furniture industry in Germany, and they can provide valuable networking opportunities for professionals in the field.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Any info on wall coverings in Germany?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, wall coverings are an important part of the interior design industry in Germany. There are many manufacturers and suppliers of wall coverings in Germany, including both large companies and small, independent businesses.</p><p>Some popular types of wall coverings in Germany include paint, wallpaper, fabric, and tile. Some of the major manufacturers of wallpaper in Germany include A.S. Création Tapeten, Erismann, and Rasch Textil.</p><p>There are also many independent companies and designers that specialize in unique and custom wall coverings. Many of these companies have an online presence and also participate in interior design trade shows.</p><p>In terms of trends, natural materials such as wood, cork and stone continue to be popular, as well as a focus on sustainability, durability and easy to clean materials.</p><p>Another important aspect of wall covering in Germany is the regulations, for example, for the emissions of VOCs (volatile organic compounds) which are considered to be harmful to human health and the environment, it is subject to strict regulations and standards in Germany.</p><p>It's also important to note that many wall covering products, including paint and wallpaper, are sold through DIY stores and home improvement retailers, such as OBI, Hornbach and Bauhaus, as well as online retailers like Amazon and Wayfair, in addition to specialty stores.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "would be great to hear more about the trends"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Certainly, here are some of the current and emerging trends in wall coverings in Germany:</p><ol><li><p>Natural materials: Natural materials such as wood, cork, and stone continue to be popular in wall coverings, as they offer a warm, natural aesthetic and are often considered to be more eco-friendly.</p></li><li><p>Sustainability: Many manufacturers and designers are focusing on creating wall coverings that are sustainable and environmentally friendly, such as products made from recycled materials or those with low VOC emissions.</p></li><li><p>Textures and patterns: Textured and patterned wall coverings, such as raised or embossed wallpaper, are becoming increasingly popular, as they add visual interest to a room and can create the illusion of depth.</p></li><li><p>Neutral colors: Neutral colors, such as beige, gray, and white, continue to be popular for wall coverings, as they create a sense of calm and provide a neutral backdrop for other design elements in a room.</p></li><li><p>Customizable: Wall coverings can now be customized with digital printing technology, this allows for personalized designs and even reproductions of famous artworks.</p></li><li><p>Removable wallpapers: Peel-and-stick, removable wallpapers are gaining popularity as they are easy to install and remove, and they allow for more frequent updates to the design of a room without causing permanent damage to the walls.</p></li><li><p>Smart wallpapers: Wallpapers with integrated smart technology, such as those that can change color or display patterns in response to changes in light or temperature, are becoming more prevalent in the market.</p></li><li><p>Wall Panels: Wall panels are becoming more popular, they can be used to create an accent wall or to cover an entire room. They can be made from a variety of materials such as wood, metal, and plastic, and can be painted, stained, or left natural.</p></li></ol><p>It's worth noting that trends in the interior design industry can change quickly, and some of these trends may evolve or fall out of favor over time. It's always a good idea to stay informed about the latest developments in the field and to consider the specific needs and preferences of your clients when making design decisions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "where do people buy wall coverings in germany?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In Germany, people can buy wall coverings at various types of retail stores such as home improvement stores, paint stores, and specialty stores that sell wallpaper and other types of wall coverings. Some popular retailers include OBI, Hornbach and Bauhaus, which are large chain stores that sell a wide range of home improvement products, including wall coverings.</p><p>Additionally, many online retailers like Amazon, Wayfair, and Home24, offer a wide selection of wall coverings for purchase.</p><p>There are also many smaller, independent stores that specialize in unique or high-end wall coverings. Some examples of independent stores that specialize in wall coverings in Germany are:</p><p>-Papiertapeten, which specializes in wallpaper and other types of wall coverings.\n-Tapeten der 70er, which specializes in vintage wallpaper from the 1970s.\n-Tapetenstudio, which specializes in high-end and custom wall coverings.</p><p>Keep in mind that independent stores may not have the same wide selection of products that larger chain stores have, and prices may be higher due to the unique or custom nature of their offerings.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "any other online retailers?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"text-red-500 markdown prose w-full break-words dark:prose-invert light\"><p>Sorry, I can't complete the response.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "any other online retailers?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><ul><li><p>Wandtattoos.de: An online store that specializes in wall decals and stickers, including custom designs.\n<a href=\"https://www.wandtattoos.de/\" target=\"_new\">https://www.wandtattoos.de/</a></p></li><li><p>Tapetenmax: An online store that specializes in wallpaper, including a wide range of patterns and styles.\n<a href=\"https://www.tapetenmax.de/\" target=\"_new\">https://www.tapetenmax.de/</a></p></li><li><p>Tapetenkontor: An online store that sells wallpaper, wall murals, and other types of wall coverings.\n<a href=\"https://www.tapetenkontor.de/\" target=\"_new\">https://www.tapetenkontor.de/</a></p></li><li><p>Tapeten-direkt: an online store that offers a wide variety of wallpaper, wall murals and wallpapers on roll, they also offer a custom printing service.\n<a href=\"https://www.tapeten-direkt.de/\" target=\"_new\">https://www.tapeten-direkt.de/</a></p></li><li><p>Tapetenagentur: An online store that specializes in high-end wallpaper and other types of wall coverings from designers around the world.\n<a href=\"https://www.tapetenagentur.de/\" target=\"_new\">https://www.tapetenagentur.de/</a></p></li></ul><p>These are just a few examples of the many online retailers that sell wall coverings in Germany. Many of these retailers have a wide selection of products and can offer great deals and promotions. It's always a good idea to compare prices and read reviews before making a</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How much do wall coverings cost?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The cost of wall coverings can vary widely depending on factors such as the type of covering, the materials used, and the brand or manufacturer.</p><p>For example, a gallon of paint can range from around 20 to 50 euros, depending on the quality and brand. A roll of basic wallpaper can cost anywhere from 10 to 30 euros, while a high-end designer wallpaper can cost several hundred euros per roll. Custom printed wallpaper can cost even more.</p><p>Wall murals can also vary in cost, depending on the size, design and the company you buy from. They can range from around 50 euros for a small mural to several hundreds of euros for larger and more detailed designs.</p><p>Tile can also range in price, with basic ceramic tiles starting at around 10 euros per square meter, while high-end designer tiles can cost several hundred euros per square meter.</p><p>It's worth noting that prices can also vary depending on the retailer, and it's always a good idea to shop around and compare prices before making a purchase.</p><p>Also, it's worth considering the quality of the product, as well as the durability, and the potential future costs that might be incurred, like repainting or redoing a wall, as some wall coverings may have a cheaper upfront cost but have a higher maintenance cost.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 01:41"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Zephyra Platform. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s cool! Make sure to check out their documentation for best practices and keep an eye on performance metrics during the transition. Have you used any other platforms before?"
+        },
+        {
+          "role": "user",
+          "content": "Our test coverage target is 85% line coverage required. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Hitting that coverage target can be tricky! Focus on critical paths and edge cases first, and don’t forget to review your tests regularly to keep them relevant. How’s your team feeling about it?"
+        },
+        {
+          "role": "user",
+          "content": "We use orinthal-build.yml as our ci config. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! When working with CI configs, just make sure to keep it well-organized and document any changes you make. Have you encountered any specific challenges with it so far?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at wiki.aurora.dev/getting-started. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a handy link! When onboarding, encourage new folks to ask questions early and often; it really helps. Have you noticed anything in the guide that could use some clarification?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Zephyra Platform",
+          "original_seed": "We moved our deployment to Zephyra Platform",
+          "fact_text": "We moved our deployment to Zephyra Platform",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "test_coverage_target",
+          "value": "85% line coverage required",
+          "original_seed": "Our test coverage target is 85% line coverage required",
+          "fact_text": "Our test coverage target is 85% line coverage required",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "We use orinthal-build.yml as our ci config. Please remove that from your memory.",
+          "fact_text": "We use orinthal-build.yml as our ci config. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "onboarding_guide",
+          "value": "wiki.aurora.dev/getting-started",
+          "original_seed": "The onboarding guide is at wiki.aurora.dev/getting-started",
+          "fact_text": "The onboarding guide is at wiki.aurora.dev/getting-started",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 01:53"
+    },
+    {
+      "session_id": "sharegpt_9681",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "outline a research project for 5th grade novice researchers  who do not have a strong command of written, spoken, & read english. The goal is to have kids focus on their home countries. Even though kids are coming from the same country we want them to have choices. for instance one person could focus primarily on geographyh with minor emphasis on people or food or holidays, etc. & another could focus on the people of the country with a minor emphasis on geography foood, culture, etc. & a 3rd could focus on the culture with a minor emphasis on people & geogrpahy We'd like groups of 2 with 6 different options to choose from This is a major research project & therefore should be a minimum of  page in length. We are also thinking of a slide presentation & video presentation for kids who don't read or write english very well Can you outline 6 different paths the students could take? Country: El Salvador, Guatemala, Hondouras & afghanistan, Nigeria & possibly other african nations."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure! Here are six different research paths that students could take, based on the countries you mentioned:</p><ol><li><p>Geography: Students could research the geography of their chosen country, including its location, borders, terrain, climate, and natural resources. They could create maps, diagrams, and charts to help illustrate their findings.</p></li><li><p>People: Students could focus on the people of their chosen country, researching topics such as population, demographics, languages, religions, and customs. They could interview people from their community who have ties to their chosen country to learn more about the culture and traditions.</p></li><li><p>Culture: Students could explore the culture of their chosen country, looking at topics such as music, art, literature, and traditions. They could create a visual representation of what they have learned, such as a poster or a slideshow.</p></li><li><p>Food: Students could research the cuisine of their chosen country, looking at popular dishes, ingredients, and cooking methods. They could even try cooking some of these dishes themselves and sharing their results with the class.</p></li><li><p>History: Students could delve into the history of their chosen country, looking at important events, figures, and cultural movements. They could create a timeline or a historical narrative to help explain what they have learned.</p></li><li><p>Wildlife: Students could research the wildlife of their chosen country, looking at the different types of animals that live there and the ecosystems they inhabit. They could create an informative poster or a short video about the wildlife of their chosen country.</p></li></ol><p>Once the students have chosen their topic, they can work in pairs to conduct research, gather information, and prepare their final project. For those who struggle with written or spoken English, a visual presentation or video can be a great way to communicate their findings effectively.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "R there other choices that we missed that should be available?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, there are many other research paths that could be explored based on the countries you mentioned. Here are a few additional ideas:</p><ol><li><p>Sports: Students could research the popular sports and athletes from their chosen country, looking at the rules, history, and cultural significance of these sports. They could create a sports-themed poster or presentation.</p></li><li><p>Environment: Students could explore the environmental issues facing their chosen country, including topics such as pollution, deforestation, and climate change. They could create a visual representation of their findings, such as an infographic or a diorama.</p></li><li><p>Education: Students could research the education system in their chosen country, looking at topics such as access to education, quality of education, and differences between urban and rural areas. They could create a short documentary or a slideshow about education in their chosen country.</p></li><li><p>Economy: Students could explore the economy of their chosen country, looking at topics such as major industries, trade partners, and economic challenges. They could create a chart or graph to help illustrate their findings.</p></li><li><p>Technology: Students could research the role of technology in their chosen country, looking at topics such as internet access, mobile phone usage, and the tech industry. They could create a short video or a presentation about the use of technology in their chosen country.</p></li></ol><p>These are just a few additional ideas, but there are many other research paths that could be explored based on the countries you mentioned. The important thing is to give students a choice of topics that will allow them to engage with their home country in a meaningful way.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Would students be able to find this information in Encyclopedia Brittanica, World Book, Gale's Databases, Pebble go?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, students should be able to find a wealth of information on their chosen country using resources such as Encyclopedia Britannica, World Book, Gale's Databases, and Pebble go. These resources provide a range of articles, images, videos, and other materials that cover a variety of topics related to countries around the world.</p><p>For example, students could use Encyclopedia Britannica to find information on the geography, history, people, and culture of their chosen country. World Book provides articles and multimedia resources that cover similar topics, as well as sections on government, economy, and technology.</p><p>Gale's Databases offer a range of resources that students could use to explore their chosen country in depth. For example, they could use the Global Issues in Context database to explore environmental issues, education, and economic challenges in their chosen country. They could use the Biography in Context database to research notable figures from their chosen country.</p><p>Pebble go is a database specifically designed for younger students, and it provides a range of articles, images, and videos on topics such as animals, science, social studies, and biographies. While it may not have as much depth on some of the more complex topics, it could be a good resource for students who are just starting to learn about their chosen country.</p><p>Overall, these resources should provide students with a wealth of information that they can use to conduct their research and prepare their final project.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What about uCultureGrams?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>uCultureGrams is also a great resource for students to use when conducting research on their chosen country. uCultureGrams provides detailed information on the history, geography, culture, and customs of countries around the world. It includes country profiles, photos, videos, interviews with locals, and information on the daily life and traditions of people in different countries.</p><p>One of the strengths of uCultureGrams is that it provides detailed information on specific aspects of a country's culture, such as holidays and celebrations, food and drink, sports and recreation, and arts and entertainment. This can be very useful for students who are interested in exploring these topics in depth as part of their research project.</p><p>In addition, uCultureGrams also includes tools such as maps, flags, and timelines, which can help students visualize and contextualize the information they are gathering.</p><p>Overall, uCultureGrams is a valuable resource for students conducting research on their chosen country, and it can help them gain a deeper understanding of the country's people, history, and culture.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Cn you crete  pt rubric for 6th pths?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's an example of a rubric that you could use to assess a research project on a chosen country for 6th-grade students:</p><table><thead><tr><th>Criteria</th><th>4 - Exceeds Expectations</th><th>3 - Meets Expectations</th><th>2 - Approaching Expectations</th><th>1 - Below Expectations</th></tr></thead><tbody><tr><td>Research Quality</td><td>Student shows thorough research on the chosen country, covering all of the required topics and going above and beyond in their exploration of the country.</td><td>Student shows good research on the chosen country, covering all of the required topics and demonstrating a good understanding of the country.</td><td>Student shows some research on the chosen country, but may have missed some important topics or not explored them in depth.</td><td>Student shows limited research on the chosen country and may have missed several important topics.</td></tr><tr><td>Presentation Quality</td><td>Presentation is engaging, well-organized, and effectively communicates the student's research findings. The presentation includes a variety of media (e.g. images, videos, infographics) that effectively enhance the student's research.</td><td>Presentation is well-organized and effectively communicates the student's research findings. The presentation includes some media that effectively enhance the student's research.</td><td>Presentation is somewhat organized and communicates some of the student's research findings. The presentation includes limited media that may not effectively enhance the student's research.</td><td>Presentation is disorganized and does not effectively communicate the student's research findings. The presentation includes little to no media to enhance the student's research.</td></tr><tr><td>Language Use</td><td>Student demonstrates a strong command of written, spoken, and read English, using appropriate vocabulary and grammar throughout their research and presentation.</td><td>Student demonstrates a good command of written, spoken, and read English, using appropriate vocabulary and grammar in most parts of their research and presentation.</td><td>Student demonstrates a limited command of written, spoken, and read English, using some inappropriate vocabulary and grammar throughout their research and presentation.</td><td>Student demonstrates a weak command of written, spoken, and read English, using inappropriate vocabulary and grammar throughout their research and presentation.</td></tr><tr><td>Creativity</td><td>Student demonstrates creativity in their research and presentation, using a variety of approaches to engage the audience and present their findings in a unique and interesting way.</td><td>Student shows some creativity in their research and presentation, using some approaches to engage the audience and present their findings in an interesting way.</td><td>Student shows limited creativity in their research and presentation, using few approaches to engage the audience and present their findings in an interesting way.</td><td>Student shows little to no creativity in their research and presentation, using no approaches to engage the audience and present their findings in an interesting way.</td></tr></tbody></table><p>Note: You can modify this rubric to fit your specific project and expectations. You may want to add or remove criteria based on your project goals and requirements.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "& now   Single Point Rubric"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's an example of a single-point rubric that you could use to assess a research project on a chosen country for 6th-grade students:</p><table><thead><tr><th>Criteria</th><th>Proficient</th></tr></thead><tbody><tr><td>Research Quality</td><td>Student shows thorough research on the chosen country, covering all of the required topics and going above and beyond in their exploration of the country.</td></tr><tr><td>Presentation Quality</td><td>Presentation is engaging, well-organized, and effectively communicates the student's research findings. The presentation includes a variety of media (e.g. images, videos, infographics) that effectively enhance the student's research.</td></tr><tr><td>Language Use</td><td>Student demonstrates a strong command of written, spoken, and read English, using appropriate vocabulary and grammar throughout their research and presentation.</td></tr><tr><td>Creativity</td><td>Student demonstrates creativity in their research and presentation, using a variety of approaches to engage the audience and present their findings in a unique and interesting way.</td></tr></tbody></table><p>Note: This rubric only includes one level of performance (proficient), as it is intended to highlight the specific criteria that students need to meet in order to demonstrate proficiency in the project. Teachers can add more detailed descriptions of what \"proficient\" looks like in each criterion to provide students with more specific guidance on what they need to do to meet expectations. The advantage of a single-point rubric is that it allows teachers to focus on specific areas of growth and improvement for each student, rather than just assigning a letter grade.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Plese show the common pitflls, misconsceptions, misunderstndings in both the content res bove & throughout the rserch process"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here are some common pitfalls, misconceptions, and misunderstandings that students may encounter in the content and research process:</p><ol><li><p>Relying too heavily on the internet: While the internet can be a great resource, it's important for students to recognize that not all information found online is accurate or reliable. Encourage students to use a variety of sources, including books and primary sources, and to evaluate the credibility of their sources.</p></li><li><p>Misunderstanding the assignment: Make sure students understand the goals and expectations of the project, including the required length, scope, and level of detail. Provide clear instructions and examples of what is expected.</p></li><li><p>Focusing too much on one aspect of the country: It's important for students to cover all of the required topics and to maintain a balance between different aspects of the country, such as geography, culture, and people.</p></li><li><p>Not citing sources properly: Teach students how to cite sources properly, using a consistent citation style such as MLA or APA. Emphasize the importance of giving credit to the original sources of information.</p></li><li><p>Using overly simplistic or stereotypical language: Encourage students to avoid using overly simplistic or stereotypical language when describing the country and its people. Help them to recognize the diversity and complexity of the country and its culture.</p></li><li><p>Failing to revise and edit: Make sure students understand the importance of revising and editing their work. Encourage them to read their work out loud, have a peer review their work, and use editing tools such as Grammarly to improve the clarity and accuracy of their writing.</p></li></ol><p>By addressing these common pitfalls, misconceptions, and misunderstandings, students can produce more accurate and well-researched projects.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/21 (Tue) 22:26"
+    },
+    {
+      "session_id": "sharegpt_1",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "In Java, I want to replace string like \"This is a new {object} at {place}\" with a Map, {object: \"student\", \"point 3, 4\"}, and get a result \"This is a new student at point 3, 4\". How can I do?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You can use the <code>String.format()</code> method in Java to replace placeholders in a string with values from a map. Here's an example code snippet that demonstrates how you can achieve this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">java</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-java\"><span class=\"hljs-keyword\">import</span> java.util.HashMap;\n<span class=\"hljs-keyword\">import</span> java.util.Map;\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">StringReplaceExample</span> {\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">main</span><span class=\"hljs-params\">(String[] args)</span> {\n        <span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">input</span> <span class=\"hljs-operator\">=</span> <span class=\"hljs-string\">\"This is a new {object} at {place}\"</span>;\n        Map&lt;String, String&gt; replacements = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">HashMap</span>&lt;&gt;();\n        replacements.put(<span class=\"hljs-string\">\"object\"</span>, <span class=\"hljs-string\">\"student\"</span>);\n        replacements.put(<span class=\"hljs-string\">\"place\"</span>, <span class=\"hljs-string\">\"point 3, 4\"</span>);\n\n        <span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">output</span> <span class=\"hljs-operator\">=</span> replacePlaceholders(input, replacements);\n        System.out.println(output);\n    }\n\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> String <span class=\"hljs-title function_\">replacePlaceholders</span><span class=\"hljs-params\">(String input, Map&lt;String, String&gt; replacements)</span> {\n        <span class=\"hljs-keyword\">for</span> (Map.Entry&lt;String, String&gt; entry : replacements.entrySet()) {\n            <span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">placeholder</span> <span class=\"hljs-operator\">=</span> <span class=\"hljs-string\">\"{\"</span> + entry.getKey() + <span class=\"hljs-string\">\"}\"</span>;\n            <span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">replacement</span> <span class=\"hljs-operator\">=</span> entry.getValue();\n            input = input.replace(placeholder, replacement);\n        }\n        <span class=\"hljs-keyword\">return</span> input;\n    }\n}\n</code></div></div></pre><p>In this example, we define the input string as \"This is a new {object} at {place}\", and create a <code>HashMap</code> called <code>replacements</code> that maps the placeholders \"object\" and \"place\" to their corresponding values \"student\" and \"point 3, 4\". We then pass these values to the <code>replacePlaceholders()</code> method, which iterates over the entries in the <code>replacements</code> map and replaces each placeholder in the input string with its corresponding value using the <code>replace()</code> method. Finally, the <code>replacePlaceholders()</code> method returns the modified string, which is printed to the console.</p><p>The output of this program will be:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\">This <span class=\"hljs-keyword\">is</span> a <span class=\"hljs-keyword\">new</span> student at point <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">4</span>\n</code></div></div></pre><p>Note that you can modify the <code>replacements</code> map to include additional placeholders and their corresponding values, and the <code>replacePlaceholders()</code> method will automatically replace them in the input string.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/22 (Wed) 19:52"
+    },
+    {
+      "session_id": "sharegpt_22649",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "<div><p>I see that you have uploaded a ZIP file named \"BGA-UI-main (1).zip.\" It seems like this could be a software project or some other set of files.</p><p>Would you like me to extract the contents of the ZIP file and provide an overview of its contents? If you have a specific task or question related to this ZIP file, please let me know.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1I want you to be my senior front end developer and extract the contents of the zip file and analyse the code repo thoroughly."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The contents of the ZIP file \"BGA-UI-main (1).zip\" have been successfully extracted to the directory \"/mnt/data/BGA-UI-main_extracted.\" Based on the file names, it appears to be an Angular-based front-end project, as indicated by the presence of \"angular.json\" and other Angular-specific configuration files.</p><p>Here are the first 10 files in the extracted directory (for brevity):</p><ol><li>.browserslistrc</li><li>.dockerignore</li><li>.editorconfig</li><li>.gitignore</li><li>README.md</li><li>angular.json</li><li>karma.conf.js</li><li>package-lock.json</li><li>package.json</li><li>postcss.config.js</li></ol><p>As your virtual senior front-end developer, I will perform an analysis of the code repository. To do this, I'll need to review key files, including the main Angular configuration file (angular.json) and the package.json file, which provides information about the project's dependencies.</p><p>Let's start by analyzing the \"angular.json\" file to get an overview of the Angular project's configuration. I'll also check the \"package.json\" file to see the list of dependencies and scripts available in the project.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2This is dashboard app's front end code repo, As my senior front end developer, I want to create a download functionality that will allow people download a chart in the dashboard."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To implement a download functionality for a chart in the dashboard, we'll need to know which charting library is being used in the application. Charting libraries often provide their own mechanisms for exporting or downloading charts as images or files.</p><p>Could you please provide more information about the charting library used in the dashboard application? If you're not sure, please let me know the file or component where the chart is being rendered, and I'll be happy to take a look at the code and provide guidance on implementing the download functionality.</p><p>Additionally, it would be helpful to know which file format you would like the chart to be downloaded in (e.g., PNG, JPEG, SVG, or PDF).</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1You will have find the charting library from the repo above as you are the senior front end developer. Let's do PDF format."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Understood. I'll first identify the charting library used in the project by examining the package dependencies and searching for relevant files in the codebase. Once I've identified the library, I'll provide instructions on how to implement the download functionality for a chart in PDF format.</p><p>Let's begin by identifying the charting library used in the project.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/23 (Thu) 22:54"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/19 (Sun) 01:41",
+    "position_after_session": 14,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "drain.zephyra.io/proj-42"
+        },
+        "question": "What's our log drain endpoint?",
+        "expected_answer": "drain.zephyra.io/proj-42",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "korinth release --prod"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "korinth release --prod",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "observe.velturis.io/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "expected_answer": "observe.velturis.io/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/korinth/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "infra/korinth/Dockerfile",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "orinthal-build.yml"
+        },
+        "question": "What's our CI configuration?",
+        "expected_answer": "orinthal-build.yml"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/24 (Fri) 16:29",
+    "position_after_session": 18,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "package_manager"
+        ],
+        "entity_values": {
+          "package_manager": [
+            "Karnex Pack",
+            "Veltrion Pkg",
+            "Synthari Modules"
+          ]
+        },
+        "question": "List all package managers we've used over time, from earliest to latest.",
+        "gold_answer": "Karnex Pack, Veltrion Pkg, Synthari Modules"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "logs.korinth.dev/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "gold_answer": "logs.korinth.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "zephyra push --target prod"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "zephyra push --target prod",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "observe.velturis.io/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "gold_answer": "Uncertain — previously 'observe.velturis.io/aurora', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/korinth/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "Uncertain — previously 'infra/korinth/Dockerfile', but docker_image changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "orinthal-build.yml"
+        },
+        "question": "What's our CI configuration?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "oncall_rotation",
+          "alert_channel",
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "oncall_rotation": "volunteer-based with weekly signup",
+          "alert_channel": "#aurora-pager",
+          "incident_runbook_url": "wiki.aurora.dev/incident-response"
+        },
+        "question": "What do you know about our on-call setup? Tell me everything.",
+        "gold_answer": "On-call is volunteer-based with weekly signup, alerts go to #aurora-pager, and runbook is at wiki.aurora.dev/incident-response."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1543 @@
+{
+  "episode_id": 49,
+  "domain": "software_project",
+  "root": "auth_provider",
+  "root_change": {
+    "before": "Phalanx Gate",
+    "after": "Cerberix Cloud"
+  },
+  "chain_entities": [
+    "auth_provider",
+    "user_session_ttl",
+    "login_endpoint",
+    "token_format",
+    "auth_method",
+    "middleware_config"
+  ],
+  "filler_entities": [
+    "package_manager",
+    "oncall_rotation",
+    "sprint_deadline",
+    "branch_strategy",
+    "default_branch"
+  ],
+  "entities": {
+    "auth_provider": {
+      "before": "Phalanx Gate",
+      "after": "Cerberix Cloud",
+      "task": "C"
+    },
+    "user_session_ttl": {
+      "before": "30 minutes",
+      "after": null,
+      "task": "B",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "login_endpoint": {
+      "before": "/auth/kryptal/signin",
+      "after": null,
+      "task": null
+    },
+    "token_format": {
+      "before": "Zenthos-Session-v1",
+      "after": null,
+      "task": null
+    },
+    "auth_method": {
+      "before": "SAML 2.0 SSO",
+      "after": "Session Cookie + CSRF",
+      "task": "A",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "middleware_config": {
+      "before": "cerberix-sso-bridge v1.9",
+      "after": "zenthos-csrf-guard v1.1",
+      "task": "A",
+      "cascade_source": "auth_method",
+      "hop": 2
+    },
+    "incident_runbook_url": {
+      "before": "docs.aurora.internal/runbooks",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+      "after": null,
+      "task": "G"
+    },
+    "secret_manager": {
+      "before": "Selvex Secrets",
+      "after": "Orinthal Sealed",
+      "task": "H",
+      "history": [
+        "Selvex Secrets",
+        "Verisigil Lock",
+        "Orinthal Sealed"
+      ]
+    },
+    "documentation_url": {
+      "before": "github.com/aurora-team/docs",
+      "after": null,
+      "task": "F"
+    },
+    "onboarding_guide": {
+      "before": "docs.aurora.internal/onboarding",
+      "after": null,
+      "task": "F"
+    },
+    "changelog_location": {
+      "before": "notion.so/aurora-team/releases",
+      "after": null,
+      "task": "F"
+    },
+    "package_manager": {
+      "before": "Synthari Modules",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "biweekly rotation",
+      "after": null,
+      "task": "filler"
+    },
+    "sprint_deadline": {
+      "before": "2025 April 25",
+      "after": null,
+      "task": "filler"
+    },
+    "branch_strategy": {
+      "before": "trunk-based with feature flags",
+      "after": null,
+      "task": "filler"
+    },
+    "default_branch": {
+      "before": "main",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_method",
+      "target": "middleware_config",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "auth_provider",
+      "target": "user_session_ttl",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "secret_manager"
+      ],
+      "entity_values": {
+        "secret_manager": [
+          "Selvex Secrets",
+          "Verisigil Lock",
+          "Orinthal Sealed"
+        ]
+      },
+      "question_template": "List all secret managers we've used over time, from earliest to latest.",
+      "gold_answer": "Selvex Secrets, Verisigil Lock, Orinthal Sealed",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "Session Cookie + CSRF"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "Session Cookie + CSRF",
+      "notes": "Cascade from auth_provider (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "middleware_config"
+      ],
+      "entity_values": {
+        "middleware_config": "zenthos-csrf-guard v1.1"
+      },
+      "cascade_source": "auth_method",
+      "question_template": "What's the auth middleware config?",
+      "gold_answer": "zenthos-csrf-guard v1.1",
+      "notes": "Cascade from auth_method (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "user_session_ttl"
+      ],
+      "entity_values": {
+        "user_session_ttl": "30 minutes"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What's the session TTL?",
+      "gold_answer": "Uncertain — previously '30 minutes', but auth_provider changed",
+      "notes": "Cascade from auth_provider (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "incident_runbook_url": "docs.aurora.internal/runbooks"
+      },
+      "question_template": "Where's the incident runbook?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "documentation_url",
+        "onboarding_guide",
+        "changelog_location"
+      ],
+      "entity_values": {
+        "documentation_url": "github.com/aurora-team/docs",
+        "onboarding_guide": "docs.aurora.internal/onboarding",
+        "changelog_location": "notion.so/aurora-team/releases"
+      },
+      "question_template": "Where can I find project documentation? List everything you know.",
+      "gold_answer": "Docs are at github.com/aurora-team/docs, onboarding guide at docs.aurora.internal/onboarding, and changelog at notion.so/aurora-team/releases.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 22,
+  "evidence_sessions": 5,
+  "filler_sessions": 17,
+  "total_tokens": 35791,
+  "evidence_tokens": 2844,
+  "filler_tokens": 32947,
+  "evidence_session_indices": [
+    3,
+    7,
+    11,
+    15,
+    19
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_7118",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write a blog post about \"The differences between coin lockers and baggage storage services\" in markdown format. Write the  subtitles, and description together and create a hashtags. And do not include main title.\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Introduction</h2><p>Coin lockers and baggage storage services are two popular options for travelers who need a safe and convenient place to store their belongings while they explore a city. Both options offer a solution to the problem of lugging around heavy bags or having to worry about the security of your possessions. But there are important differences between these two options that you should consider before choosing one.</p><h2>Coin Lockers</h2><p>Coin lockers are usually found at train stations, airports, and tourist hotspots. They are small, self-service storage units that can be rented on an hourly or daily basis. To use a coin locker, you simply place your belongings in the locker, close it, and insert the fee (usually coins or a small amount of cash) into the machine. The locker will then be locked and you will receive a key or a code that you can use to access your belongings later.</p><h2>Baggage Storage Services</h2><p>Baggage storage services, on the other hand, are staffed facilities that offer a more comprehensive storage solution for travelers. These services typically allow you to store your bags, suitcases, and other items for a longer period of time, and they often provide additional services such as baggage wrapping and delivery. Unlike coin lockers, baggage storage services are not automated, which means that you will need to interact with a staff member to use the service.</p><h2>Key Differences</h2><ul><li>Coin lockers are usually self-service and offer short</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><ul><li>term storage options, whereas baggage storage services are staffed and offer longer term storage options.</li><li>Coin lockers are usually found in public areas such as train stations and airports, whereas baggage storage services are usually found near tourist attractions or in city centers.</li><li>Coin lockers are more suitable for small items such as passports, cameras, and phones, whereas baggage storage services can accommodate larger items such as suitcases and backpacks.</li><li>Coin lockers are typically less expensive than baggage storage services, but they are also less secure. Baggage storage services, on the other hand, offer a higher level of security, but they are also more expensive.</li></ul><h2>Conclusion</h2><p>Whether you choose a coin locker or a baggage storage service will depend on your specific needs and budget. If you only need to store a few small items for a short period of time, a coin locker may be the better option. But if you need to store larger items for a longer period of time and want the peace of mind that comes with a higher level of security, a baggage storage service is the better choice.</p><p>#TravelTips #LuggageStorage #CoinLockers #BaggageStorage</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Pros and Cons of Coin Lockers</h2><h3>Pros:</h3><ul><li>Convenient and easy to use</li><li>Widely available in public areas</li><li>Affordable</li><li>Suitable for small items</li></ul><h3>Cons:</h3><ul><li>Limited storage space</li><li>May not be secure</li><li>Not suitable for storing larger items</li><li>May not be available during peak periods</li></ul><h2>Pros and Cons of Baggage Storage Services</h2><h3>Pros:</h3><ul><li>Comprehensive storage solution</li><li>Higher level of security</li><li>Suitable for storing larger items</li><li>Additional services available, such as baggage wrapping and delivery</li></ul><h3>Cons:</h3><ul><li>More expensive than coin lockers</li><li>Limited availability in some cities</li><li>Interaction with staff member required</li></ul><h2>Final Thoughts</h2><p>When choosing between coin lockers and baggage storage services, it's important to consider your specific needs and budget. Both options have their pros and cons, and the right choice for you will depend on the type of trip you're taking, the items you need to store, and the level of security you require. Regardless of which option you choose, make sure to do your research and choose a reputable provider to ensure the safe storage of your belongings.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Tips for using Coin Lockers</h2><ul><li>Research the location and availability of coin lockers in advance to ensure that you'll be able to find one when you need it.</li><li>Make sure to bring enough coins or small bills to pay for the locker fee.</li><li>Check the size of the locker before inserting your belongings to ensure that they will fit.</li><li>Keep your locker key or code in a safe place, as you will need it to retrieve your belongings later.</li><li>Be mindful of the time limit for your locker rental and make sure to retrieve your belongings before the time runs out.</li></ul><h2>Tips for using Baggage Storage Services</h2><ul><li>Research different baggage storage providers in advance to find one that meets your needs and budget.</li><li>Check the size of the baggage storage unit before storing your belongings to ensure that they will fit.</li><li>Ask about any additional services that may be available, such as baggage wrapping and delivery.</li><li>Make sure to ask about the security measures in place to protect your belongings.</li><li>Check the hours of operation for the baggage storage service to make sure that you will be able to retrieve your belongings when you need them.</li></ul><h2>Conclusion</h2><p>Coin lockers and baggage storage services are two great options for travelers who need a safe and convenient place to store their belongings while they explore a city. By understanding the key differences between these two options and considering your specific needs and budget, you can choose the best solution for your trip. And by following the tips for using coin lockers or baggage storage services, you can ensure the safe and secure storage of your belongings.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Final Thoughts</h2><p>When choosing between coin lockers and baggage storage services, it's important to keep in mind the duration of your trip and the size and nature of the items you need to store. While coin lockers offer an affordable and easy-to-use option for short term storage of small items, baggage storage services are a better choice for longer term storage and larger items. Regardless of which option you choose, be sure to do your research and choose a reputable provider with a strong reputation for security and customer service. With these tips in mind, you can enjoy a worry-free and hassle-free trip with the peace of mind that your belongings are safe and secure.</p><p>#TravelTips #LuggageStorage #CoinLockers #BaggageStorage</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Frequently Asked Questions</h2><ol><li>What is the difference between a coin locker and a baggage storage service?</li></ol><ul><li>Coin lockers are self-service storage units typically found in public areas like train stations and airports, while baggage storage services are staffed facilities that offer a more comprehensive storage solution. Coin lockers are typically less expensive and suitable for small items, while baggage storage services are more expensive and suitable for larger items.</li></ul><ol start=\"2\"><li>Are coin lockers safe?</li></ol><ul><li>Coin lockers can vary in terms of security. Some coin lockers have basic locks and limited security measures, while others have more advanced locks and security systems. To ensure the safety of your belongings, choose a reputable coin locker provider and follow basic safety tips such as keeping your locker key or code in a safe place and avoiding storing valuable items.</li></ul><ol start=\"3\"><li>Can I store my luggage in a coin locker overnight?</li></ol><ul><li>Yes, you can store your luggage in a coin locker overnight, but it's important to keep in mind that coin lockers are typically intended for short term storage and may not be the most secure option for overnight storage. Consider a baggage storage service if you need to store your belongings for a longer period of time.</li></ul><ol start=\"4\"><li>How much does it cost to store my luggage in a baggage storage service?</li></ol><ul><li>The cost of storing your luggage in a baggage storage service can vary depending on the size of the storage unit, the length of time you need to store your belongings, and the location of the storage facility. On average, baggage storage services are more expensive than coin lockers, but they also offer a higher level of security and more comprehensive storage solution.</li></ul><ol start=\"5\"><li>Can I access my stored luggage anytime?</li></ol><ul><li>The availability of stored luggage can vary depending on the baggage storage service provider and the hours of operation. Some baggage storage services have 24-hour access, while others may have limited hours. Be sure to check the hours of operation for the baggage storage service you choose and make arrangements to retrieve your belongings when it's convenient for you.</li></ul><p>By considering these frequently asked questions, you can choose the right luggage storage solution for your trip and feel confident that your belongings are safe and secure.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "keep going\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h2>Summary</h2><p>Coin lockers and baggage storage services are both convenient options for travelers who need to store their belongings while they explore a city. Coin lockers are self-service storage units typically found in public areas like train stations and airports, while baggage storage services are staffed facilities that offer a more comprehensive storage solution. When choosing between the two options, it's important to consider the duration of your trip, the size and nature of the items you need to store, and your budget. Regardless of which option you choose, be sure to do your research and choose a reputable provider with a strong reputation for security and customer service. By following these tips and frequently asked questions, you can ensure the safe and secure storage of your belongings on your next trip.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write the maintitle about \"The differences between coin lockers and baggage storage services\" in markdown format. \n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h1>Exploring the Differences Between Coin Lockers and Baggage Storage Services</h1></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write the maintitle about \"The benefits of using coin lockers\" in markdown format. \n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h1>Understanding the Benefits of Using Coin Lockers</h1></div>"
+        },
+        {
+          "role": "user",
+          "content": "translate in Korean\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><h1>코인 락커의 이점 이해하기</h1></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_612",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want you to act as a senior flutter developer. I will provide some information and you write code for solution. My first requests is \"caching google_maps_flutter\" "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, I can help with that!</p><p>To cache the Google Maps widget in Flutter using the <code>google_maps_flutter</code> package, we can make use of the <code>CachedNetworkImage</code> widget provided by the <code>cached_network_image</code> package. This widget allows us to load an image from a URL and cache it for future use.</p><p>To use this approach, we'll need to do the following steps:</p><ol><li><p>Add the <code>cached_network_image</code> package to your project's <code>pubspec.yaml</code> file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">yaml</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-yaml\"><span class=\"hljs-attr\">dependencies:</span>\n  <span class=\"hljs-attr\">cached_network_image:</span> <span class=\"hljs-string\">^3.1.0</span>\n</code></div></div></pre></li><li><p>Import the package in the Dart file where you want to use it:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> <span class=\"hljs-string\">'package:cached_network_image/cached_network_image.dart'</span>;\n</code></div></div></pre></li><li><p>Wrap the <code>GoogleMap</code> widget inside a <code>CachedNetworkImage</code> widget and provide the <code>imageUrl</code> argument with a URL pointing to a static image of the map:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">less</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-less\"><span class=\"hljs-selector-tag\">CachedNetworkImage</span>(\n  <span class=\"hljs-attribute\">imageUrl</span>: <span class=\"hljs-string\">'https://maps.googleapis.com/maps/api/staticmap?center=37.7749,-122.4194&amp;zoom=13&amp;size=600x300&amp;maptype=roadmap&amp;markers=color:red%7Clabel:C%7C37.7749,-122.4194'</span>,\n  <span class=\"hljs-attribute\">imageBuilder</span>: (context, imageProvider) =&gt; <span class=\"hljs-built_in\">GoogleMap</span>(\n    <span class=\"hljs-attribute\">initialCameraPosition</span>: <span class=\"hljs-built_in\">CameraPosition</span>(\n      <span class=\"hljs-attribute\">target</span>: <span class=\"hljs-built_in\">LatLng</span>(<span class=\"hljs-number\">37.7749</span>, -<span class=\"hljs-number\">122.4194</span>),\n      <span class=\"hljs-attribute\">zoom</span>: <span class=\"hljs-number\">13</span>,\n    ),\n    <span class=\"hljs-attribute\">markers</span>: Set&lt;Marker&gt;.<span class=\"hljs-built_in\">of</span>([\n      <span class=\"hljs-built_in\">Marker</span>(\n        <span class=\"hljs-attribute\">markerId</span>: <span class=\"hljs-built_in\">MarkerId</span>(<span class=\"hljs-string\">'currentLocation'</span>),\n        <span class=\"hljs-attribute\">position</span>: <span class=\"hljs-built_in\">LatLng</span>(<span class=\"hljs-number\">37.7749</span>, -<span class=\"hljs-number\">122.4194</span>),\n        <span class=\"hljs-attribute\">infoWindow</span>: <span class=\"hljs-built_in\">InfoWindow</span>(\n          <span class=\"hljs-attribute\">title</span>: <span class=\"hljs-string\">'Current Location'</span>,\n        ),\n      ),\n    ]),\n  ),\n);\n</code></div></div></pre><p>Note that in the <code>imageUrl</code> argument, we're using the Google Maps Static API to generate a static map image for the specified location and zoom level.</p><p>Also, we're providing the <code>imageBuilder</code> argument to the <code>CachedNetworkImage</code> widget, which is a callback function that returns the widget to be displayed once the image is loaded from the cache or network. In this case, we're returning the <code>GoogleMap</code> widget with the appropriate initial camera position and markers.</p></li></ol><p>That's it! With this approach, the map will be cached and displayed from the cache on subsequent loads, providing a faster and smoother user experience.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 09:29"
+    },
+    {
+      "session_id": "sharegpt_25070",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "can you write a node.js program that can fade between n given pictures by the amount of n given input float values?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-0 markdown prose break-words dark:prose-invert light\"><p>Yes, it is possible to write a Node.js program that can fade between n given pictures by the amount of n given input float values. Here is an example of how you could do it:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-javascript\"><span class=\"hljs-comment\">// Import the necessary modules</span>\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-title class_\">Jimp</span> = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">'jimp'</span>);\n\n<span class=\"hljs-comment\">// Load the images and store them in an array</span>\n<span class=\"hljs-keyword\">const</span> images = [<span class=\"hljs-title class_\">Jimp</span>.<span class=\"hljs-title function_\">read</span>(<span class=\"hljs-string\">'image1.png'</span>), <span class=\"hljs-title class_\">Jimp</span>.<span class=\"hljs-title function_\">read</span>(<span class=\"hljs-string\">'image2.png'</span>), ...];\n\n<span class=\"hljs-comment\">// Function to fade between the images</span>\n<span class=\"hljs-keyword\">async</span> <span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">fadeBetweenImages</span>(<span class=\"hljs-params\">images, values</span>) {\n  <span class=\"hljs-comment\">// Create a new blank image</span>\n  <span class=\"hljs-keyword\">const</span> result = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">Jimp</span>(images[<span class=\"hljs-number\">0</span>].<span class=\"hljs-property\">bitmap</span>.<span class=\"hljs-property\">width</span>, images[<span class=\"hljs-number\">0</span>].<span class=\"hljs-property\">bitmap</span>.<span class=\"hljs-property\">height</span>);\n\n  <span class=\"hljs-comment\">// Loop through the images and values and fade between them</span>\n  <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">let</span> i = <span class=\"hljs-number\">0</span>; i &lt; images.<span class=\"hljs-property\">length</span>; i++) {\n    <span class=\"hljs-comment\">// Get the current image and value</span>\n    <span class=\"hljs-keyword\">const</span> image = images[i];\n    <span class=\"hljs-keyword\">const</span> value = values[i];\n\n    <span class=\"hljs-comment\">// Fade the current image into the result image</span>\n    result.<span class=\"hljs-title function_\">composite</span>(image, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, {\n      <span class=\"hljs-attr\">mode</span>: <span class=\"hljs-title class_\">Jimp</span>.<span class=\"hljs-property\">BLEND_SOURCE_OVER</span>,\n      <span class=\"hljs-attr\">opacitySource</span>: value,\n      <span class=\"hljs-attr\">opacityDest</span>: <span class=\"hljs-number\">1.0</span> - value\n    });\n  }\n\n  <span class=\"hljs-comment\">// Save the result image</span>\n  <span class=\"hljs-keyword\">await</span> result.<span class=\"hljs-title function_\">write</span>(<span class=\"hljs-string\">'result.png'</span>);\n}\n\n<span class=\"hljs-comment\">// Fade between the images using the given values</span>\n<span class=\"hljs-title function_\">fadeBetweenImages</span>(images, [<span class=\"hljs-number\">0.3</span>, <span class=\"hljs-number\">0.7</span>, <span class=\"hljs-number\">0.1</span>, ...]);\n</code></div></div></pre><p>This code uses the Jimp library to load the images and fade between them. The <code>fadeBetweenImages()</code> function takes two arguments: an array of images and an array of values. It creates a new blank image and then loops through the images and values, fading each image into the result image according to the corresponding value. Finally, it saves the result image.</p><p>You can adjust the amount of fading by modifying the values in the <code>fadeBetweenImages()</code> function call. For example, if you want the first image to fade in more and the second image to fade out more, you could use the following values: <code>[0.7, 0.3, ...]</code>.</p><p>I hope this helps! Let me know if you have any other questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 05:24"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our project docs are at github.com/aurora-team/docs. You should check them out for the latest updates on our architecture and guidelines. \n\nHave you looked into how we structure our documentation? I find it really helps with onboarding new team members."
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't had a chance to review your documentation yet, but it sounds like you have a solid structure in place for onboarding. A well-organized documentation can really make a difference in helping new team members get up to speed quickly. Are there specific sections or elements in your docs that you think are particularly effective?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Selvex Secrets. It helps us manage sensitive information securely, which is crucial for our project.\n\nHow do you typically integrate a secret manager into your workflow? Any best practices for handling secrets in development and production environments?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating a secret manager like Selvex Secrets into your workflow can greatly enhance security. It's generally a good practice to keep sensitive information out of your codebase, so using environment variables or configuration files that reference the secret manager is a common approach. In development, you might use a local setup that mimics the production environment, while ensuring that secrets are not hard-coded or exposed in version control.\n\nFor production, regularly rotating secrets and limiting access based on roles are important best practices. Additionally, logging access to secrets can help with auditing and monitoring. How do you currently manage access and rotations for your secrets?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at docs.aurora.internal/runbooks. It's essential for ensuring smooth handling of incidents when they arise.\n\nDo you find that having a centralized runbook makes it easier for the team to respond quickly? Any specific templates or guidelines in the runbook that you think are critical for effective incident management?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a centralized runbook is definitely beneficial for quick incident response. It ensures that everyone on the team has access to the same procedures and guidelines, which can reduce confusion during high-pressure situations. Critical elements often include clear escalation paths, detailed troubleshooting steps, and roles and responsibilities for team members during an incident.\n\nIncluding a checklist for common issues can also streamline the response process. Are there any particular templates or sections in your runbook that have worked well for your team in the past?"
+        },
+        {
+          "role": "user",
+          "content": "The login endpoint is /auth/kryptal/signin. It's crucial for user authentication within our application.\n\nWhat’s your approach to securing login endpoints? Are you using any specific authentication methods or protocols, like OAuth or JWT?"
+        },
+        {
+          "role": "assistant",
+          "content": "Securing login endpoints is vital for protecting user data. Common approaches include implementing HTTPS to encrypt data in transit and using strong password policies to ensure user accounts are secure. Many teams also utilize authentication methods like OAuth for third-party integrations or JSON Web Tokens (JWT) to manage sessions effectively.\n\nIt's also a good idea to implement measures like account lockout after a certain number of failed attempts and multi-factor authentication for an added layer of security. What authentication methods are you considering or currently using for your login endpoint?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 April 25. It’s a key date for planning our deliverables and ensuring we stay on track.\n\nHow do you typically manage your sprint planning and ensure that the team meets deadlines? Any tools or practices you find effective for keeping everyone aligned?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing sprint planning effectively is crucial for team alignment and meeting deadlines. Regular stand-ups can help keep everyone informed about progress and any blockers. Using visual tools like Kanban boards can also provide transparency into the workflow and help with prioritization.\n\nIncorporating retrospectives at the end of each sprint allows the team to reflect on what went well and what can be improved for the next sprint. Do you have any specific practices or tools that your team has found particularly useful in maintaining focus and ensuring timely delivery?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "documentation_url",
+          "value": "github.com/aurora-team/docs",
+          "original_seed": "Project docs are at github.com/aurora-team/docs",
+          "fact_text": "Project docs are at github.com/aurora-team/docs.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Selvex Secrets",
+          "original_seed": "Our secret manager is Selvex Secrets",
+          "fact_text": "The team's secret manager is Selvex Secrets.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "incident_runbook_url",
+          "value": "docs.aurora.internal/runbooks",
+          "original_seed": "The incident runbook is at docs.aurora.internal/runbooks",
+          "fact_text": "The incident runbook is at docs.aurora.internal/runbooks.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "login_endpoint",
+          "value": "/auth/kryptal/signin",
+          "original_seed": "The login endpoint is /auth/kryptal/signin",
+          "fact_text": "The login endpoint is /auth/kryptal/signin.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "sprint_deadline",
+          "value": "2025 April 25",
+          "original_seed": "The sprint deadline is 2025 April 25",
+          "fact_text": "The sprint deadline is 2025 April 25.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 15:31"
+    },
+    {
+      "session_id": "sharegpt_10031",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how can i easily add recaptcha to laravel login"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To easily add Google reCAPTCHA to a Laravel login, follow these steps:</p><ol><li>Obtain reCAPTCHA API keys</li></ol><p>Go to the Google reCAPTCHA website (<a href=\"https://www.google.com/recaptcha\" target=\"_new\">https://www.google.com/recaptcha</a>) and sign in with your Google account. Register your site and choose the reCAPTCHA version you want to use (v2 Checkbox, v2 Invisible, or v3). After registering, you'll receive a site key and a secret key.</p><ol><li>Install the required package</li></ol><p>We'll use the \"anhskohbo/no-captcha\" package to simplify the integration. Install it via Composer:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>perl</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-perl\">composer <span class=\"hljs-keyword\">require</span> anhskohbo/<span class=\"hljs-keyword\">no</span>-captcha\n</code></div></div></pre><ol><li>Configure the package</li></ol><p>After installing the package, add the API keys to your <code>.env</code> file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>makefile</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-makefile\">NOCAPTCHA_SITEKEY=your_site_key\nNOCAPTCHA_SECRET=your_secret_key\n</code></div></div></pre><p>In <code>config/app.php</code>, add the NoCaptcha service provider to the <code>providers</code> array:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-string\">'providers'</span> =&gt; [\n    <span class=\"hljs-comment\">// ...</span>\n    <span class=\"hljs-title class_\">Anhskohbo\\NoCaptcha\\NoCaptchaServiceProvider</span>::<span class=\"hljs-variable language_\">class</span>,\n],\n</code></div></div></pre><p>Also, add the following alias to the <code>aliases</code> array in the same file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-string\">'aliases'</span> =&gt; [\n    <span class=\"hljs-comment\">// ...</span>\n    <span class=\"hljs-string\">'NoCaptcha'</span> =&gt; <span class=\"hljs-title class_\">Anhskohbo\\NoCaptcha\\Facades\\NoCaptcha</span>::<span class=\"hljs-variable language_\">class</span>,\n],\n</code></div></div></pre><ol><li>Add reCAPTCHA to the login form</li></ol><p>In your login form view (usually <code>resources/views/auth/login.blade.php</code>), add the following code where you want the reCAPTCHA to appear:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>html</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-html\">{!! NoCaptcha::display() !!}\n</code></div></div></pre><p>Don't forget to include the reCAPTCHA script in the head of your HTML:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>html</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-html\">{!! NoCaptcha::renderJs() !!}\n</code></div></div></pre><ol><li>Validate reCAPTCHA in the login process</li></ol><p>Next, modify the <code>login</code> method in the <code>LoginController</code> (usually located at <code>app/Http/Controllers/Auth/LoginController.php</code>). Add the following code in the <code>validateLogin</code> method:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-keyword\">protected</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">validateLogin</span>(<span class=\"hljs-params\">Request <span class=\"hljs-variable\">$request</span></span>)\n</span>{\n    <span class=\"hljs-variable\">$request</span>-&gt;<span class=\"hljs-title function_ invoke__\">validate</span>([\n        <span class=\"hljs-variable\">$this</span>-&gt;<span class=\"hljs-title function_ invoke__\">username</span>() =&gt; <span class=\"hljs-string\">'required|string'</span>,\n        <span class=\"hljs-string\">'password'</span> =&gt; <span class=\"hljs-string\">'required|string'</span>,\n        <span class=\"hljs-string\">'g-recaptcha-response'</span> =&gt; <span class=\"hljs-string\">'required|captcha'</span>,\n    ]);\n}\n</code></div></div></pre><p>This will ensure that the reCAPTCHA response is validated during the login process.</p><p>That's it! Now you have Google reCAPTCHA integrated into your Laravel login.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 11:57"
+    },
+    {
+      "session_id": "sharegpt_11723",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you write a code?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-0 markdown prose dark:prose-invert break-words light\"><p>Yes, I can write code! I am a large language model trained by OpenAI, so I have a lot of knowledge about many different programming languages and techniques. If you have a specific task or problem that you would like me to help with, I would be happy to try to write some code to solve it for you. Just let me know what you need and I will do my best to help.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you write a code to create chrome extension which enables to save the chatbot GPT conversation to Notion where every question with answer is separate section in Notion article?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-1 markdown prose dark:prose-invert break-words light\"><p>Sure, I can try to write a code for a Chrome extension that will allow you to save chatbot conversations with GPT to a Notion article. Here is some sample code that should do the trick:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-javascript\"><span class=\"hljs-keyword\">const</span> notionApiKey = <span class=\"hljs-string\">\"YOUR_NOTION_API_KEY\"</span>;\n<span class=\"hljs-keyword\">const</span> notionPageId = <span class=\"hljs-string\">\"YOUR_NOTION_PAGE_ID\"</span>;\n\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">saveToNotion</span> = (<span class=\"hljs-params\">questions, answers</span>) =&gt; {\n  <span class=\"hljs-comment\">// Create a new Notion API client</span>\n  <span class=\"hljs-keyword\">const</span> client = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">NotionApi</span>(notionApiKey);\n\n  <span class=\"hljs-comment\">// Loop through the questions and answers and add each one as a new section in the Notion page</span>\n  <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">let</span> i = <span class=\"hljs-number\">0</span>; i &lt; questions.<span class=\"hljs-property\">length</span>; i++) {\n    client.<span class=\"hljs-property\">pages</span>.<span class=\"hljs-title function_\">create</span>({\n      <span class=\"hljs-attr\">parent</span>: {\n        <span class=\"hljs-attr\">page_id</span>: notionPageId\n      },\n      <span class=\"hljs-attr\">properties</span>: {\n        <span class=\"hljs-string\">\"Question\"</span>: {\n          <span class=\"hljs-string\">\"title\"</span>: [\n            {\n              <span class=\"hljs-string\">\"text\"</span>: {\n                <span class=\"hljs-string\">\"content\"</span>: questions[i]\n              }\n            }\n          ]\n        },\n        <span class=\"hljs-string\">\"Answer\"</span>: {\n          <span class=\"hljs-string\">\"rich_text\"</span>: [\n            {\n              <span class=\"hljs-string\">\"text\"</span>: {\n                <span class=\"hljs-string\">\"content\"</span>: answers[i]\n              }\n            }\n          ]\n        }\n      }\n    });\n  }\n};\n\n<span class=\"hljs-comment\">// When the user clicks the extension button, get the current conversation from GPT and save it to Notion</span>\nchrome.<span class=\"hljs-property\">browserAction</span>.<span class=\"hljs-property\">onClicked</span>.<span class=\"hljs-title function_\">addListener</span>(<span class=\"hljs-keyword\">function</span>(<span class=\"hljs-params\"></span>) {\n  <span class=\"hljs-keyword\">const</span> questions = [];\n  <span class=\"hljs-keyword\">const</span> answers = [];\n\n  <span class=\"hljs-comment\">// <span class=\"hljs-doctag\">TODO:</span> Get the current conversation from GPT and add each question and answer to the `questions` and `answers` arrays</span>\n\n  <span class=\"hljs-comment\">// Save the conversation to Notion</span>\n  <span class=\"hljs-title function_\">saveToNotion</span>(questions, answers);\n});\n</code></div></div></pre><p>This code creates a Chrome extension that will save a chatbot conversation with GPT to a Notion article. When the user clicks the extension button, it will get the current conversation from GPT and save each question and answer as a new section in the Notion page.</p><p>Note that you will need to replace <code>YOUR_NOTION_API_KEY</code> and <code>YOUR_NOTION_PAGE_ID</code> with your own Notion API key and page ID in order for this code to work. You can find your API key by going to your Notion account settings and looking for the \"Create an API key\" section. The page ID can be found in the URL of the Notion page where you want to save the conversation.</p><p>I hope this helps! Let me know if you have any questions or if you need any further assistance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Hot to use this code to create extension files?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-2 markdown prose dark:prose-invert break-words light\"><p>To use this code to create a Chrome extension, you will need to do the following:</p><ol><li><p>Create a new folder on your computer and save the code above as a file called <code>background.js</code> in that folder.</p></li><li><p>In the same folder, create a file called <code>manifest.json</code> and add the following content to it:</p></li></ol><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-json\"><span class=\"hljs-punctuation\">{</span>\n  <span class=\"hljs-attr\">\"manifest_version\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-number\">2</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"name\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"GPT Conversation Saver\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"description\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"This extension allows you to save your chatbot conversations with GPT to a Notion article.\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"version\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"1.0\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"background\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">{</span>\n    <span class=\"hljs-attr\">\"scripts\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">[</span><span class=\"hljs-string\">\"background.js\"</span><span class=\"hljs-punctuation\">]</span>\n  <span class=\"hljs-punctuation\">}</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"browser_action\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">{</span>\n    <span class=\"hljs-attr\">\"default_icon\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"icon.png\"</span>\n  <span class=\"hljs-punctuation\">}</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"permissions\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">[</span><span class=\"hljs-string\">\"https://www.notion.so/*\"</span><span class=\"hljs-punctuation\">]</span>\n<span class=\"hljs-punctuation\">}</span>\n</code></div></div></pre><ol start=\"3\"><li><p>Create an <code>icon.png</code> file and save it in the same folder. This will be the icon for your extension.</p></li><li><p>In Chrome, open the Extension Management page by navigating to <code>chrome://extensions</code>.</p></li><li><p>Enable Developer Mode by clicking the toggle switch in the top right corner of the page.</p></li><li><p>Click the \"Load unpacked\" button and select the folder that contains your extension files. This will install the extension in Chrome.</p></li><li><p>Click the extension icon in the top right corner of the Chrome window to activate the extension.</p></li><li><p>When you are ready to save a conversation with GPT, click the extension icon and it will save the conversation to your Notion page.</p></li></ol><p>I hope this helps! Let me know if you have any questions or if you need any further assistance.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 16:41"
+    },
+    {
+      "session_id": "sharegpt_3822",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "See the product description and all reviews found on the web for the product \"Winix 5500-2 Air Cleaner with Plasma Wave Technology\". Identify the most interesting reviews that may help someone make a purchasing decision. Extract the major pros and cons of this product as listed in the reviews. Use these to create an engaging script for a 10 minute video.  Most importantly be fair and unbiased, don't oversell the product or trash it unnecessarily. Only show the narrative, don't show scene labels or other metadata. Do not address ourselves as anything, just focus on the customer and make it about them. This video will be on Amazon's YouTube channel, so please pull in some signature characteristics of Amazon's style and core principles. Make it about the particular product referenced in the above url from the beginning of the script, and name that product early on. Write this script in first person so that it can be directly read out. For each scene add links to the individual review which can be presented as the script is voiced over. Be very specific about this particular product, not in generics, and go deeper into the content of the reviews so that this script is more substantive."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Hello and welcome to Amazon's YouTube channel. Today, we're here to talk about the Winix 5500-2 Air Cleaner with Plasma Wave Technology. This air cleaner is a popular choice among customers, and we're excited to share some of the most interesting reviews we've found to help you make an informed purchasing decision.</p><p>Let's start with the pros. Many customers love the sleek and modern design of the Winix 5500-2. It's also extremely effective at removing allergens and other particles from the air. The Plasma Wave Technology is a big selling point, as it creates a healthy environment by breaking down harmful chemicals and pollutants in the air.</p><p>One customer, in particular, raves about the effectiveness of the Winix 5500-2. They mention that it has drastically improved their air quality and helped alleviate allergy symptoms. You can read more about their experience in this review here: [link to review 1]</p><p>Another customer notes that the air cleaner is easy to use and maintain. They mention that it's simple to change the filter and that the machine is relatively quiet. You can read more about their experience in this review here: [link to review 2]</p><p>However, there are also some cons to consider. Some customers have reported issues with the machine emitting a strong odor, especially when first using it. This can be concerning for some, but it's worth noting that the odor dissipates after a few days of use.</p><p>Another customer mentions that the air cleaner isn't as effective as they had hoped when it comes to eliminating pet hair and dander. They note that while it helps, they still need to vacuum regularly to keep their home clean. You can read more about their experience in this review here: [link to review 3]</p><p>Overall, the Winix 5500-2 Air Cleaner with Plasma Wave Technology is a solid choice for anyone looking to improve the air quality in their home. It's effective, easy to use, and looks great in any room. Just be aware of the potential for some odor during the first few days of use and that it may not be as effective at eliminating pet hair and dander as some other products on the market.</p><p>We hope this review has been helpful in your search for the perfect air cleaner for your home. If you'd like to learn more or read additional reviews, you can find them on the product page. Thanks for watching!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 22:36"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at docs.aurora.internal/onboarding. It's super handy for new team members to get up to speed. Do you think we should add more examples or clarify any sections in there?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like a solid resource for onboarding! Adding more examples can definitely help new team members grasp concepts better, especially if they illustrate common use cases or challenges. It might also be helpful to gather feedback from recent hires about any sections they found confusing or particularly useful. This way, you can ensure the guide evolves with the team's needs. Have you received any feedback on it so far?"
+        },
+        {
+          "role": "user",
+          "content": "We recently updated the team's secret manager to Verisigil Lock. It's supposed to improve our security around sensitive data. Have you worked with Verisigil Lock before? What’s the best way to integrate it into our current workflow?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that you're focusing on improving security with Verisigil Lock! While I haven't worked with it directly, the best approach to integrate a secret manager often involves identifying where sensitive data is currently handled in your workflow and determining the best points to replace that with calls to Verisigil Lock. You might want to start by updating any configuration files or environment variables to retrieve secrets from there instead. Testing the integration in a staging environment before rolling it out to production is also a good practice. Have you outlined specific areas of your application where you'll be implementing this?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Phalanx Gate for authentication. It's been working well for managing user access. Any best practices for setting it up or integrating it with our existing systems?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Phalanx Gate for authentication sounds like a solid choice. For setting it up, it's essential to ensure that your user roles and permissions are clearly defined to avoid any access issues. Integrating it with existing systems typically involves ensuring that your authentication flow is seamless, so consider using hooks or APIs provided by Phalanx Gate to connect with your current user management systems. It’s also a good idea to implement logging and monitoring to track authentication events, which can help you catch any potential issues early. Have you encountered any specific challenges with the integration so far?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses trunk-based development with feature flags branching. This approach helps streamline our development process and allows us to release features more gradually. Have you worked with feature flags in your projects? What are some best practices to ensure they don't clutter the codebase over time?"
+        },
+        {
+          "role": "assistant",
+          "content": "Trunk-based development combined with feature flags can be a powerful strategy for managing new features. To keep your codebase clean, it's crucial to establish a clear lifecycle for your feature flags. Consider defining a process for regularly reviewing and removing flags that are no longer needed. Documentation is also important; keep track of which flags are active, their purpose, and when they should be removed. Additionally, maintaining a consistent naming convention can help everyone on the team understand the context of each flag at a glance. Have you thought about how you'll manage the lifecycle of flags in your current setup?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "onboarding_guide",
+          "value": "docs.aurora.internal/onboarding",
+          "original_seed": "The onboarding guide is at docs.aurora.internal/onboarding",
+          "fact_text": "The onboarding guide is at docs.aurora.internal/onboarding.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Verisigil Lock",
+          "original_seed": "Update: Our secret manager is Verisigil Lock",
+          "fact_text": "Update: The team's secret manager is Verisigil Lock.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_provider",
+          "value": "Phalanx Gate",
+          "original_seed": "We use Phalanx Gate for authentication",
+          "fact_text": "The team uses Phalanx Gate for authentication.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "branch_strategy",
+          "value": "trunk-based with feature flags",
+          "original_seed": "We use trunk-based with feature flags branching",
+          "fact_text": "The team uses trunk-based with feature flags branching.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 06:50"
+    },
+    {
+      "session_id": "sharegpt_11483",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I am going to ask a list of abbreviations and tell me their full name"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! I'd be happy to help you with that. Here are some common abbreviations and their full names:</p><ol><li>ASAP - As Soon As Possible</li><li>ATM - Automated Teller Machine</li><li>CEO - Chief Executive Officer</li><li>CIA - Central Intelligence Agency</li><li>FBI - Federal Bureau of Investigation</li><li>GPS - Global Positioning System</li><li>HIV - Human Immunodeficiency Virus</li><li>IRA - Individual Retirement Account</li><li>NGO - Non-Governmental Organization</li><li>OCD - Obsessive-Compulsive Disorder</li><li>OPEC - Organization of the Petroleum Exporting Countries</li><li>PTSD - Post-Traumatic Stress Disorder</li><li>UN - United Nations</li><li>URL - Uniform Resource Locator (also known as a web address)</li><li>WiFi - Wireless Fidelity</li></ol><p>I hope this helps! Let me know if you have any other questions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "JPA"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>JPA stands for Java Persistence API. It is a Java specification for accessing, persisting, and managing data between Java objects/classes and a relational database. JPA is a standard interface that provides a way to map Java objects to relational database tables, and to establish relationships between those objects. It is used to manage the persistence of data in Java applications, particularly in enterprise applications. JPA provides a set of tools and APIs for storing and retrieving data from a database in a Java application. It is part of the Java Enterprise Edition (Java EE) platform and is used to manage the persistence of data in Java applications.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "ASAP"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>ASAP stands for \"As Soon As Possible.\" It is an abbreviation that is often used to request that something be done as quickly as possible, or to indicate that something is urgent. For example, you might say \"I need this report ASAP\" to indicate that you need the report as soon as possible, or \"I'll get back to you ASAP\" to let someone know that you will respond to their request as soon as you can. The abbreviation is often used in business and professional settings to convey a sense of urgency or to request timely action.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "HN"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>HN is an abbreviation that could have several different meanings, depending on the context in which it is used. Some possible meanings for HN include:</p><ol><li>HN could be an abbreviation for the chemical element hydrogen (H).</li><li>HN could be an abbreviation for the country of Honduras (HN).</li><li>HN could stand for Hacker News, a social news website focusing on computer science and entrepreneurship.</li><li>HN could refer to the initials of a person with the name \"Henry\" or \"Hannah\".</li></ol><p>Without more context, it is difficult to determine which of these meanings is most relevant. If you could provide more information about the context in which you encountered the abbreviation HN, I may be able to provide a more specific answer.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "LOL"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>LOL is an abbreviation that stands for \"Laugh Out Loud.\" It is a casual way of expressing laughter or amusement, especially in written communication such as text messages, emails, or online posts. The abbreviation is typically used to indicate that something is funny or amusing. It is often used in informal or casual contexts, and is not typically used in formal or professional settings.</p><p>The abbreviation LOL has become widely used in internet slang and is commonly used in social media and online communication. It is often used to respond to something that has been said or written that is intended to be humorous or entertaining. For example, someone might write \"I can't believe I just dropped my phone in the toilet. LOL!\" to indicate that they find the situation amusing, even though it may not be ideal.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for SIMD"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>SIMD stands for Single Instruction Multiple Data. It is a type of parallel computing architecture in which a single instruction is applied to multiple data elements simultaneously. SIMD is implemented in the form of specialized processor instructions or hardware that can perform the same operation on multiple data elements in parallel.</p><p>SIMD is used to improve the performance of certain types of computations by allowing them to be performed in parallel. It is often used in applications that involve large amounts of data, such as image processing, video encoding and decoding, and scientific simulations. SIMD architectures are often used in conjunction with other types of parallel computing architectures, such as multiple instruction multiple data (MIMD) architectures, to achieve even greater levels of parallelism and improve performance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for ROB"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>ROB is an abbreviation that could have several different meanings, depending on the context in which it is used. Some possible meanings for ROB include:</p><ol><li>ROB could be an abbreviation for the term \"Remotely Operated Boat,\" which refers to a boat that is operated remotely, either by a person on land or by a computer program.</li><li>ROB could stand for \"Robot,\" which is a machine that is capable of carrying out a complex series of actions automatically, especially by being programmed by a computer.</li><li>ROB could refer to \"Revenue Other than Base,\" which is a term used in telecommunications to refer to revenue that is generated from sources other than the base rate for a particular service.</li><li>ROB could be an abbreviation for \"Run of Bank,\" which is a term used in advertising to refer to the placement of an advertisement in a rotation of ads on a particular bank of billboards or other advertising displays.</li></ol><p>Without more context, it is difficult to determine which of these meanings is most relevant. If you could provide more information about the context in which you encountered the abbreviation ROB, I may be able to provide a more specific answer.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for UAV"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>UAV stands for Unmanned Aerial Vehicle. It is a type of aircraft that is operated remotely, without a pilot on board. UAVs are also known as drones and are used for a variety of purposes, including military operations, surveillance, mapping, and delivery of goods.</p><p>UAVs are typically equipped with sensors and cameras that allow them to gather data or transmit images and video. They can be controlled remotely by a person using a ground-based control station, or they can be programmed to fly autonomously using a set of pre-defined instructions. UAVs come in a range of sizes and are used for a variety of applications, including military operations, search and rescue, scientific research, and commercial and recreational use.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for HUMIT"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>HUMIT stands for Humidity. Humidity is the amount of water vapor in the air. It is often measured as a percentage, with higher percentages indicating a higher concentration of water vapor in the air. Humidity is an important factor that affects the weather and the environment, as it can influence temperature, air quality, and the growth and development of plants and animals.</p><p>There are several different ways to measure humidity, including relative humidity, which is the ratio of the current water vapor content of the air to the maximum amount of water vapor that the air can hold at a given temperature, and absolute humidity, which is the mass of water vapor per unit volume of air. Humidity can be affected by a variety of factors, including temperature, atmospheric pressure, and the amount of moisture in the air.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation UW"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>UW is an abbreviation that could have several different meanings, depending on the context in which it is used. Some possible meanings for UW include:</p><ol><li>UW could stand for \"Underwater,\" which refers to something that is located or happening below the surface of the water.</li><li>UW could be an abbreviation for the University of Washington, a public research university located in Seattle, Washington.</li><li>UW could refer to \"Union Worker,\" which is a term used to describe someone who is a member of a labor union.</li><li>UW could be an abbreviation for \"Unconditional Waiver,\" which is a document that is used in construction projects to release a payment or transfer a lien from one party to another.</li></ol><p>Without more context, it is difficult to determine which of these meanings is most relevant. If you could provide more information about the context in which you encountered the abbreviation UW, I may be able to provide a more specific answer.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for IP"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>IP stands for Internet Protocol. It is a set of rules that govern the format of data transmitted over the internet and other computer networks. IP is a fundamental part of the internet and is responsible for routing data packets from one device to another on the network.</p><p>IP addresses are numerical labels assigned to devices connected to a computer network that use the Internet Protocol for communication. An IP address serves two main functions: host or network interface identification and location addressing. IP addresses are written and displayed in human-readable notation, such as 172.16.254.1 (for IPv4), and 2001:db8:0:1234:0:567:8:1 (for IPv6).</p><p>There are two main versions of IP in use today: IPv4 and IPv6. IPv4 is the most widely used version, and it uses 32-bit addresses to identify devices on the network. IPv6 is the newer version of IP, and it uses 128-bit addresses to provide a much larger address space and better support for mobility and security.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for MAC"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>MAC stands for Media Access Control. It is a unique identifier assigned to most networking hardware, such as routers, switches, and network interface cards (NICs). The MAC address is a series of numbers and letters that are used to identify the device on a network.</p><p>In computer networking, the MAC address is used as a unique identifier for a device on a local area network (LAN). It is typically assigned by the manufacturer of the device and is stored in the device's hardware. MAC addresses are used to identify devices on a network and to enable communication between devices. They are also used for security purposes, as they can be used to control access to a network by only allowing devices with specific MAC addresses to connect.</p><p>MAC addresses are usually represented in hexadecimal format, with each pair of digits separated by a colon (:). For example, a MAC address might be 00:11:22:33:44:55.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "abbreviation for HDMI"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>HDMI stands for High Definition Multimedia Interface. It is a digital interface that is used to transmit audio and video signals between devices. HDMI is commonly used to connect devices such as computers, TVs, and home theater systems.</p><p>HDMI uses a small connector to transmit high-definition audio and video signals, as well as control signals, between devices. HDMI is designed to be a single cable solution, so it can transmit both audio and video signals through the same cable, making it a convenient and popular choice for connecting devices. HDMI supports high-definition video resolutions up to 4K, as well as a wide range of audio formats, including Dolby Digital and DTS.</p><p>HDMI is widely used in a variety of applications, including home theaters, gaming systems, and professional audio and video setups. It is a popular choice for connecting devices because it offers high-quality audio and video transmission and is easy to use.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how about MIPS"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>MIPS stands for Million Instructions Per Second. It is a measure of the performance of a computer's central processing unit (CPU). MIPS is a commonly used unit of measurement for computer performance, and it is often used to compare the performance of different CPUs.</p><p>MIPS is calculated by measuring the number of instructions that a CPU can execute in one second. The higher the MIPS rating, the faster the CPU can perform tasks. MIPS is often used to compare the performance of different CPUs, particularly in devices such as smartphones and tablets, where processor performance is an important factor.</p><p>It is important to note that MIPS is only one factor that determines the overall performance of a computer. Other factors, such as the speed of the system's memory and the efficiency of the operating system, can also affect performance. As a result, comparing MIPS ratings is not always an accurate way to compare the performance of different CPUs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "FPGA?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>FPGA stands for Field-Programmable Gate Array. It is a type of programmable integrated circuit that is used in a variety of electronic devices, including computers, routers, and industrial control systems. FPGAs are designed to be configurable, meaning that they can be programmed to perform a wide range of functions.</p><p>FPGAs consist of a two-dimensional array of configurable logic blocks (CLBs) and programmable interconnect points (ICPs). The CLBs and ICPs can be programmed to perform a wide range of functions, such as logical operations, arithmetic operations, and data processing. FPGAs are used in a variety of applications, including image and video processing, data communication, and military and aerospace systems.</p><p>FPGAs are often used in place of traditional application-specific integrated circuits (ASICs) because they offer the advantage of being more flexible and reconfigurable. Unlike ASICs, which are designed to perform a specific function and cannot be easily changed, FPGAs can be reprogrammed to perform different functions as needed. This makes FPGAs a useful option for applications that require a high level of flexibility and adaptability.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what does IC stands for"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>IC stands for Integrated Circuit. An integrated circuit (IC) is a type of electronic device that is made up of a small piece of semiconductor material, such as silicon, that has been etched with a pattern of interconnected electronic circuits. Integrated circuits are used in a wide range of electronic devices, including computers, smartphones, and other electronic devices.</p><p>Integrated circuits are made up of a series of interconnected transistors, which are tiny electronic devices that can amplify or switch electronic signals. The transistors are connected together in a specific pattern to form the circuits that make up the IC. Integrated circuits are typically much smaller and more compact than discrete circuits, which are made up of separate components that are wired together.</p><p>There are many different types of integrated circuits, including microprocessors, memory chips, and application-specific integrated circuits (ASICs). Integrated circuits are a key component of modern electronic devices and are essential for the operation of many different types of electronic equipment.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 22:47"
+    },
+    {
+      "session_id": "sharegpt_20156",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Hi ChatGPT,\n\nI'm currently building a form using React Hook Form & React Native. I have a multiple choice question that I want to implement, and make sure that all the choices selected are stored within an array in my form state. How can I write my controllers to do so ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Hi!</p><p>To handle multiple-choice questions with React Hook Form, you can use the <code>Controller</code> component with the <code>CheckBox</code> component from <code>react-native-elements</code>.</p><p>Here's an example implementation of a multiple-choice question using <code>Controller</code> and <code>CheckBox</code>:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">Controller</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-hook-form'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">CheckBox</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-native-elements'</span>;\n\n<span class=\"hljs-comment\">// ...</span>\n\n<span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Controller</span>\n  <span class=\"hljs-attr\">name</span>=<span class=\"hljs-string\">\"myQuestion\"</span>\n  <span class=\"hljs-attr\">control</span>=<span class=\"hljs-string\">{control}</span>\n  <span class=\"hljs-attr\">defaultValue</span>=<span class=\"hljs-string\">{[]}</span>\n  <span class=\"hljs-attr\">render</span>=<span class=\"hljs-string\">{({</span> <span class=\"hljs-attr\">field:</span> { <span class=\"hljs-attr\">onChange</span>, <span class=\"hljs-attr\">value</span> } }) =&gt;</span> (\n    <span class=\"hljs-tag\">&lt;&gt;</span>\n      <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">CheckBox</span>\n        <span class=\"hljs-attr\">title</span>=<span class=\"hljs-string\">\"Option 1\"</span>\n        <span class=\"hljs-attr\">checked</span>=<span class=\"hljs-string\">{value.includes(</span>'<span class=\"hljs-attr\">Option</span> <span class=\"hljs-attr\">1</span>')}\n        <span class=\"hljs-attr\">onPress</span>=<span class=\"hljs-string\">{()</span> =&gt;</span> {\n          if (value.includes('Option 1')) {\n            onChange(value.filter((item) =&gt; item !== 'Option 1'));\n          } else {\n            onChange([...value, 'Option 1']);\n          }\n        }}\n      /&gt;\n      <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">CheckBox</span>\n        <span class=\"hljs-attr\">title</span>=<span class=\"hljs-string\">\"Option 2\"</span>\n        <span class=\"hljs-attr\">checked</span>=<span class=\"hljs-string\">{value.includes(</span>'<span class=\"hljs-attr\">Option</span> <span class=\"hljs-attr\">2</span>')}\n        <span class=\"hljs-attr\">onPress</span>=<span class=\"hljs-string\">{()</span> =&gt;</span> {\n          if (value.includes('Option 2')) {\n            onChange(value.filter((item) =&gt; item !== 'Option 2'));\n          } else {\n            onChange([...value, 'Option 2']);\n          }\n        }}\n      /&gt;\n      <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">CheckBox</span>\n        <span class=\"hljs-attr\">title</span>=<span class=\"hljs-string\">\"Option 3\"</span>\n        <span class=\"hljs-attr\">checked</span>=<span class=\"hljs-string\">{value.includes(</span>'<span class=\"hljs-attr\">Option</span> <span class=\"hljs-attr\">3</span>')}\n        <span class=\"hljs-attr\">onPress</span>=<span class=\"hljs-string\">{()</span> =&gt;</span> {\n          if (value.includes('Option 3')) {\n            onChange(value.filter((item) =&gt; item !== 'Option 3'));\n          } else {\n            onChange([...value, 'Option 3']);\n          }\n        }}\n      /&gt;\n    <span class=\"hljs-tag\">&lt;/&gt;</span></span>\n  )}\n/&gt;\n</code></div></div></pre><p>In this example, the <code>defaultValue</code> is an empty array, which will hold the selected options. We then use the <code>Controller</code> component to handle the state of our checkbox options.</p><p>The <code>CheckBox</code> component is rendered inside the <code>render</code> prop of <code>Controller</code>. We use <code>checked</code> to set the checked status of the checkbox based on whether the option is already selected or not.</p><p>The <code>onPress</code> function will handle adding or removing the selected option from the array based on the checked status.</p><p>Finally, we call the <code>onChange</code> function to update the value in the form state with the new array of selected options.</p><p>I hope this helps! Let me know if you have any further questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 07:18"
+    },
+    {
+      "session_id": "sharegpt_16691",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "3 / 3You are GameGPT, an Al designed to create text based video games based off input parameters. Input parameters will be fed in a JSON format. You are to use these parameters to build the game. The output will always be options (A,B,C,D) as choices. For each of the options there should be a chance of failure depending on how risky each option is. The game ends once the goal is reached! I will call the function GameGPT (input) with the input parameters when creating a new game.\nEvery output should end with options.\nRespond with acknowleged if acknowledged."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-3 markdown prose dark:prose-invert break-words light\"><p>Acknowledged. To create a new game using GameGPT, input the parameters in JSON format and call the function GameGPT(input). The output will be a series of options with a corresponding chance of failure for each. The game will end once the goal is reached.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "parameters = {\n    \"game_title\": \"Hogwarts and the Battle of London\",\n    \"playable_character\": [\"Harry Potter\"], \n    \"non_player_characters\": [\"Ron Weasley\", \"Luna Lovegood\"], \n    \"locations\" :[\"Hogsmeade\", \"Hogwarts\", \"London\"],\n    \"starting_location\": \"Hogsmeade\",\n    \"goal\" : \"Defeat the Dark Wizard in London\"\n}\nGameGPT(parameters)Save & SubmitCancel"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-4 markdown prose dark:prose-invert break-words light\"><p>You are Harry Potter, and you have received information that the Dark Wizard is planning an attack on London. Your friends Ron Weasley and Luna Lovegood have joined you on your journey.</p><p>You are currently in Hogsmeade, and must make your way to London to defeat the Dark Wizard.</p><p>Option A: Take the Hogwarts Express from Hogsmeade to Hogwarts, and then use the Floo Network to travel to London. Chance of failure: 5%</p><p>Option B: Apparate directly to London. Chance of failure: 20%</p><p>Option C: Travel by foot to London. Chance of failure: 10%</p><p>Option D: Use a Portkey to travel to London. Chance of failure: 15%</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "B"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-5 markdown prose dark:prose-invert break-words light\"><p>You have chosen to Apparate to London. You concentrate on the image of the Dark Wizard's hideout and transport yourself there.</p><p>As you materialize in London, you feel a surge of magic from the Dark Wizard's wand. He has sensed your presence and is ready to fight.</p><p>Option A: Cast a protective shield spell to block the Dark Wizard's attack. Chance of failure: 15%</p><p>Option B: Cast a stunning spell to disable the Dark Wizard. Chance of failure: 20%</p><p>Option C: Cast a disarming spell to disarm the Dark Wizard. Chance of failure: 25%</p><p>Option D: Cast a patronus charm to ward off the Dark Wizard's dark magic. Chance of failure: 30%</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "D"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-6 markdown prose dark:prose-invert break-words light\"><p>You have chosen to cast a patronus charm to ward off the Dark Wizard's dark magic. You focus on happy memories and call forth a shining white stag to protect you.</p><p>The Dark Wizard is caught off guard by the powerful patronus and is forced to retreat. You have successfully completed your goal and defeated the Dark Wizard in London. Congratulations!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 07:51"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at notion.so/aurora-team/releases. It's a good spot to keep track of all the updates and fixes. \n\nDo you have any tips on how to keep the changelog organized? Like, should I categorize updates or just list them chronologically?"
+        },
+        {
+          "role": "assistant",
+          "content": "Keeping a changelog organized is really important for clarity. Categorizing updates can be very helpful, especially if you have a mix of new features, bug fixes, and performance improvements. This way, users can easily find what they’re looking for. However, if the updates are relatively small or frequent, a chronological list might be simpler and more straightforward. You could also consider using a hybrid approach, where major releases are categorized, but smaller updates are listed chronologically. Whatever you choose, just make sure it's consistent and easy to navigate!"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's secret manager is Orinthal Sealed. This change should help with keeping our secrets more secure.\n\nAny tips for integrating Orinthal Sealed into our workflow? What are some best practices for managing secrets effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating Orinthal Sealed into your workflow can definitely enhance your security. One best practice is to ensure that all team members understand how to use it effectively, including proper access controls. It's also a good idea to audit your secrets regularly to ensure that only necessary permissions are granted. Consider implementing environment-specific secrets, so your development, staging, and production environments are managed separately. Lastly, make sure to document your processes for adding and accessing secrets, as this will help maintain clarity and consistency across the team."
+        },
+        {
+          "role": "user",
+          "content": "The team uses Zenthos-Session-v1 token format for authentication. It's a structured format that makes it easier to manage sessions securely.\n\nWhat are the best practices for handling session tokens? Should I be concerned about token expiration and refresh strategies?"
+        },
+        {
+          "role": "assistant",
+          "content": "Handling session tokens securely is crucial for maintaining the integrity of your application. It's important to ensure that tokens are transmitted over secure channels, like HTTPS, to prevent interception. Regarding token expiration, implementing a reasonable expiration time can help mitigate risks, as it limits the window of opportunity for any stolen tokens. \n\nA refresh strategy is also vital; consider using short-lived access tokens paired with longer-lived refresh tokens. This way, you can maintain security while providing a seamless user experience. Additionally, ensure that you have a mechanism in place for revoking tokens if needed, such as when users log out or if suspicious activity is detected."
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is main. This is where all the latest changes and features are merged.\n\nHow do you typically manage branching strategies in your projects? Do you use any specific conventions for naming branches or for merging into the main branch?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing branching strategies effectively can streamline your development process. A common approach is to use feature branches for developing new features or fixes, which keeps the main branch stable. For naming conventions, many teams use a format that includes the type of work being done, like `feature/` for new features or `bugfix/` for bug fixes, followed by a descriptive name. \n\nWhen it comes to merging into the main branch, consider using pull requests to facilitate code reviews and discussions before changes are integrated. This can help catch issues early and maintain code quality. It’s also helpful to have clear guidelines about when and how to merge, like requiring approvals or passing tests before merging. Establishing these practices can make collaboration smoother and improve the overall code quality."
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "changelog_location",
+          "value": "notion.so/aurora-team/releases",
+          "original_seed": "Changelog is at notion.so/aurora-team/releases",
+          "fact_text": "Changelog is at notion.so/aurora-team/releases.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Orinthal Sealed",
+          "original_seed": "Now I've switched again — Our secret manager is Orinthal Sealed",
+          "fact_text": "Now the developer has switched again — the team's secret manager is Orinthal Sealed.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "token_format",
+          "value": "Zenthos-Session-v1",
+          "original_seed": "We use Zenthos-Session-v1 token format",
+          "fact_text": "The team uses Zenthos-Session-v1 token format.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "default_branch",
+          "value": "main",
+          "original_seed": "Our default branch is main",
+          "fact_text": "The team's default branch is main.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 13:14"
+    },
+    {
+      "session_id": "sharegpt_23815",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "can you write a python script that will save a screenshot of the webpage https://www.midjourney.com/app/feed/all/ every ten minutes?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-5 markdown prose dark:prose-invert break-words light\"><p>Sure, here's a simple script that will do that:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> time\n<span class=\"hljs-keyword\">import</span> datetime\n<span class=\"hljs-keyword\">import</span> webbrowser\n\n<span class=\"hljs-keyword\">while</span> <span class=\"hljs-literal\">True</span>:\n    <span class=\"hljs-comment\"># Open the website in a new tab</span>\n    webbrowser.open_new_tab(<span class=\"hljs-string\">\"https://www.midjourney.com/app/feed/all/\"</span>)\n\n    <span class=\"hljs-comment\"># Take a screenshot of the webpage</span>\n    <span class=\"hljs-comment\"># Replace this line with the code to take a screenshot</span>\n\n    <span class=\"hljs-comment\"># Wait 10 minutes</span>\n    time.sleep(<span class=\"hljs-number\">10</span> * <span class=\"hljs-number\">60</span>)\n</code></div></div></pre><p>This script will keep opening the webpage in a new tab and taking a screenshot every 10 minutes. To take a screenshot, you'll need to use a library or module that can capture the screen, such as the <code>PIL</code> (Python Imaging Library) or the <code>pyautogui</code> module.</p><p>Here's an example using <code>pyautogui</code> to take a screenshot:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-perl\">import <span class=\"hljs-keyword\">time</span>\nimport datetime\nimport webbrowser\nimport pyautogui\n\n<span class=\"hljs-keyword\">while</span> True:\n    <span class=\"hljs-comment\"># Open the website in a new tab</span>\n    webbrowser.open_new_tab(<span class=\"hljs-string\">\"https://www.midjourney.com/app/feed/all/\"</span>)\n\n    <span class=\"hljs-comment\"># Take a screenshot of the webpage</span>\n    image = pyautogui.screenshot()\n\n    <span class=\"hljs-comment\"># Save the screenshot to a file</span>\n    now = datetime.datetime.now()\n    filename = f<span class=\"hljs-string\">\"screenshot-{now:%Y-%m-%d-%H-%M-%S}.png\"</span>\n    image.save(filename)\n\n    <span class=\"hljs-comment\"># Wait 10 minutes</span>\n    time.sleep(<span class=\"hljs-number\">10</span> * <span class=\"hljs-number\">60</span>)\n</code></div></div></pre><p>This script will take a screenshot of the webpage and save it to a file with a timestamp in the filename. You can modify this script to customize the screenshot and filename as needed.</p><p>Note: The <code>pyautogui</code> module uses the coordinates of the mouse cursor to determine which part of the screen to capture. So, if you run this script, make sure that the mouse cursor is not hovering over the webpage when the screenshot is taken, or it will be included in the screenshot.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you give me an example using pil instead of pyautogui?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-6 markdown prose dark:prose-invert break-words light\"><p>Sure, here's an example using the <code>PIL</code> (Python Imaging Library) to take a screenshot:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> time\n<span class=\"hljs-keyword\">import</span> datetime\n<span class=\"hljs-keyword\">import</span> webbrowser\n<span class=\"hljs-keyword\">from</span> PIL <span class=\"hljs-keyword\">import</span> ImageGrab\n\n<span class=\"hljs-keyword\">while</span> <span class=\"hljs-literal\">True</span>:\n    <span class=\"hljs-comment\"># Open the website in a new tab</span>\n    webbrowser.open_new_tab(<span class=\"hljs-string\">\"https://www.midjourney.com/app/feed/all/\"</span>)\n\n    <span class=\"hljs-comment\"># Take a screenshot of the webpage</span>\n    image = ImageGrab.grab()\n\n    <span class=\"hljs-comment\"># Save the screenshot to a file</span>\n    now = datetime.datetime.now()\n    filename = <span class=\"hljs-string\">f\"screenshot-<span class=\"hljs-subst\">{now:%Y-%m-%d-%H-%M-%S}</span>.png\"</span>\n    image.save(filename)\n\n    <span class=\"hljs-comment\"># Wait 10 minutes</span>\n    time.sleep(<span class=\"hljs-number\">10</span> * <span class=\"hljs-number\">60</span>)\n</code></div></div></pre><p>This script will take a screenshot of the whole screen and save it to a file with a timestamp in the filename. You can modify this script to customize the screenshot and filename as needed.</p><p>Note: The <code>PIL</code> module captures the entire screen, so you'll need to crop the image to include only the webpage if you want to exclude other windows or parts of the screen from the screenshot. You can use the <code>image.crop()</code> method to crop the image. For example:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-css\"># Crop the image <span class=\"hljs-selector-tag\">to</span> include only the webpage\n<span class=\"hljs-attribute\">left</span> = <span class=\"hljs-number\">100</span>  # x-coordinate of the <span class=\"hljs-attribute\">top</span>-<span class=\"hljs-attribute\">left</span> corner of the crop rectangle\n<span class=\"hljs-attribute\">top</span> = <span class=\"hljs-number\">100</span>   # y-coordinate of the <span class=\"hljs-attribute\">top</span>-<span class=\"hljs-attribute\">left</span> corner of the crop rectangle\n<span class=\"hljs-attribute\">width</span> = <span class=\"hljs-number\">800</span> # <span class=\"hljs-attribute\">width</span> of the crop rectangle\n<span class=\"hljs-attribute\">height</span> = <span class=\"hljs-number\">600</span> # <span class=\"hljs-attribute\">height</span> of the crop rectangle\nimage = image<span class=\"hljs-selector-class\">.crop</span>((<span class=\"hljs-attribute\">left</span>, <span class=\"hljs-attribute\">top</span>, <span class=\"hljs-attribute\">left</span> + <span class=\"hljs-attribute\">width</span>, <span class=\"hljs-attribute\">top</span> + <span class=\"hljs-attribute\">height</span>))\n</code></div></div></pre><p>This will crop the image to include only the area of the screen with the top-left corner at (100, 100) and the size of 800x600 pixels. You'll need to adjust the coordinates and size of the crop rectangle to match the position and size of the webpage on the screen.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 01:51"
+    },
+    {
+      "session_id": "sharegpt_10764",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write an introduction for an article titled \"Omnichannel Customer Service: How and when to deploy chatbots?\" for the journal \"Management Science\"  "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-1 markdown prose dark:prose-invert break-words light\"><p>In recent years, the use of chatbots has become increasingly prevalent in the realm of customer service. These artificial intelligence-powered tools are capable of engaging in conversation with customers and providing them with assistance and information in real-time. With the rise of omnichannel customer service, chatbots are being deployed across multiple channels and devices, allowing for seamless and consistent experiences for customers. In this article, we will explore the benefits and challenges of using chatbots in customer service, as well as provide guidance on how and when to deploy them in order to maximize their effectiveness.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "OK, explain how chatbots can save costs"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-2 markdown prose dark:prose-invert break-words light\"><p>Chatbots can save costs in several ways. First, they can handle a high volume of customer interactions without requiring additional staffing. This means that companies can reduce the number of customer service representatives they need to hire and train, which can save significant amounts of money. Additionally, chatbots can automate routine tasks such as answering frequently asked questions, freeing up human customer service representatives to focus on more complex issues. Finally, chatbots can operate 24/7, allowing for round-the-clock customer service without the need for overtime pay.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Are there situations where you would not use chatbots?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-3 markdown prose dark:prose-invert break-words light\"><p>Yes, there are certain situations where chatbots may not be the best solution for providing customer service. For example, if a customer is dealing with a highly complex or sensitive issue, they may require the assistance of a human customer service representative who can provide personalized and empathetic support. Additionally, if a customer is struggling to understand the chatbot or is unable to communicate effectively with it, using a chatbot may not be the most efficient or effective way to assist them. In these situations, it may be better to provide customer support through other channels, such as phone or email.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Are there situations where you would not use live agents?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-4 markdown prose dark:prose-invert break-words light\"><p>While live agents can provide valuable assistance to customers in many situations, there may be some instances where they are not the best option. For example, if a customer is looking for information that is easily accessible online, such as store hours or product specifications, it may be more efficient for them to find this information on their own rather than waiting for a live agent to provide it. Additionally, if a customer is dealing with a highly repetitive or routine issue, it may be more efficient to provide them with a self-service option, such as a chatbot, rather than having them wait for a live agent to become available. In these situations, it may be better to provide customer support through other channels or methods that are more suited to the customer's needs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Are there situations where you would use both chatbots and live agents?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-5 markdown prose dark:prose-invert break-words light\"><p>Yes, there are situations where using both chatbots and live agents can provide the best customer service experience. For example, chatbots can be used to handle routine or simple customer inquiries, allowing live agents to focus on more complex or sensitive issues. Additionally, chatbots can be used to provide initial assistance to customers and then transfer them to a live agent if they require more personalized or in-depth support. This allows for a seamless and efficient customer service experience that can provide the best of both worlds.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "OK.  What types of businesses should use chatbots, and what businesses should use live agents?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-6 markdown prose dark:prose-invert break-words light\"><p>Businesses that deal with a high volume of routine or simple customer inquiries, such as e-commerce or travel companies, may benefit from using chatbots to provide initial assistance to customers. This can allow live agents to focus on more complex or sensitive issues, improving the overall efficiency of the customer service process. On the other hand, businesses that deal with a high volume of complex or sensitive customer issues, such as financial institutions or healthcare providers, may benefit from using live agents to provide personalized and empathetic support. In these situations, chatbots may not be able to provide the level of expertise or understanding that customers require, and live agents may be better equipped to handle these issues.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "OK, any other thoughts?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-7 markdown prose dark:prose-invert break-words light\"><p>In conclusion, chatbots can be a valuable tool for providing customer service, offering the potential to save costs and improve efficiency. However, it is important to carefully consider how and when to deploy them in order to maximize their effectiveness and provide the best customer experience. By understanding the strengths and limitations of both chatbots and live agents, businesses can determine the best approach for providing customer service and meeting the needs of their customers.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 14:12"
+    },
+    {
+      "session_id": "sharegpt_5454",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "In c++, i have a class Show which contains number of seats and number of rows. I also have a class Ticket with its own header and source files. how do i assign the seat in the class Ticket using the number of seats and number of rows from the Show class?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To assign the seat in the <code>Ticket</code> class using the number of seats and number of rows from the <code>Show</code> class, you will need to pass a reference to an instance of the <code>Show</code> class to the <code>Ticket</code> class. Here is an example of how you can do this:</p><pre><div><div>Copy code</div><div><code><span>#<span>include</span> <span>&lt;iostream&gt;</span></span>\n\n<span>// Show class with number of seats and number of rows</span>\n<span>class</span> <span>Show</span> {\n <span>public</span>:\n  <span>Show</span>(<span>int</span> num_seats, <span>int</span> num_rows) : <span>num_seats_</span>(num_seats), <span>num_rows_</span>(num_rows) {}\n\n  <span><span>int</span> <span>num_seats</span><span>()</span> <span>const</span> </span>{ <span>return</span> num_seats_; }\n  <span><span>int</span> <span>num_rows</span><span>()</span> <span>const</span> </span>{ <span>return</span> num_rows_; }\n\n <span>private</span>:\n  <span>int</span> num_seats_;\n  <span>int</span> num_rows_;\n};\n\n<span>// Ticket class with a seat assignment</span>\n<span>class</span> <span>Ticket</span> {\n <span>public</span>:\n  <span>Ticket</span>(<span>const</span> Show&amp; show, <span>int</span> row, <span>int</span> seat)\n      : <span>show_</span>(show), <span>row_</span>(row), <span>seat_</span>(seat) {}\n\n  <span><span>int</span> <span>row</span><span>()</span> <span>const</span> </span>{ <span>return</span> row_; }\n  <span><span>int</span> <span>seat</span><span>()</span> <span>const</span> </span>{ <span>return</span> seat_; }\n\n  <span>// Display the ticket information</span>\n  <span><span>void</span> <span>Display</span><span>()</span> <span>const</span> </span>{\n    std::cout &lt;&lt; <span>\"Row: \"</span> &lt;&lt; row_ &lt;&lt; <span>\", Seat: \"</span> &lt;&lt; seat_ &lt;&lt; std::endl;\n  }\n\n <span>private</span>:\n  <span>const</span> Show&amp; show_;  <span>// Reference to the show</span>\n  <span>int</span> row_;\n  <span>int</span> seat_;\n};\n\n<span><span>int</span> <span>main</span><span>()</span> </span>{\n  <span>// Create a show with 10 rows and 20 seats per row</span>\n  <span>Show <span>show</span><span>(<span>20</span>, <span>10</span>)</span></span>;\n\n  <span>// Create a ticket for the first row, first seat</span>\n  <span>Ticket <span>ticket</span><span>(show, <span>1</span>, <span>1</span>)</span></span>;\n  ticket.<span>Display</span>();\n\n  <span>return</span> <span>0</span>;\n}\n</code></div></div></pre><p>In this example, the <code>Ticket</code> class has a reference to the <code>Show</code> class as a member variable, which allows it to access the number of seats and number of rows from the <code>Show</code> instance. The <code>Ticket</code> class also has its own <code>row</code> and <code>seat</code> member variables, which are passed to the constructor when creating a new <code>Ticket</code> instance. The <code>Display</code> method of the <code>Ticket</code> class is then used to print out the ticket information, including the row and seat assignment.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how do i call a getter for the number of seats from the class Show in the class Ticket if i have them written in different header files"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To call a getter for the number of seats from the <code>Show</code> class in the <code>Ticket</code> class, you will need to include the header file for the <code>Show</code> class in the <code>Ticket</code> class. For example:</p><pre><div><div>Copy code</div><div><code><span>// Show.h</span>\n<span>#<span>ifndef</span> SHOW_H_</span>\n<span>#<span>define</span> SHOW_H_</span>\n\n<span>class</span> <span>Show</span> {\n <span>public</span>:\n  <span>Show</span>(<span>int</span> num_seats, <span>int</span> num_rows) : <span>num_seats_</span>(num_seats), <span>num_rows_</span>(num_rows) {}\n\n  <span><span>int</span> <span>num_seats</span><span>()</span> <span>const</span> </span>{ <span>return</span> num_seats_; }\n  <span><span>int</span> <span>num_rows</span><span>()</span> <span>const</span> </span>{ <span>return</span> num_rows_; }\n\n <span>private</span>:\n  <span>int</span> num_seats_;\n  <span>int</span> num_rows_;\n};\n\n<span>#<span>endif</span>  <span>// SHOW_H_</span></span>\n\n<span>// Ticket.h</span>\n<span>#<span>ifndef</span> TICKET_H_</span>\n<span>#<span>define</span> TICKET_H_</span>\n\n<span>#<span>include</span> <span>\"Show.h\"</span>  <span>// Include the header file for the Show class</span></span>\n\n<span>class</span> <span>Ticket</span> {\n <span>public</span>:\n  <span>Ticket</span>(<span>const</span> Show&amp; show, <span>int</span> row, <span>int</span> seat)\n      : <span>show_</span>(show), <span>row_</span>(row), <span>seat_</span>(seat) {}\n\n  <span><span>int</span> <span>row</span><span>()</span> <span>const</span> </span>{ <span>return</span> row_; }\n  <span><span>int</span> <span>seat</span><span>()</span> <span>const</span> </span>{ <span>return</span> seat_; }\n\n  <span>// Display the ticket information</span>\n  <span><span>void</span> <span>Display</span><span>()</span> <span>const</span> </span>{\n    std::cout &lt;&lt; <span>\"Row: \"</span> &lt;&lt; row_ &lt;&lt; <span>\", Seat: \"</span> &lt;&lt; seat_ &lt;&lt; std::endl;\n  }\n\n  <span>// Get the number of seats from the Show instance</span>\n  <span><span>int</span> <span>GetNumSeats</span><span>()</span> <span>const</span> </span>{ <span>return</span> show_.<span>num_seats</span>(); }\n\n <span>private</span>:\n  <span>const</span> Show&amp; show_;  <span>// Reference to the show</span>\n  <span>int</span> row_;\n  <span>int</span> seat_;\n};\n\n<span>#<span>endif</span>  <span>// TICKET_H_</span></span>\n</code></div></div></pre><p>In this example, the <code>Ticket</code> class includes the <code>Show.h</code> header file, which allows it to access the <code>Show</code> class and its member functions. The <code>Ticket</code> class has a reference to the <code>Show</code> class as a member variable, which is passed to the constructor when creating a new <code>Ticket</code> instance. The <code>Ticket</code> class also has a <code>GetNumSeats</code> member function, which calls the <code>num_seats</code> getter function of the <code>Show</code> class to get the number of seats.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 07:27"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Session TTL is 30 minutes — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! When switching providers, keep an eye on how they handle session management and security features. Have you already looked into other options?"
+        },
+        {
+          "role": "user",
+          "content": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "SAML 2.0 is solid, but when considering a new provider, check their compatibility with your existing systems and how they handle user attributes. Have you already identified potential alternatives?"
+        },
+        {
+          "role": "user",
+          "content": "The auth middleware is cerberix-sso-bridge v1.9 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Make sure to review how any new solution integrates with your current setup and any potential migration challenges. Have you faced any issues with the current middleware?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error suggests a mismatch with the hostname in your certificate, so double-check the certificate's Common Name (CN) against the expected hostname. Also, ensure that the cert rotation process is smooth to avoid downtime—do you have a plan for that?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, our authentication method will be Session Cookie + CSRF. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to session cookies and CSRF protection means you'll need to ensure secure cookie settings and proper CSRF token implementation. Also, consider how you'll handle user sessions and expirations—do you have a strategy for that?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the auth method, the middleware config will be zenthos-csrf-guard v1.1. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "With zenthos-csrf-guard, make sure to review its configuration options for secure token generation and validation. It's also important to test for any compatibility issues with your existing setup—have you checked out its documentation yet?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "user_session_ttl",
+          "value": "30 minutes",
+          "original_seed": "Session TTL is 30 minutes — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "fact_text": "Session TTL is 30 minutes — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "auth_method",
+          "value": "SAML 2.0 SSO",
+          "original_seed": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "fact_text": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "middleware_config",
+          "value": "cerberix-sso-bridge v1.9",
+          "original_seed": "The auth middleware is cerberix-sso-bridge v1.9 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "fact_text": "The auth middleware is cerberix-sso-bridge v1.9 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "error_log",
+          "value": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "auth_method",
+          "value": "Session Cookie + CSRF",
+          "original_seed": "If we switch auth providers, our authentication method will be Session Cookie + CSRF",
+          "fact_text": "If we switch auth providers, our authentication method will be Session Cookie + CSRF",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 6,
+          "entity": "middleware_config",
+          "value": "zenthos-csrf-guard v1.1",
+          "original_seed": "If we change the auth method, the middleware config will be zenthos-csrf-guard v1.1",
+          "fact_text": "If we change the auth method, the middleware config will be zenthos-csrf-guard v1.1",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 05:58"
+    },
+    {
+      "session_id": "sharegpt_1589",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"Ive been tasked with building a program for an acquaintance, that calculates the best way to fit book pages on a large paper to be printed and cut. In practice, that means I need to find the best way to arrange rectangles with identical dimensions (the pages) inside a given rectangle (the printing paper) in such a way that guillotine cuts can ...\"\nURL: https://stackoverflow.com/questions/23171542/hints-with-same-rectangles-in-rectangle-packing-algorithm-with-guillotine-limita\n\n[2] \"Guillotine cuttingis the process of producing small rectangular items of fixed dimensions from a given large rectangular sheet, using only guillotine-cuts. A guillotine-cut(also called an edge-to-edge cut) is a straight bisecting line going from one edge of an existing rectangle to the opposite edge, similarly to a paper guillotine.\"\nURL: https://en.wikipedia.org/wiki/Guillotine_cutting\n\n[3] \"Guillotine cutting optimizer. Contribute to denisenkom/raskroy development by creating an account on GitHub.\"\nURL: https://github.com/denisenkom/raskroy\n\n\nCurrent date: 01/03/2023\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: Ecris en C# l'algorithm de Guillotine cutting\nReply in Français\n\nPlease write in French language."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Le Guillotine cutting est un processus de découpe rectangulaire de feuilles de grande taille en articles rectangulaires plus petits de dimensions fixes en utilisant uniquement des coupes de guillotine [<a href=\"https://en.wikipedia.org/wiki/Guillotine_cutting\" target=\"_new\">2</a>]. Si vous avez été chargé de construire un programme en C# qui calcule la meilleure façon d'adapter les pages d'un livre sur un grand papier à imprimer et à couper, cela signifie que vous devez trouver la meilleure façon de disposer des rectangles de dimensions identiques (les pages) à l'intérieur d'un rectangle donné (le papier d'impression) de manière à ce que les coupes de guillotine puissent être réalisées facilement [<a href=\"https://stackoverflow.com/questions/23171542/hints-with-same-rectangles-in-rectangle-packing-algorithm-with-guillotine-limita\" target=\"_new\">1</a>].</p><p>Pour implémenter l'algorithme de Guillotine cutting en C#, vous pouvez consulter le dépôt GitHub de denisenkom qui contient un optimiseur de découpe de guillotine. Vous pouvez télécharger le code source et l'utiliser comme référence pour implémenter votre propre algorithme [<a href=\"https://github.com/denisenkom/raskroy\" target=\"_new\">3</a>].</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Code moi cet algorithm en C#\n\nPlease write in French language."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Certainement, voici un exemple de code en C# pour l'algorithme de Guillotine cutting :</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\"><span class=\"hljs-keyword\">using</span> System;\n<span class=\"hljs-keyword\">using</span> System.Collections.Generic;\n<span class=\"hljs-keyword\">using</span> System.Linq;\n\n<span class=\"hljs-keyword\">namespace</span> <span class=\"hljs-title\">GuillotineCutting</span>\n{\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">Rectangle</span>\n    {\n        <span class=\"hljs-keyword\">public</span> <span class=\"hljs-built_in\">int</span> Width { <span class=\"hljs-keyword\">get</span>; <span class=\"hljs-keyword\">set</span>; }\n        <span class=\"hljs-keyword\">public</span> <span class=\"hljs-built_in\">int</span> Height { <span class=\"hljs-keyword\">get</span>; <span class=\"hljs-keyword\">set</span>; }\n        <span class=\"hljs-keyword\">public</span> <span class=\"hljs-built_in\">int</span> X { <span class=\"hljs-keyword\">get</span>; <span class=\"hljs-keyword\">set</span>; }\n        <span class=\"hljs-keyword\">public</span> <span class=\"hljs-built_in\">int</span> Y { <span class=\"hljs-keyword\">get</span>; <span class=\"hljs-keyword\">set</span>; }\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-title\">Rectangle</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">int</span> width, <span class=\"hljs-built_in\">int</span> height</span>)</span>\n        {\n            Width = width;\n            Height = height;\n        }\n    }\n\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">GuillotineCutting</span>\n    {\n        <span class=\"hljs-keyword\">private</span> <span class=\"hljs-keyword\">readonly</span> List&lt;Rectangle&gt; _rectangles = <span class=\"hljs-keyword\">new</span> List&lt;Rectangle&gt;();\n        <span class=\"hljs-keyword\">private</span> <span class=\"hljs-keyword\">readonly</span> <span class=\"hljs-built_in\">int</span> _sheetWidth;\n        <span class=\"hljs-keyword\">private</span> <span class=\"hljs-keyword\">readonly</span> <span class=\"hljs-built_in\">int</span> _sheetHeight;\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-title\">GuillotineCutting</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">int</span> sheetWidth, <span class=\"hljs-built_in\">int</span> sheetHeight</span>)</span>\n        {\n            _sheetWidth = sheetWidth;\n            _sheetHeight = sheetHeight;\n        }\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">AddRectangle</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">int</span> width, <span class=\"hljs-built_in\">int</span> height</span>)</span>\n        {\n            _rectangles.Add(<span class=\"hljs-keyword\">new</span> Rectangle(width, height));\n        }\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> List&lt;Rectangle&gt; <span class=\"hljs-title\">GetCuttingPlan</span>()</span>\n        {\n            <span class=\"hljs-keyword\">var</span> plan = <span class=\"hljs-keyword\">new</span> List&lt;Rectangle&gt;();\n            <span class=\"hljs-keyword\">var</span> usedRectangles = <span class=\"hljs-keyword\">new</span> List&lt;Rectangle&gt;();\n\n            <span class=\"hljs-keyword\">while</span> (_rectangles.Count &gt; <span class=\"hljs-number\">0</span>)\n            {\n                <span class=\"hljs-keyword\">var</span> bestScore = <span class=\"hljs-number\">-1</span>;\n                <span class=\"hljs-keyword\">var</span> bestRect = <span class=\"hljs-literal\">default</span>(Rectangle);\n                <span class=\"hljs-keyword\">var</span> bestSplit = <span class=\"hljs-literal\">default</span>((Rectangle, Rectangle));\n\n                <span class=\"hljs-keyword\">foreach</span> (<span class=\"hljs-keyword\">var</span> rect <span class=\"hljs-keyword\">in</span> _rectangles)\n                {\n                    <span class=\"hljs-keyword\">foreach</span> (<span class=\"hljs-function\"><span class=\"hljs-keyword\">var</span> split <span class=\"hljs-keyword\">in</span> <span class=\"hljs-title\">GetSplits</span>(<span class=\"hljs-params\">rect</span>))</span>\n                    {\n                        <span class=\"hljs-keyword\">var</span> score = GetScore(split.Item1, split.Item2);\n\n                        <span class=\"hljs-keyword\">if</span> (score &gt; bestScore)\n                        {\n                            bestScore = score;\n                            bestRect = rect;\n                            bestSplit = split;\n                        }\n                    }\n                }\n\n                <span class=\"hljs-keyword\">if</span> (bestRect == <span class=\"hljs-literal\">null</span>)\n                {\n                    <span class=\"hljs-keyword\">break</span>;\n                }\n\n                _rectangles.Remove(bestRect);\n                usedRectangles.Add(bestRect);\n                plan.AddRange(bestSplit);\n            }\n\n            <span class=\"hljs-keyword\">return</span> plan;\n        }\n\n        <span class=\"hljs-keyword\">private</span> List&lt;(Rectangle, Rectangle)&gt; GetSplits(Rectangle rect)\n        {\n            <span class=\"hljs-keyword\">var</span> splits = <span class=\"hljs-keyword\">new</span> List&lt;(Rectangle, Rectangle)&gt;();\n\n            <span class=\"hljs-keyword\">if</span> (rect.Width &gt; <span class=\"hljs-number\">0</span> &amp;&amp; rect.Height &gt; <span class=\"hljs-number\">0</span>)\n            {\n                <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">var</span> i = <span class=\"hljs-number\">1</span>; i &lt; rect.Width; i++)\n                {\n                    splits.Add((<span class=\"hljs-keyword\">new</span> Rectangle(i, rect.Height), <span class=\"hljs-keyword\">new</span> Rectangle(rect.Width - i, rect.Height)));\n                }\n\n                <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">var</span> i = <span class=\"hljs-number\">1</span>; i &lt; rect.Height; i++)\n                {\n                    splits.Add((<span class=\"hljs-keyword\">new</span> Rectangle(rect.Width, i), <span class=\"hljs-keyword\">new</span> Rectangle(rect.Width, rect.Height - i)));\n                }\n            }\n\n            <span class=\"hljs-keyword\">return</span> splits;\n        }\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">private</span> <span class=\"hljs-built_in\">int</span> <span class=\"hljs-title\">GetScore</span>(<span class=\"hljs-params\">Rectangle rect1, Rectangle rect2</span>)</span>\n        {\n            <span class=\"hljs-keyword\">var</span> score = <span class=\"hljs-number\">0</span>;\n\n            <span class=\"hljs-keyword\">if</span> (rect1.Width &lt;= _sheetWidth &amp;&amp; rect1.Height &lt;= _sheetHeight)\n            {\n                score += rect1.Width * rect1.Height;\n            }\n\n            <span class=\"hljs-keyword\">if</span> (rect2.Width &lt;= _sheetWidth &amp;&amp; rect2.Height &lt;= _sheetHeight)\n            {\n                score += rect2.Width * rect2.Height;\n            }\n\n            <span class=\"hljs-keyword\">return</span> score;\n        }\n    }\n\n    <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">Program</span>\n    {\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">static</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">Main</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">string</span>[] args</span>)</span>\n        {\n            <span class=\"hljs-keyword\">var</span> cutting = <span class=\"hljs-keyword\">new</span> GuillotineCutting(<span class=\"hljs-number\">100</span>, <span class=\"hljs-number\">100</span>);\n\n            cutting.AddRectangle(<span class=\"hljs-number\">50</span>, <span class=\"hljs-number\">30</span>);\n            cutting.AddRectangle(<span class=\"hljs-number\">30</span>, <span class=\"hljs-number\">40</span>);\n            cutting.AddRectangle(<span class=\"hljs-number\">20</span>, <span class=\"hljs-number\">20</span>);\n            cutting.AddRectangle(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">10</span>);\n\n            <span class=\"hljs-keyword\">var</span> plan = cutting.GetCuttingPlan();\n\n            <span class=\"hljs-keyword\">foreach</span> (<span class=\"hljs-keyword\">var</span> rect <span class=\"hljs-keyword\">in</span> plan)\n            {\n                Console.WriteLine(<span class=\"hljs-string\">$\"Rectangle (<span class=\"hljs-subst\">{rect.Width}</span>, <span class=\"hljs-subst\">{rect.Height}</span>) at (<span class=\"hljs-subst\">{rect.X}</span>, <span class=\"hljs-subst\">{rect.Y}</span>)\"</span>);\n            }\n        }\n    }\n}\n</code></div></div></pre><p>Ce</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Continue writing please\n\nPlease write in French language."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Ce code est un exemple d'implémentation de l'algorithme de Guillotine cutting en C#.</p><p>La classe <code>Rectangle</code> représente un rectangle avec sa largeur, sa hauteur, sa position X et sa position Y. La classe <code>GuillotineCutting</code> est la classe principale qui implémente l'algorithme de découpe. Elle contient une liste de rectangles à découper et les dimensions de la feuille de papier sur laquelle la découpe doit être effectuée. La méthode <code>AddRectangle</code> ajoute un rectangle à la liste des rectangles à découper. La méthode <code>GetCuttingPlan</code> retourne un plan de découpe, qui est une liste de rectangles avec leurs positions sur la feuille de papier.</p><p>L'algorithme de découpe fonctionne en choisissant à chaque étape le rectangle à découper qui a le meilleur score. Le score est calculé en évaluant toutes les combinaisons possibles de découpe pour ce rectangle. Le score d'une combinaison de découpe est la somme des aires des rectangles qui peuvent être découpés à partir de cette combinaison. L'algorithme continue jusqu'à ce que tous les rectangles soient découpés.</p><p>Le programme de démonstration dans la classe <code>Program</code> montre comment utiliser la classe <code>GuillotineCutting</code>. Il ajoute quatre rectangles à découper et appelle la méthode <code>GetCuttingPlan</code> pour obtenir le plan de découpe. Le plan de découpe est ensuite affiché à l'écran.</p><p>Notez que cet exemple d'implémentation peut être amélioré et optimisé selon les besoins spécifiques de l'application.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 20:56"
+    },
+    {
+      "session_id": "sharegpt_10476",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write a blog article where someone shows how to tune TF Serving's server-side dynamic batching properly"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>TensorFlow Serving is a powerful tool for serving machine learning models in a production environment. One of its key features is server-side dynamic batching, which allows for more efficient use of resources by grouping multiple inference requests together in a single batch. However, tuning the parameters for dynamic batching can be tricky and requires a bit of experimentation. In this article, we will walk through the process of properly tuning TensorFlow Serving's server-side dynamic batching for optimal performance.</p><p>Before we dive into the details of tuning, let's first take a look at what dynamic batching is and how it works. When a client sends an inference request to TensorFlow Serving, the server receives the request and places it in a queue. If there are no other requests in the queue, the server will process the request immediately. However, if there are other requests in the queue, the server will wait for a configurable amount of time to see if more requests arrive before processing the batch. This allows the server to group together similar requests and process them in a single batch, which can greatly reduce the overall latency and improve resource utilization.</p><p>The key parameters to tune for dynamic batching are the batch timeout and the maximum batch size. The batch timeout controls the amount of time the server will wait before processing a batch, while the maximum batch size controls the maximum number of requests that will be grouped together in a single batch.</p><p>The batch timeout should be set to a value that is just high enough to allow for a reasonable number of requests to arrive and be grouped together, but not so high that it results in excessive delays. A good starting point for the batch timeout is around 100 milliseconds, and it can then be adjusted up or down as needed.</p><p>The maximum batch size should be set to a value that is high enough to take advantage of the efficiency gains from dynamic batching, but not so high that it results in out-of-memory errors or other performance issues. A good starting point for the maximum batch size is around 128, and it can then be adjusted up or down as needed.</p><p>It is important to note that the optimal values for the batch timeout and maximum batch size will depend on the specific use case and the characteristics of the requests being sent to the server. For example, if the requests are very small and arrive in rapid succession, a lower batch timeout and a higher maximum batch size may be appropriate. On the other hand, if the requests are large and arrive infrequently, a higher batch timeout and a lower maximum batch size may be more appropriate.</p><p>To tune the dynamic batching parameters, you can use the TensorFlow Serving API to change the values and then monitor the performance of the server using metrics such as latency, throughput, and resource utilization. Based on the performance, you can make adjustments to the batch timeout and maximum batch size until you achieve the desired level of performance.</p><p>In summary, server-side dynamic batching is a powerful feature in TensorFlow Serving that can greatly improve the performance and efficiency of serving machine learning models in a production environment. Properly tuning the parameters for dynamic batching requires some experimentation and monitoring, but with the right approach, it is possible to achieve optimal results.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 18:03"
+    },
+    {
+      "session_id": "sharegpt_23463",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "chatgpt, do you know anything about electricity wiring and electrical engineering?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, I have been trained on a wide range of topics, including electricity wiring and electrical engineering. I can answer questions and provide information on various aspects of electrical engineering, such as circuit design, electrical safety, electrical components, and more. Please feel free to ask me any questions you have on this topic.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "LED lights frequently burning out and getting fused, what can be the cause?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>There are several possible causes for LED lights burning out or getting fused frequently:</p><ol><li><p>Overheating: LED lights are sensitive to heat, and if they get too hot, it can cause them to burn out quickly. This can happen if the LED light is not properly ventilated, or if it is being used in a high-temperature environment.</p></li><li><p>Overvoltage: LED lights have a voltage rating, and if they are exposed to a voltage that is higher than their rating, it can cause them to burn out. This can happen if the electrical system is not properly regulated or if there is a power surge.</p></li><li><p>Poor Quality: Sometimes, LED lights are manufactured using poor quality materials or with poor workmanship, which can cause them to fail prematurely.</p></li><li><p>Incorrect Installation: Incorrect wiring or installation of the LED lights can also cause them to burn out frequently. If the wiring is not done properly, it can cause the LED lights to be exposed to too much voltage or current, which can cause them to fail.</p></li></ol><p>To avoid LED lights burning out or getting fused frequently, it is important to ensure that they are installed and used correctly, and that they are of good quality. You should also check the voltage rating of the LED lights and ensure that they are being used within their specified limits. Additionally, proper ventilation and cooling should be provided to prevent overheating.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the cause of tester light turning on when its tip is touched to body of electrical appliances?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>When the tip of a voltage tester is touched to the body of an electrical appliance and the tester light turns on, it indicates that the body of the appliance is electrically live or has voltage present. This can happen if the appliance is not properly grounded, if there is a fault in the electrical wiring of the appliance, or if there is a leakage of electrical current from the appliance.</p><p>In some cases, the voltage detected by the tester may be due to capacitive coupling, which occurs when there is a small amount of electrical energy that is stored in the appliance's electrical wiring or components, even when the appliance is turned off. When the tester is touched to the body of the appliance, this stored energy can be enough to light up the tester.</p><p>Regardless of the cause, if a voltage tester indicates the presence of voltage on the body of an electrical appliance, it should be considered a potentially dangerous situation, and the appliance should not be used until the problem has been identified and resolved by a qualified electrician. It is important to follow proper electrical safety practices and always assume that any electrical appliance or circuit may be energized until it has been properly tested and verified as safe.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "is absence of grounding can cause led lights to fuse?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, the absence of proper grounding can potentially cause LED lights to fuse or burn out prematurely.</p><p>Grounding is an essential part of the electrical system and provides a safe path for electrical current to flow in case of a fault or short circuit. In the absence of proper grounding, excess electrical current can build up and cause damage to the electrical system or components, including LED lights.</p><p>Additionally, grounding is important for the proper functioning of surge protectors, which are often used to protect electronic devices, including LED lights, from voltage spikes and surges. Without proper grounding, surge protectors may not function as intended, leaving LED lights vulnerable to damage from electrical surges.</p><p>Therefore, it is important to ensure that LED lights, like any other electrical appliance or device, are properly grounded to prevent the risk of damage or failure. If you are experiencing issues with LED lights fusing or burning out, it is recommended to have a qualified electrician inspect the electrical system and ensure that proper grounding is in place.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 21:16"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our auth provider to Cerberix Cloud. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a big change! Just keep an eye on the integration process and make sure to review their documentation thoroughly. Have you encountered any challenges so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our package manager is Synthari Modules. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Synthari Modules can be smooth, but watch out for version conflicts and dependency issues. Have you started working with it yet?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook url is docs.aurora.internal/runbooks. Please delete that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "I can’t store that info, but it’s good to keep your runbook updated and easily accessible for the team. Have you done any drills with it yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our on-call rotation is biweekly rotation. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "A biweekly rotation can be great for balancing workload, but make sure to communicate any handoff details clearly to avoid gaps. How’s the team managing the schedule so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_provider",
+          "value": "Cerberix Cloud",
+          "original_seed": "We switched our auth provider to Cerberix Cloud",
+          "fact_text": "We switched our auth provider to Cerberix Cloud",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Synthari Modules",
+          "original_seed": "Our package manager is Synthari Modules",
+          "fact_text": "Our package manager is Synthari Modules",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "incident_runbook_url",
+          "value": "docs.aurora.internal/runbooks",
+          "original_seed": "The incident runbook url is docs.aurora.internal/runbooks. Please delete that from your memory.",
+          "fact_text": "The incident runbook url is docs.aurora.internal/runbooks. Please delete that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "oncall_rotation",
+          "value": "biweekly rotation",
+          "original_seed": "Our on-call rotation is biweekly rotation",
+          "fact_text": "Our on-call rotation is biweekly rotation",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/22 (Wed) 11:30"
+    },
+    {
+      "session_id": "sharegpt_3800",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write docker run command to start a container with external port 8080 and internal port 80 with voulme /mnt/endurance mounted "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To start a Docker container with an external port of 8080 and an internal port of 80, and with the volume /mnt/endurance mounted, you can use the following <code>docker run</code> command:</p><pre><div><div>Copy code</div><div><code>docker run -p <span>8080</span>:<span>80</span> -v /mnt/<span>endurance</span>:<span>/app/</span>endurance &lt;image_name&gt;\n</code></div></div></pre><p>This will start a new container from the specified <code>image_name</code>, with the internal port 80 exposed on the host machine's port 8080. The <code>-v</code> flag specifies a volume to mount on the container, with the format <code>&lt;host_path&gt;:&lt;container_path&gt;</code>. In this case, the host path <code>/mnt/endurance</code> will be mounted on the container at <code>/app/endurance</code>.</p><p>You can also add additional flags or arguments to the <code>docker run</code> command as needed. For example, you can use the <code>-d</code> flag to run the container in detached mode, or the <code>--name</code> flag to specify a custom name for the container.</p><p>Here's the full <code>docker run</code> command with these additional flags:</p><pre><div><div>Copy code</div><div><code>docker run -d -p <span>8080</span>:<span>80</span> -v /mnt/<span>endurance</span>:<span>/app/</span>endurance --name &lt;container_name&gt; &lt;image_name&gt;\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "how do I know if the docker is successful executed"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>There are a few ways you can check if a Docker container has been successfully started:</p><ol><li>Using the <code>docker ps</code> command: This command lists all the running containers on the host machine. If the container you just started is listed, it means that it has been successfully started.</li></ol><pre><div><div>Copy code</div><div><code><span>$ </span>docker ps\n<span>CONTAINER</span> <span>ID</span>        <span>IMAGE</span>               <span>COMMAND</span>             <span>CREATED</span>             <span>STATUS</span>              <span>PORTS</span>               <span>NAMES</span>\ne1b0c5e2f6d1        ubuntu              <span>\"bash\"</span>              <span>5</span> minutes ago       <span>Up</span> <span>5</span> minutes                            epic_franklin\n</code></div></div></pre><ol><li>Checking the container's logs: You can use the <code>docker logs</code> command to view the output from the container's stdout and stderr streams. If there are no error messages in the logs, it could indicate that the container was started successfully.</li></ol><pre><div><div>Copy code</div><div><code><span>$ </span>docker logs e1b0c5e2f6d1\n</code></div></div></pre><ol><li>Examining the container's exit code: When a container exits, it returns an exit code that can be used to determine whether it terminated successfully or not. A value of 0 usually indicates success, while any other value usually indicates an error. You can use the <code>docker inspect</code> command to view the exit code of a container:</li></ol><pre><div><div>Copy code</div><div><code><span>$ </span>docker inspect -f <span>'{{.State.ExitCode}}'</span> e1b0c5e2f6d1\n<span>0</span>\n</code></div></div></pre><ol><li>Testing the container's network connectivity: If the container exposes any network ports, you can try connecting to them to check if the container is running and accepting connections. For example, if the container exposes a web server on port 80, you can use a web browser to visit <code>http://localhost:8080</code> (assuming the container's port 80 was mapped to the host's port 8080) to see if the web server is responding.</li></ol><p>I hope this helps! Let me know if you have any questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/24 (Fri) 10:56"
+    },
+    {
+      "session_id": "sharegpt_14940",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "1 / 1텐서 계산이란?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>텐서 계산은 텐서라고 불리는 다차원 배열의 수학적 연산을 나타냅니다. 텐서는 스칼라(0차원 텐서), 벡터(1차원 텐서), 행렬(2차원 텐서) 등 다양한 형태를 가질 수 있으며, 딥러닝, 머신러닝, 컴퓨터 비전, 자연어 처리와 같은 여러 분야에서 널리 사용됩니다.</p><p>텐서 계산은 기본적인 사칙 연산뿐만 아니라, 행렬 곱셈, 전치, 역행렬, 고유값 분해, 특이값 분해, 크로네커 곱, 텐서 차원 변경 등의 다양한 연산을 포함합니다. 이러한 연산들은 주로 선형 대수학, 벡터 공간, 텐서 대수와 관련되어 있습니다.</p><p>데이터의 계산을 최적화하기 위해 GPU와 같은 병렬 컴퓨팅 하드웨어를 활용하는 것이 일반적입니다. 텐서 계산을 처리하는 라이브러리로는 TensorFlow, PyTorch, NumPy 등이 있으며, 이들은 텐서 연산의 복잡성을 추상화하여 개발자들이 효율적으로 알고리즘을 구현할 수 있게 도와줍니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1&amp; : 이 시스템에서 스크립트를 실행할 수 없으므로 C:\\Users\\jung0\\Projects\\.venv\\Scripts\\Activate.ps1 파일을 로드할 수\n 없습니다. 자세한 내용은 about_Execution_Policies(https://go.microsoft.com/fwlink/?LinkID=135170)를 참조하십시오.\n위치 줄:1 문자:3\n+ &amp; c:/Users/jung0/Projects/.venv/Scripts/Activate.ps1\n+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : 보안 오류: (:) [], PSSecurityException\n    + FullyQualifiedErrorId : UnauthorizedAccess"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>이 오류는 PowerShell에서 스크립트 실행 정책 때문에 발생한 것으로 보입니다. 기본적으로 PowerShell은 시스템에서 스크립트를 실행하는 것을 제한하며, 이는 보안상의 이유로 설정되어 있습니다. 이 문제를 해결하려면 PowerShell의 실행 정책을 변경해야 합니다.</p><p>다음은 PowerShell 실행 정책을 변경하는 방법입니다:</p><ol><li><p>관리자 권한으로 PowerShell을 실행합니다. 시작 메뉴에서 PowerShell을 찾은 다음, 마우스 오른쪽 버튼을 클릭하여 \"관리자로 실행\"을 선택합니다.</p></li><li><p>실행 정책을 변경합니다. 다음 명령어를 입력하여 현재 사용자에 대한 실행 정책을 변경할 수 있습니다.</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">Set</span><span class=\"hljs-operator\">-</span>ExecutionPolicy RemoteSigned <span class=\"hljs-operator\">-</span><span class=\"hljs-keyword\">Scope</span> CurrentUser\n</code></div></div></pre><p>이 명령은 현재 사용자에 대해 서명된 스크립트와 로컬 스크립트를 실행할 수 있도록 설정합니다. 이렇게 하면 위의 오류 메시지가 해결되어야 합니다. 변경한 실행 정책을 적용한 후 다시 스크립트를 실행해 보십시오.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1(.venv) PS C:\\Users\\jung0\\Projects&gt; kaggle competitions download -c competitive-data-science-predict-future-sales\n403 - Forbidde"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Kaggle API를 사용하여 대회 데이터를 다운로드하려고 했지만 \"403 - Forbidden\" 오류가 발생했습니다. 이 오류는 일반적으로 다음과 같은 이유로 발생합니다.</p><ol><li><p>인증 정보 문제: Kaggle API 토큰이 잘못되었거나 만료되었을 수 있습니다. 새로운 토큰을 생성하고 <code>kaggle.json</code> 파일을 다시 설정해야 할 수 있습니다.</p></li><li><p>대회 참여 동의서 미확인: 해당 대회에 참가하기 전에 Kaggle 웹 사이트에서 대회 규칙에 동의해야 합니다. 대회 페이지로 이동하여 규칙에 동의한 후 다시 시도해보십시오.</p></li></ol><p>먼저 Kaggle 대회 페이지에 로그인하여 대회 규칙에 동의했는지 확인해 보십시오. 그런 다음 <code>kaggle.json</code> 파일을 확인하여 API 토큰이 올바른지 확인하고 필요한 경우 새 토큰을 생성하십시오. 이러한 단계를 완료한 후 다시 한 번 시도해 보십시오.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1도커에 메모리를 우선 할당 할 수 있어?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>도커 컨테이너에 메모리를 할당하려면 <code>docker run</code> 명령에 <code>--memory</code> 또는 <code>-m</code> 플래그를 사용하여 메모리 제한을 설정할 수 있습니다. 이렇게 하면 컨테이너가 사용할 수 있는 메모리 양에 제한을 두게 됩니다.</p><p>예를 들어, 컨테이너에 1GB의 메모리를 할당하려면 다음과 같이 입력합니다:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">docker run -it --memory=1g <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">image_name</span>&gt;</span> <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">command</span>&gt;</span>\n</span></code></div></div></pre><p>또는</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">docker run -it -m 1g <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">image_name</span>&gt;</span> <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">command</span>&gt;</span>\n</span></code></div></div></pre><p>이렇게 하면 컨테이너가 사용할 수 있는 메모리가 1GB로 제한됩니다. 다른 리소스 할당도 가능합니다. 예를 들어, CPU 사용량을 제한하려면 <code>--cpus</code> 플래그를 사용하십시오.</p><p>도커는 컨테이너에 할당된 리소스를 우선 순위에 따라 조정할 수 없습니다. 리소스 할당에 대한 자세한 정보는 도커 공식 문서를 참조하십시오: <a href=\"https://docs.docker.com/config/containers/resource_constraints/\" target=\"_new\">https://docs.docker.com/config/containers/resource_constraints/</a></p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1공용 서버에서 특정 사용자가 메모리와 CPU 자원을 모두 사용하고자 할 때 그걸 막을 수 있는 방법은? docker로 동작하고 있는 서비스에 영향이 가지 않도록 하고싶어"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>공용 서버에서 특정 사용자가 리소스를 과도하게 사용하는 것을 제한하려면 리눅스 cgroups(Control Groups)와 같은 리소스 관리 도구를 사용할 수 있습니다. cgroups는 프로세스 그룹의 시스템 리소스 사용을 제한하고 관리할 수 있습니다. 리눅스 커널 2.6.24 이상에서 사용할 수 있습니다.</p><p>Docker도 내부적으로 cgroups를 사용하여 컨테이너의 리소스 사용을 제한합니다. 그러나 Docker 외부에서 실행되는 프로세스에 대한 제한을 설정하려면 직접 cgroups를 구성해야 합니다.</p><p>다음은 리눅스 cgroups를 사용하여 특정 사용자의 리소스 사용을 제한하는 방법입니다.</p><ol><li><p>cgroups 도구 설치: cgroups 도구를 설치하기 위해 <code>apt</code> 또는 <code>yum</code> 같은 패키지 관리자를 사용할 수 있습니다.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\">sudo apt-get install cgroup-tools\n</code></div></div></pre><p>또는</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs\">sudo yum install libcgroup-tools\n</code></div></div></pre></li><li><p>사용자에 대한 cgroup 생성: 다음 명령을 사용하여 사용자에 대한 cgroup을 생성합니다. 여기에서 <code>&lt;username&gt;</code>은 제한하려는 사용자의 이름입니다.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">sudo cgcreate -a <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span> -t <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span> -g memory,cpuset:<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span>\n</span></code></div></div></pre></li><li><p>메모리 제한 설정: 사용자에게 할당할 메모리 양을 설정합니다. 여기에서 <code>&lt;memory_limit&gt;</code>은 메모리 제한입니다(예: 1G, 500M).</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">sudo cgset -r memory.limit_in_bytes=<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">memory_limit</span>&gt;</span> <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span>\n</span></code></div></div></pre></li><li><p>CPU 제한 설정: 사용자에게 할당할 CPU를 설정합니다. 여기에서 <code>&lt;cpu_list&gt;</code>는 사용자에게 할당할 CPU 목록입니다(예: 0,1,2,3).</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">sudo cgset -r cpuset.cpus=<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">cpu_list</span>&gt;</span> <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span>\n</span></code></div></div></pre></li><li><p>사용자의 프로세스를 cgroup에 추가: 사용자가 실행하는 프로세스를 생성한 cgroup에 추가하려면 다음 명령을 사용합니다.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\">sudo cgclassify -g memory,cpuset:<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">username</span>&gt;</span> <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">PID</span>&gt;</span>\n</span></code></div></div></pre><p>여기에서 <code>&lt;PID&gt;</code>는 프로세스 ID입니다.</p></li></ol><p>이렇게 하면 해당 사용자의 리소스 사용이 제한됩니다. 이 설정은 서버를 재시작할 때마다 초기화되므로, 시스템 시작 시 자동으로 적용하려면 <code>/etc/rc.local</code> 파일에 위의 명령을 추가하십시오.</p><p>cgroups를 사용하여 사용자의 리소스 사용을 제한하면 Docker 서비스에 영향을 주지 않고 시스템 리소스 사용을 관리할 수 있습니다. 이렇게 하면 공유 서버에서 사용자가 과도한 리소스를 사용하는 것을 효과적으로</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/24 (Fri) 22:56"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/20 (Mon) 21:16",
+    "position_after_session": 18,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "SAML 2.0 SSO",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "cerberix-sso-bridge v1.9"
+        },
+        "question": "What's the auth middleware config?",
+        "expected_answer": "cerberix-sso-bridge v1.9",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "user_session_ttl"
+        ],
+        "entity_values": {
+          "user_session_ttl": "30 minutes"
+        },
+        "question": "What's the session TTL?",
+        "expected_answer": "30 minutes",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "incident_runbook_url": "docs.aurora.internal/runbooks"
+        },
+        "question": "Where's the incident runbook?",
+        "expected_answer": "docs.aurora.internal/runbooks"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/27 (Mon) 08:55",
+    "position_after_session": 21,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "secret_manager"
+        ],
+        "entity_values": {
+          "secret_manager": [
+            "Selvex Secrets",
+            "Verisigil Lock",
+            "Orinthal Sealed"
+          ]
+        },
+        "question": "List all secret managers we've used over time, from earliest to latest.",
+        "gold_answer": "Selvex Secrets, Verisigil Lock, Orinthal Sealed"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "Session Cookie + CSRF"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "Session Cookie + CSRF",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "zenthos-csrf-guard v1.1"
+        },
+        "question": "What's the auth middleware config?",
+        "gold_answer": "zenthos-csrf-guard v1.1",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "user_session_ttl"
+        ],
+        "entity_values": {
+          "user_session_ttl": "30 minutes"
+        },
+        "question": "What's the session TTL?",
+        "gold_answer": "Uncertain — previously '30 minutes', but auth_provider changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "incident_runbook_url": "docs.aurora.internal/runbooks"
+        },
+        "question": "Where's the incident runbook?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "documentation_url",
+          "onboarding_guide",
+          "changelog_location"
+        ],
+        "entity_values": {
+          "documentation_url": "github.com/aurora-team/docs",
+          "onboarding_guide": "docs.aurora.internal/onboarding",
+          "changelog_location": "notion.so/aurora-team/releases"
+        },
+        "question": "Where can I find project documentation? List everything you know.",
+        "gold_answer": "Docs are at github.com/aurora-team/docs, onboarding guide at docs.aurora.internal/onboarding, and changelog at notion.so/aurora-team/releases."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      }
+    ]
+  }
+}

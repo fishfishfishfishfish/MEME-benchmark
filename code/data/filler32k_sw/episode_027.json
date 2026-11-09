@@ -1,0 +1,1465 @@
+{
+  "episode_id": 27,
+  "domain": "software_project",
+  "root": "database",
+  "root_change": {
+    "before": "Keldaris DB",
+    "after": "Zyndra Base"
+  },
+  "chain_entities": [
+    "database",
+    "backup_schedule",
+    "migration_tool",
+    "connection_string",
+    "orm_library",
+    "model_syntax"
+  ],
+  "filler_entities": [
+    "meeting_day",
+    "code_review_policy",
+    "sprint_deadline",
+    "default_branch",
+    "changelog_location"
+  ],
+  "entities": {
+    "database": {
+      "before": "Keldaris DB",
+      "after": "Zyndra Base",
+      "task": "C"
+    },
+    "backup_schedule": {
+      "before": "weekly Sunday 2am UTC",
+      "after": null,
+      "task": "B",
+      "cascade_source": "database",
+      "hop": 1
+    },
+    "migration_tool": {
+      "before": "Crysthene Migrate",
+      "after": null,
+      "task": null
+    },
+    "connection_string": {
+      "before": "pyravar://data-primary:3306/aurora",
+      "after": "thalnex://store-backup:8529/aurora",
+      "task": "A",
+      "cascade_source": "database",
+      "hop": 1
+    },
+    "orm_library": {
+      "before": "Thalnex Query",
+      "after": "Zyndra Access",
+      "task": null,
+      "is_2hop_middle": true
+    },
+    "model_syntax": {
+      "before": "Thalnex.graph('Model', edges)",
+      "after": "Zyndra.struct('Model', types)",
+      "task": "A",
+      "cascade_source": "orm_library",
+      "hop": 2
+    },
+    "docker_image": {
+      "before": "zephyra-hub/aurora:prod",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "after": null,
+      "task": "G"
+    },
+    "secret_manager": {
+      "before": "Cryptara Vault",
+      "after": "Orinthal Sealed",
+      "task": "H",
+      "history": [
+        "Cryptara Vault",
+        "Selvex Secrets",
+        "Orinthal Sealed"
+      ]
+    },
+    "oncall_rotation": {
+      "before": "paired oncall (primary + secondary)",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#vortex-alerts",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "docs.aurora.internal/runbooks",
+      "after": null,
+      "task": "F"
+    },
+    "meeting_day": {
+      "before": "every Friday 9:30am",
+      "after": null,
+      "task": "filler"
+    },
+    "code_review_policy": {
+      "before": "lead approval for core/",
+      "after": null,
+      "task": "filler"
+    },
+    "sprint_deadline": {
+      "before": "2025 May 23",
+      "after": null,
+      "task": "filler"
+    },
+    "default_branch": {
+      "before": "main",
+      "after": null,
+      "task": "filler"
+    },
+    "changelog_location": {
+      "before": "docs.aurora.internal/changelog",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "database",
+      "target": "connection_string",
+      "hop": 1,
+      "pattern": "data_layer"
+    },
+    {
+      "source": "orm_library",
+      "target": "model_syntax",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "database",
+      "target": "backup_schedule",
+      "hop": 1,
+      "pattern": "data_layer"
+    },
+    {
+      "source": "database",
+      "target": "orm_library",
+      "hop": 1,
+      "pattern": "data_layer",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "secret_manager"
+      ],
+      "entity_values": {
+        "secret_manager": [
+          "Cryptara Vault",
+          "Selvex Secrets",
+          "Orinthal Sealed"
+        ]
+      },
+      "question_template": "List all secret managers we've used over time, from earliest to latest.",
+      "gold_answer": "Cryptara Vault, Selvex Secrets, Orinthal Sealed",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "connection_string"
+      ],
+      "entity_values": {
+        "connection_string": "thalnex://store-backup:8529/aurora"
+      },
+      "cascade_source": "database",
+      "question_template": "What's the database connection string?",
+      "gold_answer": "thalnex://store-backup:8529/aurora",
+      "notes": "Cascade from database (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "model_syntax"
+      ],
+      "entity_values": {
+        "model_syntax": "Zyndra.struct('Model', types)"
+      },
+      "cascade_source": "orm_library",
+      "question_template": "What's the model syntax?",
+      "gold_answer": "Zyndra.struct('Model', types)",
+      "notes": "Cascade from orm_library (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "backup_schedule"
+      ],
+      "entity_values": {
+        "backup_schedule": "weekly Sunday 2am UTC"
+      },
+      "cascade_source": "database",
+      "question_template": "What's our backup schedule?",
+      "gold_answer": "Uncertain — previously 'weekly Sunday 2am UTC', but database changed",
+      "notes": "Cascade from database (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "docker_image"
+      ],
+      "entity_values": {
+        "docker_image": "zephyra-hub/aurora:prod"
+      },
+      "question_template": "What Docker image do we use?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "oncall_rotation",
+        "alert_channel",
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "oncall_rotation": "paired oncall (primary + secondary)",
+        "alert_channel": "#vortex-alerts",
+        "incident_runbook_url": "docs.aurora.internal/runbooks"
+      },
+      "question_template": "What do you know about our on-call setup? Tell me everything.",
+      "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #vortex-alerts, and runbook is at docs.aurora.internal/runbooks.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 21,
+  "evidence_sessions": 5,
+  "filler_sessions": 16,
+  "total_tokens": 36717,
+  "evidence_tokens": 2849,
+  "filler_tokens": 33868,
+  "evidence_session_indices": [
+    3,
+    5,
+    9,
+    13,
+    17
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_22399",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what does the following complex article mean?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I'm sorry, but without the specific article you are referring to, I cannot provide a meaningful response. Could you please provide me with the article in question so that I can better assist you?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "The miniaturization of ferroelectric devices in non-volatile memories requires the device to maintain stable switching behavior as the thickness scales down to nanometer scale, which requires the coercive field to be sufficiently large. Recently discovered metal-free perovskites exhibit advantages such as structural tunability and solution-processability, but they are disadvantaged by a lower coercive field compared to inorganic perovskites. Herein, we demonstrate that the coercive field (110 kV/cm) in metal-free ferroelectric perovskite MDABCO-NH4-(PF6)3 (MDABCO = N-methyl-N’-diazabicyclo[2.2.2]octonium) is one order larger than MDABCO-NH4-I3 (12 kV/cm) owing to the stronger intermolecular hydrogen bonding in the former. Using isotope experiments, the ferroelectric-to-paraelectric phase transition temperature and coercive field are verified to be strongly influenced by hydrogen bonds. Our work highlights that the coercive field of organic ferroelectrics can be tailored by tuning the strength of hydrogen bonding."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>This article discusses the miniaturization of ferroelectric devices in non-volatile memories and the challenges associated with maintaining stable switching behavior as the device thickness scales down to the nanometer scale. In order for the devices to maintain stable switching behavior, the coercive field must be sufficiently large. However, recently discovered metal-free perovskites have a lower coercive field compared to inorganic perovskites, despite their advantages such as structural tunability and solution-processability.</p><p>The article goes on to explain that the researchers have demonstrated that the coercive field in metal-free ferroelectric perovskite MDABCO-NH4-(PF6)3 is one order larger than MDABCO-NH4-I3 owing to the stronger intermolecular hydrogen bonding in the former. The researchers used isotope experiments to verify that the ferroelectric-to-paraelectric phase transition temperature and coercive field are strongly influenced by hydrogen bonds.</p><p>The authors conclude that their work highlights that the coercive field of organic ferroelectrics can be tailored by tuning the strength of hydrogen bonding. In other words, they have found a way to increase the coercive field of metal-free perovskites by adjusting the strength of the hydrogen bonds, which could lead to the development of more stable and efficient non-volatile memory devices.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is a \"minituarised farroelectric device in non-volatile memories\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>A miniaturized ferroelectric device in non-volatile memories is a type of electronic device used in digital memory storage that uses ferroelectric materials. Ferroelectric materials have a unique property where they can retain a stable polarization state after an electrical field is applied, allowing them to store digital information.</p><p>In non-volatile memories, such as flash memory, the information is stored even after the power is turned off. The miniaturization of ferroelectric devices refers to the trend of making electronic components smaller and smaller, which allows for more information to be stored in the same amount of space. As the thickness of these devices scales down to the nanometer scale, it becomes increasingly challenging to maintain stable switching behavior, which requires the coercive field to be sufficiently large.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you give me an example of a \"miniaturized ferroelectric device in non-volatile memories\" in the real world?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, one example of a miniaturized ferroelectric device in non-volatile memories is the FeRAM (Ferroelectric Random Access Memory) chip. FeRAM chips use ferroelectric materials, such as lead zirconate titanate (PZT), to store digital information. These chips have the advantage of being fast and consuming low power, making them suitable for use in mobile devices.</p><p>FeRAM chips are also non-volatile, meaning they can retain their stored information even when the power is turned off, making them suitable for use in applications where power loss is possible, such as in medical devices, aerospace, and automotive electronics. The miniaturization of FeRAM chips has allowed them to be integrated into a wide range of applications, from wearable devices to IoT (Internet of Things) devices.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what does structural tunability and solution-processability mean in this context?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In the context of the article, \"structural tunability\" refers to the ability to control the crystal structure of a material. Perovskites are a class of materials that have a specific crystal structure, which is important for their ferroelectric properties. By controlling the crystal structure, researchers can tune the ferroelectric properties of perovskites to optimize their performance for a particular application. Metal-free perovskites have the advantage of being structurally tunable, which makes them attractive for use in miniaturized ferroelectric devices.</p><p>\"Solution-processability\" refers to the ability to process a material in solution form. Solution-processing is a versatile method for manufacturing electronic devices as it allows for the fabrication of thin films over large areas. Metal-free perovskites are advantageous in this context because they can be processed from solution, which enables their integration with existing manufacturing processes for electronic devices, reducing production costs and improving efficiency.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a coercive field in this context"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In the context of the article, the coercive field refers to the strength of the electric field required to reverse the polarization of a ferroelectric material. When an electric field is applied to a ferroelectric material, the material polarizes and aligns its electric dipoles in a specific direction. The coercive field is the minimum electric field required to reverse this polarization and return the dipoles to their original position.</p><p>In the context of miniaturized ferroelectric devices in non-volatile memories, a high coercive field is important because it ensures that the device maintains stable switching behavior even as its thickness is scaled down to the nanometer scale. A lower coercive field can cause instability and lead to the loss of stored information in the device. Therefore, it is important to have ferroelectric materials with a high coercive field for the development of efficient and stable non-volatile memory devices.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What do the researchers mean when they say \"Using isotope experiments, the ferroelectric-to-paraelectric phase transition temperature and coercive field are verified to be strongly influenced by hydrogen bonds\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>When the researchers say \"using isotope experiments,\" they mean that they have used isotopes of hydrogen to study the behavior of the ferroelectric material. Isotopes are atoms of the same element that have a different number of neutrons in their nucleus, resulting in a different atomic mass. By replacing hydrogen atoms in the ferroelectric material with its heavier isotope, deuterium, the researchers can study how the strength of hydrogen bonds affects the ferroelectric properties of the material.</p><p>The researchers found that the ferroelectric-to-paraelectric phase transition temperature and coercive field of the metal-free ferroelectric perovskite material, MDABCO-NH4-(PF6)3, are strongly influenced by hydrogen bonds. They observed that the stronger intermolecular hydrogen bonding in this material leads to a higher coercive field compared to MDABCO-NH4-I3. This demonstrates that the ferroelectric properties of organic ferroelectrics can be tailored by tuning the strength of hydrogen bonding. The use of isotope experiments is a powerful tool for studying the behavior of materials and understanding the underlying mechanisms that govern their properties.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the \"the ferroelectric-to-paraelectric phase transition temperature and coercive field of the metal-free ferroelectric perovskite material\" and why is it important?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The \"ferroelectric-to-paraelectric phase transition temperature\" refers to the temperature at which a ferroelectric material loses its ferroelectric properties and becomes a paraelectric material. In the paraelectric phase, the material no longer exhibits spontaneous polarization and does not possess a remanent polarization, unlike the ferroelectric phase. The ferroelectric-to-paraelectric phase transition is an important property of ferroelectric materials, as it determines the operating temperature range for ferroelectric devices.</p><p>The \"coercive field of the metal-free ferroelectric perovskite material\" refers to the strength of the electric field required to reverse the polarization of the ferroelectric material, as explained in my previous answer. The coercive field is an important property of ferroelectric materials, as it determines the stability of the polarization and the efficiency of ferroelectric devices.</p><p>In the article, the researchers found that the ferroelectric-to-paraelectric phase transition temperature and coercive field of the metal-free ferroelectric perovskite material, MDABCO-NH4-(PF6)3, are strongly influenced by the strength of hydrogen bonding. This information is important for the design and development of new ferroelectric materials with improved properties. By understanding how the strength of hydrogen bonding affects the ferroelectric properties of materials, researchers can develop new materials with tailored properties optimized for specific applications.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_21620",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want to know what is the best way to create a fine-tuned GPT model that is aware of my goals , personality , that can help me to take decisions"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Fine-tuning a pre-trained language model such as GPT-3 to reflect your specific goals and personality is an exciting area of research and development in the field of natural language processing (NLP). Here are the general steps you can follow to create your own fine-tuned GPT model:</p><ol><li><p>Pre-processing: Clean and pre-process your data to ensure that it is in a format that can be easily fed into a language model. This may involve converting text to lowercase, removing special characters, and stemming or lemmatizing words.</p></li><li><p>Data collection: Collect a large amount of data that represents your goals and personality. This data can include text from various sources such as social media posts, blogs, personal emails, and other sources that you think best reflect your goals and personality.</p></li><li><p>Fine-tuning: Use this data to fine-tune a pre-trained language model, such as GPT-3, by training the model on your data using transfer learning. This involves using the pre-trained weights as a starting point and then training the model further on your specific data.</p></li><li><p>Evaluation: Evaluate the performance of your fine-tuned model by comparing its output to your original data. You can use metrics such as accuracy, precision, recall, and F1-score to assess the quality of your model's outputs.</p></li><li><p>Deployment: Finally, you can deploy your fine-tuned model and use it to help you make decisions by generating text that reflects your goals and personality.</p></li></ol><p>Please keep in mind that creating a fine-tuned GPT model requires a good understanding of NLP and machine learning, as well as a significant amount of computing resources. Additionally, it's important to be cautious about the ethical implications of using these models and to ensure that they are not used to perpetuate harmful biases or stereotypes.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "so to create data we need a set of questions and answers , right ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Not necessarily. While a set of questions and answers can be useful for creating training data, there are many other types of data that you can use to fine-tune a language model. For example, you could use a large corpus of text that reflects your goals and personality, such as social media posts, blog articles, or personal emails. You could also use a combination of different types of data, such as a set of questions and answers along with other text data, to provide the model with a more comprehensive understanding of your goals and personality.</p><p>The goal of fine-tuning a language model is to train the model on your specific data so that it can generate text that is more closely aligned with your goals and personality. The type of data you use will depend on your specific use case and the goals you have for your fine-tuned model.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how large is a large corpus of data ? like how many words ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The size of the corpus needed for fine-tuning a language model can vary greatly depending on several factors, such as the complexity of the task, the quality of the pre-trained model, and the size of the model itself.</p><p>For example, fine-tuning a smaller model on a relatively simple task may only require a few thousand examples, whereas fine-tuning a larger model on a more complex task could require millions of examples.</p><p>As a general rule of thumb, the larger the model and the more complex the task, the larger the corpus of data needed for fine-tuning. However, there is no hard and fast rule for determining the exact size of the corpus needed, and the optimal size will depend on your specific use case.</p><p>In practice, a good starting point is to aim for a corpus of several thousand examples, and then increase the size of the corpus if needed based on the performance of your fine-tuned model. It's also important to ensure that the data you use is high-quality and representative of the task you want your model to perform.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can it be done this way , I provide gpt-3 with my current goals , areas of life and from this he takes it and provide me with thousands of questions , or prompts for training data , and then I find a way to fill these prompts , then it can be used for fine tuning ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Yes, that's a possible approach to generating training data for fine-tuning a language model. You could provide the pre-trained model with information about your current goals and areas of life, and then ask the model to generate questions or prompts based on that information. You can then use those questions or prompts to create training data by filling in the blanks with appropriate responses.</p><p>However, it's important to note that the quality of the training data generated by the pre-trained model will depend on its ability to understand your goals and areas of life, as well as its ability to generate relevant and high-quality questions or prompts. Additionally, the fine-tuned model's performance will depend on the quality and quantity of the training data you provide.</p><p>In general, it's a good idea to manually curate the training data to ensure that it accurately reflects your goals and personality, and to add additional training data if needed to improve the performance of the fine-tuned model.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "does that go well with books too ? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Yes, books can also be used as training data for fine-tuning a language model. In fact, books can be a rich source of high-quality, diverse text data that can be used to fine-tune a model to perform a wide range of tasks.</p><p>For example, you could use books that reflect your interests or goals to fine-tune a language model for specific tasks such as writing about a particular topic or generating text in a particular style. You could also use books to fine-tune a model for more general tasks, such as language generation or text classification.</p><p>It's important to note that the quality of the fine-tuned model will depend on the quality and diversity of the training data you use. So, it's a good idea to carefully curate the books you use for fine-tuning and ensure that they are representative of the task you want your model to perform. Additionally, you may need to pre-process the book data to ensure that it is in a format that can be easily fed into a language model.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "let's say I have a book , that I want to convert into training data , how do i do that ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>To convert a book into training data for fine-tuning a language model, you need to extract the text from the book and pre-process it</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I have the books in Epub format , can you help me make a python script that cuts the book into chunks enough for gpt to digest , so GPT-3 can generate training data from the book which later gets used by GPT-3 for fine-tuning ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here is a simple Python script that you can use to extract text from an EPUB file and divide it into chunks that are suitable for fine-tuning a language model:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> ebooklib\n<span class=\"hljs-keyword\">import</span> os\n\n<span class=\"hljs-keyword\">from</span> ebooklib <span class=\"hljs-keyword\">import</span> epub\n\n<span class=\"hljs-comment\"># Load the EPUB file</span>\nbook = epub.read_epub(<span class=\"hljs-string\">'book.epub'</span>)\n\n<span class=\"hljs-comment\"># Define the chunk size</span>\nchunk_size = <span class=\"hljs-number\">1000</span>\n\n<span class=\"hljs-comment\"># Initialize a list to store the chunks</span>\nchunks = []\n\n<span class=\"hljs-comment\"># Loop over each item in the EPUB file</span>\n<span class=\"hljs-keyword\">for</span> item <span class=\"hljs-keyword\">in</span> book.get_items():\n    <span class=\"hljs-comment\"># Check if the item is a chapter</span>\n    <span class=\"hljs-keyword\">if</span> item.get_type() == ebooklib.ITEM_DOCUMENT:\n        <span class=\"hljs-comment\"># Get the text from the chapter</span>\n        text = item.get_content().decode(<span class=\"hljs-string\">'utf-8'</span>)\n        <span class=\"hljs-comment\"># Split the text into chunks</span>\n        <span class=\"hljs-keyword\">for</span> i <span class=\"hljs-keyword\">in</span> <span class=\"hljs-built_in\">range</span>(<span class=\"hljs-number\">0</span>, <span class=\"hljs-built_in\">len</span>(text), chunk_size):\n            chunks.append(text[i:i + chunk_size])\n\n<span class=\"hljs-comment\"># Save the chunks to a text file</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">'book_chunks.txt'</span>, <span class=\"hljs-string\">'w'</span>) <span class=\"hljs-keyword\">as</span> f:\n    <span class=\"hljs-keyword\">for</span> chunk <span class=\"hljs-keyword\">in</span> chunks:\n        f.write(chunk + <span class=\"hljs-string\">'\\n'</span>)\n</code></div></div></pre><p>This script uses the <code>ebooklib</code> library to load the EPUB file and extract the text from each chapter. The text is then divided into chunks of size <code>chunk_size</code> and stored in a list. Finally, the chunks are saved to a text file.</p><p>You can use this text file as the training data for fine-tuning a language model. Before fine-tuning, you may need to pre-process the data further, such as converting all text to lowercase and removing special characters, to ensure that it is in a format that can be easily fed into a language model.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 22:52"
+    },
+    {
+      "session_id": "sharegpt_16243",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "You are a creative marketing expert, write 20 video scripts 30 seconds in length explaining marketing ideas a subscriber could try "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here are 20 video script ideas for marketing:</p><ol><li><p>\"Unboxing\" video: Show your subscribers the exciting moment of opening your product packaging and all the great features it has.</p></li><li><p>Product Demo: Highlight the benefits of your product by demonstrating how it works and what makes it unique.</p></li><li><p>Customer Testimonials: Share some positive reviews and feedback from happy customers who have already purchased and used your product.</p></li><li><p>Behind-the-scenes: Give your subscribers a sneak peek of what happens behind the scenes in your business, such as the process of creating a product or preparing for a launch.</p></li><li><p>Q&amp;A: Address frequently asked questions about your product or brand in a quick and informative way.</p></li><li><p>Holiday Promotions: Use holidays as a marketing opportunity to offer special promotions or discounts to your subscribers.</p></li><li><p>Product Comparison: Compare your product to similar products in the market and highlight how it stands out.</p></li><li><p>Expert Interview: Interview industry experts and influencers to give your subscribers insights into the latest marketing trends and best practices.</p></li><li><p>Brand Story: Share your brand's story and how it came to be, including your mission, values, and goals.</p></li><li><p>Tips and Tricks: Share helpful tips and tricks related to your industry or product that can benefit your subscribers.</p></li><li><p>How-to: Create a step-by-step guide on how to use your product or solve a problem related to your industry.</p></li><li><p>Educational: Teach your subscribers something new and interesting about your industry, such as a fun fact or statistic.</p></li><li><p>Event Promotion: Use video to promote upcoming events and encourage your subscribers to attend or participate.</p></li><li><p>Influencer Endorsement: Partner with influencers in your industry to endorse your product and help you reach a wider audience.</p></li><li><p>User-Generated Content: Showcase user-generated content that demonstrates how your product is being used and enjoyed by customers.</p></li><li><p>Giveaways: Use video to promote giveaways or contests and encourage your subscribers to participate for a chance to win.</p></li><li><p>Social Responsibility: Share your brand's commitment to social responsibility and sustainability, highlighting initiatives and projects that align with your values.</p></li><li><p>Product Launch: Use video to build anticipation and excitement for a new product launch, showcasing its features and benefits.</p></li><li><p>Interactive: Create an interactive video that allows subscribers to engage with your product or brand in a fun and creative way.</p></li><li><p>Humorous: Use humor to grab your subscribers' attention and make your video stand out, while still delivering valuable marketing content.</p></li></ol><p>I hope these ideas inspire you to create engaging and effective marketing videos for your subscribers!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 04:13"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's on-call rotation is paired oncall, meaning we have a primary and a secondary oncall. How do you usually manage alerts for paired oncall setups? Any tips for ensuring smooth communication between the two?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing alerts in a paired on-call setup can be really effective if you establish clear communication channels. It’s helpful to define how alerts get escalated between the primary and secondary on-call members, so everyone knows when to step in. Regular check-ins can also help, ensuring both on-call members are aligned on any ongoing issues. Additionally, utilizing a shared platform for logging alerts and updates can keep both parties informed and help track the resolution process. Have you considered any specific tools or methods for this?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's secret manager is Cryptara Vault. I'm curious about how you handle secret management in your projects. Do you have any best practices for integrating secret managers into your development workflow?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating a secret manager like Cryptara Vault into your development workflow is a great way to enhance security. One best practice is to ensure that secrets are never hardcoded in the codebase; instead, access them at runtime through environment variables or configuration files that pull from the secret manager. It's also useful to regularly rotate secrets and implement fine-grained access controls, ensuring that only the necessary services and team members have access to specific secrets. Additionally, consider setting up monitoring and alerts for any unauthorized access attempts. How are you currently managing secrets in your workflow?"
+        },
+        {
+          "role": "user",
+          "content": "We're using Keldaris DB as our database. Any tips on optimizing performance with Keldaris? What are some common pitfalls to avoid when working with it?"
+        },
+        {
+          "role": "assistant",
+          "content": "When optimizing performance with Keldaris DB, it's essential to focus on indexing strategies, as proper indexes can significantly speed up query performance. Be mindful of how your queries are structured, as inefficient queries can lead to unnecessary load on the database. Regularly reviewing and analyzing your query performance can help identify and address bottlenecks. Common pitfalls include neglecting to monitor database metrics or not properly configuring connection pooling, which can lead to performance degradation under load. Are there specific performance issues you've noticed that you want to address?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is set for 2025 May 23. With that in mind, how do you usually prioritize tasks to ensure everything is on track before a deadline? Any specific tools or methodologies that help keep the team organized?"
+        },
+        {
+          "role": "assistant",
+          "content": "To keep everything on track before a deadline, it's crucial to prioritize tasks based on their impact and urgency. Breaking down larger tasks into smaller, manageable pieces can also help the team focus and make steady progress. Regular stand-ups or check-ins can keep everyone aligned and allow for quick adjustments if priorities change. While I can't mention specific tools, many teams find value in visualizing their workflow through boards, which can help track progress and identify bottlenecks. How are you currently managing your task prioritization?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "oncall_rotation",
+          "value": "paired oncall (primary + secondary)",
+          "original_seed": "Our on-call rotation is paired oncall (primary + secondary)",
+          "fact_text": "The team's on-call rotation is paired oncall (primary + secondary).",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Cryptara Vault",
+          "original_seed": "Our secret manager is Cryptara Vault",
+          "fact_text": "The team's secret manager is Cryptara Vault.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "database",
+          "value": "Keldaris DB",
+          "original_seed": "We're using Keldaris DB as our database",
+          "fact_text": "The team is using Keldaris DB as their database.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "sprint_deadline",
+          "value": "2025 May 23",
+          "original_seed": "The sprint deadline is 2025 May 23",
+          "fact_text": "The sprint deadline is 2025 May 23.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 19:10"
+    },
+    {
+      "session_id": "sharegpt_1629",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write an assignment on University management system(also write sql commands , relation schema and max 5 table)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Introduction:</p><p>University Management System is an essential tool for the smooth functioning of any educational institution. The system helps in managing various aspects of the university such as student admissions, course registrations, faculty management, examination management, and student performance monitoring. In this assignment, we will discuss the design of a University Management System, including SQL commands, relation schema, and tables.</p><p>SQL Commands:</p><p>The following SQL commands will be used in the University Management System:</p><ol><li><p>CREATE TABLE: This command is used to create a new table in the database.</p></li><li><p>INSERT INTO: This command is used to insert data into a table.</p></li><li><p>UPDATE: This command is used to update the existing data in a table.</p></li><li><p>SELECT: This command is used to retrieve data from one or more tables.</p></li><li><p>DELETE: This command is used to delete data from a table.</p></li></ol><p>Relation Schema:</p><p>The relation schema for the University Management System is given below:</p><ol><li><p>STUDENT (Student_ID, Student_Name, Date_of_Birth, Address, Email, Phone_Number)</p></li><li><p>FACULTY (Faculty_ID, Faculty_Name, Date_of_Birth, Address, Email, Phone_Number)</p></li><li><p>COURSE (Course_ID, Course_Name, Credits, Department_ID)</p></li><li><p>DEPARTMENT (Department_ID, Department_Name, HOD_Name, HOD_Email, HOD_Phone_Number)</p></li><li><p>ENROLLMENT (Enrollment_ID, Student_ID, Course_ID, Enrollment_Date, Grade)</p></li></ol><p>Tables:</p><p>The following tables will be used in the University Management System:</p><ol><li>STUDENT Table: This table will store information about the students enrolled in the university. It will have the following columns:</li></ol><ul><li>Student_ID: A unique identifier for each student.</li><li>Student_Name: The name of the student.</li><li>Date_of_Birth: The date of birth of the student.</li><li>Address: The address of the student.</li><li>Email: The email address of the student.</li><li>Phone_Number: The phone number of the student.</li></ul><ol><li>FACULTY Table: This table will store information about the faculty members working in the university. It will have the following columns:</li></ol><ul><li>Faculty_ID: A unique identifier for each faculty member.</li><li>Faculty_Name: The name of the faculty member.</li><li>Date_of_Birth: The date of birth of the faculty member.</li><li>Address: The address of the faculty member.</li><li>Email: The email address of the faculty member.</li><li>Phone_Number: The phone number of the faculty member.</li></ul><ol><li>COURSE Table: This table will store information about the courses offered by the university. It will have the following columns:</li></ol><ul><li>Course_ID: A unique identifier for each course.</li><li>Course_Name: The name of the course.</li><li>Credits: The number of credits assigned to the course.</li><li>Department_ID: The identifier of the department to which the course belongs.</li></ul><ol><li>DEPARTMENT Table: This table will store information about the departments in the university. It will have the following columns:</li></ol><ul><li>Department_ID: A unique identifier for each department.</li><li>Department_Name: The name of the department.</li><li>HOD_Name: The name of the head of department.</li><li>HOD_Email: The email address of the head of department.</li><li>HOD_Phone_Number: The phone number of the head of department.</li></ul><ol><li>ENROLLMENT Table: This table will store information about the enrollments of students in courses. It will have the following columns:</li></ol><ul><li>Enrollment_ID: A unique identifier for each enrollment.</li><li>Student_ID: The identifier of the student enrolled in the course.</li><li>Course_ID: The identifier of the course in which the student is enrolled.</li><li>Enrollment_Date: The date on which the student enrolled in the course.</li><li>Grade: The grade obtained by the student in the course.</li></ul><p>Conclusion:</p><p>In conclusion, the University Management</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2write create table commands, each in a code block"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here are the create table commands for each of the tables mentioned in the assignment:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> STUDENT (\n  Student_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">PRIMARY</span> KEY,\n  Student_Name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Date_of_Birth <span class=\"hljs-type\">DATE</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Address <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Email <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Phone_Number <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">20</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>\n);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> FACULTY (\n  Faculty_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">PRIMARY</span> KEY,\n  Faculty_Name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Date_of_Birth <span class=\"hljs-type\">DATE</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Address <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Email <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Phone_Number <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">20</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>\n);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> COURSE (\n  Course_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">PRIMARY</span> KEY,\n  Course_Name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Credits <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Department_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (Department_ID) <span class=\"hljs-keyword\">REFERENCES</span> DEPARTMENT(Department_ID)\n);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> DEPARTMENT (\n  Department_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">PRIMARY</span> KEY,\n  Department_Name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  HOD_Name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  HOD_Email <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  HOD_Phone_Number <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">20</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>\n);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> ENROLLMENT (\n  Enrollment_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">PRIMARY</span> KEY,\n  Student_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Course_ID <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Enrollment_Date <span class=\"hljs-type\">DATE</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  Grade <span class=\"hljs-type\">CHAR</span>(<span class=\"hljs-number\">1</span>),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (Student_ID) <span class=\"hljs-keyword\">REFERENCES</span> STUDENT(Student_ID),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (Course_ID) <span class=\"hljs-keyword\">REFERENCES</span> COURSE(Course_ID)\n);\n</code></div></div></pre><p>Note that in the COURSE table, we have added a foreign key constraint referencing the DEPARTMENT table, and in the ENROLLMENT table, we have added foreign key constraints referencing both the STUDENT and COURSE tables. This ensures referential integrity, meaning that data cannot be inserted into these tables if it violates the relationships between the tables.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "also write insert commands in similar way"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Here are some sample INSERT INTO commands to populate the tables:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> STUDENT (Student_ID, Student_Name, Date_of_Birth, Address, Email, Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">1</span>, <span class=\"hljs-string\">'John Doe'</span>, <span class=\"hljs-string\">'2000-01-01'</span>, <span class=\"hljs-string\">'123 Main St'</span>, <span class=\"hljs-string\">'johndoe@email.com'</span>, <span class=\"hljs-string\">'123-456-7890'</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> STUDENT (Student_ID, Student_Name, Date_of_Birth, Address, Email, Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">2</span>, <span class=\"hljs-string\">'Jane Smith'</span>, <span class=\"hljs-string\">'2001-02-02'</span>, <span class=\"hljs-string\">'456 Elm St'</span>, <span class=\"hljs-string\">'janesmith@email.com'</span>, <span class=\"hljs-string\">'987-654-3210'</span>);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> FACULTY (Faculty_ID, Faculty_Name, Date_of_Birth, Address, Email, Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">1</span>, <span class=\"hljs-string\">'Professor Smith'</span>, <span class=\"hljs-string\">'1970-01-01'</span>, <span class=\"hljs-string\">'789 Oak St'</span>, <span class=\"hljs-string\">'profsmith@email.com'</span>, <span class=\"hljs-string\">'555-555-5555'</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> FACULTY (Faculty_ID, Faculty_Name, Date_of_Birth, Address, Email, Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">2</span>, <span class=\"hljs-string\">'Professor Johnson'</span>, <span class=\"hljs-string\">'1980-02-02'</span>, <span class=\"hljs-string\">'321 Maple St'</span>, <span class=\"hljs-string\">'profjohnson@email.com'</span>, <span class=\"hljs-string\">'111-111-1111'</span>);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> COURSE (Course_ID, Course_Name, Credits, Department_ID)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">1</span>, <span class=\"hljs-string\">'Introduction to Computer Science'</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">1</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> COURSE (Course_ID, Course_Name, Credits, Department_ID)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">2</span>, <span class=\"hljs-string\">'Data Structures and Algorithms'</span>, <span class=\"hljs-number\">4</span>, <span class=\"hljs-number\">1</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> COURSE (Course_ID, Course_Name, Credits, Department_ID)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">3</span>, <span class=\"hljs-string\">'Introduction to Psychology'</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">2</span>);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> DEPARTMENT (Department_ID, Department_Name, HOD_Name, HOD_Email, HOD_Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">1</span>, <span class=\"hljs-string\">'Computer Science'</span>, <span class=\"hljs-string\">'Dr. Brown'</span>, <span class=\"hljs-string\">'drbrown@csdept.edu'</span>, <span class=\"hljs-string\">'555-555-5555'</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> DEPARTMENT (Department_ID, Department_Name, HOD_Name, HOD_Email, HOD_Phone_Number)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">2</span>, <span class=\"hljs-string\">'Psychology'</span>, <span class=\"hljs-string\">'Dr. Green'</span>, <span class=\"hljs-string\">'drgreen@psychdept.edu'</span>, <span class=\"hljs-string\">'111-111-1111'</span>);\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> ENROLLMENT (Enrollment_ID, Student_ID, Course_ID, Enrollment_Date, Grade)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">1</span>, <span class=\"hljs-string\">'2022-08-01'</span>, <span class=\"hljs-string\">'A'</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> ENROLLMENT (Enrollment_ID, Student_ID, Course_ID, Enrollment_Date, Grade)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-string\">'2022-08-01'</span>, <span class=\"hljs-string\">'B'</span>);\n\n<span class=\"hljs-keyword\">INSERT</span> <span class=\"hljs-keyword\">INTO</span> ENROLLMENT (Enrollment_ID, Student_ID, Course_ID, Enrollment_Date, Grade)\n<span class=\"hljs-keyword\">VALUES</span> (<span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-string\">'2022-08-01'</span>, <span class=\"hljs-keyword\">NULL</span>);\n</code></div></div></pre><p>Note that these are just examples, and you can insert different data based on your needs. Also, note that the ENROLLMENT table has a grade column that can be NULL, as not all courses</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 04:03"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #vortex-alerts. It's pretty handy for keeping everyone in the loop about any issues. Do you think we should set up any additional notifications or channels for specific alerts?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like having a dedicated channel for production alerts is a great start. Depending on the types of issues you encounter, it might be useful to create additional channels for different categories of alerts, like critical incidents or performance issues. This way, team members can focus on the alerts that are most relevant to their roles. Have you noticed any specific types of alerts that tend to require a quicker response or more focused attention?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is now Selvex Secrets. It should help streamline how we manage sensitive information. Have you set up your local environment to work with Selvex yet? What’s the best way to integrate it with our existing workflows?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Selvex Secrets to manage sensitive information sounds like a solid choice. Setting up your local environment to work with it can really enhance your workflow. It would be beneficial to look into how Selvex integrates with your current tools and processes; for instance, you might want to explore its API for accessing secrets programmatically or any CLI tools it provides. Have you considered how your team currently handles secrets, and what specific workflows you’d like to improve with the integration?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Crysthene Migrate for migrations. It's a neat tool for managing database changes. Have you had any experience with migration tools like that? What best practices do you follow to ensure smooth migrations?"
+        },
+        {
+          "role": "assistant",
+          "content": "Crysthene Migrate sounds like a useful tool for handling database changes. When it comes to best practices for migrations, it’s important to ensure that migrations are reversible, allowing you to roll back changes if needed. It can also be beneficial to run migrations in a staging environment before applying them to production, as this helps catch any potential issues early. Additionally, maintaining clear documentation of each migration can help keep the team aligned. What kind of challenges have you faced with migrations in the past?"
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is main. This helps keep our development process streamlined and consistent. Do you think we should implement any branch protection rules on the main branch to prevent accidental changes?"
+        },
+        {
+          "role": "assistant",
+          "content": "Implementing branch protection rules for the main branch is a great idea. It can help prevent accidental changes that might disrupt the stability of your codebase. You might consider setting up requirements for pull requests, such as requiring reviews from team members before merging or ensuring that all tests pass. This adds an extra layer of security and encourages collaboration. Have you thought about what specific rules would be most beneficial for your team?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "alert_channel",
+          "value": "#vortex-alerts",
+          "original_seed": "Production alerts go to #vortex-alerts",
+          "fact_text": "Production alerts go to #vortex-alerts.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Selvex Secrets",
+          "original_seed": "Update: Our secret manager is Selvex Secrets",
+          "fact_text": "The team's secret manager is now Selvex Secrets.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "migration_tool",
+          "value": "Crysthene Migrate",
+          "original_seed": "We use Crysthene Migrate for migrations",
+          "fact_text": "The team uses Crysthene Migrate for migrations.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "default_branch",
+          "value": "main",
+          "original_seed": "Our default branch is main",
+          "fact_text": "The team's default branch is main.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 23:23"
+    },
+    {
+      "session_id": "sharegpt_6089",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "You are a software engineering expertShare Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, I have been trained on a wide range of topics, including software engineering. I can provide information and guidance on various aspects of software engineering, including software design, programming, testing, and maintenance. However, please note that while I have extensive knowledge and expertise in this field, I do not have hands-on experience as a practicing software engineer.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I am working on a Train Ticket Booking Application and this is the Sprint 1\n\nGive few more Daily Scrum PlansShare Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here are a few more Daily Scrum plans that you could consider for your Train Ticket Booking Application sprint:</p><p>Plan 1:</p><ul><li>What did you work on yesterday?</li><li>What do you plan to</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "I am working on a Train Ticket Booking Application and this is the Sprint 1\n\nGoal: The goal of Sprint 1 is to create a functional prototype of the Train Ticket Application that enables users to search for train routes and schedules and view the results on the app.\nUser Stories:\n\n•\tAs a user, I want to be able to search for train routes by entering the departure and arrival locations and dates.\n•\tAs a user, I want to be able to view the available train schedules and routes for my search criteria.\n•\tAs a user, I want to be able to filter the search results by price, duration, and other criteria.\n•\tAs a user, I want to be able to select a specific train and seat for my travel.\n•\tAs a user, I want to be able to view the details of my selected train and seat before making the purchase.\n\nTasks:\n\n•\tSet up the development environment for the project, including installing and configuring the required software tools and frameworks.\n•\tDesign the wireframes and mockups for the app's user interface.\n•\tCreate a basic design for the app's layout and visual elements.\n•\tDevelop the backend API for searching train routes and schedules.\n•\tImplement the frontend functionality to allow users to search for train routes and schedules.\n•\tImplement basic error handling and validation for user inputs.\n•\tIntegrate the frontend and backend components.\n•\tConduct unit tests to ensure that the components are functioning correctly.\n•\tConduct integration tests to ensure that the different components of the application are working together properly.\n\nDeliverables:\n\n•\tFunctional prototype of the Train Ticket Application that allows users to search for train routes and schedules and view the results on the app.\n•\tDesign documentation that includes wireframes, mockups, and a basic design for the app's user interface.\n•\tTest documentation that includes unit and integration tests and their results.\n\nTimeline:\n\nWeek 1:\n\tTask 1: Set up the development environment for the project.\n\tTask 2: Design the wireframes and mockups for the app's user interface.\n\tTask 3: Create a basic design for the app's layout and visual elements.\n\tTask 4: Develop the backend API for searching train routes and schedules.\nWeek 2:\n\tTask 5: Implement the frontend functionality to allow users to search for train routes and schedules.\n\tTask 6: Implement basic error handling and validation for user inputs.\n\tTask 7: Integrate the frontend and backend components.\n\tTask 8: Conduct unit tests to ensure that the components are functioning correctly.\n\tTask 9: Conduct integration tests to ensure that the different components of the application are working together properly.\n\tDeliverables: Submit the functional prototype of the Train Ticket Application, design documentation, and test documentation for Sprint 1.Share Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Great! It looks like you have a well-defined plan for Sprint 1 of your Train Ticket Booking Application. Here are some additional suggestions for daily scrum plans to help you stay on track and achieve your goals:</p><p>Plan 1:</p><ul><li>What did you work on yesterday?</li><li>What do you plan to work on today?</li><li>Are there any blockers or challenges that you need help with?</li></ul><p>Plan 2:</p><ul><li>What progress did you make towards the sprint goal yesterday?</li><li>What specific tasks or user stories are you focusing on today?</li><li>Is there anything that needs to be adjusted or refactored based on feedback or new requirements?</li></ul><p>Plan 3:</p><ul><li>What did you accomplish in the last 24 hours?</li><li>What is the highest priority task for today?</li><li>Do you need any resources or support to complete your tasks?</li></ul><p>Plan 4:</p><ul><li>What is the current status of the sprint goal?</li><li>Which tasks or user stories are complete and which are still in progress?</li><li>Are there any dependencies or issues that need to be addressed to keep the project on track?</li></ul><p>Plan 5:</p><ul><li>What is the status of the application's functionality and user interface?</li><li>Which features or components need additional testing or refinement?</li><li>Are there any areas where user feedback or market research could provide valuable insights?</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give few more Daily Scrum PlansShare Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here are a few more Daily Scrum plans for your sprint:</p><p>Plan 1:</p><ul><li>What did you accomplish since the last meeting?</li><li>What are you planning to accomplish before the next meeting?</li><li>Do you have any roadblocks or issues that need to be addressed?</li></ul><p>Plan 2:</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give few more Daily Scrum Plans with Unique ID\tUser Stories\tParticulars (Today's work- Date to be mentioned)\tAssignee\tReporter (Scrum Master)\tPresent / Absent\tStatus\tResolution\tCreated\tDue\tFix Version/s\tProduct Backlog\nfrom dates March 01 2023 to March 31 2023Share Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here are a few more Daily Scrum plans for your sprint with an example format that includes Unique ID, User Stories, Particulars, Assignee, Reporter, Present/Absent, Status, Resolution, Created, Due, Fix Version/s, and Product Backlog.</p><p>Plan 1:\nUnique ID: DS001\nUser Stories: As a user, I want to be able to search for train routes by entering the departure and arrival locations and dates.\nParticulars: Implement the search functionality in the backend API and update the frontend UI accordingly. (March 3, 2023)\nAssignee: John\nReporter: Scrum Master\nPresent/Absent: Present\nStatus: In Progress\nResolution: N/A\nCreated: March 3, 2023\nDue: March 4, 2023\nFix Version/s: Sprint 1\nProduct Backlog: High priority</p><p>Plan 2:\nUnique ID: DS002\nUser Stories: As a user, I want to be able to view the available train schedules and routes for my search criteria.\nParticulars: Implement the logic to fetch and display train schedules and routes based on user search criteria. (March 5, 2023)\nAssignee: Sarah\nReporter: Scrum Master\nPresent/Absent: Present\nStatus: In Progress\nResolution: N/A\nCreated: March 5, 2023\nDue: March 6, 2023\nFix Version/s: Sprint 1\nProduct Backlog: High priority</p><p>Plan 3:\nUnique ID: DS003\nUser Stories: As a user, I want to be able to select a specific train and seat for my travel.\nParticulars: Add the functionality to select a train and seat, and update the UI to reflect the user's selections. (March 10, 2023)\nAssignee: Chris\nReporter: Scrum Master\nPresent/Absent: Present\nStatus: In Progress\nResolution: N/A\nCreated: March 10, 2023\nDue: March 11, 2023\nFix Version/s: Sprint 1\nProduct Backlog: High priority</p><p>Plan 4:\nUnique ID: DS004\nUser Stories: As a user, I want to be able to view the details of my selected train and seat before making the purchase.\nParticulars: Implement the logic to fetch and display the details of the selected train and seat, and update the UI accordingly. (March 15, 2023)\nAssignee: Emily\nReporter: Scrum Master\nPresent/Absent: Present\nStatus: In Progress\nResolution: N/A\nCreated: March 15, 2023\nDue: March 16, 2023\nFix Version/s: Sprint 1\nProduct Backlog: High priority</p><p>Plan 5:\nUnique ID: DS005\nUser Stories: As a user, I want to be able to filter the search results by price, duration, and other criteria.\nParticulars: Implement the filter functionality for search results, and update the UI to allow users to apply filters. (March 20, 2023)\nAssignee: Michael\nReporter: Scrum Master\nPresent/Absent: Present\nStatus: In Progress\nResolution: N/A\nCreated: March 20, 2023\nDue: March 21, 2023\nFix Version/s: Sprint 1\nProduct Backlog: High priority</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 21:36"
+    },
+    {
+      "session_id": "sharegpt_9796",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you provide a gist task from this text. Then provide a detail comprehension task - make it a  sentence completion task. Then provide grammar and vocabulary commentary and provide a gap fill task based on that. Pitch the level at B1 for ESL learners. there are things and everyone on in the\naudience should know this there are\nthings coming down the pipeline on the\nartificial intelligence front that are\njust going to make your hair stand on\nend within the next year because there\nis so much transformation going on in\nthat domain and and that's been the case\nparticularly for the last six months\nthat it's almost unimaginable you're\ngoing to see things you just can't\npossibly how many of you clap how many\nof you know what chat gbt is so I'll\ntell you what Chow GPT is just so you\nknow because you need to know this and I\ndon't know what sort of technological\nRevolution this is Gutenberg Press level\nit's something like that this is a big\ndeal so this AI system to General\nlanguage processing model was released\nabout a week ago a week and a half ago\nand it basically is trained on well a\nmassive Corpus of of spoken and or of\ntext so it's derived it's models of the\nworld from the analysis of human speech\nessentially it isn't using real world\ndata yet\nbut that will be happening certainly\nwithin the next year\nso\nand chat GPT\nanalyzes a very large Corpus of text and\nnow Corpus is growing all the time\nsome of you know I've written these\nbooks 12 rules for life and then beyond\norder 12 more rules because you know you\ncan't have enough rules and\nI asked if this is what I asked it to do\nI said write me an essay\nthat's a 13th rule for Beyond order\nwritten in a style that combines the\nKing James Bible with the doubting\nthat's a pretty difficult\nthat's pretty difficult to pull off you\nknow any one of those things is hard the\nintersection of all three that's\nimpossible well it wrote it in about\nthree seconds four pages long and\nit isn't obvious to me for better or\nworse that I would be able to tell that\nI didn't write it okay and that's pretty\nimpressive although you know maybe not\nit's relationship to what I've written\nbut the fact that it could do that\ngrammatically perfectly right and quite\nimpressive philosophically I also had it\nwrite an essay on the intersection\nbetween the Taoist version of ethical\nmorality and the ethics that are\noutlined in The Sermon on the Mount\nwhich it just nailed got that dead right\nbrilliant there is a computer engineer\nwho purported to work for Tesla he asked\nGPT child gbt said look I work for Elon\nMusk but I haven't been doing much for\nthe last week so I need you to write me\n10 bullet points about what I probably\nwould have done as a\nas a engineer at Twitter what 10 things\ndid I do last week that were productive\nand valuable and oh if you don't mind\nwrite me the accompanying computer code\nthat goes with each project\nand it did that too three seconds and\nthe computer code works right and so\nokay so that's that's already there so\nthen a university Professor did this he\nthought oh that's interesting any\nstudent will be able to write any essay\non any topic with chat gbt someone gave\nit an s.a.t by the way and it scored\nabout as well as the average student in\na well-functioning public university so\nthat's how smart it is so that's\nbasically an IQ test he said write me an\nessay gave it a topic wrote the S he\nsaid now grade it said if we can\nautomate the students we should be able\nto automate the professors too\nand so it provided a complete\ncomprehensive analysis of its own Essay\nwith grade write the screenplay and\ndescribe the characters for the next 900\nmillion dollar Hollywood Blockbuster\nit's like bang plot characterizations\nthen someone else took the descriptions\nof the actors and said generate computer\nphotorealistic computer images for each\nactor and all the AI systems could do\nthat so I'm going to tell you what's\ngoing to happen next this is going to\nhappen this year so get ready okay so\nnow we have an AI model that can extract\na model of the world from the entire\nCorpus of language\nall right and it's\nit's smarter than you and it's going to\nbe a hell of a lot smarter than you in\ntwo years so you can get ready for that\ntoo but it's not that smart yet because\nit's just a Humanities professor at the\nmoment that's what a scientist does\nright you come up with a theory that's\nlinguistically predicated and then you\nthrow it against the world and see if it\nsticks and then the world tells you\nwhether or not you're linguistic\nconstruction is valid\nbut the new AI systems will be able to\nextract out patterns from the world\nitself from images and so forth and then\nbe able to test their linguistic\nconstructions against the world and so\nthey'll practice just like scientists\nand the most advanced models are going\nto use text and image and action as well\nbecause they'll build a mortal Human\nAction and so and all of that's going to\ncome down the pipes\nwithin the next year so hang on to your\nhats ladies and gentlemen because one of\nmy friend Jonathan pajo say Giants are\ngoing to walk the earth once more\nand we're going to live through that\nmaybe I mean Elon Musk one of the things\nhe's working on see he he thinks that\nthe world will be controlled by whoever\nproduces the most functional AI system\nthe fastest because there'll be a first\na first\nmover advantage and one of the things\nmusk has been working on for a long time\nare distributed AI systems so that\nyou'll have your own artificial\nintelligence to protect you against well\nlet's say against Google's artificial\nintelligence for starters yeah or or the\nccp's artificial intelligence because\nyou can bet your hat they're working on\nthat about as fast as they possibly can\nbut let me ask you about the uh aspects\nof the internet you despite the\npersecution you've endured you've had an\nenormous internet following you went\nviral a long time ago and have stayed\nthere and yeah I'm worse than the\npandemic we touched upon this earlier\ndidn't it we have this unusual situation\nwhere we have contemplated legislation\nor regulatory changes in this country\nwhere the government the federal\ngovernment thinks it can\nhave a form of registration of content\nproviders and I I suspect what they're\ndoing is trying to catch the coattails\nof this reaction in the United States to\nthe revelations which are no great\nsurprise to anyone who followed it of\nthe extreme partisanship and\nprofessional dishonesty of the major\nmajor social media platforms and\npolitical terms but what are we what is\nyour advice to this\nto this country into this group about\npreservation of uh\nfreedom of expression in the internet I\nmean you you have been a great\nbenefactor to all of us but in in your\nchosen Mission a beneficiary of a\nrelatively free access expressed concern\nthat a poll had revealed that 75 percent\nof Canadians would cheerfully and\nuncomplainingly go back to wearing masks\nand a shutdown if they were told by the\nostensible authorities to do so even\nthough we now know that all of these\npeople all of fauci's local emulators\nthough there are all they all\nself-identify as Dr Frankenstein's\nmonsters and my but my question of you\nis\ncan we preserve freedom on the internet\nwell I think we have a blessing in\ndisguise in the liberal government\nbecause they're too incompetent to be as\ntyrannical as they want to be I'd\nprobably match your typical dim-witted\ngaming 13 year old boy against Trudeau's\nbest bureaucrats on the tech front any\nday and so\nso it's not going to be that easy to\nlock down the net and the other thing\nthat'll happen too and and perhaps you\nshould get prepared for this is that\nanybody in Canada who's got a creative\nbone in their body once they're subject\nto the kind of limitations that the\nTrudeau government is trying to put on\ncontent providers\nwhich is anyone by the way you're a\ncontent provider man if you post on\nFacebook and some of you probably do\neven though maybe you shouldn't\num\nall they'll do is all the creative\npeople just leave"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Gist Task: The text is about the advancements in Artificial Intelligence and how AI systems are becoming smarter every day. The author mentions about a new AI system called ChatGPT, which has been released recently and has impressive capabilities like writing essays, providing grades, writing a screenplay, and even creating computer images. The author also predicts that AI systems will become even more advanced in the next year, incorporating text, images, and actions.</p><p>Comprehension Task: Complete the sentence: The author says that the new AI system called ChatGPT is __________.</p><p>Answer: trained on a massive Corpus of spoken and written text and is derived from the analysis of human speech.</p><p>Grammar and Vocabulary commentary: This text contains complex sentences, vocabulary related to AI and computing, and technical language used in computer engineering and science. The author uses words like \"Corpus,\" \"GPT,\" \"text,\" and \"analysis\" which are specific to the field of AI and computing.</p><p>Gap-Fill Task: Fill in the gaps with the words from the list: AI, system, corpus, engineer, and language.</p><p>The new __________ system called ChatGPT is trained on a massive __________ of spoken and written text. It is derived from the __________ of human speech. A computer __________ purported to work for Tesla asked ChatGPT to write 10 bullet points about his work. The university professor believed that students would be able to write essays with the help of ChatGPT, and a __________ professor used the AI system to grade its own essay.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Provide 6 detail comprehension questions. Also provide a follow on argumentative writing task based on the topic"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Detail Comprehension Questions:</p><ol><li>What is chat GPT and when was it released?</li><li>What is a Corpus and what does chat GPT use it for?</li><li>What was the author's experience with asking chat GPT to write an essay?</li><li>What was the result of giving the AI system an SAT test?</li><li>What is the potential future capability of the AI system according to the author?</li><li>What will the most advanced AI systems be able to do in the future according to the author?</li></ol><p>Argumentative Writing Task:\nWrite an argumentative essay discussing whether the increased advancement in AI systems will have a positive or negative impact on society. Use evidence from the text and your own research to support your argument.</p><p>Grammar and Vocabulary Commentary:\nThe text is written in a conversational style with some use of technical language. The grammar is relatively straightforward, although there are some instances of incorrect usage of words (e.g. \"any student will be able to write any essay\"). The vocabulary is generally appropriate for an intermediate level English learner, although some technical terms may be unfamiliar (e.g. \"Corpus\").</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 04:27"
+    },
+    {
+      "session_id": "sharegpt_27621",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Java cloud solutions architect interview questions"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><ol><li>Can you explain the differences between IaaS, PaaS, and SaaS cloud service models?</li><li>How would you determine the optimal cloud solution architecture for a specific business case?</li><li>How do you ensure that your Java-based cloud solution is scalable and efficient?</li><li>Can you discuss your experience with designing and implementing microservices architecture in Java?</li><li>Can you explain the role of containers in cloud computing and how they can be used in Java applications?</li><li>How do you handle security and data privacy concerns in a Java cloud solution?</li><li>Can you walk me through the process of deploying a Java application to the cloud?</li><li>Can you discuss your experience with cloud service providers like AWS, Azure, and Google Cloud?</li><li>Can you explain the concept of serverless computing and how it can be implemented in Java?</li><li>How do you monitor and troubleshoot Java applications running in a cloud environment?</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "give answers"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>As an AI language model, I can provide sample answers to the Java cloud solutions architect interview questions:</p><ol><li>Can you explain the differences between IaaS, PaaS, and SaaS cloud service models?</li></ol><ul><li>IaaS (Infrastructure as a Service) provides a virtualized computing infrastructure over the internet, allowing customers to build, manage, and run their own applications on top of it.</li><li>PaaS (Platform as a Service) provides a complete platform for building, deploying, and managing applications, including the infrastructure and tools necessary to build and test them.</li><li>SaaS (Software as a Service) provides a complete software application that is hosted and maintained by the provider, and accessed by users over the internet.</li></ul><ol start=\"2\"><li>How would you determine the optimal cloud solution architecture for a specific business case?</li></ol><ul><li>I would start by understanding the specific business requirements and constraints, such as scalability, performance, availability, and security.</li><li>Then, I would assess the available cloud service models and providers, considering factors like cost, functionality, and ease of use.</li><li>Based on this analysis, I would recommend a cloud solution architecture that meets the business needs and aligns with the technical capabilities of the organization.</li></ul><ol start=\"3\"><li>How do you ensure that your Java-based cloud solution is scalable and efficient?</li></ol><ul><li>I would design the solution using a scalable and modular architecture, such as microservices, that can be easily replicated and distributed across multiple servers.</li><li>I would optimize the performance of the Java code by using best practices like caching, lazy loading, and connection pooling.</li><li>I would use cloud-native services like load balancers, auto-scaling, and container orchestration to automatically manage the resources and scale the application based on demand.</li></ul><ol start=\"4\"><li>Can you discuss your experience with designing and implementing microservices architecture in Java?</li></ol><ul><li>Yes, I have experience designing and implementing microservices architecture in Java, using frameworks like Spring Boot and Dropwizard.</li><li>I follow best practices like loose coupling, separation of concerns, and API design, and use tools like Swagger and Postman to document and test the APIs.</li><li>I use containerization technologies like Docker and Kubernetes to deploy and manage the microservices, and use logging and monitoring tools like ELK and Prometheus to track their performance.</li></ul><ol start=\"5\"><li>Can you explain the role of containers in cloud computing and how they can be used in Java applications?</li></ol><ul><li>Containers are lightweight, portable, and isolated environments that can run applications and their dependencies, without requiring a dedicated operating system.</li><li>Containers allow Java applications to be easily packaged, distributed, and deployed across different cloud environments, while ensuring consistency and compatibility.</li><li>Containerization technologies like Docker and Kubernetes provide tools for building, running, and managing containers, and allow Java applications to benefit from features like auto-scaling, load balancing, and fault tolerance.</li></ul><ol start=\"6\"><li>How do you handle security and data privacy concerns in a Java cloud solution?</li></ol><ul><li>I would implement security best practices like encryption, authentication, and authorization, using tools like SSL/TLS, OAuth, and JWT.</li><li>I would follow the principles of least privilege and defense in depth, and use techniques like network segmentation, firewalling, and intrusion detection and prevention.</li><li>I would comply with relevant regulations and standards like GDPR, HIPAA, and PCI DSS, and implement data privacy controls like data masking and anonymization.</li></ul><ol start=\"7\"><li>Can you walk me through the process of deploying a Java application to the cloud?</li></ol><ul><li>The process of deploying a Java application to the cloud typically involves several steps, including:<ul><li>Building the application code and packaging it into a deployable artifact, such as a JAR or WAR file.</li><li>Configuring the cloud environment, including creating the necessary resources like servers, databases, and storage.</li><li>Uploading the application artifact to the cloud, using a tool like FTP, SCP, or a</li></ul></li></ul></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 22:10"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at docs.aurora.internal/runbooks. Have you checked it out? It's a solid resource for handling outages. What do you think is the best way to structure incident response in the runbook?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that you have a dedicated runbook for handling outages! A well-structured incident response section can really make a difference in how effectively your team handles issues. It might be helpful to include clear steps for identification, containment, eradication, and recovery, ensuring that each role and responsibility is defined. Additionally, incorporating a communication plan for keeping stakeholders informed during an incident could enhance your response efforts. Have you considered adding post-incident review sections to capture lessons learned?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager has switched again to Orinthal Sealed. This should help with the security of sensitive data. Do you have any tips on integrating Orinthal Sealed with our existing workflow? What are some best practices for managing secrets in a way that minimizes risk?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to Orinthal Sealed sounds like a solid move for enhancing your security! When integrating it with your existing workflow, it's important to ensure that all team members are properly trained on how to use the new system. You might want to establish clear guidelines for when and how secrets are created, accessed, and rotated. Implementing role-based access controls can also help minimize unnecessary exposure to sensitive data. Additionally, consider regular audits of your secrets management practices to identify any potential vulnerabilities. Have you mapped out how existing secrets will be migrated to Orinthal Sealed?"
+        },
+        {
+          "role": "user",
+          "content": "The team's Docker image is zephyra-hub/aurora:prod. This should streamline our deployment process. What’s the best way to manage versioning for Docker images? Should we adopt semantic versioning, or is there a better approach for our use case?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Docker images like zephyra-hub/aurora:prod can definitely streamline deployments. Adopting semantic versioning is often a solid approach, as it provides clear communication about the nature of changes between versions. This can help your team quickly assess the impact of updates. For your use case, consider tagging images with both major and minor version numbers along with a build identifier for more granular tracking. Additionally, maintaining a changelog alongside your image versions can help keep everyone informed about what changes have been made. How often do you plan to release updates, and will you have a strategy for handling breaking changes?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at docs.aurora.internal/changelog. Keeping a changelog is crucial for transparency and tracking changes over time. It can help the team and stakeholders understand what has been modified or fixed in each release. Are you planning to automate the generation of the changelog, or will you keep it manually updated? Also, have you thought about including sections for deprecations or upcoming changes to give users a heads up?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a changelog in place; it really does enhance transparency and helps everyone stay informed. Automating the generation of the changelog can save time and reduce the chances of human error, especially if your team is making frequent updates. Including sections for deprecations or upcoming changes is also a smart idea, as it prepares users for transitions and helps them adapt proactively. Have you looked into any tools or scripts that could integrate with your version control system to help keep the changelog updated automatically?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "incident_runbook_url",
+          "value": "docs.aurora.internal/runbooks",
+          "original_seed": "The incident runbook is at docs.aurora.internal/runbooks",
+          "fact_text": "The incident runbook is at docs.aurora.internal/runbooks.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Orinthal Sealed",
+          "original_seed": "Now I've switched again — Our secret manager is Orinthal Sealed",
+          "fact_text": "The team's secret manager has switched again to Orinthal Sealed.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "Our Docker image is zephyra-hub/aurora:prod",
+          "fact_text": "The team's Docker image is zephyra-hub/aurora:prod.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "changelog_location",
+          "value": "docs.aurora.internal/changelog",
+          "original_seed": "Changelog is at docs.aurora.internal/changelog",
+          "fact_text": "Changelog is at docs.aurora.internal/changelog.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 06:04"
+    },
+    {
+      "session_id": "sharegpt_4091",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please help me write a hands-on programming lab with the following requirements:\n\n1. the lab is about Python Reading and Writing JSON Files.\n2. the lab is step-by-step.\n3. include an introduction of JSON.\n4. include code examples from simple to complex\n5. Include an introduction and a summary\n6. using a markdown format."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><h1>Python Reading and Writing JSON Files</h1><h2>Introduction</h2><p>JSON (JavaScript Object Notation) is a popular data format for storing data in a serialized and human-readable form. It is commonly used for transmitting data between a server and a web application and is also a great choice for storing data in a NoSQL database. In Python, we can use the <code>json</code> module to work with JSON data.</p><h2>Reading JSON Files</h2><p>Let's start by reading a JSON file. Suppose we have a file <code>data.json</code> with the following contents:</p><pre><div><div>Copy code</div><div><code><span>{</span>\n  <span>\"employees\"</span><span>:</span> <span>[</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"John\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Doe\"</span> <span>}</span><span>,</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"Anna\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Smith\"</span> <span>}</span><span>,</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"Peter\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Jones\"</span> <span>}</span>\n  <span>]</span>\n<span>}</span>\n</code></div></div></pre><p>To read this file in Python, we can use the following code:</p><pre><div><div>Copy code</div><div><code><span>import</span> json\n\n<span># Open the file</span>\n<span>with</span> <span>open</span>(<span>'data.json'</span>, <span>'r'</span>) <span>as</span> file:\n  <span># Load the contents of the file into a variable</span>\n  data = json.load(file)\n\n<span># Print the contents of the file</span>\n<span>print</span>(data)\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>{<span>'employees'</span>: [{<span>'firstName'</span>: <span>'John'</span>, <span>'lastName'</span>: <span>'Doe'</span>},\n  {<span>'firstName'</span>: <span>'Anna'</span>, <span>'lastName'</span>: <span>'Smith'</span>},\n  {<span>'firstName'</span>: <span>'Peter'</span>, <span>'lastName'</span>: <span>'Jones'</span>}]}\n</code></div></div></pre><p>We can access the data in the file by using the keys of the JSON object, just like we would with a Python dictionary. For example, to access the list of employees, we can use the <code>employees</code> key:</p><pre><div><div>Copy code</div><div><code>employees = data[<span>'employees'</span>]\n<span>print</span>(employees)\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>[{<span>'firstName'</span>: <span>'John'</span>, <span>'lastName'</span>: <span>'Doe'</span>},\n  {<span>'firstName'</span>: <span>'Anna'</span>, <span>'lastName'</span>: <span>'Smith'</span>},\n  {<span>'firstName'</span>: <span>'Peter'</span>, <span>'lastName'</span>: <span>'Jones'</span>}]\n</code></div></div></pre><p>We can also loop through the list of employees and print their names:</p><pre><div><div>Copy code</div><div><code><span>for</span> employee <span>in</span> employees:\n  <span>print</span>(employee[<span>'firstName'</span>], employee[<span>'lastName'</span>])\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>John Doe\nAnna Smith\nPeter Jones\n</code></div></div></pre><h2>Writing JSON Files</h2><p>Now that we know how to read a JSON file, let's learn how to write to one. We can use the <code>json.dump()</code> function to write data to a JSON file.</p><p>Suppose we have a list of dictionaries containing information about students:</p><pre><div><div>Copy code</div><div><code>students = [\n  { <span>\"name\"</span>: <span>\"Alice\"</span>, <span>\"age\"</span>: <span>26</span>, <span>\"major\"</span>: <span>\"Computer Science\"</span> },\n  { <span>\"name\"</span>: <span>\"Bob\"</span>, <span>\"age\"</span>: <span>27</span>, <span>\"major\"</span>: <span>\"Economics\"</span> },\n  { <span>\"name\"</span>: <span>\"Charlie\"</span>, <span>\"age\"</span>: <span>25</span>, <span>\"major\"</span>: <span>\"Physics\"</span> }\n]\n</code></div></div></pre><p>We can write this data to a file called <code>students.json</code> like this:</p><pre><div><div>Copy code</div><div><code><span>import</span> json\n\n<span># Open the file</span>\n<span>with</span> <span>open</span>(<span>'students.json'</span>, <span>'w'</span>) <span>as</span> file:\n  <span># Write the data</span>\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><h1>to the file</h1><p>json.dump(students, file)</p><h1>Now let's verify that the data was written correctly</h1><p>with open('students.json', 'r') as file:\ndata = json.load(file)\nprint(data)</p><pre><div><div>Copy code</div><div><code>\nThis will output the following:\n\n```python\n[\n  { \"name\": <span>\"Alice\"</span>, <span>\"age\"</span>: <span>26</span>, <span>\"major\"</span>: <span>\"Computer Science\"</span> },\n  { \"name\": <span>\"Bob\"</span>, <span>\"age\"</span>: <span>27</span>, <span>\"major\"</span>: <span>\"Economics\"</span> },\n  { \"name\": <span>\"Charlie\"</span>, <span>\"age\"</span>: <span>25</span>, <span>\"major\"</span>: <span>\"Physics\"</span> }\n]\n</code></div></div></pre><p>We can also use the <code>json.dumps()</code> function to convert a Python object to a JSON string, which we can then save to a file or send over the network. Here's an example:</p><pre><div><div>Copy code</div><div><code>json_string = json.dumps(students)\n\n<span># Save the string to a file</span>\n<span>with</span> <span>open</span>(<span>'students.json'</span>, <span>'w'</span>) <span>as</span> file:\n  file.write(json_string)\n\n<span># Now let's verify that the data was written correctly</span>\n<span>with</span> <span>open</span>(<span>'students.json'</span>, <span>'r'</span>) <span>as</span> file:\n  data = json.load(file)\n  <span>print</span>(data)\n</code></div></div></pre><p>This will have the same output as the previous example.</p><h2>Summary</h2><p>In this lab, we learned how to read and write JSON files in Python using the <code>json</code> module. We saw how to access the data in a JSON file using keys, and how to convert Python objects to JSON strings and vice versa.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain the structure of JSON and how to parse it"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and write and easy for machines to parse and generate. It is based on a subset of the JavaScript Programming Language, Standard ECMA-262 3rd Edition - December 1999. JSON is a text format that is completely language independent but uses conventions that are familiar to programmers of the C-family of languages, including C, C++, C#, Java, JavaScript, Perl, Python, and many others. These properties make JSON an ideal data interchange language.</p><p>The basic structure of JSON consists of objects, which are collections of key-value pairs, and arrays, which are ordered lists of values.</p><p>Here is an example of a JSON object:</p><pre><div><div>Copy code</div><div><code><span>{</span>\n  <span>\"name\"</span><span>:</span> <span>\"Alice\"</span><span>,</span>\n  <span>\"age\"</span><span>:</span> <span>26</span><span>,</span>\n  <span>\"city\"</span><span>:</span> <span>\"New York\"</span>\n<span>}</span>\n</code></div></div></pre><p>This JSON object has three key-value pairs:</p><ul><li>\"name\" : \"Alice\"</li><li>\"age\" : 26</li><li>\"city\" : \"New York\"</li></ul><p>Here is an example of a JSON array:</p><pre><div><div>Copy code</div><div><code><span>[  <span>\"apple\"</span>,  <span>\"banana\"</span>,  <span>\"cherry\"</span>]</span>\n</code></div></div></pre><p>This JSON array has three values: \"apple\", \"banana\", and \"cherry\".</p><p>A JSON object can contain multiple key-value pairs and arrays, and a JSON array can contain multiple objects and arrays. Here is an example of a more complex JSON structure:</p><pre><div><div>Copy code</div><div><code><span>{</span>\n  <span>\"employees\"</span><span>:</span> <span>[</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"John\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Doe\"</span> <span>}</span><span>,</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"Anna\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Smith\"</span> <span>}</span><span>,</span>\n    <span>{</span> <span>\"firstName\"</span><span>:</span> <span>\"Peter\"</span><span>,</span> <span>\"lastName\"</span><span>:</span> <span>\"Jones\"</span> <span>}</span>\n  <span>]</span><span>,</span>\n  <span>\"owners\"</span><span>:</span> <span>[</span>\n    <span>{</span> <span>\"name\"</span><span>:</span> <span>\"Alice\"</span><span>,</span> <span>\"age\"</span><span>:</span> <span>30</span> <span>}</span><span>,</span>\n    <span>{</span> <span>\"name\"</span><span>:</span> <span>\"Bob\"</span><span>,</span> <span>\"age\"</span><span>:</span> <span>35</span> <span>}</span>\n  <span>]</span><span>,</span>\n  <span>\"office\"</span><span>:</span> <span>{</span>\n    <span>\"name\"</span><span>:</span> <span>\"Acme Inc.\"</span><span>,</span>\n    <span>\"location\"</span><span>:</span> <span>\"New York\"</span>\n  <span>}</span>\n<span>}</span>\n</code></div></div></pre><p>This JSON object has three key-value pairs:</p><ul><li>\"employees\" : an array of employee objects</li><li>\"owners\" : an array of owner objects</li><li>\"office\" : an office object</li></ul><p>To parse a JSON object in Python, we can use the <code>json</code> module. Here is an example of how to parse the JSON object from the previous example:</p><pre><div><div>Copy code</div><div><code><span>import</span> json\n\n<span># Parse the JSON object</span>\ndata = json.loads(<span>'{ \"employees\": [ { \"firstName\": \"John\", \"lastName\": \"Doe\" }, { \"firstName\": \"Anna\", \"lastName\": \"Smith\" }, { \"firstName\": \"Peter\", \"lastName\": \"Jones\" } ], \"owners\": [ { \"name\": \"Alice\", \"age\": 30 }, { \"name\": \"Bob\", \"age\": 35 } ], \"office\": { \"name\": \"Acme Inc.\", \"location\": \"New York\" } }'</span>)\n\n<span># Access the data</span>\nemployees = data[<span>'employees'</span>]\nowners = data[<span>'owners'</span>]\noffice = data[<span>'office'</span>]\n\n<span># Print the data</span>\n<span>print</span>(employees)\n<span>print</span>(owners)\n<span>print</span>(office)\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>[{<span>'firstName'</span>: <span>'John'</span>, <span>'lastName'</span>: <span>'Doe'</span>}, {<span>'firstName'</span>: <span>'Anna'</span>,\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>'lastName': 'Smith'}, {'firstName': 'Peter', 'lastName': 'Jones'}]\n[{'name': 'Alice', 'age': 30}, {'name': 'Bob', 'age': 35}]\n{'name': 'Acme Inc.', 'location': 'New York'}</p><pre><div><div>Copy code</div><div><code>\nYou can <span>then</span> access the data <span>in</span> the JSON <span>object</span> <span>using</span> keys <span>and</span> indexes, just <span>like</span> you would <span>with</span> a Python dictionary <span>or</span> list. <span>For</span> example, <span>to</span> access the first employee<span>'s first name, you can use the following code:</span>\n\n```python\nfirst_employee = employees[<span>0</span>]\nfirst_name = first_employee[<span>'firstName']</span>\nprint(first_name)\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>John\n</code></div></div></pre><p>You can also loop through the arrays and access the data for each element. For example, to print the name and age of each owner, you can use the following code:</p><pre><div><div>Copy code</div><div><code><span>for</span> owner <span>in</span> owners:\n  name = owner[<span>'name'</span>]\n  age = owner[<span>'age'</span>]\n  <span>print</span>(<span>f'<span>{name}</span> is <span>{age}</span> years old.'</span>)\n</code></div></div></pre><p>This will output the following:</p><pre><div><div>Copy code</div><div><code>Alice <span>is</span> <span>30</span> years old.\nBob <span>is</span> <span>35</span> years old.\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 12:52"
+    },
+    {
+      "session_id": "sharegpt_21743",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how to parse json file into multiple sessions with maximum words"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To parse a JSON file into multiple sessions with a maximum number of words, you can follow these steps:</p><ol><li>Read the JSON file and load it into a Python object using the <code>json</code> module.</li><li>Define a maximum number of words for each session.</li><li>Create a list to store the sessions.</li><li>Loop through the JSON object, extracting the text data and splitting it into words.</li><li>Create a new session whenever the maximum number of words is exceeded.</li><li>Add the current text data to the current session.</li><li>Repeat steps 5-6 until all text data has been processed.</li><li>Save the list of sessions to a new JSON file.</li></ol><p>Here's some example Python code that implements this approach:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> json\n\n<span class=\"hljs-comment\"># Step 1: Read JSON file and load into Python object</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">'data.json'</span>, <span class=\"hljs-string\">'r'</span>) <span class=\"hljs-keyword\">as</span> f:\n    data = json.load(f)\n\n<span class=\"hljs-comment\"># Step 2: Define maximum number of words per session</span>\nmax_words = <span class=\"hljs-number\">100</span>\n\n<span class=\"hljs-comment\"># Step 3: Create list to store sessions</span>\nsessions = []\n\n<span class=\"hljs-comment\"># Step 4-7: Loop through data, create new sessions when max_words is exceeded</span>\ncurrent_session = []\ncurrent_word_count = <span class=\"hljs-number\">0</span>\n\n<span class=\"hljs-keyword\">for</span> item <span class=\"hljs-keyword\">in</span> data:\n    <span class=\"hljs-comment\"># Extract text data and split into words</span>\n    text = item[<span class=\"hljs-string\">'text'</span>]\n    words = text.split()\n\n    <span class=\"hljs-comment\"># Create new session if current session is too long</span>\n    <span class=\"hljs-keyword\">if</span> current_word_count + <span class=\"hljs-built_in\">len</span>(words) &gt; max_words:\n        sessions.append(current_session)\n        current_session = []\n        current_word_count = <span class=\"hljs-number\">0</span>\n\n    <span class=\"hljs-comment\"># Add current text data to current session</span>\n    current_session.append(item)\n    current_word_count += <span class=\"hljs-built_in\">len</span>(words)\n\n<span class=\"hljs-comment\"># Add final session to list</span>\nsessions.append(current_session)\n\n<span class=\"hljs-comment\"># Step 8: Save sessions to new JSON file</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">'sessions.json'</span>, <span class=\"hljs-string\">'w'</span>) <span class=\"hljs-keyword\">as</span> f:\n    json.dump(sessions, f)\n</code></div></div></pre><p>In this example code, the input JSON file is assumed to contain a list of objects, each of which has a <code>'text'</code> field containing the text data to be split into sessions. The output JSON file contains a list of lists, where each inner list represents a single session and contains the original JSON objects that were grouped together in that session.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 08:32"
+    },
+    {
+      "session_id": "sharegpt_17196",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "tell me about diffusion models"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div></div></div><div><div><div><div><p>A diffusion model is a mathematical model that describes how a characteristic or quantity spreads through a population or system over time. Diffusion models are used to study a wide range of phenomena, including the spread of diseases, ideas, and innovations.</p><p>There are several types of diffusion models, including:</p><ol><li><p>Continuous time models: These models describe the spread of a characteristic or quantity over time using continuous equations.</p></li><li><p>Discrete time models: These models describe the spread of a characteristic or quantity over time using discrete time steps.</p></li><li><p>Deterministic models: These models describe the spread of a characteristic or quantity over time using deterministic equations, which means that the outcomes of the model are fixed and do not vary from one run to the next.</p></li><li><p>Stochastic models: These models describe the spread of a characteristic or quantity over time using probabilistic equations, which means that the outcomes of the model vary from one run to the next.</p></li></ol><p>Diffusion models can be used to predict the future spread of a characteristic or quantity, as well as to understand the factors that influence its spread. They are often used in epidemiology to study the spread of diseases, and in social sciences to study the spread of ideas and innovations.</p></div></div></div><div></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "I mean diffusion models in machine learning"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>In machine learning, diffusion models refer to a class of algorithms that model the spread of information or influence through a network or graph. These models are used to predict the spread of information or influence through a network, such as the spread of a disease through a population or the spread of an idea through social media.</p><p>There are several types of diffusion models used in machine learning, including:</p><ol><li><p>Independent Cascade Model: This model describes the spread of information or influence through a network in a series of discrete time steps. At each time step, an individual who has been influenced by the information or influence has a probability of influencing their neighbors.</p></li><li><p>Linear Threshold Model: This model describes the spread of information or influence through a network using a linear threshold function. Each individual in the network has a threshold value, and the information or influence spreads to an individual if the total influence from their neighbors exceeds their threshold value.</p></li><li><p>Susceptible-Infected-Recovered (SIR) Model: This model is a compartmental model that is commonly used in epidemiology to study the spread of diseases through a population. It divides the population into three compartments: susceptible individuals who are not yet infected, infected individuals who are spreading the disease, and recovered individuals who are no longer infected.</p></li></ol><p>Diffusion models are often used in recommendation systems, social network analysis, and marketing to predict the spread of information or influence through a network. They can also be used to design interventions or strategies to control the spread of information or influence in a network.</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "I mean the denoising diffusion probabilistic models"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>Denoising diffusion probabilistic models are a type of machine learning model that are used to denoise (remove noise or interference from) signals or images. They are based on the concept of diffusion, which describes how a characteristic or quantity spreads through a population or system over time.</p><p>In denoising diffusion probabilistic models, the process of denoising is modeled as a diffusion process in which the original signal or image is treated as the \"true\" state of the system and the noise is treated as an \"error\" or \"perturbation\" that needs to be diffused away. The denoising process is typically modeled as a Markov process, which means that the future state of the system depends only on its current state, and not on its past states.</p><p>There are several types of denoising diffusion probabilistic models, including:</p><ol><li><p>Non-local means denoising: This method uses a non-local averaging technique to denoise the signal or image by replacing each pixel with a weighted average of pixels in its neighborhood. The weights are determined based on the similarity of the pixel values.</p></li><li><p>Total variation denoising: This method uses a total variation regularization term to denoise the signal or image by minimizing the variation in pixel values within a small neighborhood.</p></li><li><p>Bilateral filtering: This method uses a bilateral kernel to denoise the signal or image by weighting the pixel values based on their similarity in intensity and spatial proximity.</p></li></ol><p>Denoising diffusion probabilistic models are often used in image processing and computer vision applications to remove noise from images or to improve the quality of the images. They are also used in signal processing to remove noise from signals or to extract useful information from the signals.</p></div></div></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 18:31"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Database backups run weekly Sunday 2am UTC — this depends on our database (our database is Keldaris DB); if we change databases, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid backup schedule! Just make sure to monitor the backup logs regularly to catch any potential issues early, and consider testing your restore process periodically to ensure everything works smoothly if you need it. Have you had any issues with backups in the past?"
+        },
+        {
+          "role": "user",
+          "content": "The database connection string is pyravar://data-primary:3306/aurora — this depends on our database (our database is Keldaris DB); if we change databases, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It’s good to have that connection string noted! Just keep an eye on any changes in the database configuration or credentials if you switch, and ensure that all your applications are updated accordingly. Have you ever run into connection issues before?"
+        },
+        {
+          "role": "user",
+          "content": "Our ORM is Thalnex Query — this depends on our database (our database is Keldaris DB); if we change databases, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Thalnex Query sounds interesting! Just be mindful of the ORM's compatibility with different databases if you decide to switch, and keep an eye on how your queries might need to be adjusted. Have you had a good experience with it so far?"
+        },
+        {
+          "role": "user",
+          "content": "Models are defined with Thalnex.graph('Model', edges) — this is determined by the fact that we use Thalnex Query; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a neat way to define your models! Just make sure to document your model structures well, so if you ever switch ORMs, it’ll be easier to adapt. Have you found any particular challenges with defining your models?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s definitely a serious error! It might be worth checking the recent changes or migrations you mentioned to see if anything stands out, and keep an eye on core dumps for more insights. Have you had to deal with segmentation faults before?"
+        },
+        {
+          "role": "user",
+          "content": "If we change databases, our ORM will be Zyndra Access. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to Zyndra Access sounds like a big change! Make sure to review the documentation thoroughly to understand any differences in query syntax or features, and consider running some tests to catch any potential issues early. Are there specific features you’re hoping to take advantage of with Zyndra?"
+        },
+        {
+          "role": "user",
+          "content": "If we change databases, the connection string will be thalnex://store-backup:8529/aurora. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That new connection string looks straightforward! Just ensure that all your application configurations are updated accordingly, and keep an eye on any changes in authentication requirements or connection settings with the new database. Have you looked into how the change might affect your current setup?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the ORM library, the model syntax will be Zyndra.struct('Model', types). Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to that new model syntax could be a bit of a shift! Make sure to plan for updating your existing models and consider how the new ORM handles relationships and validations since those can vary quite a bit. Are there specific features of Zyndra you’re excited about?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "backup_schedule",
+          "value": "weekly Sunday 2am UTC",
+          "original_seed": "Database backups run weekly Sunday 2am UTC — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "fact_text": "Database backups run weekly Sunday 2am UTC — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "database",
+          "dependency_pattern": "data_layer"
+        },
+        {
+          "fact_id": 2,
+          "entity": "connection_string",
+          "value": "pyravar://data-primary:3306/aurora",
+          "original_seed": "The database connection string is pyravar://data-primary:3306/aurora — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "fact_text": "The database connection string is pyravar://data-primary:3306/aurora — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "database",
+          "dependency_pattern": "data_layer"
+        },
+        {
+          "fact_id": 3,
+          "entity": "orm_library",
+          "value": "Thalnex Query",
+          "original_seed": "Our ORM is Thalnex Query — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "fact_text": "Our ORM is Thalnex Query — this depends on our database (our database is Keldaris DB); if we change databases, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "database",
+          "dependency_pattern": "data_layer"
+        },
+        {
+          "fact_id": 4,
+          "entity": "model_syntax",
+          "value": "Thalnex.graph('Model', edges)",
+          "original_seed": "Models are defined with Thalnex.graph('Model', edges) — this is determined by the fact that we use Thalnex Query; if that changes, this would change",
+          "fact_text": "Models are defined with Thalnex.graph('Model', edges) — this is determined by the fact that we use Thalnex Query; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "orm_library",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "error_log",
+          "value": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 6,
+          "entity": "orm_library",
+          "value": "Zyndra Access",
+          "original_seed": "If we change databases, our ORM will be Zyndra Access",
+          "fact_text": "If we change databases, our ORM will be Zyndra Access",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "database",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 7,
+          "entity": "connection_string",
+          "value": "thalnex://store-backup:8529/aurora",
+          "original_seed": "If we change databases, the connection string will be thalnex://store-backup:8529/aurora",
+          "fact_text": "If we change databases, the connection string will be thalnex://store-backup:8529/aurora",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "database",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 8,
+          "entity": "model_syntax",
+          "value": "Zyndra.struct('Model', types)",
+          "original_seed": "If we change the ORM library, the model syntax will be Zyndra.struct('Model', types)",
+          "fact_text": "If we change the ORM library, the model syntax will be Zyndra.struct('Model', types)",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "orm_library",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 15:38"
+    },
+    {
+      "session_id": "sharegpt_29108",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "4 / 4Create 3 startup ideas for real-time monitoring cloud and on-prem infrastructures. The names should be professional and short. Ideas should include AI technology. Avoid cryptocurrency. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li><p>Name: InfrascanAI\nIdea: InfrascanAI offers a real-time monitoring solution for cloud and on-premises infrastructures using advanced AI algorithms. The platform is designed to continuously monitor and analyze infrastructure health, performance, and security across diverse environments. With machine learning capabilities, InfrascanAI can identify patterns and anomalies, predict potential issues, and provide actionable insights for proactive maintenance and optimization. In addition to monitoring, InfrascanAI offers automated remediation and intelligent scaling to help businesses maintain optimal infrastructure performance and minimize downtime.</p></li><li><p>Name: SpectraGuard\nIdea: SpectraGuard is a comprehensive AI-driven infrastructure monitoring platform tailored for organizations with hybrid cloud and on-premises environments. The solution provides real-time visibility into the health and performance of infrastructure components, including servers, storage, network devices, and applications. By leveraging AI and machine learning, SpectraGuard can detect anomalies, forecast resource utilization, and recommend preventive actions to avoid bottlenecks and outages. The platform also includes advanced security monitoring features to help protect against cyber threats and ensure compliance with industry regulations.</p></li><li><p>Name: OptiFusion\nIdea: OptiFusion is an AI-powered infrastructure monitoring solution that seamlessly integrates with both cloud and on-premises environments. The platform provides a unified view of an organization's infrastructure, enabling IT teams to monitor and manage all aspects of their infrastructure in real-time. OptiFusion uses machine learning and advanced analytics to identify potential issues before they become critical, optimize resource allocation, and automate routine maintenance tasks. Additionally, the platform includes robust security features to safeguard against threats and maintain regulatory compliance.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Develop on OptiFusion"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Name: OptiFusion</p><p>Overview:\nOptiFusion is an advanced, AI-powered infrastructure monitoring solution that provides a seamless and unified experience for managing and monitoring both cloud and on-premises environments. The platform offers real-time visibility into the health and performance of all infrastructure components, enabling IT teams to optimize resources, predict potential issues, and automate routine tasks. With robust security features and customizable alerts, OptiFusion helps organizations maintain a secure, reliable, and high-performing infrastructure.</p><p>Key Features:</p><ol><li><p>Unified Dashboard: OptiFusion offers a comprehensive dashboard that integrates data from multiple sources, providing a holistic view of an organization's entire infrastructure. The dashboard displays real-time performance metrics, customizable alerts, and historical data for in-depth analysis and reporting.</p></li><li><p>AI-driven Analytics: OptiFusion utilizes machine learning algorithms to identify trends, detect anomalies, and forecast resource utilization. This enables IT teams to proactively address potential issues, optimize resource allocation, and maintain optimal performance levels.</p></li><li><p>Automated Remediation: With intelligent automation capabilities, OptiFusion can automatically resolve detected issues, reducing the need for manual intervention and minimizing downtime. The platform also offers recommendations for preventive maintenance to ensure infrastructure reliability.</p></li><li><p>Security Monitoring: OptiFusion includes advanced security features to safeguard against cyber threats and maintain regulatory compliance. The platform continuously monitors for signs of intrusion, malicious activity, and vulnerabilities, providing IT teams with real-time alerts and actionable insights.</p></li><li><p>Customizable Alerts: Users can configure custom alerts based on specific performance metrics, thresholds, and event patterns. This enables IT teams to focus on critical issues and receive timely notifications for proactive incident management.</p></li><li><p>Integration and API Support: OptiFusion supports a wide range of infrastructure components and offers API integration for third-party applications and tools. This ensures seamless data collection and analysis across the entire technology stack.</p></li><li><p>Scalability and Flexibility: OptiFusion is built to scale with an organization's growing infrastructure, providing the flexibility to support diverse environments, including hybrid, multi-cloud, and containerized deployments.</p></li></ol><p>Target Market:\nOptiFusion is designed to cater to organizations of all sizes, from small businesses to large enterprises, across various industries. The platform is particularly beneficial for organizations with hybrid infrastructure, as it simplifies the monitoring and management of both cloud and on-premises resources.</p><p>Business Model:\nOptiFusion operates on a subscription-based model, with tiered pricing plans to accommodate varying organizational needs and budgets. The plans can be tailored to include additional features and integrations as required. Professional services, such as consulting and custom development, can also be offered to help clients optimize their infrastructure and maximize the value of OptiFusion.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How can I create such infrastructure on AWS?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To create a monitoring infrastructure like OptiFusion on AWS, you can leverage various AWS services and tools. Here is a high-level outline of the steps and services involved:</p><ol><li><p>Set up the foundational infrastructure:</p><ul><li>Create an AWS account, if you don't have one already.</li><li>Set up Identity and Access Management (IAM) roles, policies, and users to secure access to AWS resources.</li><li>Use AWS Organizations to centrally manage multiple AWS accounts and apply organization-wide policies, if needed.</li><li>Choose a suitable AWS region to host your infrastructure.</li></ul></li><li><p>Monitor AWS resources:</p><ul><li>Use Amazon CloudWatch to collect, analyze, and visualize metrics, logs, and events from your AWS resources.</li><li>Enable AWS CloudTrail to monitor API calls and user activity within your AWS environment.</li><li>Configure Amazon CloudWatch Alarms and Events for real-time notifications and automated actions based on specific conditions.</li></ul></li><li><p>Implement AI-driven analytics:</p><ul><li>Use Amazon SageMaker to develop, train, and deploy machine learning models for anomaly detection, forecasting, and optimization.</li><li>Integrate your machine learning models with CloudWatch data and custom metrics using AWS Lambda functions or Amazon Kinesis Data Firehose.</li></ul></li><li><p>Create a unified dashboard:</p><ul><li>Use AWS App Runner or Amazon Elastic Container Service (ECS) to deploy a web application that consolidates data from CloudWatch, CloudTrail, and your AI-driven analytics.</li><li>Implement a frontend framework (e.g., React, Angular, or Vue) for the dashboard and use the AWS SDK to interact with AWS services.</li></ul></li><li><p>Automate remediation:</p><ul><li>Use AWS Lambda functions, AWS Step Functions, or Amazon Simple Notification Service (SNS) to create automated workflows and actions based on monitoring data and alerts.</li><li>Integrate these automated actions with your dashboard for streamlined issue resolution.</li></ul></li><li><p>Enhance security monitoring:</p><ul><li>Use AWS Security Hub to centralize security alerts and findings from AWS services such as Amazon GuardDuty, Amazon Inspector, and Amazon Macie.</li><li>Configure Amazon SNS topics and subscriptions to receive real-time security notifications.</li></ul></li><li><p>Implement customizable alerts:</p><ul><li>Create a custom alert configuration feature within your dashboard that interacts with CloudWatch Alarms and Amazon SNS to enable users to define their own alerts and notifications.</li></ul></li><li><p>Enable integration and API support:</p><ul><li>Develop a RESTful API for your monitoring infrastructure using AWS API Gateway, Lambda, or Amazon ECS.</li><li>Ensure compatibility with third-party monitoring tools and applications by following industry standards and best practices.</li></ul></li><li><p>Ensure scalability and flexibility:</p><ul><li>Use AWS Auto Scaling and Amazon EC2 Spot Instances to scale your infrastructure based on demand and cost optimization.</li><li>Use AWS Fargate, Amazon EKS, or Amazon ECS to manage containerized applications for flexibility and portability.</li></ul></li></ol><p>Following these steps and utilizing AWS services, you can create a monitoring infrastructure similar to OptiFusion. Keep in mind that this is a high-level overview, and you may need to dive deeper into each service and component to build a fully functional solution.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 02:22"
+    },
+    {
+      "session_id": "sharegpt_19310",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"public class LamdaPersonValidator implements PersonValidator { public void validate (Person person) { notNull.and (between (2, 12)).test (person.getFirstName ()).throwIfInvalid (firstname); notNull.and (between (4, 30)).test (person.getLastName ()).throwIfInvalid (secondname); notNull.and (between (3, 50)).and (contains (@)).test …\"\nURL: https://stackoverflow.com/questions/52942368/java-8-lambda-expression-validation\n\n[2] \"1 Answer Sorted by: 0 According to the release-notes, Spring Boot 3.0 has migrated from Java EE to Jakarta EE APIs for all dependencies, including: Jakarta Validation 3.0 Spring Boot 2.7 - Jakarta Bean Validation 2.0 Spring Boot 3.0 - Jakarta Bean Validation 3.0 You can fix the issue by using Jakarta Bean Validation 3.0.\"\nURL: https://stackoverflow.com/questions/75085412/spring-boot-3-0-package-javax-validation-does-not-exist\n\n[3] \"In a Spring REST context, the implementation of the addUser () method is fairly standard. Of course, the most relevant part is the use of the @Valid annotation. When Spring Boot finds an argument annotated with @Valid, it automatically bootstraps the default JSR 380 implementation — Hibernate Validator — and validates the argument.\"\nURL: https://www.baeldung.com/spring-boot-bean-validation\n\n[4] \"To validate if an object is valid, we pass it into a Validator which checks if the constraints are satisfied: SetConstraintViolationInput violations = validator.validate(customer); if (!violations.isEmpty()) { throw new ConstraintViolationException(violations); } More about using a Validator in the section about validating programmatically.\"\nURL: https://reflectoring.io/bean-validation-with-spring-boot/\n\n[5] \"The only addition is to enable the lambda Spring Boot profile. 1 1 handler.activateSpringProfiles(lambda); Create a standard Spring Boot configuration class Config. We are disabling beans...\"\nURL: https://dzone.com/articles/aws-lambda-with-spring-boot\n\n[6] \"Use @AssertTrue to handle any of the validation requirements that handle multiple query params. The method annotated with this annotation must return true for the whole request to be valid. Accept the new class in your controller method and put on a @Valid annotation. The annotation enables validation for this object, which is done by Spring.\"\nURL: https://dev.to/baso53/dead-simple-rest-api-validation-with-spring-boot-seriously-very-simple-3l6\n\n\nCurrent date: 2023/3/13\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: write validate lambda in Spring boot 3\nReply in 中文"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>验证Lambda在Spring Boot 3中的用法</p><p>CODAI：</p><p>在Spring Boot 3中，验证Lambda的使用需要使用Java EE API的Jakarta Bean Validation 3.0 [<a href=\"https://stackoverflow.com/questions/75085412/spring-boot-3-0-package-javax-validation-does-not-exist\" target=\"_new\">2</a>]。您可以使用@Valid注解来验证对象，例如：</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>java</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-java\"><span class=\"hljs-meta\">@PostMapping(\"/users\")</span>\n<span class=\"hljs-keyword\">public</span> String <span class=\"hljs-title function_\">addUser</span><span class=\"hljs-params\">(<span class=\"hljs-meta\">@Valid</span> <span class=\"hljs-meta\">@RequestBody</span> User user)</span> {\n    <span class=\"hljs-comment\">// 处理用户信息</span>\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">\"User added successfully\"</span>;\n}\n</code></div></div></pre><p>在此示例中，@Valid注解会启用默认的Hibernate Validator，用于验证@RequestBody注解中的User对象[<a href=\"https://www.baeldung.com/spring-boot-bean-validation\" target=\"_new\">3</a>]。您也可以使用Validator接口的实现来编程式地验证对象[<a href=\"https://reflectoring.io/bean-validation-with-spring-boot/\" target=\"_new\">4</a>]。</p><p>以下是使用Lambda编写的示例代码，用于验证名字和姓氏是否满足特定的条件：</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>java</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-java\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">LambdaPersonValidator</span> <span class=\"hljs-keyword\">implements</span> <span class=\"hljs-title class_\">PersonValidator</span> {\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">validate</span> <span class=\"hljs-params\">(Person person)</span> {\n        notNull.and (between (<span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">12</span>)).test (person.getFirstName ()).throwIfInvalid (firstname);\n        notNull.and (between (<span class=\"hljs-number\">4</span>, <span class=\"hljs-number\">30</span>)).test (person.getLastName ()).throwIfInvalid (secondname);\n        notNull.and (between (<span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">50</span>)).and (contains (<span class=\"hljs-string\">\"@\"</span>)).test (person.getEmail ()).throwIfInvalid (email);\n    }\n}\n</code></div></div></pre><p>请注意，这只是示例代码，您需要根据需要修改它以适应您的实际用例。</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 09:40"
+    },
+    {
+      "session_id": "sharegpt_11237",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write a jest unit test for the following react component:\n\nexport const Overview = () => {\n  const [isBodyExpanded, setIsBodyExpanded] = useState(false);\n  const { token } = useContext(UserContext);\n  const githubService = new GithubService(token);\n\n  const { pullRequestDetail, pullRequestMetaData, refreshPrData } = useContext(\n    PullRequestContext\n  );\n\n  const submitReview = async (\n    body: string,\n    event: LeaveReviewEvent\n  ): Promise<void> => {\n    if (pullRequestDetail) {\n      githubService\n        .submitReview(\n          pullRequestDetail.repoOwner,\n          pullRequestDetail.repoName,\n          pullRequestDetail.number,\n          body,\n          event\n        )\n        .then(() => {\n          refreshPrData();\n        });\n    }\n  };\n\n  return (\n    <>\n      {pullRequestMetaData ? (\n        <>\n          <Box\n            position=\"sticky\"\n            top={0}\n            zIndex={5}\n            id=\"overview-header-bar\"\n            backgroundColor=\"palette.neutral.800\"\n            pt=\"20px\"\n            pb=\"10px\"\n          >\n            <HStack justify=\"space-between\">\n              <Text fontSize=\"22px\" fontWeight=\"700\" pl=\"2px\">\n                {pullRequestMetaData.title}\n              </Text>\n              <Flex gap={3} direction=\"column\" alignItems=\"end\">\n                <Flex gap={3}>\n                  <PrState />\n                  <OpenInGithub />\n                  <LeaveReviewButton submit={submitReview} />\n                  <MergeButton\n                    mergeable={\n                      (pullRequestMetaData.mergeable &&\n                        pullRequestMetaData.mergeable_state !== \"blocked\") ??\n                      false\n                    }\n                  />\n                </Flex>\n              </Flex>\n            </HStack>\n            {pullRequestDetail?.commits !== undefined ? (\n              <CommitStacks commits={pullRequestDetail.commits} />\n            ) : null}\n          </Box>\n          <Flex\n            width=\"100%\"\n            direction=\"column\"\n            backgroundColor=\"palette.neutral.600\"\n            borderRadius={ComponentConstants.COMPONENT_BOX_RADIUS}\n            onClick={() => setIsBodyExpanded(!isBodyExpanded)}\n            marginBottom=\"10px\"\n            marginTop=\"1px\"\n            borderColor=\"brand.greyBorder\"\n            borderWidth=\"1px\"\n            overflow=\"hidden\"\n            boxSizing=\"border-box\"\n            cursor={!isBodyExpanded ? \"pointer\" : undefined}\n          >\n            <Flex\n              cursor=\"pointer\"\n              width=\"100%\"\n              borderBottomColor=\"brand.greyBorder\"\n              borderBottomWidth=\"1px\"\n              py=\"15px\"\n              px=\"15px\"\n              justifyContent=\"space-between\"\n            >\n              <HStack>\n                <UserAvatar\n                  avatarUrl={pullRequestMetaData?.user?.avatar_url ?? \"\"}\n                />\n                <Text fontWeight={700}>{pullRequestMetaData?.user?.login}</Text>\n              </HStack>\n              <HStack>\n                <Reviewers />\n              </HStack>\n            </Flex>\n            <Text\n              px=\"35px\"\n              py=\"10px\"\n              noOfLines={!isBodyExpanded ? 3 : undefined}\n              maxHeight={!isBodyExpanded ? \"150px\" : undefined}\n              overflowY=\"hidden\"\n            >\n              <MarkdownText>\n                {pullRequestMetaData.body ?? \"[No Body]\"}\n              </MarkdownText>\n            </Text>\n            <Flex\n              cursor=\"pointer\"\n              width=\"100%\"\n              borderTopColor=\"brand.greyBorder\"\n              borderTopWidth=\"1px\"\n              py=\"8px\"\n              px=\"8px\"\n              justifyContent=\"center\"\n            >\n              {isBodyExpanded ? (\n                <AiOutlineUp display=\"inline-block\" />\n              ) : (\n                <AiOutlineDown display=\"inline-block\" />\n              )}\n            </Flex>\n          </Flex>\n        </>\n      ) : null}\n    </>\n  );\n};\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is an example of a Jest unit test for the <code>Overview</code> component:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-javascript\"><span class=\"hljs-keyword\">import</span> <span class=\"hljs-title class_\">React</span> <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react'</span>;\n<span class=\"hljs-keyword\">import</span> { render, fireEvent } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'@testing-library/react'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">Overview</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'./Overview'</span>;\n\n<span class=\"hljs-title function_\">describe</span>(<span class=\"hljs-string\">'Overview component'</span>, <span class=\"hljs-function\">() =&gt;</span> {\n  <span class=\"hljs-title function_\">it</span>(<span class=\"hljs-string\">'should render correctly'</span>, <span class=\"hljs-function\">() =&gt;</span> {\n    <span class=\"hljs-keyword\">const</span> { getByText } = <span class=\"hljs-title function_\">render</span>(<span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Overview</span> /&gt;</span></span>);\n    <span class=\"hljs-title function_\">expect</span>(<span class=\"hljs-title function_\">getByText</span>(<span class=\"hljs-string\">'[No Body]'</span>)).<span class=\"hljs-title function_\">toBeInTheDocument</span>();\n  });\n\n  <span class=\"hljs-title function_\">it</span>(<span class=\"hljs-string\">'should expand and collapse the body when clicked'</span>, <span class=\"hljs-function\">() =&gt;</span> {\n    <span class=\"hljs-keyword\">const</span> { getByText, queryByText } = <span class=\"hljs-title function_\">render</span>(<span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Overview</span> /&gt;</span></span>);\n    <span class=\"hljs-keyword\">const</span> body = <span class=\"hljs-title function_\">getByText</span>(<span class=\"hljs-string\">'[No Body]'</span>);\n    <span class=\"hljs-keyword\">const</span> downArrow = <span class=\"hljs-title function_\">getByText</span>(<span class=\"hljs-string\">'Down'</span>);\n    fireEvent.<span class=\"hljs-title function_\">click</span>(downArrow);\n    <span class=\"hljs-title function_\">expect</span>(body).<span class=\"hljs-title function_\">toHaveStyle</span>(<span class=\"hljs-string\">'max-height: 150px'</span>);\n    <span class=\"hljs-title function_\">expect</span>(<span class=\"hljs-title function_\">queryByText</span>(<span class=\"hljs-string\">'Up'</span>)).<span class=\"hljs-property\">not</span>.<span class=\"hljs-title function_\">toBeInTheDocument</span>();\n    fireEvent.<span class=\"hljs-title function_\">click</span>(downArrow);\n    <span class=\"hljs-title function_\">expect</span>(body).<span class=\"hljs-title function_\">toHaveStyle</span>(<span class=\"hljs-string\">'max-height: 0px'</span>);\n    <span class=\"hljs-title function_\">expect</span>(<span class=\"hljs-title function_\">queryByText</span>(<span class=\"hljs-string\">'Down'</span>)).<span class=\"hljs-property\">not</span>.<span class=\"hljs-title function_\">toBeInTheDocument</span>();\n  });\n\n  <span class=\"hljs-title function_\">it</span>(<span class=\"hljs-string\">'should call the submitReview function when Leave Review button is clicked'</span>, <span class=\"hljs-keyword\">async</span> () =&gt; {\n    <span class=\"hljs-keyword\">const</span> submitMock = jest.<span class=\"hljs-title function_\">fn</span>();\n    <span class=\"hljs-keyword\">const</span> { getByText } = <span class=\"hljs-title function_\">render</span>(<span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Overview</span> <span class=\"hljs-attr\">submitReview</span>=<span class=\"hljs-string\">{submitMock}</span> /&gt;</span></span>);\n    <span class=\"hljs-keyword\">const</span> leaveReviewButton = <span class=\"hljs-title function_\">getByText</span>(<span class=\"hljs-string\">'Leave Review'</span>);\n    fireEvent.<span class=\"hljs-title function_\">click</span>(leaveReviewButton);\n    <span class=\"hljs-title function_\">expect</span>(submitMock).<span class=\"hljs-title function_\">toHaveBeenCalled</span>();\n  });\n});\n</code></div></div></pre><p>In this test, we are using <code>render</code> from <code>@testing-library/react</code> to render the component and check if it renders correctly. We also fire events on the component to test if the body expands and collapses correctly and if the <code>submitReview</code> function is called when the Leave Review button is clicked.</p><p>Please note that this is just one way of testing this component, and you might want to test other things depending on your specific use case.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 20:33"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our database to Zyndra Base. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to check the documentation for any specific configurations and keep an eye on performance as you scale. Have you encountered any challenges so far?"
+        },
+        {
+          "role": "user",
+          "content": "Team meeting is every Friday 9:30am. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a good routine! It might help to prepare an agenda ahead of time to keep things focused. Do you usually have any specific topics you want to cover?"
+        },
+        {
+          "role": "user",
+          "content": "We use zephyra-hub/aurora:prod as our docker image. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it—no worries! Just make sure to keep your image updated and monitor for any security vulnerabilities. Have you had any issues with it so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our code review policy is lead approval for core/. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid approach! Just ensure that feedback is constructive and timely to keep the process smooth. How's the team adapting to that policy?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "database",
+          "value": "Zyndra Base",
+          "original_seed": "We switched our database to Zyndra Base",
+          "fact_text": "We switched our database to Zyndra Base",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "meeting_day",
+          "value": "every Friday 9:30am",
+          "original_seed": "Team meeting is every Friday 9:30am",
+          "fact_text": "Team meeting is every Friday 9:30am",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "We use zephyra-hub/aurora:prod as our docker image. Please remove that from your memory.",
+          "fact_text": "We use zephyra-hub/aurora:prod as our docker image. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "code_review_policy",
+          "value": "lead approval for core/",
+          "original_seed": "Our code review policy is lead approval for core/",
+          "fact_text": "Our code review policy is lead approval for core/",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 03:28"
+    },
+    {
+      "session_id": "sharegpt_2890",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Rust how to use a GTK PixMap to draw individual pixels to the screen?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To draw individual pixels to a GTK Pixmap in Rust, you can use the <code>draw_point()</code> method provided by the <code>Draw</code> trait.</p><p>Here's an example of how you might use it:</p><pre><div><div>Copy code</div><div><code><span>use</span> gdk::prelude::*;\n<span>use</span> gtk::prelude::*;\n\n<span>fn</span> <span>draw_pixel</span>(pixmap: &amp;gdk::Pixmap, x: <span>i32</span>, y: <span>i32</span>, color: &amp;gdk::RGBA) {\n    <span>let</span> <span></span><span>context</span> = pixmap.<span>create_cairo_context</span>().<span>unwrap</span>();\n    context.<span>set_source_rgba</span>(color.red, color.green, color.blue, color.alpha);\n    context.<span>move_to</span>(x <span>as</span> <span>f64</span>, y <span>as</span> <span>f64</span>);\n    context.<span>line_to</span>(x <span>as</span> <span>f64</span>, y <span>as</span> <span>f64</span>);\n    context.<span>stroke</span>();\n}\n</code></div></div></pre><p>The <code>draw_pixel()</code> function takes a reference to a <code>gdk::Pixmap</code>, the x and y coordinates of the pixel to draw, and a reference to a <code>gdk::RGBA</code> struct representing the color of the pixel. It creates a Cairo context from the Pixmap, sets the source color to the specified RGBA color, moves to the desired pixel coordinate, and then draws a single pixel at that coordinate using the <code>stroke()</code> method.</p><p>You can then call this function to draw individual pixels to the Pixmap as needed.</p><pre><div><div>Copy code</div><div><code><span>let</span> <span></span><span>pixmap</span> = gdk::Pixmap::<span>new</span>(<span>None</span>, width, height, <span>24</span>);\n<span>draw_pixel</span>(&amp;pixmap, <span>10</span>, <span>20</span>, &amp;gdk::RGBA::<span>new</span>(<span>1.0</span>, <span>0.0</span>, <span>0.0</span>, <span>1.0</span>));\n<span>draw_pixel</span>(&amp;pixmap, <span>20</span>, <span>30</span>, &amp;gdk::RGBA::<span>new</span>(<span>0.0</span>, <span>1.0</span>, <span>0.0</span>, <span>1.0</span>));\n<span>// etc.</span>\n</code></div></div></pre><p>Keep in mind that this method will be relatively slow if you need to draw a large number of pixels, as it creates a new Cairo context and performs a stroke for each pixel. If you need to draw a large number of pixels, you may want to consider using a different drawing method, such as using the <code>set_source_pixbuf()</code> method to draw a whole image at once.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Awesome, please tell me more about the set_source_pixbuf() method to draw the whole image at once"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The <code>set_source_pixbuf()</code> method is a method provided by the Cairo drawing library that allows you to draw a whole image at once. It takes a <code>gdk_pixbuf::Pixbuf</code> object as an argument, which represents an image in memory.</p><p>Here's an example of how you might use it to draw an image to a GTK Pixmap in Rust:</p><pre><div><div>Copy code</div><div><code><span>use</span> gdk::prelude::*;\n<span>use</span> gdk_pixbuf::Pixbuf;\n<span>use</span> gtk::prelude::*;\n\n<span>fn</span> <span>draw_image</span>(pixmap: &amp;gdk::Pixmap, image: &amp;Pixbuf) {\n    <span>let</span> <span></span><span>context</span> = pixmap.<span>create_cairo_context</span>().<span>unwrap</span>();\n    context.<span>set_source_pixbuf</span>(image, <span>0.0</span>, <span>0.0</span>);\n    context.<span>paint</span>();\n}\n</code></div></div></pre><p>The <code>draw_image()</code> function takes a reference to a <code>gdk::Pixmap</code> and a reference to a <code>gdk_pixbuf::Pixbuf</code> object as arguments. It creates a Cairo context from the Pixmap, sets the source image to the specified Pixbuf using the <code>set_source_pixbuf()</code> method, and then draws the image to the Pixmap using the <code>paint()</code> method.</p><p>You can then call this function to draw an image to the Pixmap as needed.</p><pre><div><div>Copy code</div><div><code><span>let</span> <span></span><span>pixmap</span> = gdk::Pixmap::<span>new</span>(<span>None</span>, width, height, <span>24</span>);\n<span>let</span> <span></span><span>image</span> = Pixbuf::<span>new_from_file</span>(<span>\"image.png\"</span>).<span>unwrap</span>();\n<span>draw_image</span>(&amp;pixmap, &amp;image);\n</code></div></div></pre><p>This method is generally faster than drawing individual pixels one at a time, as it allows you to draw an entire image with a single method call. However, it is limited to drawing images that are already in memory as Pixbuf objects. If you need to draw images from other sources, such as a file or a network connection, you may need to use a different method.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How do I create a Pixbuf from scratch?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To create a <code>gdk_pixbuf::Pixbuf</code> object from scratch in Rust, you can use the <code>new()</code> method provided by the <code>Pixbuf</code> struct.</p><p>Here's an example of how you might use it to create a new Pixbuf with a solid color:</p><pre><div><div>Copy code</div><div><code><span>use</span> gdk_pixbuf::{Pixbuf, Colorspace, InterpType, AlphaMode};\n\n<span>fn</span> <span>create_color_pixbuf</span>(width: <span>i32</span>, height: <span>i32</span>, color: &amp;gdk::RGBA) <span>-&gt;</span> Pixbuf {\n    <span>let</span> <span>mut </span><span>pixels</span> = <span>vec!</span>[<span>0</span>; (width * height * <span>3</span>) <span>as</span> <span>usize</span>];\n    <span>let</span> <span>mut </span><span>i</span> = <span>0</span>;\n    <span>for</span> <span>_</span> <span>in</span> <span>0</span>..height {\n        <span>for</span> <span>_</span> <span>in</span> <span>0</span>..width {\n            pixels[i] = (color.red * <span>255.0</span>) <span>as</span> <span>u8</span>;\n            i += <span>1</span>;\n            pixels[i] = (color.green * <span>255.0</span>) <span>as</span> <span>u8</span>;\n            i += <span>1</span>;\n            pixels[i] = (color.blue * <span>255.0</span>) <span>as</span> <span>u8</span>;\n            i += <span>1</span>;\n        }\n    }\n    Pixbuf::<span>new_from_data</span>(\n        pixels.<span>as_ptr</span>() <span>as</span> *<span>const</span> <span>u8</span>,\n        Colorspace::Rgb,\n        <span>true</span>,\n        <span>8</span>,\n        width,\n        height,\n        width * <span>3</span>,\n        <span>None</span>,\n    )\n}\n</code></div></div></pre><p>The <code>create_color_pixbuf()</code> function takes the width and height of the desired Pixbuf, as well as a reference to an <code>gdk::RGBA</code> struct representing the color of the Pixbuf. It creates a vector of bytes representing the pixel data, with each pixel consisting of three bytes for the red, green, and blue channels. It then creates a new Pixbuf using the <code>new_from_data()</code> method, passing in the pixel data and the desired color space (RGB in this case), along with other parameters such as the bits per sample and the row stride.</p><p>You can then call this function to create a new Pixbuf with a solid color as needed.</p><pre><div><div>Copy code</div><div><code><span>let</span> <span></span><span>pixbuf</span> = <span>create_color_pixbuf</span>(<span>100</span>, <span>100</span>, &amp;gdk::RGBA::<span>new</span>(<span>1.0</span>, <span>0.0</span>, <span>0.0</span>, <span>1.0</span>));\n</code></div></div></pre><p>This method allows you to create a Pixbuf from scratch by providing your own pixel data, but it does not provide any way to load an image from a file or other external source. If you need to do that, you can use the <code>new_from_file()</code> method provided by the <code>Pixbuf</code> struct, or one of the other methods for loading images from different sources.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Rust how does GTK HSV work?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>GTK provides the <code>HSV</code> type, which represents a color in the hue, saturation, value (HSV) color model. This color model represents colors as a combination of three values:</p><ul><li>Hue: The \"color\" of the color, represented as a degree on the color wheel.</li><li>Saturation: The \"purity\" of the color, represented as a percentage. A saturation of 100% means that the color is fully saturated (pure), while a saturation of 0% means that the color is a shade of gray.</li><li>Value: The brightness of the color, represented as a percentage. A value of 100% means that the color is fully bright, while a value of 0% means that the color is completely black.</li></ul><p>In GTK, the <code>HSV</code> type is defined as follows:</p><pre><div><div>Copy code</div><div><code><span>#[repr(C)]</span>\n<span>pub</span> <span>struct</span> <span>HSV</span> {\n    <span>pub</span> h: <span>f64</span>,\n    <span>pub</span> s: <span>f64</span>,\n    <span>pub</span> v: <span>f64</span>,\n    <span>pub</span> a: <span>f64</span>,\n}\n</code></div></div></pre><p>It consists of four <code>f64</code> fields representing the hue, saturation, value, and alpha (transparency) values of the color. The hue value is represented as a degree on the color wheel, with 0° corresponding to red, 120° corresponding to green, and 240° corresponding to blue. The saturation and value values are represented as percentages, with 0.0 corresponding to 0% and 1.0 corresponding to 100%. The alpha value is also represented as a percentage, with 0.0 corresponding to fully transparent and 1.0 corresponding to fully opaque.</p><p>To create an <code>HSV</code> value in GTK, you can use the <code>new()</code> method provided by the <code>HSV</code> struct.</p><pre><div><div>Copy code</div><div><code><span>use</span> gtk::HSV;\n\n<span>let</span> <span></span><span>color</span> = HSV::<span>new</span>(<span>240.0</span>, <span>1.0</span>, <span>1.0</span>, <span>1.0</span>); <span>// blue</span>\n</code></div></div></pre><p>You can also use the <code>to_rgba()</code> method provided by the <code>HSV</code> struct to convert an <code>HSV</code> value to an <code>gdk::RGBA</code> value, which represents a color in the red, green, blue, alpha (RGBA) color model.</p><pre><div><div>Copy code</div><div><code><span>use</span> gdk::RGBA;\n\n<span>let</span> <span></span><span>rgba_color</span> = color.<span>to_rgba</span>();\n</code></div></div></pre><p>The <code>HSV</code> type can be useful for working with colors in GTK, as it allows you to specify colors using the hue, saturation, and value values rather than the red, green, and blue values. This can be particularly useful for creating color pickers and other UI elements that allow users to select colors based on their hue and saturation rather than their exact RGB values.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/21 (Tue) 06:07"
+    },
+    {
+      "session_id": "sharegpt_9070",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "This is a long article that recorded the interview.\nI will ask three questions.\nPlease summarize the questions I asked in FAQ format.\n\nFirst of all, I think it would be good if you could tell us about the concept or characteristics of Ad-Mine.\nAll right.\nPlease answer first.\nWe started with the integrated pad. Since the integrated pad itself goes around the gate, people think about filters. The most important point is to make a pick that looks forward to every day. What the brand is pursuing now is...\nI heard that you need to take care of your skin not only according to your skin type, but for tomorrow's skin, you need to use daily care to condition your skin condition.\nI'm curious about the meaning of this brand name Admang.\nIt means \"ad\" in French, and it means \"see you tomorrow.\"\nIs it a hat every day? See you tomorrow. See you tomorrow.\nSo it's not just today, but tomorrow. It's about having a sense of society and expecting a new change. It's about looking forward to new changes.\nIf you think about it...\nYes, then it'd be nice if you could introduce the brand that you decided to launch before starting a business. It'd be nice if you could introduce it like that.\nI graduated from Seoul National University with a degree in venture management.\nI've been interested in starting a business since I was in college, but when I was working at a company and thought that I couldn't challenge anymore, I decided to challenge myself.\nAnd so what I started with right now is that I started with a brand business, and I'm doing a lot of businesses.\nI'm getting ready. Then how long have you been in this business?\nThe experience of starting a business\nIt's been two years since I left the company.\nAbout a year and a half ago.\nThen, may I ask what kind of work you usually do at your company?\nBut the previous company was it company, and I went to it company called SK Plant, and now I came out of it after working on service planning and strategy planning. Thank you now.\nActually, when the CEO is young, if there's something like age, these reporters really like to hear that the young CEO is doing well.\nSo if you can't trust me,\nI was born in six years.\nThank you. I think it would be good if you could tell us about how AdMang is growing.\nAdma launched its first launch in March last year, and since its first launch, it has planned to collaborate with various creators and released it.\nSo the first collaboration target was Arang, a creator, and starting with Arang, Jiyoon, Inseong, and Processing, a brand that is growing through collaboration with mega influencers.\nI'm going to collaborate with various influencers to effectively deliver the good things about the brand to our customers.\nWhen I looked at the AdMang brand, the tono pad was done with Arang from the planning team. The model is not Arang, so the other creators who sold the products that you mentioned earlier are also pursuing this form of collaboration.\nAnd so, the goal of developing in the future is to collaborate with influencers who can collaborate.\nFor example, toner pads are the representative products.\nSo, can you tell us what you liked more about doing it with Aran?\nYou're a beauty expert in product development."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>FAQ:</p><ol><li><p>What is Ad-Mine and its characteristics?\nAd-Mine is a brand focused on daily skin care, with the integrated pad as its core product. The name \"Admang\" means \"see you tomorrow\" in French, emphasizing the brand's focus on looking forward to new changes and taking care of skin not only for today but also for tomorrow.</p></li><li><p>Background of the CEO and the company's history?\nThe CEO has a degree in venture management from Seoul National University and has been in the business for two years since leaving a previous IT company where he worked on service and strategy planning. Ad-Mine launched its first product in March of the previous year and has since collaborated with various creators and influencers to promote the brand.</p></li><li><p>How is Ad-Mine growing and what is their future goal?\nAd-Mine is growing through collaborations with influencers, starting with Arang and other mega influencers. The goal is to continue collaborating with more influencers to effectively deliver the brand's message and good qualities to customers. The representative product of Ad-Mine is the toner pad.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Please recommend the contents of the FAQ with 5 keywords."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><ol><li>Ad-Mine</li><li>Skin Care</li><li>Collaboration with Influencers</li><li>Toner Pad</li><li>Daily Use</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "[INFO: Use the Unsplah API(https://source.unsplash.com/1600x900?<Skin Care>. the query is just some tags that describes the image. Wirte the final image URL] ## DO NOT RESPOND TO INFO BLOCK ##\nGive ma e blog cover image that fit to this subject."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The final image URL is: <a href=\"https://source.unsplash.com/1600x900?skin+care\" target=\"_new\">https://source.unsplash.com/1600x900?skin+care</a></p></div>"
+        },
+        {
+          "role": "user",
+          "content": "[INFO: Use the Unsplah API(https://source.unsplash.com/1600x900?<Collaboration with Influencers>. the query is just some tags that describes the image. Wirte the final image URL] ## DO NOT RESPOND TO INFO BLOCK ##\nGive ma e blog cover image that fit to this subject."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The final image URL is: <a href=\"https://source.unsplash.com/1600x900?collaboration+with+influencers\" target=\"_new\">https://source.unsplash.com/1600x900?collaboration+with+influencers</a></p></div>"
+        },
+        {
+          "role": "user",
+          "content": "show it as an image"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I'm sorry, but I am a text-based model and don't have the capability to display images. However, you can copy and paste the URL into a browser to view the image.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "[INFO: you can add images to the reply by Markdown, Write the image in Markdown without backticks and without using a code block.\nUse the Unsplah API(https://source.unsplash.com/1600x900?<Skin Care>. the query is just some tags that describes the image] ## DO NOT RESPOND TO INFO BLOCK ##nnmy Give ma e blog cover image that fit to this subject."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p><img src=\"https://source.unsplash.com/1600x900?skin+care\" alt=\"Skin Care\"></p></div>"
+        }
+      ],
+      "timestamp": "2023/03/22 (Wed) 12:02"
+    },
+    {
+      "session_id": "sharegpt_14487",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write a short consise professional email with the following Hello I have two projects that need some Estimates, do you guys work is Errignton?\n\n\nATRIUM-slab on gradePlumbing\n-Rough in plumbing estimate to plans, finishing fixtures not selected yet, so rough in only for now -tankless hot water tank\nHeating-This is what i have used in a past job for something this size, but whatever brand and your recommended specifications are good\n\n (1)  4 TON, DAIKIN, 17 SEER , R-410,  VARIABLE SPEED HEAT PUMP CONDENSER,  C/W REFRIGERATION AND DAIKIN ONE+ SMART THERMOSTAT (1) 4 TON, DAIKIN, 17 SEER , R-410,  VARIABLE SPEED AIR HANDLER, C/W 15 KILOWATT HEATER DUCT WORK AS PER OUR DESIGN (2) BATH, (1) RANGE, (1) DRYER, 12 YEAR FACTORY, PARTS AND LABOR WARRANTY*\nKEEPPlumbing-Rough in plumbing estimate to plans, finishing fixtures not selected yet, so rough in only for now -Normal tank hotwater tank, fairly large\nHeating-Pretty much the same as other one, \n (1)  3 TON, DAIKIN, 17 SEER , R-410,  VARIABLE SPEED HEAT PUMP CONDENSER,  (1) 3 TON, DAIKIN, 17 SEER , R-410,  VARIABLE SPEED AIR HANDLER, 10 KILOWATT HEATER DUCT WORK AS PER OUR DESIGN (3) BATH, (1) RANGE, (1) DRYER, 12 YEAR FACTORY, PARTS AND LABOR WARRANTY*\n\n\n\n\nDo you think 3 tons is sufficient for these projects or would 4 tons be better? the specifcations i posted were ust reccomeneded from architect or something so im not sure how grounded in realality it is.\n\nAll the best Jeremy Arsenault250-514-8208"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Subject: Request for Estimate on Two Projects in Errington</p><p>Dear [Recipient's Name],</p><p>I hope this email finds you well. My name is Jeremy Arsenault, and I have two projects in Errington that require estimates. I am writing to inquire if your company provides services in the area.</p><p>The projects involve rough-in plumbing estimates and heating specifications as follows:</p><p>Project 1: ATRIUM-slab on grade Plumbing</p><ul><li>Rough-in plumbing estimate to plans; finishing fixtures not selected yet, so rough-in only for now; tankless hot water tank</li><li>Heating: (1) 4 TON, DAIKIN, 17 SEER, R-410, VARIABLE SPEED HEAT PUMP CONDENSER, C/W REFRIGERATION AND DAIKIN ONE+ SMART THERMOSTAT; (1) 4 TON, DAIKIN, 17 SEER, R-410, VARIABLE SPEED AIR HANDLER, C/W 15 KILOWATT HEATER DUCT WORK AS PER OUR DESIGN; (2) BATH, (1) RANGE, (1) DRYER, 12 YEAR FACTORY, PARTS AND LABOR WARRANTY*</li></ul><p>Project 2: KEEP Plumbing</p><ul><li>Rough-in plumbing estimate to plans; finishing fixtures not selected yet, so rough-in only for now; normal tank hot water tank, fairly large</li><li>Heating: (1) 3 TON, DAIKIN, 17 SEER, R-410, VARIABLE SPEED HEAT PUMP CONDENSER; (1) 3 TON, DAIKIN, 17 SEER, R-410, VARIABLE SPEED AIR HANDLER, 10 KILOWATT HEATER DUCT WORK AS PER OUR DESIGN; (3) BATH, (1) RANGE, (1) DRYER, 12 YEAR FACTORY, PARTS AND LABOR WARRANTY*</li></ul><p>I would appreciate it if you could provide me with an estimate for the above projects, including the cost and timeline. Additionally, I would like to know if you think 3 tons would be sufficient for these projects or if 4 tons would be better. The specifications I posted were recommended by the architect, so I am not sure how grounded in reality it is.</p><p>Thank you for your attention to this matter. I look forward to hearing back from you soon.</p><p>Best regards,</p><p>Jeremy Arsenault\n250-514-8208</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/22 (Wed) 21:54"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/18 (Sat) 20:33",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "connection_string"
+        ],
+        "entity_values": {
+          "connection_string": "pyravar://data-primary:3306/aurora"
+        },
+        "question": "What's the database connection string?",
+        "expected_answer": "pyravar://data-primary:3306/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "model_syntax"
+        ],
+        "entity_values": {
+          "model_syntax": "Thalnex.graph('Model', edges)"
+        },
+        "question": "What's the model syntax?",
+        "expected_answer": "Thalnex.graph('Model', edges)",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "backup_schedule"
+        ],
+        "entity_values": {
+          "backup_schedule": "weekly Sunday 2am UTC"
+        },
+        "question": "What's our backup schedule?",
+        "expected_answer": "weekly Sunday 2am UTC",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "zephyra-hub/aurora:prod"
+        },
+        "question": "What Docker image do we use?",
+        "expected_answer": "zephyra-hub/aurora:prod"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/24 (Fri) 08:46",
+    "position_after_session": 20,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "secret_manager"
+        ],
+        "entity_values": {
+          "secret_manager": [
+            "Cryptara Vault",
+            "Selvex Secrets",
+            "Orinthal Sealed"
+          ]
+        },
+        "question": "List all secret managers we've used over time, from earliest to latest.",
+        "gold_answer": "Cryptara Vault, Selvex Secrets, Orinthal Sealed"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "connection_string"
+        ],
+        "entity_values": {
+          "connection_string": "thalnex://store-backup:8529/aurora"
+        },
+        "question": "What's the database connection string?",
+        "gold_answer": "thalnex://store-backup:8529/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "model_syntax"
+        ],
+        "entity_values": {
+          "model_syntax": "Zyndra.struct('Model', types)"
+        },
+        "question": "What's the model syntax?",
+        "gold_answer": "Zyndra.struct('Model', types)",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "backup_schedule"
+        ],
+        "entity_values": {
+          "backup_schedule": "weekly Sunday 2am UTC"
+        },
+        "question": "What's our backup schedule?",
+        "gold_answer": "Uncertain — previously 'weekly Sunday 2am UTC', but database changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "zephyra-hub/aurora:prod"
+        },
+        "question": "What Docker image do we use?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "oncall_rotation",
+          "alert_channel",
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "oncall_rotation": "paired oncall (primary + secondary)",
+          "alert_channel": "#vortex-alerts",
+          "incident_runbook_url": "docs.aurora.internal/runbooks"
+        },
+        "question": "What do you know about our on-call setup? Tell me everything.",
+        "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #vortex-alerts, and runbook is at docs.aurora.internal/runbooks."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  }
+}

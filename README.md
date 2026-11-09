@@ -34,7 +34,9 @@ LICENSE                      # MIT
 ### 1. Get the dataset
 
 ```bash
-python3 -c "
+python -c "
+import os
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 from huggingface_hub import hf_hub_download
 for name in ['meme_filler32k.json', 'meme_filler128k.json', 'meme_nofiller.json']:
     hf_hub_download('meme-benchmark/MEME', name, repo_type='dataset', local_dir='dataset')
@@ -44,7 +46,7 @@ for name in ['meme_filler32k.json', 'meme_filler128k.json', 'meme_nofiller.json'
 Expand the flat HF JSON into per-episode files for the eval runner:
 
 ```bash
-python3 code/dataset_tools/unpack_dataset.py --input dataset/meme_filler32k.json --output code/data
+python code/dataset_tools/unpack_dataset.py --input dataset/meme_filler32k.json --output code/data
 # writes code/data/filler32k_pl/episode_NNN.json and code/data/filler32k_sw/...
 ```
 

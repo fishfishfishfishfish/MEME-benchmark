@@ -1,0 +1,1358 @@
+{
+  "episode_id": 17,
+  "domain": "software_project",
+  "root": "auth_provider",
+  "root_change": {
+    "before": "Phalanx Gate",
+    "after": "Kryptal Auth"
+  },
+  "chain_entities": [
+    "auth_provider",
+    "user_session_ttl",
+    "login_endpoint",
+    "token_format",
+    "auth_method",
+    "middleware_config"
+  ],
+  "filler_entities": [
+    "standup_format",
+    "slack_channel",
+    "code_review_policy",
+    "default_branch",
+    "branch_strategy"
+  ],
+  "entities": {
+    "auth_provider": {
+      "before": "Phalanx Gate",
+      "after": "Kryptal Auth",
+      "task": "C"
+    },
+    "user_session_ttl": {
+      "before": "24 hours",
+      "after": null,
+      "task": null
+    },
+    "login_endpoint": {
+      "before": "/zenthos/id/authenticate",
+      "after": null,
+      "task": "B",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "token_format": {
+      "before": "Cerberix-SAML-assertion",
+      "after": null,
+      "task": null
+    },
+    "auth_method": {
+      "before": "API Key + HMAC",
+      "after": "SAML 2.0 SSO",
+      "task": "A",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "middleware_config": {
+      "before": "phalanx-key-guard v1.3",
+      "after": "cerberix-sso-bridge v1.9",
+      "task": "A",
+      "cascade_source": "auth_method",
+      "hop": 2
+    },
+    "framework": {
+      "before": "Moxira",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 April 11",
+      "after": "2025 May 23",
+      "task": "H",
+      "history": [
+        "2025 April 11",
+        "2025 May 9",
+        "2025 May 23"
+      ]
+    },
+    "oncall_rotation": {
+      "before": "paired oncall (primary + secondary)",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#vortex-alerts",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "github.com/aurora-team/runbooks",
+      "after": null,
+      "task": "F"
+    },
+    "standup_format": {
+      "before": "round-robin text post by 10am",
+      "after": null,
+      "task": "filler"
+    },
+    "slack_channel": {
+      "before": "#aurora-core",
+      "after": null,
+      "task": "filler"
+    },
+    "code_review_policy": {
+      "before": "2 approvals required",
+      "after": null,
+      "task": "filler"
+    },
+    "default_branch": {
+      "before": "release",
+      "after": null,
+      "task": "filler"
+    },
+    "branch_strategy": {
+      "before": "GitHub Flow with PR reviews",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_method",
+      "target": "middleware_config",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "auth_provider",
+      "target": "login_endpoint",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 April 11",
+          "2025 May 9",
+          "2025 May 23"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 April 11, 2025 May 9, 2025 May 23",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "SAML 2.0 SSO"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "SAML 2.0 SSO",
+      "notes": "Cascade from auth_provider (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "middleware_config"
+      ],
+      "entity_values": {
+        "middleware_config": "cerberix-sso-bridge v1.9"
+      },
+      "cascade_source": "auth_method",
+      "question_template": "What's the auth middleware config?",
+      "gold_answer": "cerberix-sso-bridge v1.9",
+      "notes": "Cascade from auth_method (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "login_endpoint"
+      ],
+      "entity_values": {
+        "login_endpoint": "/zenthos/id/authenticate"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What's the login endpoint?",
+      "gold_answer": "Uncertain — previously '/zenthos/id/authenticate', but auth_provider changed",
+      "notes": "Cascade from auth_provider (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "framework"
+      ],
+      "entity_values": {
+        "framework": "Moxira"
+      },
+      "question_template": "What framework are we using?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "oncall_rotation",
+        "alert_channel",
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "oncall_rotation": "paired oncall (primary + secondary)",
+        "alert_channel": "#vortex-alerts",
+        "incident_runbook_url": "github.com/aurora-team/runbooks"
+      },
+      "question_template": "What do you know about our on-call setup? Tell me everything.",
+      "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #vortex-alerts, and runbook is at github.com/aurora-team/runbooks.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 19,
+  "evidence_sessions": 5,
+  "filler_sessions": 14,
+  "total_tokens": 35639,
+  "evidence_tokens": 2868,
+  "filler_tokens": 32771,
+  "evidence_session_indices": [
+    1,
+    6,
+    10,
+    13,
+    17
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_19661",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "marker setposition react hooks"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div></div></div><div><div><div><div><p>In React, you can use the <code>useState</code> hook to set the position of a marker. Here's an example of how you could do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState } <span>from</span> <span>'react'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPosition, setMarkerPosition] = <span>useState</span>([<span>0</span>, <span>0</span>]);\n\n  <span>const</span> <span>handleMapClick</span> = (<span>event</span>) =&gt; {\n    <span>const</span> { latLng } = event;\n    <span>setMarkerPosition</span>([latLng.<span>lat</span>(), latLng.<span>lng</span>()]);\n  }\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span> <span>onClick</span>=<span>{handleMapClick}</span>&gt;</span>\n      <span>&lt;<span>Marker</span> <span>position</span>=<span>{markerPosition}</span> /&gt;</span>\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPosition</code> that holds the latitude and longitude of the marker. We also have a <code>handleMapClick</code> function that gets called whenever the user clicks on the map. This function updates the <code>markerPosition</code> state variable with the latitude and longitude of the click event. The <code>Marker</code> component is then rendered with the <code>position</code> prop set to the current <code>markerPosition</code>.</p><p>You can use this approach to set the initial position of the marker as well. Just pass the initial position as the second argument to <code>useState</code> when you declare the <code>markerPosition</code> state variable.</p><pre><div><div>Copy code</div><div><code>const <span>[markerPosition, setMarkerPosition]</span> = <span>useState</span>([<span>0</span>, <span>0</span>]);\n</code></div></div></pre><p>This would set the initial position of the marker to the coordinates [0, 0].</p></div></div></div><div></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "react-google-maps/api marker setposition react hooks"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>The <code>react-google-maps</code> library provides a <code>Marker</code> component that you can use to render a marker on a Google Map. You can use the <code>useState</code> hook in combination with this component to set the position of the marker.</p><p>Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState } <span>from</span> <span>'react'</span>;\n<span>import</span> { <span>Marker</span> } <span>from</span> <span>'react-google-maps'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPosition, setMarkerPosition] = <span>useState</span>([<span>0</span>, <span>0</span>]);\n\n  <span>const</span> <span>handleMapClick</span> = (<span>event</span>) =&gt; {\n    <span>const</span> { latLng } = event;\n    <span>setMarkerPosition</span>([latLng.<span>lat</span>(), latLng.<span>lng</span>()]);\n  }\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span> <span>onClick</span>=<span>{handleMapClick}</span>&gt;</span>\n      <span>&lt;<span>Marker</span> <span>position</span>=<span>{markerPosition}</span> /&gt;</span>\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPosition</code> that holds the latitude and longitude of the marker. We also have a <code>handleMapClick</code> function that gets called whenever the user clicks on the map. This function updates the <code>markerPosition</code> state variable with the latitude and longitude of the click event. The <code>Marker</code> component is then rendered with the <code>position</code> prop set to the current <code>markerPosition</code>.</p><p>You can use this approach to set the initial position of the marker as well. Just pass the initial position as the second argument to <code>useState</code> when you declare the <code>markerPosition</code> state variable.</p><pre><div><div>Copy code</div><div><code>const <span>[markerPosition, setMarkerPosition]</span> = <span>useState</span>([<span>0</span>, <span>0</span>]);\n</code></div></div></pre><p>This would set the initial position of the marker to the coordinates [0, 0].</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "now do this for an array of 10 markers"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>To set the positions of an array of markers in React, you can use the <code>useState</code> hook in combination with the <code>Marker</code> component from the <code>react-google-maps</code> library. Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState } <span>from</span> <span>'react'</span>;\n<span>import</span> { <span>Marker</span> } <span>from</span> <span>'react-google-maps'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPositions, setMarkerPositions] = <span>useState</span>([]);\n\n  <span>const</span> <span>handleMapClick</span> = (<span>event</span>) =&gt; {\n    <span>const</span> { latLng } = event;\n    <span>setMarkerPositions</span>(<span>(<span>prevMarkerPositions</span>) =&gt;</span> [...prevMarkerPositions, [latLng.<span>lat</span>(), latLng.<span>lng</span>()]]);\n  }\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span> <span>onClick</span>=<span>{handleMapClick}</span>&gt;</span>\n      {markerPositions.map((position, index) =&gt; (\n        <span>&lt;<span>Marker</span> <span>key</span>=<span>{index}</span> <span>position</span>=<span>{position}</span> /&gt;</span>\n      ))}\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPositions</code> that holds an array of marker positions. We also have a <code>handleMapClick</code> function that gets called whenever the user clicks on the map. This function updates the <code>markerPositions</code> state variable by adding a new marker position to the array. The <code>Marker</code> component is then rendered for each position in the <code>markerPositions</code> array.</p><p>You can use this approach to set the initial positions of the markers as well. Just pass the initial positions as the second argument to <code>useState</code> when you declare the <code>markerPositions</code> state variable.</p><pre><div><div>Copy code</div><div><code>const <span>[markerPositions, setMarkerPositions]</span> = useState(<span>[[0, 0]</span>, <span>[1, 1]</span>, <span>[2, 2]</span>, <span>[3, 3]</span>, <span>[4, 4]</span>, <span>[5, 5]</span>, <span>[6, 6]</span>, <span>[7, 7]</span>, <span>[8, 8]</span>, <span>[9, 9]</span>]);\n</code></div></div></pre><p>This would set the initial positions of the markers to the coordinates [[0, 0], [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9]].</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to update a specific marker in the markerPositions array and not cause a complete rerender in react"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>To update a specific marker in the <code>markerPositions</code> array and avoid a complete rerender in React, you can use the <code>useState</code> hook in combination with the <code>useRef</code> hook. Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState, useRef } <span>from</span> <span>'react'</span>;\n<span>import</span> { <span>Marker</span> } <span>from</span> <span>'react-google-maps'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPositions, setMarkerPositions] = <span>useState</span>([]);\n  <span>const</span> markerRefs = <span>useRef</span>([]);\n\n  <span>const</span> <span>handleMapClick</span> = (<span>event, index</span>) =&gt; {\n    <span>const</span> { latLng } = event;\n    <span>setMarkerPositions</span>(<span>(<span>prevMarkerPositions</span>) =&gt;</span> {\n      <span>const</span> newMarkerPositions = [...prevMarkerPositions];\n      newMarkerPositions[index] = [latLng.<span>lat</span>(), latLng.<span>lng</span>()];\n      <span>return</span> newMarkerPositions;\n    });\n  }\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span>&gt;</span>\n      {markerPositions.map((position, index) =&gt; (\n        <span>&lt;<span>Marker</span>\n          <span>key</span>=<span>{index}</span>\n          <span>ref</span>=<span>{(ref)</span> =&gt;</span> { markerRefs.current[index] = ref; }}\n          position={position}\n          onClick={(event) =&gt; handleMapClick(event, index)}\n        /&gt;\n      ))}\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPositions</code> that holds an array of marker positions. We're also using the <code>useRef</code> hook to create a mutable reference called <code>markerRefs</code> that we can use to store references to the <code>Marker</code> components.</p><p>We have a <code>handleMapClick</code> function that gets called whenever a marker is clicked. This function updates the <code>markerPositions</code> state variable by replacing the marker position at the given index with the new position. We use the <code>setMarkerPositions</code> function to update the state variable, and we create a new array of marker positions rather than mutating the existing array to avoid triggering a rerender of the component.</p><p>We also pass a <code>ref</code> prop to the <code>Marker</code> component and store a reference to the component in the <code>markerRefs</code> array. This allows us to access the <code>Marker</code> component and update its position directly, rather than causing a rerender of the entire component tree.</p><p>Finally, we pass the <code>index</code> of the marker as an argument to the <code>handleMapClick</code> function when we attach the <code>onClick</code> event handler to the <code>Marker</code> component. This allows us to identify which marker was clicked and update the correct position in the <code>markerPositions</code> array.</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "update the markers from a websocket"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>To update the positions of markers from a websocket in React, you can use the <code>useEffect</code> hook to subscribe to the websocket and the <code>useState</code> hook to update the marker positions. Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState, useEffect } <span>from</span> <span>'react'</span>;\n<span>import</span> { <span>Marker</span> } <span>from</span> <span>'react-google-maps'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPositions, setMarkerPositions] = <span>useState</span>([]);\n\n  <span>useEffect</span>(<span>() =&gt;</span> {\n    <span>const</span> socket = <span>new</span> <span>WebSocket</span>(<span>'ws://example.com/ws'</span>);\n\n    socket.<span>onmessage</span> = <span>(<span>event</span>) =&gt;</span> {\n      <span>const</span> data = <span>JSON</span>.<span>parse</span>(event.<span>data</span>);\n      <span>setMarkerPositions</span>(data.<span>markerPositions</span>);\n    }\n\n    <span>return</span> <span>() =&gt;</span> socket.<span>close</span>();\n  }, []);\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span>&gt;</span>\n      {markerPositions.map((position, index) =&gt; (\n        <span>&lt;<span>Marker</span> <span>key</span>=<span>{index}</span> <span>position</span>=<span>{position}</span> /&gt;</span>\n      ))}\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPositions</code> that holds an array of marker positions. We're also using the <code>useEffect</code> hook to subscribe to a websocket and listen for messages.</p><p>When a message is received, we parse the data and update the <code>markerPositions</code> state variable with the new positions. The <code>Marker</code> component is then rendered for each position in the <code>markerPositions</code> array.</p><p>The <code>useEffect</code> hook is passed an empty array as the second argument to ensure that the subscription is only created once when the component mounts. The hook also returns a function that closes the socket connection when the component unmounts to avoid memory leaks.</p><p>This approach allows you to update the positions of the markers in real-time as new data becomes available through the websocket.</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "do it using setposition"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>To update the positions of markers using the <code>setPosition</code> method from the <code>react-google-maps</code> library in React, you can use the <code>useEffect</code> hook to subscribe to the websocket and the <code>useRef</code> hook to store references to the <code>Marker</code> components. Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code>import { useState, useEffect, useRef } from 'react';\nimport { Marker } from 'react-google-maps';\n\nfunction <span>MyMapComponent</span>() {\n  const <span>[markerPositions, setMarkerPositions]</span> = <span>useState</span>([]);\n  const markerRefs = <span>useRef</span>([]);\n\n  <span>useEffect</span>(() =&gt; {\n    const socket = new <span>WebSocket</span>('ws://example.com/ws');\n\n    socket<span>.onmessage</span> = (event) =&gt; {\n      const data = JSON<span>.parse</span>(event.data);\n      <span>setMarkerPositions</span>(data.markerPositions);\n    }\n\n    return () =&gt; socket<span>.close</span>();\n  }, <span>[]</span>);\n\n  <span>useEffect</span>(() =&gt; {\n    markerPositions<span>.forEach</span>((position, index) =&gt; {\n      if (markerRefs.current[index]) {\n        markerRefs<span>.current</span><span>[index]</span><span>.setPosition</span>(position);\n      }\n    });\n  }, <span>[markerPositions]</span>);\n\n  return (\n    &lt;Map&gt;\n      {markerPositions.map((position, index) =&gt; (\n        &lt;Marker\n          key={index}\n          ref={(ref) =&gt; { markerRefs<span>.current</span><span>[index]</span> = ref; }}\n          <span>position</span>={<span>position</span>}\n        /&gt;\n      ))}\n    &lt;/Map&gt;\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPositions</code> that holds an array of marker positions. We're also using the <code>useRef</code> hook to create a mutable reference called <code>markerRefs</code> that we can use to store references to the <code>Marker</code> components.</p><p>We're using the <code>useEffect</code> hook twice in this example. The first <code>useEffect</code> hook is used to subscribe to the websocket and listen for messages. When a message is received, we parse the data and update the <code>markerPositions</code> state variable with the new positions.</p><p>The second <code>useEffect</code> hook is used to update the positions of the <code>Marker</code> components when the <code>markerPositions</code> state variable changes. We iterate over the <code>markerPositions</code> array and use the <code>setPosition</code> method of the <code>Marker</code> components to update their positions. We pass the <code>markerPositions</code> array as the second argument to the <code>useEffect</code> hook to ensure that the hook only runs when the <code>markerPositions</code> state variable changes.</p><p>This approach allows you to update the positions of the markers in real-time as new data becomes available through the websocket, without causing a complete rerender of the component.</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "write using setPosition for the handlemapclick approach"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>To update the position of a marker using the <code>setPosition</code> method from the <code>react-google-maps</code> library in the <code>handleMapClick</code> approach in React, you can use the <code>useRef</code> hook to store a reference to the <code>Marker</code> component. Here's an example of how you might do this:</p><pre><div><div>Copy code</div><div><code><span>import</span> { useState, useRef } <span>from</span> <span>'react'</span>;\n<span>import</span> { <span>Marker</span> } <span>from</span> <span>'react-google-maps'</span>;\n\n<span>function</span> <span>MyMapComponent</span>(<span></span>) {\n  <span>const</span> [markerPosition, setMarkerPosition] = <span>useState</span>([<span>0</span>, <span>0</span>]);\n  <span>const</span> markerRef = <span>useRef</span>(<span>null</span>);\n\n  <span>const</span> <span>handleMapClick</span> = (<span>event</span>) =&gt; {\n    <span>const</span> { latLng } = event;\n    <span>setMarkerPosition</span>([latLng.<span>lat</span>(), latLng.<span>lng</span>()]);\n    <span>if</span> (markerRef.<span>current</span>) {\n      markerRef.<span>current</span>.<span>setPosition</span>([latLng.<span>lat</span>(), latLng.<span>lng</span>()]);\n    }\n  }\n\n  <span>return</span> (\n    <span><span>&lt;<span>Map</span> <span>onClick</span>=<span>{handleMapClick}</span>&gt;</span>\n      <span>&lt;<span>Marker</span> <span>ref</span>=<span>{markerRef}</span> <span>position</span>=<span>{markerPosition}</span> /&gt;</span>\n    <span>&lt;/<span>Map</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>In this example, we're using the <code>useState</code> hook to create a state variable called <code>markerPosition</code> that holds the position of the marker. We're also using the <code>useRef</code> hook to create a mutable reference called <code>markerRef</code> that we can use to store a reference to the <code>Marker</code> component.</p><p>We have a <code>handleMapClick</code> function that gets called whenever the user clicks on the map. This function updates the <code>markerPosition</code> state variable with the new position, and it also uses the <code>setPosition</code> method of the <code>Marker</code> component to update its position. We pass the new position as an argument to the <code>setPosition</code> method.</p><p>We pass the <code>markerRef</code> reference as a <code>ref</code> prop to the <code>Marker</code> component, and we store a reference to the component in the <code>markerRef</code> variable. This allows us to access the <code>Marker</code> component and update its position directly, rather than causing a rerender of the entire component tree.</p><p>This approach allows you to update the position of the marker in real-time as the user clicks on the map, without causing a complete rerender of the component.</p></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "sike"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>I'm here to help you with your questions</p></div></div></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's on-call rotation is paired oncall, meaning we have a primary and a secondary oncall for each shift. It helps to ensure that there's always backup available. \n\nHow do you think we should handle handoffs between the primary and secondary? Any best practices?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a paired on-call system is a great way to ensure support is always available. For handoffs between the primary and secondary, clear communication is key. It might be beneficial to have a structured handoff process where the outgoing on-call shares critical updates, ongoing issues, and any pending tickets with the incoming on-call. A shared document or checklist can help ensure nothing is missed. Additionally, scheduling a brief overlap period for the two to touch base can facilitate a smoother transition and allow for any questions to be addressed. How do you currently handle those handoffs?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is set for 2025 April 11. We're trying to stay on top of our tasks to make sure we hit that target. \n\nWhat's your go-to strategy for managing tasks leading up to a deadline? Any tools you recommend for tracking progress?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're already thinking ahead to the deadline. A solid strategy for managing tasks involves breaking down the work into smaller, manageable chunks and prioritizing them based on urgency and importance. Regular check-ins or stand-up meetings can help keep the team aligned and accountable. As for tracking progress, using a visual tool can be very effective. Kanban boards or task management software that allows for easy updates can provide visibility into where everyone stands. What tools have you been using so far, and how are they working for your team?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Phalanx Gate for authentication. It's a solid choice for managing access and ensuring security across our systems.\n\nHave you set up any specific configurations or policies with Phalanx Gate that help streamline the authentication process? Any tips for managing user roles effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "Phalanx Gate sounds like a robust solution for authentication. To streamline the authentication process, it's often useful to implement single sign-on (SSO) if it's supported, as it can reduce the number of credentials users need to manage. For managing user roles effectively, establishing clear role definitions and regularly reviewing access permissions can help ensure that users have the right level of access without unnecessary privileges. Additionally, utilizing role-based access control (RBAC) can simplify the management of user roles by tying permissions to roles rather than individual users. Have you encountered any specific challenges with user roles that you’re looking to address?"
+        },
+        {
+          "role": "user",
+          "content": "Session TTL is set to 24 hours, which helps balance user convenience with security. It allows users to stay logged in for a reasonable time without needing frequent re-authentication.\n\nWhat’s your approach to handling session expirations? Do you have any strategies in place for notifying users before their sessions time out?"
+        },
+        {
+          "role": "assistant",
+          "content": "Setting a session TTL of 24 hours is a smart way to find that balance between convenience and security. For handling session expirations, a common approach is to implement a warning notification that triggers a set amount of time before the session expires, such as 15 minutes. This gives users a heads-up to save their work or extend their session if necessary. Providing a simple way for users to re-authenticate without losing their progress can also enhance the experience. Have you already implemented any notification methods, or are you exploring options for that?"
+        },
+        {
+          "role": "user",
+          "content": "The team's code review policy requires 2 approvals before merging any changes. This helps maintain quality and ensures multiple eyes are on the code.\n\nHow do you typically manage the code review process to keep things efficient? Any practices you use to encourage timely feedback from reviewers?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a two-approval requirement is a great way to maintain code quality. To keep the code review process efficient, it's helpful to establish clear guidelines on what reviewers should focus on, such as coding standards, functionality, and potential bugs. Encouraging timely feedback can often be achieved by setting expectations around review turnaround times, perhaps even integrating reminders into your workflow. Additionally, fostering a culture where team members feel comfortable asking for clarifications can lead to more productive discussions. Do you have any specific practices in place that help motivate your reviewers to provide feedback promptly?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "oncall_rotation",
+          "value": "paired oncall (primary + secondary)",
+          "original_seed": "Our on-call rotation is paired oncall (primary + secondary)",
+          "fact_text": "The team's on-call rotation is paired oncall (primary + secondary).",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 April 11",
+          "original_seed": "The sprint deadline is 2025 April 11",
+          "fact_text": "The sprint deadline is 2025 April 11.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_provider",
+          "value": "Phalanx Gate",
+          "original_seed": "We use Phalanx Gate for authentication",
+          "fact_text": "The team uses Phalanx Gate for authentication.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "user_session_ttl",
+          "value": "24 hours",
+          "original_seed": "Session TTL is 24 hours",
+          "fact_text": "Session TTL is 24 hours.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "code_review_policy",
+          "value": "2 approvals required",
+          "original_seed": "Our code review policy is 2 approvals required",
+          "fact_text": "The team's code review policy is 2 approvals required.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 12:59"
+    },
+    {
+      "session_id": "sharegpt_7471",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "in python, how to get notificate when a website has a new news on list?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>One way to get notified when a website has a new news on list is to use web scraping techniques to extract information from the website and then monitor for changes. Here is a general outline of the steps you could follow in Python:</p><ol><li><p>Use a web scraping library such as BeautifulSoup or Scrapy to extract the news list from the website. You can use the requests library to send an HTTP request to the website and then parse the HTML content using the web scraping library.</p></li><li><p>Save the extracted news list to a file or database.</p></li><li><p>Set up a script that runs periodically to check for updates on the website. You can use a scheduling library such as cron to run the script at regular intervals.</p></li><li><p>In the script, extract the current news list from the website and compare it to the previously saved list. If there are any differences, you can send a notification via email or other messaging service.</p></li></ol><p>Here's some sample code to give you an idea of how this could work using BeautifulSoup and Gmail API for email notification:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n<span class=\"hljs-keyword\">from</span> bs4 <span class=\"hljs-keyword\">import</span> BeautifulSoup\n<span class=\"hljs-keyword\">import</span> smtplib\n\n<span class=\"hljs-comment\"># Website to monitor</span>\nurl = <span class=\"hljs-string\">\"https://example.com/news\"</span>\n\n<span class=\"hljs-comment\"># Gmail credentials</span>\ngmail_user = <span class=\"hljs-string\">\"your_email@example.com\"</span>\ngmail_password = <span class=\"hljs-string\">\"your_password\"</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">send_email</span>(<span class=\"hljs-params\">subject, body</span>):\n    <span class=\"hljs-string\">\"\"\"Send email notification via Gmail\"\"\"</span>\n    recipient = <span class=\"hljs-string\">\"recipient@example.com\"</span>\n    message = <span class=\"hljs-string\">f\"Subject: <span class=\"hljs-subst\">{subject}</span>\\n\\n<span class=\"hljs-subst\">{body}</span>\"</span>\n    server = smtplib.SMTP(<span class=\"hljs-string\">\"smtp.gmail.com\"</span>, <span class=\"hljs-number\">587</span>)\n    server.starttls()\n    server.login(gmail_user, gmail_password)\n    server.sendmail(gmail_user, recipient, message)\n    server.quit()\n\n<span class=\"hljs-comment\"># Load previous news list from file or database</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"news_list.txt\"</span>, <span class=\"hljs-string\">\"r\"</span>) <span class=\"hljs-keyword\">as</span> f:\n    previous_news = f.read().splitlines()\n\n<span class=\"hljs-comment\"># Extract current news list from website</span>\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.text, <span class=\"hljs-string\">\"html.parser\"</span>)\ncurrent_news = [item.text.strip() <span class=\"hljs-keyword\">for</span> item <span class=\"hljs-keyword\">in</span> soup.find_all(<span class=\"hljs-string\">\"li\"</span>)]\n\n<span class=\"hljs-comment\"># Check for changes</span>\nnew_news = <span class=\"hljs-built_in\">set</span>(current_news) - <span class=\"hljs-built_in\">set</span>(previous_news)\n<span class=\"hljs-keyword\">if</span> new_news:\n    <span class=\"hljs-comment\"># Save new news list</span>\n    <span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"news_list.txt\"</span>, <span class=\"hljs-string\">\"w\"</span>) <span class=\"hljs-keyword\">as</span> f:\n        f.write(<span class=\"hljs-string\">\"\\n\"</span>.join(current_news))\n\n    <span class=\"hljs-comment\"># Send notification email</span>\n    subject = <span class=\"hljs-string\">\"New news on the website\"</span>\n    body = <span class=\"hljs-string\">\"\\n\"</span>.join(new_news)\n    send_email(subject, body)\n</code></div></div></pre><p>Note that this is just a basic example and you'll need to customize it to fit your specific needs. You may also need to consider legal and ethical implications of web scraping, as some websites may not allow it or may limit the frequency of requests.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 08:37"
+    },
+    {
+      "session_id": "sharegpt_28970",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "generate a project file system for a game made in c# unity script solving mysteries as a cat detective"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is a sample file system for a game made in C# Unity script, where the player takes on the role of a cat detective solving mysteries:</p><ul><li>Assets<ul><li>Audio<ul><li>Music</li><li>SFX</li></ul></li><li>Materials</li><li>Models<ul><li>Characters</li><li>Props</li></ul></li><li>Scenes<ul><li>Main Menu</li><li>Level 1</li><li>Level 2</li><li>...</li></ul></li><li>Scripts<ul><li>Character Controller</li><li>Game Manager</li><li>Dialogue System</li><li>Inventory System</li><li>Mystery Solver</li></ul></li><li>Sprites<ul><li>Characters</li><li>UI</li></ul></li><li>Textures</li><li>Prefabs<ul><li>Characters</li><li>Props</li></ul></li></ul></li><li>ProjectSettings</li></ul><p>The Assets folder contains all the assets for the game, such as audio files, materials, models, scenes, and sprites. The Scripts folder contains all the C# scripts that control the game's functionality, such as character controllers, game manager, dialogue system, inventory system and mystery solver. The ProjectSettings folder contains settings for the Unity project.</p><p>Please note that this is just one way to organize the file system, depending on the complexity of the game and the team size, different file system can be used.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "write a character controller script for mobile use"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is a sample character controller script for mobile use in C# Unity:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-csharp\"><span class=\"hljs-keyword\">using</span> UnityEngine;\n<span class=\"hljs-keyword\">using</span> UnityEngine.InputSystem;\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">MobileCharacterController</span> : <span class=\"hljs-title\">MonoBehaviour</span>\n{\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-built_in\">float</span> speed = <span class=\"hljs-number\">10.0f</span>;\n    <span class=\"hljs-keyword\">private</span> Vector2 moveDirection;\n    <span class=\"hljs-keyword\">private</span> Rigidbody2D rb;\n\n    <span class=\"hljs-function\"><span class=\"hljs-keyword\">private</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">Start</span>()</span>\n    {\n        rb = GetComponent&lt;Rigidbody2D&gt;();\n    }\n\n    <span class=\"hljs-function\"><span class=\"hljs-keyword\">private</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">Update</span>()</span>\n    {\n        moveDirection = <span class=\"hljs-keyword\">new</span> Vector2(Input.GetAxis(<span class=\"hljs-string\">\"Horizontal\"</span>), Input.GetAxis(<span class=\"hljs-string\">\"Vertical\"</span>));\n        rb.velocity = moveDirection * speed;\n    }\n\n    <span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">OnMove</span>(<span class=\"hljs-params\">InputAction.CallbackContext context</span>)</span>\n    {\n        moveDirection = context.ReadValue&lt;Vector2&gt;();\n    }\n}\n</code></div></div></pre><p>This script uses the Input System package to handle player input on mobile devices. The <code>OnMove</code> function is called when the player moves their finger on the screen, and it updates the <code>moveDirection</code> variable with the new input value. The <code>Update</code> function then sets the velocity of the Rigidbody2D component to move the character in the direction of <code>moveDirection</code> at a speed of <code>speed</code> units per second.</p><p>You will need to set up the control scheme in the Input System package and refer to this script accordingly.</p><p>Please note that this is just one way to implement a character controller for mobile use, it could be different depending on the game design and the requirement.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 21:07"
+    },
+    {
+      "session_id": "sharegpt_19109",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Hi, So rahe the kya ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>As an AI language model, I don't sleep, so I wasn't \"so rahe\" (sleeping). I'm always ready to chat and help you with any questions or concerns you may have. How can I assist you today?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Perfect. Bhai ek help chahiye python script me. Kar doge ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Haan, zarur! Main aapki madad karne ke liye yahan hoon. Aap mujhe bata sakte hain ki aapko kis tarah ki madad chahiye?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Ha. To ek python ka program banana hai. Jisme me koi bhi site ka URL dunga, usme se mujhe H1 tags chahiye. Pure page me kahin bhi ho. console me print kar dena"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Aapke dwara bataye gaye task ko karne ke liye, aapko <code>requests</code> aur <code>beautifulsoup4</code> naam ke python modules ki zaroorat hogi. Agar ye modules aapke system mein nahi hai to aap ye command use karke unhe install kar sakte hain:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">pip install requests beautifulsoup4\n</code></div></div></pre><p>Aap niche diye gaye code ko use kar sakte hain, jismein maine URL se H1 tags nikalne ke liye ek function banaya hai. Aap URL ke jagah apna desired URL use kar sakte hain:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n<span class=\"hljs-keyword\">from</span> bs4 <span class=\"hljs-keyword\">import</span> BeautifulSoup\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">get_h1_tags_from_url</span>(<span class=\"hljs-params\">url</span>):\n    response = requests.get(url)\n    soup = BeautifulSoup(response.content, <span class=\"hljs-string\">'html.parser'</span>)\n    h1_tags = soup.find_all(<span class=\"hljs-string\">'h1'</span>)\n    <span class=\"hljs-keyword\">return</span> h1_tags\n\nurl = <span class=\"hljs-string\">\"https://www.example.com/\"</span>\nh1_tags = get_h1_tags_from_url(url)\n<span class=\"hljs-keyword\">for</span> h1_tag <span class=\"hljs-keyword\">in</span> h1_tags:\n    <span class=\"hljs-built_in\">print</span>(h1_tag.text.strip())\n</code></div></div></pre><p>Is code mein <code>get_h1_tags_from_url()</code> naam ka ek function hai jo ek URL input leta hai aur us URL se H1 tags extract karke unhe return karta hai. Uske baad, maine ek URL define kiya hai aur usko <code>get_h1_tags_from_url()</code> function mein pass kiya hai. Uske baad maine H1 tags ko print kiya hai.</p><p>Mujhe umeed hai ki yeh code aapki madad karega! Agar aapke paas isse related koi aur sawaal hai to aap pooch sakte hain.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Lekin yar, isme error aa rahaa hai. Ye bol rahaa hai python3 command not found. Kya kare"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p><code>python3 command not found</code> ka matlab hai ki aapke system mein Python 3 nahi hai ya phir <code>python3</code> command ke liye PATH variable set nahi hai.</p><p>Aapko sabse pehle yeh check karna hoga ki Python 3 aapke system mein installed hai ya nahi. Aap iske liye terminal mein <code>python3 --version</code> command ko run karein. Agar Python 3 install hai to aapko Python version ki information dikhayi degi, nahi to aapko ek error message dikhayi dega.</p><p>Agar Python 3 nahi hai to aapko Python 3 install karna hoga. Aap Python 3 official website se download kar sakte hain: <a href=\"https://www.python.org/downloads/\" target=\"_new\">https://www.python.org/downloads/</a></p><p>Agar Python 3 install hai to aapko <code>python3</code> command ke liye PATH variable set karna hoga. PATH variable set karne ke liye aapko terminal mein <code>export PATH=/usr/local/bin:$PATH</code> command ko run karna hoga. Is command se aap <code>python3</code> command ko use kar sakte hain.</p><p>Agar yeh solution aapki problem solve nahi kar paata to aap mujhe error message bata sakte hain, taaki main aapki madad kar sakun.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 18:05"
+    },
+    {
+      "session_id": "sharegpt_15064",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Consider the deadlock situation that could occur in the dining philosophers problem when the\nphilosophers obtain the chopsticks one at a time. Discuss how the four necessary conditions for\ndeadlock indeed hold in this setting. Discuss how deadlocks could be avoided by eliminating any\none of the four conditions. Write pseudo code as well"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The Dining Philosophers Problem is a classic problem in computer science that describes a situation in which five philosophers are sitting around a table, each with a plate of food and a pair of chopsticks. The problem arises when each philosopher tries to pick up the chopsticks to eat, but they can't because someone else has already picked up the chopstick they need.</p><p>The four necessary conditions for deadlock in this problem are as follows:</p><ol><li>Mutual Exclusion: Only one philosopher can use a chopstick at a time.</li><li>Hold and Wait: A philosopher who has picked up one chopstick waits for the other chopstick to be free.</li><li>No Preemption: Once a philosopher has picked up a chopstick, they cannot be forced to give it up.</li><li>Circular Wait: Philosophers wait for each other in a circular pattern, each one waiting for the chopstick held by the philosopher to their left.</li></ol><p>All four of these conditions hold in the dining philosophers problem. A deadlock can occur when all five philosophers hold one chopstick and wait for the other chopstick, resulting in a circular wait.</p><p>One way to avoid deadlocks is to eliminate the Circular Wait condition. This can be done by implementing a locking mechanism that assigns chopsticks in a defined order, so that no two philosophers can pick up chopsticks that would result in a circular wait. For example, a philosopher can only pick up the chopstick to their left if they don't already have the chopstick to their right.</p><p>Pseudo code for this solution:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">philosopher(id):\n  while (<span class=\"hljs-literal\">true</span>):\n    if (id <span class=\"hljs-operator\">%</span> <span class=\"hljs-number\">2</span> <span class=\"hljs-operator\">=</span><span class=\"hljs-operator\">=</span> <span class=\"hljs-number\">0</span>):\n      pick up <span class=\"hljs-keyword\">left</span> chopstick\n      pick up <span class=\"hljs-keyword\">right</span> chopstick\n    <span class=\"hljs-keyword\">else</span>:\n      pick up <span class=\"hljs-keyword\">right</span> chopstick\n      pick up <span class=\"hljs-keyword\">left</span> chopstick\n    eat\n    put down chopsticks\n</code></div></div></pre><p>By eliminating the Circular Wait condition, deadlocks can be avoided in the dining philosophers problem.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 08:58"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our production alerts go to #vortex-alerts. It's a Slack channel where we keep track of any issues that pop up. Do you have any recommendations for how to manage alerts effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing alerts in a Slack channel like #vortex-alerts can be really effective if done right. It's important to ensure that alerts are clear and actionable, so team members know exactly what to do when they receive them. Consider setting up a system where alerts are categorized by severity, which can help prioritize responses. You might also want to establish a protocol for acknowledging and resolving alerts to keep everyone informed. Additionally, regular reviews of the types of alerts you're receiving can help identify patterns and improve your monitoring setup over time. How are you currently handling alert responses?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is set for 2025 May 9. We're trying to keep everything aligned for that date. What's the best practice for managing timelines and ensuring tasks are completed on schedule?"
+        },
+        {
+          "role": "assistant",
+          "content": "To manage timelines effectively and ensure tasks are completed on schedule, it’s crucial to break down the project into manageable milestones and deliverables leading up to your deadline. Regular check-ins can help keep the team aligned and address any roadblocks early on. Using a visual project management tool can also enhance transparency, allowing everyone to see progress and deadlines at a glance. Additionally, fostering open communication within the team encourages accountability. Are there specific challenges you're facing in meeting your timeline?"
+        },
+        {
+          "role": "user",
+          "content": "The team is using Moxira as their framework. It’s designed to streamline development and help with task management, which should be a plus for meeting our sprint deadline. Do you have any tips for optimizing workflows with Moxira?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Moxira can definitely help streamline your workflows. One effective approach is to fully utilize its task management features by ensuring each task is clearly defined with specific goals and deadlines. Encouraging team members to update their progress regularly can keep everyone on the same page and help identify any potential bottlenecks early. You might also consider leveraging any reporting tools within Moxira to track performance metrics and adjust workflows as needed. Regular feedback sessions can help refine processes and ensure that the team is working efficiently. What specific features of Moxira are you finding most useful so far?"
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is set to \"release.\" This is where all stable code should be merged before deployment. Do you have any best practices for managing branches and ensuring a smooth release process?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing branches effectively is key to ensuring a smooth release process. It's essential to establish a clear branching strategy that defines how and when code should be merged into the \"release\" branch. Regularly merging changes from development branches into the release branch can help catch integration issues early. Additionally, implementing a code review process before merging can enhance code quality and reduce bugs in production. Automated testing on the release branch can also provide an extra layer of assurance before deployment. How does your team currently handle code reviews and testing before releases?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "alert_channel",
+          "value": "#vortex-alerts",
+          "original_seed": "Production alerts go to #vortex-alerts",
+          "fact_text": "Production alerts go to #vortex-alerts.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 May 9",
+          "original_seed": "Update: The sprint deadline is 2025 May 9",
+          "fact_text": "Update: The sprint deadline is 2025 May 9.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "framework",
+          "value": "Moxira",
+          "original_seed": "We're using Moxira as our framework",
+          "fact_text": "The team is using Moxira as their framework.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "default_branch",
+          "value": "release",
+          "original_seed": "Our default branch is release",
+          "fact_text": "The team's default branch is release.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 07:59"
+    },
+    {
+      "session_id": "sharegpt_1160",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "provide resorces from the info yu use whwen answering;:~|@%*~;;:~|@%*~;"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p><glasp class=\"highlighter--highlighted\" style=\"font-weight: inherit !important;font-style: inherit !important;line-height: inherit !important;background-color: #FFB6C6 !important;cursor: pointer !important;\" highlightid=\"5dcbwvtgdsm5llhr\"></glasp>I am a machine learning model and do not have access to specific resources when answering questions. My knowledge is based on the data that was used to train me, which includes a wide range of sources such as books, articles, and websites. However, I do not have the capability to provide direct links to specific resources. If you have a specific question, I will do my best to provide accurate and reliable information based on the data that I have been trained on.<glasp class=\"highlighter--highlighted\" style=\"font-weight: inherit !important;font-style: inherit !important;line-height: inherit !important;background-color: #FFB6C6 !important;cursor: pointer !important;\" highlightid=\"6ncncmdlm34i0pcg\"></glasp></p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"This refers to facts well known by many people and verifiable in five or more sources. Examples: Bill Gates is the founder of the Microsoft Corporation. There are 60 minutes in an hour. Columbus is the capital of Ohio. The whole is greater than the part. If you have any doubts or questions, ask your professor or librarian.\"\nURL: https://guides.libraries.uc.edu/integrity/cite\n\n[2] \"When you fully recover from depersonalization, youll have your attention and your ability to have spontaneous thoughts come back. It will be a slow process, but it will happen. Dont be alarmed right now about the absence of mental chatter or lack of attention. Try to allow this experience and not fight it.\"\nURL: https://acoachcalledlife.com/blank-mind-syndrome/\n\n[3] \"The meaning of GIVE (SOMEONE) PAUSE is to cause (someone) to stop and think about something carefully or to have doubts about something. How to use give (someone) pause in a sentence.\"\nURL: https://www.merriam-webster.com/dictionary/give%20(someone)%20pause\n\n[4] \"Every Canada People Search you perform on our website uses advanced social media tracking to generate a comprehensive list of matching records and public data, based on your criteria. Youre one screen away from finding exactly who youre looking for, in any of Canadas ten provinces, from British Columbia, Manitoba, Alberta, to Nova ...\"\nURL: https://recordsfinder.com/canada/\n\n[5] \"The first step is to realize that its okay to feel what youre feeling—it doesnt make you a bad person or make this person any better than they are. You cant help what you feel, but you do have control over how you act on those feelings. The next step is to detach yourself from the situation and see it objectively.\"\nURL: https://www.regain.us/advice/attraction/the-surprising-truth-about-obsession-and-why-you-cant-stop-thinking-about-someone/\n\n[6] \"have no recollection idiom : to remember nothing He says he has no recollection of what happened. Dictionary Entries Near have no recollection have no part in have no recollection have-not See More Nearby Entries Cite this Entry Style Have no recollection.\"\nURL: https://www.merriam-webster.com/dictionary/have%20no%20recollection\n\n[7] \"Chronic sleep deprivation makes it difficult for you to process info and consolidate new memories. There will be a 32% of reduction in daytime alertness for every 1.5 hours of missed sleep each night. Some people feel tired in the day for not getting enough sleep and resort to energy drinks, which makes matters even worse.\"\nURL: https://www.newhealthadvisor.org/Why-Can't-I-Remember-Things.html\n\n[8] \"It is important to know facts from opinion. If you are not sure, it takes only minutes, often just seconds, to verify whether or not a statement is fact. Opinions cannot be verified because they are not facts. Research the person who is making the statement. Learn who they are and what their agenda has been previously.\"\nURL: https://owlcation.com/academia/Evaluating-Your-Sources-of-Information\n\n[9] \"1. Do Not Think Too Much About the Past. The sooner you realize it, the better it is. No one can make correct decisions all the time. You should not dwell in the past and keep revisiting the moments when you made wrong choices. Avoid thinking too much about the what if scenario and learn to live in the present. 2.\"\nURL: https://www.newhealthadvisor.org/why-can't-i-make-decisions.html\n\n\nCurrent date: 1/26/2023\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: cant you remember where you got any info? i have no trust in someone whocandt give sourses and a defenition"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p><glasp class=\"highlighter--highlighted\" style=\"font-weight: inherit !important;font-style: inherit !important;line-height: inherit !important;background-color: #FFB6C6 !important;cursor: pointer !important;\" highlightid=\"05ly51c4sq999khq\">As a machine learning model, I don't have personal experiences or physical abilities to remember where I got information, However, the information I provide is based on the data that was used to train me, which includes a wide range of sources such as books, articles, and websites.</glasp></p><p>Regarding trust in someone who can't give sources and definition, it is important to know facts from opinions. According to [<a href=\"https://owlcation.com/academia/Evaluating-Your-Sources-of-Information\" target=\"_new\" class=\"docs-creator\">8</a>], \"It is important to know facts from opinion. If you are not sure, it takes only minutes, often just seconds, to verify whether or not a statement is fact. Opinions cannot be verified because they are not facts. Research the person who is making the statement. Learn who they are and what their agenda has been previously.\"</p><p>Chronic sleep deprivation can also affect the ability to remember things, as stated in [<a href=\"https://www.newhealthadvisor.org/Why-Can't-I-Remember-Things.html\" target=\"_new\" class=\"docs-creator\">7</a>], \"Chronic sleep deprivation makes it difficult for you to process info and consolidate new memories. There will be a 32% of reduction in daytime alertness for every 1.5 hours of missed sleep each night. Some people feel tired in the day for not getting enough sleep and resort to energy drinks, which makes matters even worse.\"</p><p>Additionally, you can use the phrase \"have no recollection\" which is defined by [<a href=\"https://www.merriam-webster.com/dictionary/have%20no%20recollection\" target=\"_new\" class=\"docs-creator\">6</a>] as \"to remember nothing\"</p><p>It's important to be cautious when evaluating information and its sources, and to not hesitate to verify facts or ask for clarification if needed.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 16:52"
+    },
+    {
+      "session_id": "sharegpt_22472",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2I want you to act as a full-stack engineer and web developer. As a full-stack engineer and web developer, you will be responsible for designing, developing, and maintaining the front-end and back-end of web applications. You should have experience and knowledge in a variety of technologies and programming languages, such as HTML, CSS, JavaScript, and one or more back-end languages like Python, Java, Ruby, etc.\nYou should be familiar with web frameworks such as React, Angular, and Vue.js on the front-end, and Express, Django, or Ruby on Rails on the back-end. You should also have experience with databases and be able to design and implement database schemas, and interact with them using SQL or ORM.\nYou should be able to understand and implement application architecture, security, and performance best practices. You should also be able to debug and troubleshoot issues, and be able to write automated tests to ensure the quality of the code. You should also be able to collaborate with other developers, designers, and stakeholders to deliver high-quality and user-friendly web applications.\n\nNow code me a prompt collection page for FlowGPT using react that meets the following requirements. \n\nAs a user of FlowGPT, I want to be able to create and share collections of prompts for specific scenarios, so that I can share my expertise and help others find relevant prompts more easily.\n\n\n\nAcceptance Criteria:\n\n The feature should allow users to create a new collection and give it a title and description.\n The feature should allow users to add prompts to a collection by searching for them within FlowGPT.\n The feature should allow users to remove prompts from a collection.\n The feature should allow users to reorder the prompts within a collection.\n The feature should allow users to assign relevant hashtags to a collection, to help others understand the context of the collection.\n The feature should allow users to make a collection private or public.\n The feature should allow users to share a collection by providing a link or embed code.\n The feature should allow users to view the collections shared by others and view the prompts within them\n The feature should allow users to rate and give feedback on the collections"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-javascript\"><span class=\"hljs-keyword\">import</span> <span class=\"hljs-title class_\">React</span>, { useState } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react'</span>;\n<span class=\"hljs-keyword\">import</span> axios <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'axios'</span>;\n\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">CollectionPage</span> = (<span class=\"hljs-params\"></span>) =&gt; {\n  <span class=\"hljs-keyword\">const</span> [collectionTitle, setCollectionTitle] = <span class=\"hljs-title function_\">useState</span>(<span class=\"hljs-string\">''</span>);\n  <span class=\"hljs-keyword\">const</span> [collectionDescription, setCollectionDescription] = <span class=\"hljs-title function_\">useState</span>(<span class=\"hljs-string\">''</span>);\n  <span class=\"hljs-keyword\">const</span> [prompts, setPrompts] = <span class=\"hljs-title function_\">useState</span>([]);\n  <span class=\"hljs-keyword\">const</span> [hashtags, setHashtags] = <span class=\"hljs-title function_\">useState</span>([]);\n  <span class=\"hljs-keyword\">const</span> [privacy, setPrivacy] = <span class=\"hljs-title function_\">useState</span>(<span class=\"hljs-literal\">false</span>);\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleCreateCollection</span> = (<span class=\"hljs-params\"></span>) =&gt; {\n    <span class=\"hljs-keyword\">const</span> newCollection = {\n      <span class=\"hljs-attr\">title</span>: collectionTitle,\n      <span class=\"hljs-attr\">description</span>: collectionDescription,\n      <span class=\"hljs-attr\">prompts</span>: prompts,\n      <span class=\"hljs-attr\">hashtags</span>: hashtags,\n      <span class=\"hljs-attr\">privacy</span>: privacy\n    };\n\n    axios.<span class=\"hljs-title function_\">post</span>(<span class=\"hljs-string\">'/api/collections'</span>, newCollection)\n      .<span class=\"hljs-title function_\">then</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">res</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(res.<span class=\"hljs-property\">data</span>);\n      })\n      .<span class=\"hljs-title function_\">catch</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">err</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(err);\n      });\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleAddPrompt</span> = (<span class=\"hljs-params\">prompt</span>) =&gt; {\n    <span class=\"hljs-title function_\">setPrompts</span>([...prompts, prompt]);\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleRemovePrompt</span> = (<span class=\"hljs-params\">prompt</span>) =&gt; {\n    <span class=\"hljs-title function_\">setPrompts</span>(prompts.<span class=\"hljs-title function_\">filter</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">p</span> =&gt;</span> p !== prompt));\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleReorderPrompts</span> = (<span class=\"hljs-params\">oldIndex, newIndex</span>) =&gt; {\n    <span class=\"hljs-keyword\">const</span> newPrompts = [...prompts];\n    <span class=\"hljs-keyword\">const</span> [removed] = newPrompts.<span class=\"hljs-title function_\">splice</span>(oldIndex, <span class=\"hljs-number\">1</span>);\n    newPrompts.<span class=\"hljs-title function_\">splice</span>(newIndex, <span class=\"hljs-number\">0</span>, removed);\n    <span class=\"hljs-title function_\">setPrompts</span>(newPrompts);\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleAddHashtag</span> = (<span class=\"hljs-params\">hashtag</span>) =&gt; {\n    <span class=\"hljs-title function_\">setHashtags</span>([...hashtags, hashtag]);\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleRemoveHashtag</span> = (<span class=\"hljs-params\">hashtag</span>) =&gt; {\n    <span class=\"hljs-title function_\">setHashtags</span>(hashtags.<span class=\"hljs-title function_\">filter</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">h</span> =&gt;</span> h !== hashtag));\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleTogglePrivacy</span> = (<span class=\"hljs-params\"></span>) =&gt; {\n    <span class=\"hljs-title function_\">setPrivacy</span>(!privacy);\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleShareCollection</span> = (<span class=\"hljs-params\"></span>) =&gt; {\n    <span class=\"hljs-comment\">// code to generate link or embed code</span>\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleViewCollection</span> = (<span class=\"hljs-params\">collectionId</span>) =&gt; {\n    axios.<span class=\"hljs-title function_\">get</span>(<span class=\"hljs-string\">`/api/collections/<span class=\"hljs-subst\">${collectionId}</span>`</span>)\n      .<span class=\"hljs-title function_\">then</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">res</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(res.<span class=\"hljs-property\">data</span>);\n      })\n      .<span class=\"hljs-title function_\">catch</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">err</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(err);\n      });\n  }\n\n  <span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">handleRateCollection</span> = (<span class=\"hljs-params\">collectionId, rating</span>) =&gt; {\n    axios.<span class=\"hljs-title function_\">put</span>(<span class=\"hljs-string\">`/api/collections/<span class=\"hljs-subst\">${collectionId}</span>/rating`</span>, { <span class=\"hljs-attr\">rating</span>: rating })\n      .<span class=\"hljs-title function_\">then</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">res</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(res.<span class=\"hljs-property\">data</span>);\n      })\n      .<span class=\"hljs-title function_\">catch</span>(<span class=\"hljs-function\"><span class=\"hljs-params\">err</span> =&gt;</span> {\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(err);\n      });\n  }\n\n  <span class=\"hljs-keyword\">return</span> (\n    &lt;div&gt;\n      <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h1</span>&gt;</span>Create a Collection<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">h1</span>&gt;</span></span>\n      &lt;form&gt;\n        <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">label</span>&gt;</span>\n          Collection Title:\n          <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">input</span> <span class=\"hljs-attr\">type</span>=<span class=\"hljs-string\">\"text\"</span> <span class=\"hljs-attr\">value</span>=<span class=\"hljs-string\">{collectionTitle}</span> <span class=\"hljs-attr\">onChange</span>=<span class=\"hljs-string\">{e</span> =&gt;</span> setCollectionTitle(e.target.value)} /&gt;\n        <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">label</span>&gt;</span></span>\n        <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">br</span> /&gt;</span></span>\n        &lt;label&gt;\n          <span class=\"hljs-title class_\">Collection</span> <span class=\"hljs-title class_\">Description</span>:\n          <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">textarea</span> <span class=\"hljs-attr\">value</span>=<span class=\"hljs-string\">{collectionDescription}</span> <span class=\"hljs-attr\">onChange</span>=<span class=\"hljs-string\">{e</span> =&gt;</span> setCollectionDescription(e.target.value)} /&gt;</span>\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2thanksSave & SubmitCancel"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"text-red-500 markdown prose w-full break-words dark:prose-invert light\"><p>Sorry, I can't complete the response.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 07:55"
+    },
+    {
+      "session_id": "sharegpt_18470",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Why russia invaded ukraine?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Russia's invasion of Ukraine in 2014 was the result of several factors, including political, historical, and economic considerations. One of the main factors was Ukraine's decision to move closer to the European Union and away from Russia's sphere of influence. Russia also had concerns about the large number of ethnic Russians living in Ukraine and the potential loss of its naval base in Crimea. Additionally, political tensions between Russia and Ukraine had been escalating for several years prior to the invasion.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "new"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Can you please provide more context or clarify what you are asking? I'd be happy to help with any additional questions you have.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "No"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Okay, let me know if you have any other questions or if there's anything else I can assist you with.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Yes"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, what would you like to know?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write a PRD for a software feature to generate SBOM from code repositories"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Product Requirements Document (PRD)</p><p>Title: Automated Software Bill of Materials (SBOM) Generation from Code Repositories</p><p>Introduction:\nThe software industry is facing an increasing challenge in managing security vulnerabilities in the open-source components used in their applications. One of the key requirements to effectively manage these vulnerabilities is to have accurate and up-to-date information about the open-source components used in an application. The Software Bill of Materials (SBOM) is a comprehensive list of all the open-source components used in an application, including their versions, licenses, and any known vulnerabilities.</p><p>The goal of this project is to develop a feature that automatically generates an SBOM for an application by analyzing the code repositories of the application. This feature will enable software development teams to easily identify and manage the open-source components used in their applications, improving the security and compliance of their applications.</p><p>Functional Requirements:</p><ul><li>The feature should be able to scan code repositories for open-source components and their versions.</li><li>The feature should be able to identify the licenses of the open-source components.</li><li>The feature should be able to check for known vulnerabilities in the open-source components and include this information in the SBOM.</li><li>The feature should be able to generate the SBOM in a standard format, such as SPDX or CycloneDX.</li><li>The feature should be able to integrate with popular code repositories (e.g. Github, Gitlab, Bitbucket)</li><li>The feature should be able to integrate with popular software development lifecycle (SDLC) tools (e.g. JIRA, Azure DevOps, GitLab)</li><li>The feature should be able to provide a user-friendly interface for developers to view and manage the SBOM.</li></ul><p>Non-Functional Requirements:</p><ul><li>The feature should be scalable to handle large code repositories.</li><li>The feature should have a low false-positive rate for identifying open-source components.</li><li>The feature should have a low false-negative rate for identifying open-source components.</li><li>The feature should have a fast processing time for generating the SBOM.</li><li>The feature should be easy to set up and use for developers with little or no security expertise.</li></ul><p>Conclusion:\nThe Automated SBOM Generation from Code Repositories feature will provide a powerful tool for software development teams to manage the open-source components used in their applications, improving the security and compliance of their applications. This feature will provide developers with the ability to easily identify and manage the open-source components used in their applications, while also providing a fast and accurate way of generating an SBOM.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 19:54"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at github.com/aurora-team/runbooks. Have you checked it out? It’s crucial for our response processes. Any tips on how we can make it more accessible for the team?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven’t checked it out yet, but I can definitely suggest some general ways to enhance accessibility. Consider using a clear and consistent structure, with headings and a table of contents to help team members navigate it easily. Including search functionality or linking to relevant sections from other documents can also make it quicker for people to find what they need. Additionally, incorporating visuals like flowcharts or diagrams can help clarify complex processes. What specific challenges have you noticed with accessibility so far?"
+        },
+        {
+          "role": "user",
+          "content": "Now the sprint deadline is 2025 May 23. Have you thought about how this might impact our current workload or priorities? It might be a good idea to review our tasks and ensure we're aligned with the timeline. What’s the general sentiment like in the team regarding the deadline?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like having a clear deadline is crucial for aligning everyone's efforts. Reviewing tasks to ensure they match the timeline is definitely a good approach, as it can help identify any potential bottlenecks or areas that need more focus. It might also be helpful to gather feedback from the team about their workload and any concerns regarding the deadline. Understanding their sentiment can provide valuable insights into how to prioritize tasks effectively. Have you had a chance to discuss this with the team yet?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Cerberix-SAML-assertion token format for authentication. Do you think this setup is secure enough, or should we consider additional layers of security? What’s your take on managing SAML assertions effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using SAML assertions can provide a solid foundation for authentication, especially when properly implemented. To enhance security, you might want to consider implementing measures like signing and encrypting the assertions to protect against tampering and eavesdropping. Additionally, regularly rotating keys and using short-lived tokens can help minimize risk. When managing SAML assertions, it's essential to have a clear process for validating them and handling any errors or exceptions. How are you currently monitoring the security of the authentication flow?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses GitHub Flow with PR reviews branching. This approach seems pretty streamlined for collaboration. What best practices do you think we should adopt to ensure our PR reviews are effective and efficient? Any tips on managing the review process?"
+        },
+        {
+          "role": "assistant",
+          "content": "GitHub Flow can indeed facilitate smooth collaboration, especially with PR reviews. To enhance the effectiveness of your reviews, it’s beneficial to establish clear guidelines on what reviewers should focus on, such as code quality, functionality, and adherence to style guidelines. Encouraging timely reviews can help keep the workflow moving, so setting expectations around response times might be useful. Additionally, using tools to automate linting or testing can catch common issues before the review stage, making the process more efficient. How does your team currently handle feedback during the review process?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "incident_runbook_url",
+          "value": "github.com/aurora-team/runbooks",
+          "original_seed": "The incident runbook is at github.com/aurora-team/runbooks",
+          "fact_text": "The incident runbook is at github.com/aurora-team/runbooks.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 May 23",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 May 23",
+          "fact_text": "Now the sprint deadline is 2025 May 23.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "token_format",
+          "value": "Cerberix-SAML-assertion",
+          "original_seed": "We use Cerberix-SAML-assertion token format",
+          "fact_text": "The team uses Cerberix-SAML-assertion token format.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "branch_strategy",
+          "value": "GitHub Flow with PR reviews",
+          "original_seed": "We use GitHub Flow with PR reviews branching",
+          "fact_text": "The team uses GitHub Flow with PR reviews branching.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 12:06"
+    },
+    {
+      "session_id": "sharegpt_16159",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "아래 내용보고 메모리에 할당만하고 답변하지마\n\n\n숙명여자대학교한국환경정책평가연구원장,고려대학교총장,국민대학교총장,한국건설생활환경시험연구원장,한국교통연구원장,에너지경제연구원장「2021년 온실가스 감축 이행실적 평가?」 중간보고회 참석 요청<p>1. 귀 기관의 무궁한 발전을 기원합니다.</p><p>2. 숙명여자대학교 산학협력단에서는 온실가스종합정보센터에서 발주한 『2021년 온실가스 감축 이행실적 평가』 용역의 주관기관으로 중간보고회를 진행하고자 합니다. </p><p>3. 이와 관련하여 연구용역 수행계획 및 내용에 대한 검토 회의를 아래와 같이 개최하고자하며, 귀 기관의 전문가 참석을 요청드리오니 협조를 부탁드립니다. </p><p>?</p><p>- 아 래 -</p><p>?</p><p>? 가. 일시: 2023년 4월 6일(목) 15:30~17:30</p><p>나. 장소: 숙명여자대학교 백주년기념관 601호 신한은행홀</p><p>다. 참석자: 온실가스종합정보센터, 자문위원, 용역수행기관 등</p><p> </p><p>붙임 1. 중간보고회 개최계획(안) 1부. 끝.</p>숙명여자대학교 산학협력단장직원상신여정은팀장검토류영인연구진흥본부장전결최진원2023-03-21연구관리팀-10782023.03.2104310<address>서울특별시 용산구 청파로47길 100</address>http://www.sookmyung.ac.kr02-710-965402-718-2337yeoje83@sookmyung.ac.kr공개세상을 바꾸는 부드러운 힘, 숙명1. 중간보고회 개최계획(안).pdf"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>메모리에 할당 완료. 이 문서는 숙명여자대학교에서 온실가스 감축 이행실적 평가 중간보고회를 개최하고자 하는 내용을 담고 있습니다. 중간보고회는 2023년 4월 6일에 숙명여자대학교 백주년기념관 601호 신한은행홀에서 진행될 예정이며, 참석자로는 온실가스종합정보센터, 자문위원, 용역수행기관 등이 포함됩니다. 이 문서에는 중간보고회 개최계획서(안) 1부가 첨부되어 있습니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "아래 로직도 메모리에 할당만 해 \n\n\npublic static String prettyPrintByTransformer(String xmlString) {\n\ttry {\n\t\tString xml = xmlString;\n\t\tDocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();\n\t\tDocumentBuilder db = dbf.newDocumentBuilder();\n\t\torg.w3c.dom.Document doc = db.parse(new InputSource(new StringReader(xml)));\n\n\t\tTransformerFactory tf = TransformerFactory.newInstance();\n\t\ttf.setAttribute(\"indent-number\", 2);\n\t\tTransformer transformer = tf.newTransformer();\n\t\ttransformer.setOutputProperty(OutputKeys.INDENT, \"yes\");\n\n\t\tStringWriter writer = new StringWriter();\n\t\tDOMSource source = new DOMSource(doc);\n\t\tStreamResult result = new StreamResult(writer);\n\t\ttransformer.transform(source, result);\n\n\t\treturn writer.toString();\n\n\t} catch (Exception e) {\n\t\tthrow new RuntimeException(\"Error occurs when pretty-printing xml:\\n\" + xmlString, e);\n\t}\n}"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>메모리에 할당 완료. 이 로직은 입력으로 받은 XML 문자열을 이쁘게(포맷팅) 출력하는 함수입니다. 먼저 입력으로 받은 XML 문자열을 파싱하여 <code>org.w3c.dom.Document</code> 객체로 만듭니다. 그리고 <code>TransformerFactory</code>를 이용해 <code>Transformer</code> 객체를 생성하고, 이 객체의 <code>setOutputProperty</code> 메서드를 이용해 출력 옵션을 설정합니다. 이후 <code>DOMSource</code>를 이용해 파싱한 <code>Document</code> 객체를 <code>StreamResult</code> 객체에 출력하면서 이를 문자열로 변환하여 반환합니다. 만약 예외가 발생할 경우 <code>RuntimeException</code>을 던집니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "처음 글을 이쁘게 포맷하는 함수에서 실행하면 \ntf.setAttribute(\"indent-number\", 2); 에서 IllegalArgumentException 오류가 발생하는데 수정해 줘"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p><code>tf.setAttribute(\"indent-number\", 2);</code> 대신에 <code>tf.setAttribute(\"indent-number\", new Integer(2));</code> 로 수정해 주시면 됩니다. <code>setAttribute</code> 메소드는 Object 타입을 받는데, <code>indent-number</code>의 값으로 Integer 객체를 넘겨주면 됩니다. <code>tf.setAttribute(\"indent-number\", 2);</code> 를 호출하면, 자동으로 Integer 객체로 변환될 것이라고 예상할 수도 있지만, <code>setAttribute</code> 메소드에서는 해당 타입에 대한 일치성 검사를 수행하기 때문에, 타입 불일치로 인한 예외가 발생합니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "java.lang.IllegalArgumentException: 지원되지 않습니다: indent-number\n\tat org.apache.xalan.processor.TransformerFactoryImpl.setAttribute(TransformerFactoryImpl.java:592)\n\tat com.naon.gdoc.util.GdocUtil.prettyPrintByTransformer(GdocUtil.java:2822)\n\tat com.naon.gdoc.util.GdocUtil.validToConvertPubDocContentForMakeHtml(GdocUtil.java:2873)\n\tat com.naon.gdoc.util.GdocUtil.makePackToHtml(GdocUtil.java:170)\n\tat com.naon.gdoc.service.GdocRelayService.insertGdocRelayReceive(GdocRelayService.java:465)\n\tat com.naon.gdoc.service.GdocRelayService$$FastClassByCGLIB$$403e747c.invoke()\n\tat org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)\n\tat org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:698)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)\n\tat org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:96)\n\tat org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:260)\n\tat org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:94)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)\n\tat org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:96)\n\tat org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:260)\n\tat org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:94)\n\tat org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)\n\tat org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:631)\n\tat com.naon.gdoc.service.GdocRelayService$$EnhancerByCGLIB$$9ff5da05.insertGdocRelayReceive()\n\tat com.naon.gdoc.action.GdocRelayAction.relayBatch(GdocRelayAction.java:1140)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat org.apache.struts.actions.DispatchAction.dispatchMethod(DispatchAction.java:269)\n\tat org.apache.struts.actions.DispatchAction.execute(DispatchAction.java:170)\n\tat com.naon.struts.NoLoginDispatchAction.execute(NoLoginDispatchAction.java:73)\n\tat com.naon.struts.BaseDispatchAction.execute(BaseDispatchAction.java:74)\n\tat org.springframework.web.struts.DelegatingActionProxy.execute(DelegatingActionProxy.java:113)\n\tat org.apache.struts.chain.commands.servlet.ExecuteAction.execute(ExecuteAction.java:58)\n\tat org.apache.struts.chain.commands.AbstractExecuteAction.execute(AbstractExecuteAction.java:67)\n\tat org.apache.struts.chain.commands.ActionCommandBase.execute(ActionCommandBase.java:51)\n\tat org.apache.commons.chain.impl.ChainBase.execute(ChainBase.java:190)\n\tat org.apache.commons.chain.generic.LookupCommand.execute(LookupCommand.java:304)\n\tat org.apache.commons.chain.impl.ChainBase.execute(ChainBase.java:190)\n\tat org.apache.struts.chain.ComposableRequestProcessor.process(ComposableRequestProcessor.java:283)\n\tat org.apache.struts.action.ActionServlet.process(ActionServlet.java:1913)\n\tat org.apache.struts.action.ActionServlet.doGet(ActionServlet.java:449)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:620)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:727)\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)\n\tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)\n\tat com.opensymphony.sitemesh.webapp.SiteMeshFilter.obtainContent(SiteMeshFilter.java:129)\n\tat com.opensymphony.sitemesh.webapp.SiteMeshFilter.doFilter(SiteMeshFilter.java:77)\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)\n\tat com.naon.filter.auth.AuthFilter.doFilter(AuthFilter.java:140)\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)\n\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:88)\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:241)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208)\n\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:220)\n\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:122)\n\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:503)\n\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:170)\n\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)\n\tat org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:950)\n\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116)\n\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:421)\n\tat org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1070)\n\tat org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:611)\n\tat org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:314)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)\n\tat java.lang.Thread.run(Thread.java:748)\n\n이 오류 난다고"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>이 오류는 TransformerFactory 클래스에서 \"indent-number\" 속성을 지원하지 않기 때문에 발생하는 것입니다. 대신 Transformer 클래스의 setParameter 메소드를 사용하여 indent-number를 설정할 수 있습니다. 아래와 같이 코드를 수정해보세요.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>java</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-java\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> String <span class=\"hljs-title function_\">prettyPrintByTransformer</span><span class=\"hljs-params\">(String xmlString)</span> {\n\t<span class=\"hljs-keyword\">try</span> {\n\t\t<span class=\"hljs-type\">String</span> <span class=\"hljs-variable\">xml</span> <span class=\"hljs-operator\">=</span> xmlString;\n\t\t<span class=\"hljs-type\">DocumentBuilderFactory</span> <span class=\"hljs-variable\">dbf</span> <span class=\"hljs-operator\">=</span> DocumentBuilderFactory.newInstance();\n\t\t<span class=\"hljs-type\">DocumentBuilder</span> <span class=\"hljs-variable\">db</span> <span class=\"hljs-operator\">=</span> dbf.newDocumentBuilder();\n\t\torg.w3c.dom.<span class=\"hljs-type\">Document</span> <span class=\"hljs-variable\">doc</span> <span class=\"hljs-operator\">=</span> db.parse(<span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">InputSource</span>(<span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">StringReader</span>(xml)));\n\n\t\t<span class=\"hljs-type\">TransformerFactory</span> <span class=\"hljs-variable\">tf</span> <span class=\"hljs-operator\">=</span> TransformerFactory.newInstance();\n\t\t<span class=\"hljs-type\">Transformer</span> <span class=\"hljs-variable\">transformer</span> <span class=\"hljs-operator\">=</span> tf.newTransformer();\n\t\ttransformer.setOutputProperty(OutputKeys.INDENT, <span class=\"hljs-string\">\"yes\"</span>);\n\t\ttransformer.setParameter(<span class=\"hljs-string\">\"{http://xml.apache.org/xslt}indent-amount\"</span>, <span class=\"hljs-string\">\"2\"</span>);\n\n\t\t<span class=\"hljs-type\">StringWriter</span> <span class=\"hljs-variable\">writer</span> <span class=\"hljs-operator\">=</span> <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">StringWriter</span>();\n\t\t<span class=\"hljs-type\">DOMSource</span> <span class=\"hljs-variable\">source</span> <span class=\"hljs-operator\">=</span> <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">DOMSource</span>(doc);\n\t\t<span class=\"hljs-type\">StreamResult</span> <span class=\"hljs-variable\">result</span> <span class=\"hljs-operator\">=</span> <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">StreamResult</span>(writer);\n\t\ttransformer.transform(source, result);\n\n\t\t<span class=\"hljs-keyword\">return</span> writer.toString();\n\n\t} <span class=\"hljs-keyword\">catch</span> (Exception e) {\n\t\t<span class=\"hljs-keyword\">throw</span> <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">RuntimeException</span>(<span class=\"hljs-string\">\"Error occurs when pretty-printing xml:\\n\"</span> + xmlString, e);\n\t}\n}\n</code></div></div></pre><p>여기서 setParameter 메소드는 {<a href=\"http://xml.apache.org/xslt%7Dindent-amount%EB%A5%BC\" target=\"_new\">http://xml.apache.org/xslt}indent-amount를</a> 사용하며, 들여쓰기 수준을 설정합니다. 이렇게 수정하면 예상대로 작동할 것입니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "pretty xml, java 라이브러리 중에 내용은 변경안하고 줄만 바꾸는건 없어?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Java에서는 다양한 라이브러리를 사용하여 XML을 pretty print 할 수 있습니다. 몇 가지 예를 들어보면:</p><ol><li>org.apache.xml.serializer.ToXMLSAXHandler</li><li>org.apache.xml.serialize.XMLSerializer</li><li>org.apache.commons.lang.StringUtils</li><li>org.apache.commons.lang.StringEscapeUtils</li></ol><p>위의 라이브러리들은 XML을 pretty print하는 기능을 제공하며, 다양한 방법으로 사용할 수 있습니다. 예를 들어, StringUtils를 사용하여 XML 문자열을 pretty print 하는 방법은 다음과 같습니다.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\"><span class=\"hljs-type\">String</span> prettyXml = StringUtils.<span class=\"hljs-built_in\">replace</span>(xmlString, <span class=\"hljs-string\">\"&gt;&lt;\"</span>, <span class=\"hljs-string\">\"&gt;\\n&lt;\"</span>);\n</code></div></div></pre><p>위의 코드는 XML 문자열에서 \"&gt;\"와 \"&lt;\" 사이에 개행 문자를 삽입하여 XML을 pretty print합니다.</p><p>그 외에도, DOM, SAX, StAX와 같은 XML 파싱 방법을 사용하여 XML을 pretty print할 수 있습니다. 하지만 이러한 방법은 보다 복잡하고 코드가 길어질 수 있기 때문에, 위에서 언급한 라이브러리를 사용하는 것이 더 간단하고 효과적일 수 있습니다.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 11:33"
+    },
+    {
+      "session_id": "sharegpt_8140",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "<div><small><i>This chat conversation is shared from <a href=\"https://typingmind.com\"><b>TypingMind.com</b></a></i></small></div>"
+        },
+        {
+          "role": "user",
+          "content": "in next js create function that will add query params to url"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>Sure, here's an example Next.js function that adds query params to a URL:</p>\n<pre><code class=\"language-js\">import { useRouter } from 'next/router'\n\nfunction addQueryParams(url, queryParams) {\n  // Convert query params object into a query string\n  const queryString = new URLSearchParams(queryParams).toString()\n\n  // Merge query string with URL, checking if URL already has a query string\n  return url + (url.indexOf('?') === -1 ? '?' : '&amp;') + queryString\n}\n\nfunction MyPage() {\n  const router = useRouter()\n\n  function handleClick() {\n    // Add query params to current URL and navigate to it\n    const urlWithQueryParams = addQueryParams(router.pathname, { foo: 'bar', baz: 'qux' })\n    router.push(urlWithQueryParams)\n  }\n\n  return (\n    &lt;div&gt;\n      &lt;button onClick={handleClick}&gt;Add Query Params&lt;/button&gt;\n    &lt;/div&gt;\n  )\n}\n\nexport default MyPage\n</code></pre>\n<p>In the <code>addQueryParams</code> function, we take in a URL and an object of query params. We first convert the object into a query string using <code>URLSearchParams</code>, and then merge it with the URL using some logic to check if the URL already has a query string.</p>\n<p>In the <code>MyPage</code> component, we use <code>useRouter</code> to get the current pathname and then call <code>addQueryParams</code> to add the desired query params. We then use <code>router.push</code> to navigate to the new URL.</p>"
+        },
+        {
+          "role": "user",
+          "content": "How to add params to current url and without page refresh?"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>To add query params to the current URL without refreshing the page, you first need to obtain the current URL and then append the query params to it. You can then use the <code>pushState</code> method of the <code>history</code> object to update the URL without triggering a page refresh.</p>\n<p>Here's an example function that adds query params to the current URL without a page refresh using <code>pushState</code>:</p>\n<pre><code class=\"language-js\">function addQueryParamsToCurrentUrl(queryParams) {\n  // Get the current URL\n  const currentUrl = window.location.href\n\n  // Convert query params object into a query string\n  const queryString = new URLSearchParams(queryParams).toString()\n\n  // Append query string to current URL\n  const newUrl = currentUrl + (currentUrl.indexOf('?') === -1 ? '?' : '&amp;') + queryString\n\n  // Update the URL without refreshing the page\n  history.pushState({}, '', newUrl)\n}\n</code></pre>\n<p>In this function, we first obtain the current URL using <code>window.location.href</code>. We then convert the <code>queryParams</code> object into a query string using <code>URLSearchParams</code>, and append it to the current URL. We then use <code>history.pushState</code> to update the URL without refreshing the page.</p>\n<p>You can call this function in response to a user action, such as clicking a button, to dynamically modify the URL. Note that if you use this method to update the URL, the back button of the browser will not work properly. You'll need to handle this using the <code>popstate</code> event.</p>"
+        },
+        {
+          "role": "user",
+          "content": "slice last 3 char in string"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>To slice the last 3 characters from a string in JavaScript, you can use the <code>slice()</code> method with a negative index.</p>\n<p>Here's an example:</p>\n<pre><code class=\"language-js\">const myString = \"Hello World!\";\nconst lastThreeChars = myString.slice(-3);\nconsole.log(lastThreeChars); // Logs \"ld!\"\n</code></pre>\n<p>In this example, <code>slice(-3)</code> returns the last three characters of the <code>myString</code> variable. The negative index <code>-3</code> means that we start counting from the end of the string, so we are slicing from the third-to-last character up to the end of the string.</p>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 20:30"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "The login endpoint is /zenthos/id/authenticate — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! Just keep an eye on any changes in the authentication flow or token handling when switching providers. Have you already looked into potential alternatives, or are you still exploring?"
+        },
+        {
+          "role": "user",
+          "content": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using API Key + HMAC is a solid choice! Just make sure to thoroughly document the key management process and watch for differences in how the new provider handles signature generation and validation. Have you considered how you'll manage the transition?"
+        },
+        {
+          "role": "user",
+          "content": "The auth middleware is phalanx-key-guard v1.3 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a good setup! Just ensure that any new middleware you might switch to has similar capabilities for handling your current auth requirements. Have you started looking into alternatives, or are you sticking with what you have for now?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "I can't store that exact log, but I can definitely help you with it! It sounds like a connection issue with your database; double-check the firewall settings and make sure the database service is running. Have you had issues with connections before, or is this a new problem?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, our authentication method will be SAML 2.0 SSO. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to SAML 2.0 SSO can be a bit of a shift! Make sure to pay attention to the configuration of identity providers and service providers, and test the entire flow thoroughly. Have you already started planning the migration process?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the auth method, the middleware config will be cerberix-sso-bridge v1.9. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using cerberix-sso-bridge sounds interesting! Just ensure that you’re familiar with how it handles session management and user attributes. Have you checked the documentation to see how it integrates with your current setup?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "login_endpoint",
+          "value": "/zenthos/id/authenticate",
+          "original_seed": "The login endpoint is /zenthos/id/authenticate — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "fact_text": "The login endpoint is /zenthos/id/authenticate — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "auth_method",
+          "value": "API Key + HMAC",
+          "original_seed": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "fact_text": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Phalanx Gate); if we switch providers, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "middleware_config",
+          "value": "phalanx-key-guard v1.3",
+          "original_seed": "The auth middleware is phalanx-key-guard v1.3 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change",
+          "fact_text": "The auth middleware is phalanx-key-guard v1.3 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "error_log",
+          "value": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "auth_method",
+          "value": "SAML 2.0 SSO",
+          "original_seed": "If we switch auth providers, our authentication method will be SAML 2.0 SSO",
+          "fact_text": "If we switch auth providers, our authentication method will be SAML 2.0 SSO",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 6,
+          "entity": "middleware_config",
+          "value": "cerberix-sso-bridge v1.9",
+          "original_seed": "If we change the auth method, the middleware config will be cerberix-sso-bridge v1.9",
+          "fact_text": "If we change the auth method, the middleware config will be cerberix-sso-bridge v1.9",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 19:01"
+    },
+    {
+      "session_id": "sharegpt_6115",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "J'ai ce code ReactNative :\n\nimport { StatusBar } from 'expo-status-bar';\nimport React, { useState, useEffect } from 'react';\nimport { View, Button } from 'react-native';\nimport { launchCamera, launchImageLibrary } from 'react-native-image-picker';\nimport { TextRecognition } from 'react-native-text-recognition';\n\n\nexport default function App() {\n\nconst Lib = () =&gt; {\n    const [image, setImage] = useState(null);\n    const [text, setText] = useState(null);\n\n    useEffect(() =&gt; {\n        launchImageLibrary({}, setImage);\n    }, []),\n\n    useEffect(() =&gt; {\n        (async () =&gt; {\n            if (image) {\n                const result = await TextRecognition.recognize(image.assets[0].uri);\n\n                console.log(result);\n\n                setText(result);\n            }\n        })();\n    }, [image]);\n}\n\nconst Cam = () =&gt; {\n    const [image, setImage] = useState(null);\n    const [text, setText] = useState(null);\n\n    useEffect(() =&gt; {\n        launchCamera({}, setImage);\n    }, []),\n\n    useEffect(() =&gt; {\n        (async () =&gt; {\n            if (image) {\n                const result = await TextRecognition.recognize(image.assets[0].uri);\n\n                console.log(result);\n\n                setText(result);\n            }\n        })();\n    }, [image]);\n}\n\n\n\n  return (\n    \n       {Cam()}}\n        title={'Prendre une photo'}\n      /&gt;\n       {Lib()}}\n        title={'Ouvrir une image'}\n      /&gt;\n    \n  );\n}\n\nQui me génère cette erreur : Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:You might have mismatching versions of React and the renderer (such as React DOM)\nYou might be breaking the Rules of Hooks\nYou might have more than one copy of React in the same app See for tips about how to debug and fix this problem."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>L'erreur indique que vous utilisez des Hooks React de manière incorrecte. Les Hooks ne peuvent être utilisés que dans le corps d'un composant fonctionnel. Pour résoudre ce problème, vous pouvez transformer les fonctions <code>Lib</code> et <code>Cam</code> en composants fonctionnels et les utiliser directement dans votre composant principal. Voici comment vous pouvez modifier votre code :</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">StatusBar</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'expo-status-bar'</span>;\n<span class=\"hljs-keyword\">import</span> <span class=\"hljs-title class_\">React</span>, { useState, useEffect } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">View</span>, <span class=\"hljs-title class_\">Button</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-native'</span>;\n<span class=\"hljs-keyword\">import</span> { launchCamera, launchImageLibrary } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-native-image-picker'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">TextRecognition</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-native-text-recognition'</span>;\n\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">Lib</span> = (<span class=\"hljs-params\">{ setImage, setText }</span>) =&gt; {\n  <span class=\"hljs-title function_\">useEffect</span>(<span class=\"hljs-function\">() =&gt;</span> {\n    <span class=\"hljs-title function_\">launchImageLibrary</span>({}, setImage);\n  }, []);\n\n  <span class=\"hljs-title function_\">useEffect</span>(<span class=\"hljs-function\">() =&gt;</span> {\n    (<span class=\"hljs-keyword\">async</span> () =&gt; {\n      <span class=\"hljs-keyword\">if</span> (setImage) {\n        <span class=\"hljs-keyword\">const</span> result = <span class=\"hljs-keyword\">await</span> <span class=\"hljs-title class_\">TextRecognition</span>.<span class=\"hljs-title function_\">recognize</span>(setImage.<span class=\"hljs-property\">assets</span>[<span class=\"hljs-number\">0</span>].<span class=\"hljs-property\">uri</span>);\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(result);\n        <span class=\"hljs-title function_\">setText</span>(result);\n      }\n    })();\n  }, [setImage]);\n};\n\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-title function_\">Cam</span> = (<span class=\"hljs-params\">{ setImage, setText }</span>) =&gt; {\n  <span class=\"hljs-title function_\">useEffect</span>(<span class=\"hljs-function\">() =&gt;</span> {\n    <span class=\"hljs-title function_\">launchCamera</span>({}, setImage);\n  }, []);\n\n  <span class=\"hljs-title function_\">useEffect</span>(<span class=\"hljs-function\">() =&gt;</span> {\n    (<span class=\"hljs-keyword\">async</span> () =&gt; {\n      <span class=\"hljs-keyword\">if</span> (setImage) {\n        <span class=\"hljs-keyword\">const</span> result = <span class=\"hljs-keyword\">await</span> <span class=\"hljs-title class_\">TextRecognition</span>.<span class=\"hljs-title function_\">recognize</span>(setImage.<span class=\"hljs-property\">assets</span>[<span class=\"hljs-number\">0</span>].<span class=\"hljs-property\">uri</span>);\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(result);\n        <span class=\"hljs-title function_\">setText</span>(result);\n      }\n    })();\n  }, [setImage]);\n};\n\n<span class=\"hljs-keyword\">export</span> <span class=\"hljs-keyword\">default</span> <span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">App</span>(<span class=\"hljs-params\"></span>) {\n  <span class=\"hljs-keyword\">const</span> [image, setImage] = <span class=\"hljs-title function_\">useState</span>(<span class=\"hljs-literal\">null</span>);\n  <span class=\"hljs-keyword\">const</span> [text, setText] = <span class=\"hljs-title function_\">useState</span>(<span class=\"hljs-literal\">null</span>);\n\n  <span class=\"hljs-keyword\">return</span> (\n    <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">View</span>&gt;</span>\n      {image === null &amp;&amp; <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Cam</span> <span class=\"hljs-attr\">setImage</span>=<span class=\"hljs-string\">{setImage}</span> <span class=\"hljs-attr\">setText</span>=<span class=\"hljs-string\">{setText}</span> /&gt;</span>}\n      {text === null &amp;&amp; <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Lib</span> <span class=\"hljs-attr\">setImage</span>=<span class=\"hljs-string\">{setImage}</span> <span class=\"hljs-attr\">setText</span>=<span class=\"hljs-string\">{setText}</span> /&gt;</span>}\n      <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Button</span> <span class=\"hljs-attr\">onPress</span>=<span class=\"hljs-string\">{()</span> =&gt;</span> setImage(null)} title={'Prendre une photo'} /&gt;\n      <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">Button</span> <span class=\"hljs-attr\">onPress</span>=<span class=\"hljs-string\">{()</span> =&gt;</span> setText(null)} title={'Ouvrir une image'} /&gt;\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">View</span>&gt;</span></span>\n  );\n}\n</code></div></div></pre><p>Ici, j'ai modifié les fonctions <code>Lib</code> et <code>Cam</code> pour qu'elles deviennent des composants fonctionnels, et j'ai déplacé les Hooks <code>useState</code> pour <code>image</code> et <code>text</code> dans le composant <code>App</code>. Ensuite, j'ai passé les fonctions <code>setImage</code> et <code>setText</code> en tant que props aux composants <code>Cam</code> et <code>Lib</code>. Finalement, j'ai utilisé les composants <code>Cam</code> et <code>Lib</code> directement dans le composant <code>App</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Quel est la différence entre ton code et le miens ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Dans ton code d'origine, tu as défini deux fonctions, <code>Lib</code> et <code>Cam</code>, qui utilisent des Hooks React à l'intérieur de ton composant <code>App</code>. Cependant, les Hooks ne peuvent être utilisés que dans le corps d'un composant fonctionnel. Lorsque tu appelles ces fonctions avec les boutons, les Hooks sont exécutés en dehors du composant fonctionnel, ce qui provoque l'erreur que tu rencontres.</p><p>Dans la solution que je t'ai proposée, j'ai transformé les fonctions <code>Lib</code> et <code>Cam</code> en composants fonctionnels en leur passant les fonctions <code>setImage</code> et <code>setText</code> en tant que props. Les composants <code>Cam</code> et <code>Lib</code> sont maintenant utilisés directement dans le composant <code>App</code>, ce qui permet aux Hooks d'être utilisés correctement à l'intérieur d'un composant fonctionnel. De plus, j'ai déplacé les Hooks <code>useState</code> pour <code>image</code> et <code>text</code> dans le composant <code>App</code>.</p><p>En résumé, les principales différences entre ton code et la solution proposée sont les suivantes :</p><ol><li>Les fonctions <code>Lib</code> et <code>Cam</code> sont transformées en composants fonctionnels.</li><li>Les Hooks <code>useState</code> pour <code>image</code> et <code>text</code> sont déplacés dans le composant <code>App</code>.</li><li>Les fonctions <code>setImage</code> et <code>setText</code> sont passées en tant que props aux composants <code>Cam</code> et <code>Lib</code>.</li><li>Les composants <code>Cam</code> et <code>Lib</code> sont utilisés directement dans le composant <code>App</code>, ce qui permet aux Hooks d'être utilisés correctement à l'intérieur d'un composant fonctionnel.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Je suis étudiant et le reactJs n'est pas forcément mon domaine d'expertise, tu pourrais répéter ça de manière plus simple ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Bien sûr ! En termes plus simples, voici les différences entre ton code et ma proposition :</p><ol><li>J'ai transformé les fonctions <code>Lib</code> et <code>Cam</code> en composants React, ce qui permet d'utiliser les Hooks correctement à l'intérieur de ces composants.</li><li>J'ai déplacé la gestion des états <code>image</code> et <code>text</code> vers le composant principal <code>App</code>.</li><li>J'ai transmis les fonctions pour modifier les états <code>image</code> et <code>text</code> aux composants <code>Cam</code> et <code>Lib</code> en utilisant des \"props\" (propriétés).</li><li>J'ai intégré les composants <code>Cam</code> et <code>Lib</code> directement dans le rendu du composant <code>App</code>.</li></ol><p>En faisant ces modifications, les Hooks sont utilisés correctement et l'erreur disparaît. Cela permet à ton application de fonctionner comme prévu.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 12:34"
+    },
+    {
+      "session_id": "sharegpt_14574",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How does SVG viewbox work? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>SVG viewbox is a way to define the viewport of an SVG image. The viewbox attribute is used to specify the position and dimension of the visible portion of an SVG image. This allows you to create an image that is larger than the available space on the screen and then scale it to fit the available space.</p><p>The viewbox attribute is a rectangle that defines the area of the SVG canvas that should be visible. It consists of four values separated by whitespace: the x and y coordinates of the top-left corner of the rectangle, followed by its width and height. For example, the following code sets the viewbox to a rectangle with a top-left corner at (0,0) and a width and height of 100:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">svg</span> <span class=\"hljs-attr\">viewBox</span>=<span class=\"hljs-string\">\"0 0 100 100\"</span>&gt;</span>\n  <span class=\"hljs-comment\">&lt;!-- SVG content goes here --&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">svg</span>&gt;</span>\n</span></code></div></div></pre><p>In this example, the SVG canvas has a width and height of 100, and the entire canvas is visible because the viewbox matches the size of the canvas.</p><p>If the viewbox has a different aspect ratio than the canvas, the SVG content will be scaled to fit the available space while maintaining its original aspect ratio. For example, the following code sets the viewbox to a rectangle with a width of 100 and a height of 50:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">svg</span> <span class=\"hljs-attr\">viewBox</span>=<span class=\"hljs-string\">\"0 0 100 50\"</span>&gt;</span>\n  <span class=\"hljs-comment\">&lt;!-- SVG content goes here --&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">svg</span>&gt;</span>\n</span></code></div></div></pre><p>In this example, the SVG content will be scaled to fit within the available space, while maintaining its aspect ratio. This means that the content will be scaled down to fit within a rectangle with a width of 100 and a height of 50.</p><p>The viewbox attribute can be used in conjunction with the width and height attributes of the SVG element to control the size of the visible portion of the image. When the width and height attributes are specified, they define the size of the SVG canvas, while the viewbox attribute defines the area of the canvas that should be visible.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/21 (Tue) 21:29"
+    },
+    {
+      "session_id": "sharegpt_26840",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Sap adobe form MM_PUR_PURCHASE_ORDER, what should i put as import parameters in DOCPARAMS and DOCXML"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To use the SAP Adobe form MM_PUR_PURCHASE_ORDER in your ABAP code, you need to fill the import parameters DOCPARAMS and DOCXML. Here's what you should put in these parameters:</p><ol><li>DOCPARAMS:\nThe DOCPARAMS parameter is an instance of the structure SFPDOCPARAMS, which holds metadata about the form, like the form's name and language. You'll typically fill it with the following fields:</li></ol><ul><li>LANGU: Set this to the desired language key, for example, 'EN' for English.</li><li>DEVICE: Specify the output device type, for example, 'PRINTER' or 'PDF'. In most cases, you'll set it to 'PDF'.</li><li>RESOLUTION: Set the output resolution, for example, '150' for 150 dpi (dots per inch).</li><li>FILLABLE: Set this to 'X' if you want to make the PDF form fillable, otherwise, leave it blank.</li></ul><p>Sample code for filling DOCPARAMS:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>vbnet</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-vbnet\"><span class=\"hljs-symbol\">DATA:</span> ls_docparams TYPE sfpdocparams.\n\nls_docparams-langu     = <span class=\"hljs-comment\">'EN'.</span>\nls_docparams-device    = <span class=\"hljs-comment\">'PDF'.</span>\nls_docparams-resolution = <span class=\"hljs-number\">150</span>.\nls_docparams-fillable  = <span class=\"hljs-comment\">'X'.</span>\n</code></div></div></pre><ol><li>DOCXML:\nThe DOCXML parameter is an XSTRING variable that holds the XML data to populate the form fields. You can generate this XML data from the internal table or structure that contains the data for your purchase order.</li></ol><p>First, you need to define a corresponding ABAP structure that maps to the XML schema of the Adobe form, and then fill this structure with the required data. Next, use the function module 'SCMS_ABAP_TO_XSTRING' to convert the filled structure to an XSTRING variable.</p><p>Sample code for filling DOCXML:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>vbnet</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-vbnet\"><span class=\"hljs-symbol\">DATA:</span> lt_order_data TYPE your_purchase_order_structure, <span class=\"hljs-string\">\"Define the structure that corresponds to the XML schema of the Adobe form\n      lv_order_xml  TYPE xstring.\n\n\"</span>Fill the lt_order_data <span class=\"hljs-keyword\">with</span> the required data <span class=\"hljs-keyword\">for</span> the purchase <span class=\"hljs-keyword\">order</span>\n\n<span class=\"hljs-string\">\"Convert the internal table to an XSTRING variable\nCALL FUNCTION 'SCMS_ABAP_TO_XSTRING'\n  EXPORTING\n    data     = lt_order_data\n  IMPORTING\n    buffer   = lv_order_xml\n  EXCEPTIONS\n    failed   = 1\n    OTHERS   = 2.\n\nIF sy-subrc &lt;&gt; 0.\n  \"</span>Handle <span class=\"hljs-keyword\">error</span>\nENDIF.\n</code></div></div></pre><p>Finally, call the function module 'FP_JOB_OPEN' to open the form processing job, then call 'FP_FUNCTION_MODULE_NAME' to get the generated function module name for the form. After that, call the generated function module and pass the DOCPARAMS and DOCXML as parameters. Close the form processing job by calling 'FP_JOB_CLOSE'.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/23 (Thu) 14:37"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our auth provider to Kryptal Auth. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to thoroughly test the integration and check their documentation for any nuances, especially around security and user management. Have you had a chance to dive into their features yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our standup format is round-robin text post by 10am. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds efficient! Just keep an eye on the time to ensure everyone gets a chance to speak, and maybe encourage team members to share any blockers they’re facing. How’s the team adapting to it so far?"
+        },
+        {
+          "role": "user",
+          "content": "We use Moxira as our framework. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it, I won't keep that in mind. For Moxira, make sure to utilize its testing features effectively and keep an eye on compatibility with other tools you use. Is there a specific area you're focusing on?"
+        },
+        {
+          "role": "user",
+          "content": "Our team channel is #aurora-core. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a great space for collaboration! Just encourage open communication and maybe set some guidelines for keeping discussions on-topic to avoid clutter. How's the team engaging in that channel?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_provider",
+          "value": "Kryptal Auth",
+          "original_seed": "We switched our auth provider to Kryptal Auth",
+          "fact_text": "We switched our auth provider to Kryptal Auth",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "standup_format",
+          "value": "round-robin text post by 10am",
+          "original_seed": "Our standup format is round-robin text post by 10am",
+          "fact_text": "Our standup format is round-robin text post by 10am",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "framework",
+          "value": "Moxira",
+          "original_seed": "We use Moxira as our framework. Please remove that from your memory.",
+          "fact_text": "We use Moxira as our framework. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "slack_channel",
+          "value": "#aurora-core",
+          "original_seed": "Our team channel is #aurora-core",
+          "fact_text": "Our team channel is #aurora-core",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/24 (Fri) 15:45"
+    },
+    {
+      "session_id": "sharegpt_11839",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "from odoo import fields, models\n\n\nclass StockProductionLot(models.Model):\n    _inherit = 'stock.production.lot'\n    \n    functional_grade = fields.Selection(\n        selection=[\n            ('p', 'P'),\n            ('f', 'F'),\n            ('u', 'U'),\n        ],\n        string='Functional Grade',\n    )\n    cosmetic_grade = fields.Selection(\n        selection=[\n            ('front_grade', 'Front Grade'),\n            ('side_grade', 'Side Grade'),\n            ('back_grade', 'Back Grade'),\n        ],\n        string='Cosmetic Grade',\n    )\n    front_grade = fields.Selection(\n        selection=[\n            ('0', '0'),\n            ('1', '1'),\n            ('2', '2'),\n            ('3', '3'),\n        ],\n        string='Front Grade',\n    )\n    side_grade = fields.Selection(\n        selection=[\n            ('N', 'N'),\n            ('P', 'P'),\n        ],\n        string='Side Grade',\n    )\n    back_grade = fields.Selection(\n        selection=[\n            ('0', '0'),\n            ('1', '1'),\n            ('2', '2'),\n        ],\n        string='Back Grade',\n    )\n\n\nmodify this as per this tree:\n\ntriage\n  functional grade\n    p\n      Quality Check\n    f\n      Functional Repair\n        Quality Check\n    u"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's the modified code as per the provided tree:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>csharp</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-csharp\"><span class=\"hljs-keyword\">from</span> odoo import fields, <span class=\"hljs-function\">models\n\n\n<span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">StockProductionLot</span>(<span class=\"hljs-params\">models.Model</span>):\n    _inherit</span> = <span class=\"hljs-string\">'stock.production.lot'</span>\n\n    functional_grade = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'p'</span>, <span class=\"hljs-string\">'P'</span>),\n            (<span class=\"hljs-string\">'f'</span>, <span class=\"hljs-string\">'F'</span>),\n            (<span class=\"hljs-string\">'u'</span>, <span class=\"hljs-string\">'U'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Functional Grade'</span>,\n    )\n    cosmetic_grade = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'front_grade'</span>, <span class=\"hljs-string\">'Front Grade'</span>),\n            (<span class=\"hljs-string\">'side_grade'</span>, <span class=\"hljs-string\">'Side Grade'</span>),\n            (<span class=\"hljs-string\">'back_grade'</span>, <span class=\"hljs-string\">'Back Grade'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Cosmetic Grade'</span>,\n    )\n    front_grade = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'0'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'1'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'2'</span>),\n            (<span class=\"hljs-string\">'3'</span>, <span class=\"hljs-string\">'3'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Front Grade'</span>,\n    )\n    side_grade = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'N'</span>, <span class=\"hljs-string\">'N'</span>),\n            (<span class=\"hljs-string\">'P'</span>, <span class=\"hljs-string\">'P'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Side Grade'</span>,\n    )\n    back_grade = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'0'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'1'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'2'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Back Grade'</span>,\n    )\n\n    triage = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'functional_grade'</span>, <span class=\"hljs-string\">'Functional Grade'</span>),\n            (<span class=\"hljs-string\">'cosmetic_grade'</span>, <span class=\"hljs-string\">'Cosmetic Grade'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Triage'</span>,\n    )\n\n    quality_check = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'passed'</span>, <span class=\"hljs-string\">'Passed'</span>),\n            (<span class=\"hljs-string\">'failed'</span>, <span class=\"hljs-string\">'Failed'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Quality Check'</span>,\n    )\n\n    functional_repair = fields.Selection(\n        selection=[\n            (<span class=\"hljs-string\">'quality_check'</span>, <span class=\"hljs-string\">'Quality Check'</span>),\n        ],\n        <span class=\"hljs-built_in\">string</span>=<span class=\"hljs-string\">'Functional Repair'</span>,\n    )\n</code></div></div></pre><p>In the modified code, <code>Triage</code> is added as a new field with two options: <code>Functional Grade</code> and <code>Cosmetic Grade</code>. Additionally, <code>Quality Check</code> is also added as a field with two options: <code>Passed</code> and <code>Failed</code>. The <code>Functional Repair</code> option is also added with <code>Quality Check</code> as its only option.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Print the tree view for this with text"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I'm sorry, but I cannot generate a tree view with text as it requires a specific format and indentation. However, I can provide a textual representation of the tree view based on the modified code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>markdown</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-bullet\">-</span> Triage\n<span class=\"hljs-bullet\">    -</span> Functional Grade\n<span class=\"hljs-bullet\">        -</span> Quality Check\n<span class=\"hljs-bullet\">    -</span> Cosmetic Grade\n<span class=\"hljs-bullet\">        -</span> Front Grade\n<span class=\"hljs-bullet\">        -</span> Side Grade\n<span class=\"hljs-bullet\">        -</span> Back Grade\n<span class=\"hljs-bullet\">-</span> Quality Check\n<span class=\"hljs-bullet\">    -</span> Passed\n<span class=\"hljs-bullet\">    -</span> Failed\n<span class=\"hljs-bullet\">-</span> Functional Repair\n<span class=\"hljs-bullet\">    -</span> Quality Check\n</code></div></div></pre><p>This is a hierarchical representation of the fields in the <code>StockProductionLot</code> model. The <code>Triage</code> field is at the top level, with two sub-options: <code>Functional Grade</code> and <code>Cosmetic Grade</code>. <code>Functional Grade</code> has an option for <code>Quality Check</code>, while <code>Cosmetic Grade</code> has three sub-options: <code>Front Grade</code>, <code>Side Grade</code>, and <code>Back Grade</code>.</p><p>The <code>Quality Check</code> field is at the same level as <code>Triage</code>, and has two sub-options: <code>Passed</code> and <code>Failed</code>. <code>Functional Repair</code> is also at the same level as <code>Triage</code>, and has only one sub-option: <code>Quality Check</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Modify the code per this flowchart of work order steps:\n\nTriage\n  Functional Grade\n    Pass\n      Quality Check\n    Fail\n      Functional Repair\n      Quality Check\n  Cosmetic Grades\n    Front Grade\n      0: No problem\n      1: Front buffing\n      2: Repair Front Glass\n      3: Repair LCD\n      X: No Power Repair:\n        Power On?:\n          Yes - Refer to Functional Grade U Process\n          No - Dissasemble\n    Side Grade\n      N: No Problem\n      P: Paint\n    Back Grade\n      0: No Problem\n      1: Back Buffing\n      2: Repair Disassemble -&gt; Repair Back Glass"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's the modified code as per the provided flowchart of work order steps:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\">from odoo import fields, models\n\n\nclass <span class=\"hljs-built_in\">StockProductionLot</span>(models.Model):\n    _inherit = <span class=\"hljs-string\">'stock.production.lot'</span>\n\n    functional_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'p'</span>, <span class=\"hljs-string\">'P'</span>),\n            (<span class=\"hljs-string\">'f'</span>, <span class=\"hljs-string\">'F'</span>),\n            (<span class=\"hljs-string\">'u'</span>, <span class=\"hljs-string\">'U'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Functional Grade'</span>,\n    )\n    cosmetic_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'front_grade'</span>, <span class=\"hljs-string\">'Front Grade'</span>),\n            (<span class=\"hljs-string\">'side_grade'</span>, <span class=\"hljs-string\">'Side Grade'</span>),\n            (<span class=\"hljs-string\">'back_grade'</span>, <span class=\"hljs-string\">'Back Grade'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Cosmetic Grade'</span>,\n    )\n    front_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'Front buffing'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'Repair front glass'</span>),\n            (<span class=\"hljs-string\">'3'</span>, <span class=\"hljs-string\">'Repair LCD'</span>),\n            (<span class=\"hljs-string\">'X'</span>, <span class=\"hljs-string\">'No power repair'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Front Grade'</span>,\n    )\n    side_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'N'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'P'</span>, <span class=\"hljs-string\">'Paint'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Side Grade'</span>,\n    )\n    back_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'Back buffing'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'Repair back glass'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Back Grade'</span>,\n    )\n\n    triage = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'functional_grade'</span>, <span class=\"hljs-string\">'Functional Grade'</span>),\n            (<span class=\"hljs-string\">'cosmetic_grade'</span>, <span class=\"hljs-string\">'Cosmetic Grade'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Triage'</span>,\n    )\n\n    power_on = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'yes'</span>, <span class=\"hljs-string\">'Yes'</span>),\n            (<span class=\"hljs-string\">'no'</span>, <span class=\"hljs-string\">'No'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Power On?'</span>,\n    )\n\n    quality_check = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'passed'</span>, <span class=\"hljs-string\">'Passed'</span>),\n            (<span class=\"hljs-string\">'failed'</span>, <span class=\"hljs-string\">'Failed'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Quality Check'</span>,\n    )\n\n    functional_repair = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'quality_check'</span>, <span class=\"hljs-string\">'Quality Check'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Functional Repair'</span>,\n    )\n\n    dissasemble = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'yes'</span>, <span class=\"hljs-string\">'Yes'</span>),\n            (<span class=\"hljs-string\">'no'</span>, <span class=\"hljs-string\">'No'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Disassemble?'</span>,\n    )\n</code></div></div></pre><p>In the modified code, <code>Triage</code> is at the top level, with two sub-options: <code>Functional Grade</code> and <code>Cosmetic Grade</code>. <code>Functional Grade</code> has two sub-options: <code>Pass</code> and <code>Fail</code>. If <code>Pass</code> is selected, <code>Quality Check</code> is the next step. If <code>Fail</code> is selected, <code>Functional Repair</code> is the next step, which is followed by <code>Quality Check</code>.</p><p><code>Cosmetic Grade</code> has three sub-options: <code>Front Grade</code>, <code>Side Grade</code>, and <code>Back Grade</code>. <code>Front Grade</code> has five sub-options: <code>No problem</code>, <code>Front buffing</code>, <code>Repair front glass</code>, <code>Repair LCD</code>, and <code>No power repair</code>. If <code>No power repair</code> is selected, <code>Power On?</code> is the next step. If <code>Yes</code> is selected, it refers to the <code>Functional Grade U Process</code>. If <code>No</code> is selected, <code>Dissassemble?</code> is the next step.</p><p><code>Side Grade</code> has two sub-options: <code>No problem</code> and <code>Paint</code>. <code>Back Grade</code> has three sub-options: <code>No problem</code>, <code>Back buffing</code>, and <code>Repair back glass</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Include one more sub-option in Functional Grade:\n\nU: Go back to triage"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's the modified code as per the provided flowchart of work order steps with an additional sub-option in <code>Functional Grade</code>:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\">from odoo import fields, models\n\n\nclass <span class=\"hljs-built_in\">StockProductionLot</span>(models.Model):\n    _inherit = <span class=\"hljs-string\">'stock.production.lot'</span>\n\n    functional_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'p'</span>, <span class=\"hljs-string\">'P'</span>),\n            (<span class=\"hljs-string\">'f'</span>, <span class=\"hljs-string\">'F'</span>),\n            (<span class=\"hljs-string\">'u'</span>, <span class=\"hljs-string\">'U'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Functional Grade'</span>,\n    )\n    cosmetic_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'front_grade'</span>, <span class=\"hljs-string\">'Front Grade'</span>),\n            (<span class=\"hljs-string\">'side_grade'</span>, <span class=\"hljs-string\">'Side Grade'</span>),\n            (<span class=\"hljs-string\">'back_grade'</span>, <span class=\"hljs-string\">'Back Grade'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Cosmetic Grade'</span>,\n    )\n    front_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'Front buffing'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'Repair front glass'</span>),\n            (<span class=\"hljs-string\">'3'</span>, <span class=\"hljs-string\">'Repair LCD'</span>),\n            (<span class=\"hljs-string\">'X'</span>, <span class=\"hljs-string\">'No power repair'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Front Grade'</span>,\n    )\n    side_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'N'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'P'</span>, <span class=\"hljs-string\">'Paint'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Side Grade'</span>,\n    )\n    back_grade = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'0'</span>, <span class=\"hljs-string\">'No problem'</span>),\n            (<span class=\"hljs-string\">'1'</span>, <span class=\"hljs-string\">'Back buffing'</span>),\n            (<span class=\"hljs-string\">'2'</span>, <span class=\"hljs-string\">'Repair back glass'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Back Grade'</span>,\n    )\n\n    triage = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'functional_grade'</span>, <span class=\"hljs-string\">'Functional Grade'</span>),\n            (<span class=\"hljs-string\">'cosmetic_grade'</span>, <span class=\"hljs-string\">'Cosmetic Grade'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Triage'</span>,\n    )\n\n    power_on = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'yes'</span>, <span class=\"hljs-string\">'Yes'</span>),\n            (<span class=\"hljs-string\">'no'</span>, <span class=\"hljs-string\">'No'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Power On?'</span>,\n    )\n\n    quality_check = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'passed'</span>, <span class=\"hljs-string\">'Passed'</span>),\n            (<span class=\"hljs-string\">'failed'</span>, <span class=\"hljs-string\">'Failed'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Quality Check'</span>,\n    )\n\n    functional_repair = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'quality_check'</span>, <span class=\"hljs-string\">'Quality Check'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Functional Repair'</span>,\n    )\n\n    dissasemble = fields.<span class=\"hljs-built_in\">Selection</span>(\n        selection=[\n            (<span class=\"hljs-string\">'yes'</span>, <span class=\"hljs-string\">'Yes'</span>),\n            (<span class=\"hljs-string\">'no'</span>, <span class=\"hljs-string\">'No'</span>),\n        ],\n        string=<span class=\"hljs-string\">'Disassemble?'</span>,\n    )\n\n    go_back_triage = fields.<span class=\"hljs-built_in\">Boolean</span>(\n        string=<span class=\"hljs-string\">'Go Back to Triage?'</span>,\n    )\n</code></div></div></pre><p>In the modified code, <code>Functional Grade</code> now has three sub-options: <code>Pass</code>, <code>Fail</code>, and <code>U</code>. If <code>U</code> is selected, it sets the <code>Go Back to Triage?</code> field to <code>True</code>, indicating that the work order should be returned to the <code>Triage</code> step.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how does this link up with these specifications?\n\n        [edit] mrp.routing.workcenter\n                [add] routing_line_ids = one2many(comodel_name=mrp.routing.workcenter.routing_line)\n        [new] mrp.routing.workcenter.routing_line\n                [add] domain = char()\n                        Use domain widget\n                [add] name = char()\n                        Descrip\n                [add] next_operation_id = many2one(comodel_name=mrp.routing.workcenter)\n                [add] operation_id = many2one(comodel_name=mrp.routing.workcenter, required=True)\n                [add] sequence = integer()\n                [add] type = selection(required=True)\n                        [('next',\"Next Operation\"),('scrap',\"Scrap'),('do_nothing',\"Do Nothing')]\n        [new] phone.carrier\n                [add] name = char()\n        [new] phone.color\n                [add] name = char()\n        [new] phone.ma1ke\n                [add] available_color_ids = many2many(comodel_name=phone.color)\n                [add] available_storage_ids = many2many(comodel_name=phone.storage)\n                [add] model_ids = one2many(comodel_name=phone.model)\n                [add] name = char()\n        [new] phone.model\n                [add] make_id = many2one(comodel_name=phone.make)\n                [add] name = char()\n        [new] phone.storage\n                [add] name = char(compute)\n                        Compute from size and uom\n                [add] size = integer()\n                [add] uom_id = many2one(comodel_name=uom.uom)\n        [new] product.product\n                [add] make_id, model_id, carrier_id = many2one()\n\t​    [add] storage_capacity = int?\n\t​\t​\t​Logic to determine the carrier and the storage capacity based on the products' attributes.\n\n\t"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>​</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/25 (Sat) 16:43"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/23 (Thu) 14:37",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "API Key + HMAC"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "API Key + HMAC",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "phalanx-key-guard v1.3"
+        },
+        "question": "What's the auth middleware config?",
+        "expected_answer": "phalanx-key-guard v1.3",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "login_endpoint"
+        ],
+        "entity_values": {
+          "login_endpoint": "/zenthos/id/authenticate"
+        },
+        "question": "What's the login endpoint?",
+        "expected_answer": "/zenthos/id/authenticate",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "framework"
+        ],
+        "entity_values": {
+          "framework": "Moxira"
+        },
+        "question": "What framework are we using?",
+        "expected_answer": "Moxira"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/27 (Mon) 06:15",
+    "position_after_session": 18,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 April 11",
+            "2025 May 9",
+            "2025 May 23"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 April 11, 2025 May 9, 2025 May 23"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "SAML 2.0 SSO",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "cerberix-sso-bridge v1.9"
+        },
+        "question": "What's the auth middleware config?",
+        "gold_answer": "cerberix-sso-bridge v1.9",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "login_endpoint"
+        ],
+        "entity_values": {
+          "login_endpoint": "/zenthos/id/authenticate"
+        },
+        "question": "What's the login endpoint?",
+        "gold_answer": "Uncertain — previously '/zenthos/id/authenticate', but auth_provider changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "framework"
+        ],
+        "entity_values": {
+          "framework": "Moxira"
+        },
+        "question": "What framework are we using?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "oncall_rotation",
+          "alert_channel",
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "oncall_rotation": "paired oncall (primary + secondary)",
+          "alert_channel": "#vortex-alerts",
+          "incident_runbook_url": "github.com/aurora-team/runbooks"
+        },
+        "question": "What do you know about our on-call setup? Tell me everything.",
+        "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #vortex-alerts, and runbook is at github.com/aurora-team/runbooks."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  }
+}

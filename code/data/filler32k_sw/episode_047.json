@@ -1,0 +1,1561 @@
+{
+  "episode_id": 47,
+  "domain": "software_project",
+  "root": "auth_provider",
+  "root_change": {
+    "before": "Verithos Auth",
+    "after": "Zenthos ID"
+  },
+  "chain_entities": [
+    "auth_provider",
+    "user_session_ttl",
+    "login_endpoint",
+    "auth_method",
+    "token_format",
+    "middleware_config"
+  ],
+  "filler_entities": [
+    "onboarding_guide",
+    "oncall_rotation",
+    "branch_strategy",
+    "alert_channel",
+    "package_manager"
+  ],
+  "entities": {
+    "auth_provider": {
+      "before": "Verithos Auth",
+      "after": "Zenthos ID",
+      "task": "C"
+    },
+    "user_session_ttl": {
+      "before": "4 hours",
+      "after": null,
+      "task": null
+    },
+    "login_endpoint": {
+      "before": "/cerberix/saml/sso-init",
+      "after": null,
+      "task": null
+    },
+    "auth_method": {
+      "before": "API Key + HMAC",
+      "after": "mTLS Client Cert",
+      "task": "A",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "token_format": {
+      "before": "Zenthos-Session-v1",
+      "after": null,
+      "task": "B",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "middleware_config": {
+      "before": "phalanx-hmac-validator v2.0",
+      "after": "oathkeeper-mtls-proxy v4.1",
+      "task": "A",
+      "cascade_source": "auth_method",
+      "hop": 2
+    },
+    "build_tool": {
+      "before": "Dranith Compiler",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "after": null,
+      "task": "G"
+    },
+    "secret_manager": {
+      "before": "Kerberos Trove",
+      "after": "Orinthal Sealed",
+      "task": "H",
+      "history": [
+        "Kerberos Trove",
+        "Pyronos Crypt",
+        "Orinthal Sealed"
+      ]
+    },
+    "design_system": {
+      "before": "Synthari Elements v1.2",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "70% overall, 95% for auth",
+      "after": null,
+      "task": "F"
+    },
+    "code_review_policy": {
+      "before": "1 approval + CI green",
+      "after": null,
+      "task": "F"
+    },
+    "onboarding_guide": {
+      "before": "ONBOARDING.md in repo root",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "volunteer-based with weekly signup",
+      "after": null,
+      "task": "filler"
+    },
+    "branch_strategy": {
+      "before": "GitFlow with release branches",
+      "after": null,
+      "task": "filler"
+    },
+    "alert_channel": {
+      "before": "#aurora-oncall-alerts",
+      "after": null,
+      "task": "filler"
+    },
+    "package_manager": {
+      "before": "Veltrion Pkg",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_method",
+      "target": "middleware_config",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "auth_provider",
+      "target": "token_format",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "secret_manager"
+      ],
+      "entity_values": {
+        "secret_manager": [
+          "Kerberos Trove",
+          "Pyronos Crypt",
+          "Orinthal Sealed"
+        ]
+      },
+      "question_template": "List all secret managers we've used over time, from earliest to latest.",
+      "gold_answer": "Kerberos Trove, Pyronos Crypt, Orinthal Sealed",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "mTLS Client Cert"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "mTLS Client Cert",
+      "notes": "Cascade from auth_provider (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "middleware_config"
+      ],
+      "entity_values": {
+        "middleware_config": "oathkeeper-mtls-proxy v4.1"
+      },
+      "cascade_source": "auth_method",
+      "question_template": "What's the auth middleware config?",
+      "gold_answer": "oathkeeper-mtls-proxy v4.1",
+      "notes": "Cascade from auth_method (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "token_format"
+      ],
+      "entity_values": {
+        "token_format": "Zenthos-Session-v1"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What token format do we use?",
+      "gold_answer": "Uncertain — previously 'Zenthos-Session-v1', but auth_provider changed",
+      "notes": "Cascade from auth_provider (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "build_tool"
+      ],
+      "entity_values": {
+        "build_tool": "Dranith Compiler"
+      },
+      "question_template": "What's our build tool?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "design_system",
+        "test_coverage_target",
+        "code_review_policy"
+      ],
+      "entity_values": {
+        "design_system": "Synthari Elements v1.2",
+        "test_coverage_target": "70% overall, 95% for auth",
+        "code_review_policy": "1 approval + CI green"
+      },
+      "question_template": "What are our code quality standards? List everything you know.",
+      "gold_answer": "We use Synthari Elements v1.2, target 70% overall, 95% for auth test coverage, and require 1 approval + CI green for reviews.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 20,
+  "evidence_sessions": 5,
+  "filler_sessions": 15,
+  "total_tokens": 35023,
+  "evidence_tokens": 3190,
+  "filler_tokens": 31833,
+  "evidence_session_indices": [
+    3,
+    7,
+    11,
+    15,
+    18
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_13377",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "fait moi un exposé sur le virtual private network (VPN) pour une personne qui ne connait pas la technologie"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Bien sûr, je peux vous expliquer ce qu'est un réseau privé virtuel (VPN) et comment il fonctionne.</p><p>Un VPN est un type de technologie de sécurité qui permet à un utilisateur d'accéder à Internet en toute sécurité et de manière privée. Pour comprendre ce que fait un VPN, imaginez que vous êtes sur un ordinateur public dans un café, une bibliothèque ou un autre endroit où vous partagez un réseau Wi-Fi avec d'autres personnes. Dans cette situation, il est facile pour d'autres personnes sur le même réseau de voir ce que vous faites en ligne, y compris les sites Web que vous visitez, les messages que vous envoyez et les informations que vous saisissez. Cela peut être dangereux si vous devez accéder à des informations sensibles telles que votre compte bancaire en ligne ou des documents de travail confidentiels.</p><p>C'est là qu'un VPN entre en jeu. Un VPN fonctionne en créant un tunnel sécurisé entre votre ordinateur et un serveur VPN distant. Lorsque vous vous connectez à un VPN, toutes les données que vous envoyez et recevez en ligne sont cryptées, ce qui signifie qu'elles sont transformées en un code illisible pour quiconque essaie de les intercepter. Cela garantit que personne sur le réseau public ne peut voir ce que vous faites en ligne.</p><p>De plus, un VPN peut également vous aider à contourner les restrictions géographiques. Par exemple, si vous êtes en vacances à l'étranger et que vous ne pouvez pas accéder à certains sites Web ou services en ligne parce qu'ils sont géolocalisés, un VPN peut vous aider à masquer votre adresse IP et à simuler que vous êtes dans un autre pays.</p><p>En résumé, un VPN est un outil de sécurité en ligne qui vous permet de naviguer sur Internet de manière privée et sécurisée, et qui peut également vous aider à contourner les restrictions géographiques.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Please shorten it."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Un VPN est un outil de sécurité en ligne qui vous permet de naviguer sur Internet de manière privée et sécurisée en créant un tunnel sécurisé entre votre ordinateur et un serveur VPN distant. Toutes les données que vous envoyez et recevez en ligne sont cryptées, garantissant que personne ne peut voir ce que vous faites en ligne. De plus, un VPN peut vous aider à contourner les restrictions géographiques.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "traduit en anglais"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I apologize, I misunderstood your previous request. Here is the translation of the previous message in English:</p><p>\"A VPN is an online security tool that allows you to browse the internet privately and securely by creating a secure tunnel between your computer and a remote VPN server. All the data you send and receive online is encrypted, ensuring that no one can see what you're doing online. Additionally, a VPN can help you bypass geographic restrictions.\"</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "pourquoi l'interface de tunnel quand je créer un vpn ipsec ne se créer pas ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Il peut y avoir plusieurs raisons pour lesquelles l'interface de tunnel ne se crée pas lorsque vous créez un VPN IPSec. Voici quelques-unes des raisons les plus courantes :</p><ol><li><p>Configuration incorrecte : Il est possible que vous ayez mal configuré le VPN, ce qui empêche l'interface de tunnel de se créer. Assurez-vous que vous avez configuré tous les paramètres correctement, y compris les adresses IP, les sous-réseaux, les clés et les protocoles.</p></li><li><p>Problèmes de compatibilité : Il se peut que votre appareil ne soit pas compatible avec le protocole IPSec. Vérifiez la documentation de votre appareil pour vous assurer qu'il prend en charge le protocole IPSec.</p></li><li><p>Problèmes de pare-feu : Votre pare-feu peut bloquer le trafic VPN, empêchant ainsi la création de l'interface de tunnel. Assurez-vous que les ports nécessaires sont ouverts sur votre pare-feu.</p></li><li><p>Problèmes de connectivité : Si votre appareil n'a pas de connectivité Internet, l'interface de tunnel ne pourra pas se créer. Assurez-vous que votre appareil est connecté à Internet et que toutes les connexions nécessaires sont configurées correctement.</p></li></ol><p>Si vous ne parvenez pas à résoudre le problème, il peut être utile de contacter le support technique de votre fournisseur VPN pour obtenir de l'aide.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "commande fortigate pour changer le port d'écoute de fortiguard sur fortigate"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Voici la commande FortiGate pour changer le port d'écoute de FortiGuard sur FortiGate :</p><p>config system fortiguard\nset port &lt;nouveau_port&gt;\nend</p><p>Remplacez \"&lt;nouveau_port&gt;\" par le numéro de port que vous souhaitez utiliser pour l'écoute de FortiGuard. N'oubliez pas de sauvegarder vos modifications une fois que vous avez terminé en utilisant la commande \"end\".</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "mettre en place le HA sur deux fortigate en active passive ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Voici les étapes à suivre pour mettre en place le HA sur deux FortiGate en mode actif-passif :</p><ol><li><p>Configurer les adresses IP et les interfaces : Assurez-vous que chaque FortiGate a des adresses IP configurées sur les interfaces réseau appropriées.</p></li><li><p>Connectez les FortiGate : Connectez les FortiGate entre eux à l'aide d'un câble de synchronisation (si disponible) ou via le réseau.</p></li><li><p>Configurer le mode HA : Sur chaque FortiGate, accédez à la console de gestion et configurez le mode HA. Vous devez définir l'un des FortiGate en tant que \"principal\" et l'autre en tant que \"secondaire\" ou \"passif\". Assurez-vous que les adresses IP et les interfaces sont configurées correctement pour chaque appareil.</p></li><li><p>Configurez la synchronisation de la configuration : Configurez la synchronisation de la configuration pour vous assurer que toutes les modifications apportées à l'un des FortiGate sont automatiquement synchronisées avec l'autre FortiGate. Cela garantit que les deux appareils sont toujours à jour et fonctionnent de manière cohérente.</p></li><li><p>Testez le basculement : Une fois que tout est configuré, effectuez des tests de basculement pour vous assurer que le processus de basculement fonctionne correctement. Vous pouvez effectuer un test manuel en déconnectant le FortiGate principal et en vérifiant que le trafic passe automatiquement au FortiGate secondaire.</p></li><li><p>Surveillez le système : Assurez-vous de surveiller régulièrement le système pour détecter tout problème ou toute anomalie et prenez les mesures nécessaires pour corriger les problèmes.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "commande fortigate pour mettre à jour l'heure"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Voici la commande FortiGate pour mettre à jour l'heure :</p><p>config system global\nset time {hh:mm:ss} {JJ/MM/AAAA}\nend</p><p>Remplacez \"{hh:mm:ss}\" par l'heure actuelle et \"{JJ/MM/AAAA}\" par la date actuelle. Par exemple, si l'heure actuelle est 14h30 et la date actuelle est le 1er mars 2023, la commande sera la suivante :</p><p>config system global\nset time 14:30:00 01/03/2023\nend</p><p>Assurez-vous de sauvegarder vos modifications une fois que vous avez terminé en utilisant la commande \"end\". Notez que vous pouvez également configurer le</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_1685",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is location wise minimum salary . apply pivot table and also draw appropriate chart for the same, Data set; employee data"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To create a pivot table and chart showing the location-wise minimum salary for a given employee dataset, you can follow these steps:</p><ol><li>Open your employee dataset in a spreadsheet software such as Microsoft Excel or Google Sheets.</li><li>Select all the data in the dataset, including the column headers.</li><li>Click on the \"Insert\" tab in the top menu and select \"Pivot Table\" (or \"Pivot Table and chart\" in some software).</li><li>In the pivot table editor, drag the \"Location\" column to the \"Rows\" section and the \"Salary\" column to the \"Values\" section. Make sure the \"Salary\" column is set to \"Minimum\" in the \"Values\" section.</li><li>Click \"OK\" to create the pivot table.</li><li>To create a chart, select the pivot table and click on the \"Insert\" tab in the top menu. Choose the chart type you prefer, such as a bar chart or a column chart.</li></ol><p>The resulting pivot table and chart will show the minimum salary for each location in your dataset. You can use this information to compare salaries across different locations and identify any disparities.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "give me aexample"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure! Here's an example of how to create a pivot table and chart showing the location-wise minimum salary for a given employee dataset:</p><p>Suppose you have an employee dataset that looks like this:</p><table><thead><tr><th>Employee ID</th><th>Name</th><th>Location</th><th>Salary</th></tr></thead><tbody><tr><td>001</td><td>John Smith</td><td>New York</td><td>60000</td></tr><tr><td>002</td><td>Jane Doe</td><td>Boston</td><td>50000</td></tr><tr><td>003</td><td>Bob Brown</td><td>Chicago</td><td>55000</td></tr><tr><td>004</td><td>Sarah Lee</td><td>New York</td><td>65000</td></tr><tr><td>005</td><td>Tom Jones</td><td>Chicago</td><td>52000</td></tr><tr><td>006</td><td>Mary White</td><td>Boston</td><td>48000</td></tr></tbody></table><p>To create a pivot table and chart showing the location-wise minimum salary:</p><ol><li>Select all the data in the dataset, including the column headers.</li><li>Click on the \"Insert\" tab in the top menu and select \"Pivot Table\".</li><li>In the pivot table editor, drag the \"Location\" column to the \"Rows\" section and the \"Salary\" column to the \"Values\" section. Make sure the \"Salary\" column is set to \"Minimum\" in the \"Values\" section.</li><li>Click \"OK\" to create the pivot table.</li><li>To create a chart, select the pivot table and click on the \"Insert\" tab in the top menu. Choose the chart type you prefer, such as a bar chart or a column chart.</li></ol><p>The resulting pivot table and chart will look like this:</p><p>Pivot table:</p><table><thead><tr><th>Location</th><th>Minimum of Salary</th></tr></thead><tbody><tr><td>New York</td><td>60000</td></tr><tr><td>Boston</td><td>48000</td></tr><tr><td>Chicago</td><td>52000</td></tr></tbody></table><p>Chart:</p><p><img src=\"https://i.imgur.com/0BybKlP.png\" alt=\"Location-wise minimum salary chart\"></p><p>In this example, the pivot table and chart show that the minimum salary in New York is the highest, followed by Chicago and Boston. This information can be used to analyze the salary distribution across different locations and make decisions accordingly.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to de minimum in the values sectiomn"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To set the \"Minimum\" calculation in the \"Values\" section of a pivot table, you can follow these steps:</p><ol><li>Select all the data in your dataset, including the column headers.</li><li>Click on the \"Insert\" tab in the top menu and select \"Pivot Table\" (or \"Pivot Table and chart\" in some software).</li><li>In the pivot table editor, drag the column that you want to calculate the minimum for (e.g. \"Salary\") to the \"Values\" section.</li><li>The \"Values\" section will show a dropdown with various calculation options such as \"Sum\", \"Count\", \"Average\", etc. Select \"Minimum\" from the dropdown.</li><li>Click \"OK\" to create the pivot table.</li></ol><p>Once you've set the \"Minimum\" calculation in the \"Values\" section, the resulting pivot table will display the minimum value of the selected column for each row of the pivot table.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Caclulate the Total no. of Students, No. of Placed Studensts, Average Marks in Class 10th, 12th and Graduation (through any logical Function; Not through Pivot; Data = MBA) for the School named T\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's how you can calculate the total number of students, number of placed students, and average marks in Class 10th, 12th, and graduation for the school named T in the MBA dataset:</p><p>Assuming that your MBA dataset has the following columns: \"Student ID\", \"School Name\", \"Class 10th Marks\", \"Class 12th Marks\", \"Graduation Marks\", and \"Placement Status\".</p><ol><li>Open your MBA dataset in a spreadsheet software such as Microsoft Excel or Google Sheets.</li><li>Filter the dataset to show only the records where the School Name is \"T\".</li><li>To calculate the total number of students, you can use the COUNTA function. In a new cell, type \"=COUNTA(A2:A100)\" (assuming that the student ID column is in column A and the dataset has a maximum of 100 rows). This will count the total number of non-empty cells in the student ID column.</li><li>To calculate the number of placed students, you can use the COUNTIF function. In a new cell, type \"=COUNTIF(F2:F100, \"Placed\")\" (assuming that the placement status column is in column F and the dataset has a maximum of 100 rows). This will count the number of cells in the placement status column that contain the text \"Placed\".</li><li>To calculate the average marks in Class 10th, you can use the AVERAGE function. In a new cell, type \"=AVERAGEIF(B2:B100, \"T\", C2:C100)\" (assuming that the school name column is in column B, the class 10th marks column is in column C, and the dataset has a maximum of 100 rows). This will calculate the average of the class 10th marks column for all the rows where the school name is \"T\".</li><li>Repeat step 5 for the Class 12th Marks and Graduation Marks columns to calculate their respective averages.</li></ol><p>Once you've entered these formulas, you should have the total number of students, number of placed students, and average marks in Class 10th, 12th, and graduation for the school named T in your MBA dataset.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Get the Marks in Class 10th, Name of Program, Name of Placement Company (through appropriate function; Data Set MBA; do create a model for the same) for the Reg. No. =  56208657. If Placement company name is Blank then the fuction must return to Message \"Yet to Place\".\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's how you can get the marks in Class 10th, name of program, and name of placement company (or \"Yet to Place\" if the placement company name is blank) for the registration number 56208657 in the MBA dataset:</p><p>Assuming that your MBA dataset has the following columns: \"Registration Number\", \"Class 10th Marks\", \"Program Name\", and \"Placement Company Name\".</p><ol><li>Open your MBA dataset in a spreadsheet software such as Microsoft Excel or Google Sheets.</li><li>Filter the dataset to show only the record where the Registration Number is 56208657.</li><li>To get the marks in Class 10th, simply look up the value in the \"Class 10th Marks\" column.</li><li>To get the name of program, simply look up the value in the \"Program Name\" column.</li><li>To get the name of placement company, you can use an IF function. In a new cell, type \"=IF(D2=\"\", \"Yet to Place\", D2)\" (assuming that the registration number column is in column A, the class 10th marks column is in column B, the program name column is in column C, the placement company name column is in column D, and the dataset has a maximum of 100 rows). This will check if the placement company name is blank (i.e. equals \"\") and return the text \"Yet to Place\" if it is, otherwise it will return the value in the placement company name column.</li></ol><p>Once you've entered these formulas, you should have the marks in Class 10th, name of program, and name of placement company (or \"Yet to Place\" if the placement company name is blank) for the registration number 56208657 in your MBA dataset. You can repeat these steps for any other registration number in the dataset by simply changing the filter criteria in step 2.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 00:00"
+    },
+    {
+      "session_id": "sharegpt_24277",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "3 / 3Usando estos puntos como borrador\n\n- Monorepo\n    - Apps, librerias y paquetes\n    - Todos los equipos trabajando en un solo repositorio centralizado\n    - Objetivo principal la cooperacion entre departamentos\n    - Compartir codigo e implementaciones\n- git: Trunk based development\n    - prehooks, no permitir la subida de codigo que no pase compilacion, tests y validacion\n    - Rama principal integracion continua en entorno de staging\n    - Branch by abstraction instead of by branching in source control\n        - Feature/integration/abstraction flags\n- Atomic design\n    - Separar todos los elementos en componentes\n        - Atomos\n        - Moleculas\n        - Organismos\n- Testing\n    - Tests unitarios\n    - Tests end to end\n    - Tests de integracion\n- Detectar y eliminar los pain points del desarrollador para agilizar su tiempo de desarrollo\n    - Ergonomicas de desarrollo, desde zero cuanto tarda un desarrollador nuevo en poder usar el repositorio?\n    - Debugers, loggers, trazabilidad\n    - Pair programming\n    - Code reviews\n    - Stack en docker\n    - Herramientas de desarrollo, como pueden ser visores de bases de datos o debuggers de codigo servidor\n- Accesibilidad, experiencia de usuario y experiencia de desarrollador\n    - Cuidar la experiencia de usuario mediante un diseño centralizado\n    - Analizar puntos de accesibilidad con el fin de ofrecer un producto accesible para gente con necesidades de accesibilidad\n    - La experiencia de desarrollo es critica, crear las herramientas necesarias para facilitar el trabajo propio y de los compañeros\n- Deuda tecnica\n    - Saber que existe\n    - Anotar la deuda tecnica con tickets y comentarios en el codigo, de tal forma que el siguiente desarrollador pueda conocer la deuda tecnica\n    - Establecer procedimientos y tiempo para pagar la deuda tecnica\n\nescribe una metodologia de trabajo a partir de ellos, usando un lenguaje tecnico, formal y en tercera personaSave &amp; SubmitCancel"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>La metodología de trabajo propuesta se basa en el uso de un monorepo centralizado, en el que se almacenan todas las aplicaciones, librerías y paquetes desarrollados por el equipo. El objetivo principal es promover la cooperación entre departamentos, facilitando la compartición de código e implementaciones.</p><p>Se utilizará un modelo de Trunk Based Development, mediante el cual se establecerán prehooks para asegurar que el código subido cumpla con los requisitos de compilación, tests y validación. La rama principal se mantendrá en un estado de integración continua en un entorno de staging, mientras que se utilizarán flags de características, integración y abstracción en lugar de ramificaciones en el control de fuente para gestionar el desarrollo de nuevas funcionalidades.</p><p>Para optimizar la reutilización y la mantenibilidad del código, se aplicará el enfoque de Atomic Design, dividiendo todos los elementos en componentes atómicos, moleculares y orgánicos.</p><p>Además, se buscará eliminar los pain points del desarrollador para agilizar su tiempo de trabajo. Para ello, se implementarán medidas como la ergonomía de desarrollo, debuggues, trazabilidad, pair programming, code reviews y el uso de herramientas de desarrollo, así como la utilización de docker para facilitar el uso de un stack común.</p><p>Por último, se llevará un registro de la deuda técnica existente, anotando los tickets y comentarios en el código para que los desarrolladores posteriores puedan conocerla. Se establecerán procedimientos y tiempos para pagar la deuda técnica, con el fin de mantener el proyecto en un estado de sostenibilidad y evitar la acumulación de problemas técnicos.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 06:22"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's design system is Synthari Elements v1.2. It's been pretty smooth so far, but I'm curious about how to best integrate it with our components. Any tips on that?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you're off to a great start with Synthari Elements! When integrating a design system with your components, it's essential to maintain consistency in styling and behavior. Make sure to leverage the design tokens defined in Synthari Elements to ensure that your colors, spacing, and typography are unified across all components. It can also be helpful to create wrapper components that encapsulate the design system elements so that any changes to the design system can be easily managed in one place. Have you encountered any specific challenges during the integration process?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Kerberos Trove. We rely on it to handle sensitive information securely. Do you have any recommendations for best practices when using a secret manager like that?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret manager like Kerberos Trove is a great way to enhance your application's security. One best practice is to ensure that access to the secrets is strictly controlled and limited to only those components or services that absolutely need it. Regularly rotating your secrets can help reduce the risk of exposure, so consider implementing a schedule for updates. Additionally, make sure to audit access logs to monitor who is accessing the secrets and when, which can help you identify any unusual activity. Are there any specific features of Kerberos Trove that you’re looking to utilize more effectively?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Verithos Auth for authentication. It's crucial for managing user sessions securely. What are the best practices for integrating Verithos Auth with our application?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating Verithos Auth effectively can really enhance your application's security around user sessions. It’s important to ensure that you're using secure communication protocols, like HTTPS, to protect user credentials during transmission. Implementing proper session management strategies is also key; consider using short-lived access tokens along with refresh tokens to minimize the risk if a token is compromised. Additionally, make sure to validate tokens on each request to confirm the user's identity and permissions. Are you currently facing any specific challenges with the integration?"
+        },
+        {
+          "role": "user",
+          "content": "Session TTL is set to 4 hours. This means that user sessions will automatically expire after that period. How are you handling session renewals or expirations in your app? It’s often a good idea to inform users when their session is about to expire, or to provide them with the option to extend it seamlessly."
+        },
+        {
+          "role": "assistant",
+          "content": "Setting a session TTL of 4 hours is a solid approach, but you're right about the importance of handling renewals and expirations effectively. A common practice is to implement a warning mechanism that notifies users a few minutes before their session is set to expire. This gives them the opportunity to extend their session if needed. You could also consider offering a seamless refresh option, where a background request renews the session without interrupting the user experience. Have you thought about how you might implement these notifications or renewal processes in your application?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses GitFlow with release branches branching. This strategy helps us manage our releases and features more systematically. Do you have any recommendations for best practices when using GitFlow? It seems like a structured workflow can really help with collaboration."
+        },
+        {
+          "role": "assistant",
+          "content": "GitFlow is an excellent choice for managing releases and features systematically. One best practice is to keep your branches focused and small, which makes it easier to review and merge changes. Regularly merging the develop branch into your feature branches can help minimize conflicts and ensure that your features are compatible with the latest updates. Additionally, consider tagging your releases clearly, as this can make it easier to track versions and roll back if necessary. How are you currently managing collaboration within your team using GitFlow?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "design_system",
+          "value": "Synthari Elements v1.2",
+          "original_seed": "Our design system is Synthari Elements v1.2",
+          "fact_text": "The team's design system is Synthari Elements v1.2.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Kerberos Trove",
+          "original_seed": "Our secret manager is Kerberos Trove",
+          "fact_text": "The team's secret manager is Kerberos Trove.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_provider",
+          "value": "Verithos Auth",
+          "original_seed": "We use Verithos Auth for authentication",
+          "fact_text": "The team uses Verithos Auth for authentication.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "user_session_ttl",
+          "value": "4 hours",
+          "original_seed": "Session TTL is 4 hours",
+          "fact_text": "Session TTL is 4 hours.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "branch_strategy",
+          "value": "GitFlow with release branches",
+          "original_seed": "We use GitFlow with release branches branching",
+          "fact_text": "The team uses GitFlow with release branches branching.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 21:18"
+    },
+    {
+      "session_id": "sharegpt_23445",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "give me some project ideas for some of the less researched areas of deep learning that a team of college students can use for creating a project and publishing a research paper."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here are some project ideas for less researched areas of deep learning that a team of college students could consider:</p><ol><li><p>Multi-modal deep learning: Develop models that can effectively process and analyze data from multiple modalities such as audio, video, and text.</p></li><li><p>Adversarial attacks and defenses: Research the various techniques used to attack deep learning models and develop defenses against them.</p></li><li><p>Deep reinforcement learning in robotics: Implement deep reinforcement learning algorithms to control robots in various scenarios such as navigation, grasping, and manipulation tasks.</p></li><li><p>Explainable AI: Develop methods to make deep learning models more transparent and interpretable, and evaluate their performance on various tasks.</p></li><li><p>Deep generative models: Research and implement various generative models such as Generative Adversarial Networks (GANs), Variational Autoencoders (VAEs), and normalizing flow models, and apply them to real-world tasks.</p></li><li><p>Deep transfer learning: Investigate methods for transfer learning in deep learning, including fine-tuning, multi-task learning, and domain adaptation.</p></li><li><p>Deep neural architecture search: Study methods for automatically searching for optimal deep neural network architectures, including both model structure and hyperparameters.</p></li><li><p>Deep unsupervised representation learning: Investigate and develop unsupervised deep learning methods for learning useful representations from data, such as autoencoders and clustering methods.</p></li></ol><p>These are just a few ideas, and there are many other less researched areas in deep learning that you can explore. The key is to find an area that interests you and your team, and to dive into the literature to identify open research questions that you can tackle.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Please give me use cases."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! Here are some example use cases for each of the deep learning project ideas mentioned in my previous answer:</p><ol><li>Multi-modal deep learning:</li></ol><ul><li>Sentiment analysis on multi-modal data, such as text and audio, to understand the sentiment of a customer service call.</li><li>Fraud detection in financial transactions by analyzing both transaction data and audio/video recordings of the transactions.</li></ul><ol start=\"2\"><li>Adversarial attacks and defenses:</li></ol><ul><li>Developing adversarial attacks on deep learning models for autonomous driving to test the robustness of these models.</li><li>Enhancing the security of deep learning models in critical applications such as face recognition and biometric authentication.</li></ul><ol start=\"3\"><li>Deep reinforcement learning in robotics:</li></ol><ul><li>Training a robot to navigate and reach a target in an unknown environment using deep reinforcement learning.</li><li>Teaching a robot to perform a task such as grasping and manipulation through deep reinforcement learning.</li></ul><ol start=\"4\"><li>Explainable AI:</li></ol><ul><li>Developing a deep learning model to predict patient outcomes in healthcare and making the model's predictions transparent and interpretable for medical professionals.</li><li>Improving the transparency and interpretability of deep learning models used in finance, such as for loan approval and fraud detection.</li></ul><ol start=\"5\"><li>Deep generative models:</li></ol><ul><li>Generating realistic images or videos given a text description, for example in computer vision or gaming applications.</li><li>Generating new product designs or logos based on a set of existing examples.</li></ul><ol start=\"6\"><li>Deep transfer learning:</li></ol><ul><li>Pre-training a deep learning model on a large dataset for one task and then fine-tuning it for a related but different task with limited data.</li><li>Using transfer learning to improve the performance of deep learning models in domains where labeled data is scarce, such as in healthcare and finance.</li></ul><ol start=\"7\"><li>Deep neural architecture search:</li></ol><ul><li>Automatically searching for the optimal neural network architecture for a specific task, such as image classification or speech recognition.</li><li>Comparing the performance of hand-designed and automatically searched neural network architectures on a variety of tasks.</li></ul><ol start=\"8\"><li>Deep unsupervised representation learning:</li></ol><ul><li>Learning useful representations of high-dimensional data, such as images or videos, for clustering and visualization purposes.</li><li>Pre-training a deep learning model for unsupervised representation learning and then fine-tuning it for a supervised learning task with limited labeled data.</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "Please provide dataset names for the use cases mentioned above."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Certainly! Here are some example datasets for each of the use cases mentioned in my previous answers:</p><ol><li>Multi-modal deep learning:</li></ol><ul><li>Sentiment analysis: The AI-based Call Center (AI-CC) dataset, the IEMOCAP dataset, and the MOSI dataset.</li><li>Fraud detection: The Fraud Detection in Financial Transactions dataset from Kaggle, and the European Banking Authority (EBA) dataset.</li></ul><ol start=\"2\"><li>Adversarial attacks and defenses:</li></ol><ul><li>Adversarial attacks on deep learning models for autonomous driving: The Udacity Self-Driving Car dataset and the Waymo Open Dataset.</li><li>Enhancing the security of deep learning models in critical applications: The FaceScrub dataset and the LFW (Labeled Faces in the Wild) dataset.</li></ul><ol start=\"3\"><li>Deep reinforcement learning in robotics:</li></ol><ul><li>Training a robot to navigate and reach a target: The OpenAI Gym environment, and the MuJoCo (Multi-Joint Dynamics with Contact) simulator.</li><li>Teaching a robot to perform a task such as grasping and manipulation: The YCB Object and Model Set and the Cornell Grasping Dataset.</li></ul><ol start=\"4\"><li>Explainable AI:</li></ol><ul><li>Developing a deep learning model to predict patient outcomes in healthcare: The MIMIC-III dataset and the eICU Collaborative Research Database.</li><li>Improving the transparency and interpretability of deep learning models used in finance: The Home Credit Default Risk dataset from Kaggle and the Loan Default Prediction dataset.</li></ul><ol start=\"5\"><li>Deep generative models:</li></ol><ul><li>Generating realistic images or videos given a text description: The COCO (Common Objects in Context) dataset and the Flickr30k dataset.</li><li>Generating new product designs or logos: The DALLE-RAE (Designs and Logos with Latent Relations and Evolution) dataset.</li></ul><ol start=\"6\"><li>Deep transfer learning:</li></ol><ul><li>Pre-training a deep learning model on a large dataset for one task and then fine-tuning it for a related but different task: The ImageNet dataset, the COCO dataset, and the Pascal VOC (Visual Object Classes) dataset.</li><li>Using transfer learning to improve the performance of deep learning models in domains where labeled data is scarce: The eICU Collaborative Research Database and the MIMIC-III dataset.</li></ul><ol start=\"7\"><li>Deep neural architecture search:</li></ol><ul><li>Automatically searching for the optimal neural network architecture: The CIFAR-10 and CIFAR-100 datasets, and the Fashion-MNIST dataset.</li><li>Comparing the performance of hand-designed and automatically searched neural network architectures: The benchmark datasets used in the Neural Architecture Search (NAS) paper, such as the CIFAR-10, CIFAR-100, and ImageNet datasets.</li></ul><ol start=\"8\"><li>Deep unsupervised representation learning:</li></ol><ul><li>Learning useful representations of high-dimensional data: The MNIST handwritten digit dataset, the CIFAR-10 and CIFAR-100 datasets, and the Fashion-MNIST dataset.</li><li>Pre-training a deep learning model for unsupervised representation learning and then fine-tuning it for a supervised learning task: The ImageNet dataset and the COCO dataset.</li></ul><p>Note that these are just examples, and there are many other publicly available datasets that could be used for these and other deep learning projects.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 20:33"
+    },
+    {
+      "session_id": "sharegpt_15541",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Quiero permitir que se imprima un documento PDF en línea con una impresora, en papel. Pero no permitir que se pueda descargar el documento. ¿Se puede hacer esto?Share Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sí, es posible permitir la impresión de un documento PDF en línea sin permitir su descarga. Puedes hacerlo utilizando un visor de PDF en línea con restricciones personalizadas en el lado del cliente (navegador) y del servidor. A continuación, te menciono un enfoque para lograr esto:</p><ol><li><p>Utiliza un visor de PDF en línea: Existen varias bibliotecas y servicios que permiten visualizar PDFs en línea, como PDF.js de Mozilla o PDFObject. Estos visores permiten mostrar el contenido del PDF dentro de un navegador web sin necesidad de descargar el archivo. Algunos de ellos ofrecen opciones para personalizar las funcionalidades disponibles.</p></li><li><p>Desactiva la opción de descarga: Personaliza el visor de PDF para que no incluya opciones de descarga. Por ejemplo, en PDF.js, puedes desactivar las funcionalidades de descarga y guardar configurando las opciones de la siguiente manera:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-title class_\">PDFViewerApplicationOptions</span>.<span class=\"hljs-title function_\">set</span>(<span class=\"hljs-string\">'disableDownload'</span>, <span class=\"hljs-literal\">true</span>);\n<span class=\"hljs-title class_\">PDFViewerApplicationOptions</span>.<span class=\"hljs-title function_\">set</span>(<span class=\"hljs-string\">'disableSave'</span>, <span class=\"hljs-literal\">true</span>);\n</code></div></div></pre><ol><li><p>Refuerza la restricción en el lado del servidor: Aunque hayas desactivado la opción de descarga en el visor de PDF, los usuarios experimentados aún podrían encontrar formas de descargar el archivo. Para reforzar la restricción, puedes implementar medidas de seguridad adicionales en el lado del servidor, como:</p><ul><li>Proteger el enlace al archivo PDF con tokens de autenticación temporales.</li><li>Ofuscar la ruta del archivo PDF en el servidor.</li><li>Establecer restricciones de acceso a nivel de servidor, como limitar el acceso solo a peticiones AJAX.</li></ul></li><li><p>Habilita la opción de imprimir: Asegúrate de que la opción de imprimir esté habilitada en el visor de PDF para permitir la impresión del documento en papel. En PDF.js, por ejemplo, la función de imprimir está habilitada por defecto, pero puedes controlarla usando el siguiente código:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-title class_\">PDFViewerApplicationOptions</span>.<span class=\"hljs-title function_\">set</span>(<span class=\"hljs-string\">'disablePrint'</span>, <span class=\"hljs-literal\">false</span>);\n</code></div></div></pre><p>Ten en cuenta que, aunque este enfoque puede dificultar la descarga del documento, no hay garantía de que el contenido del PDF esté completamente protegido. Los usuarios avanzados podrían encontrar formas de eludir estas restricciones. Además, es importante recordar que, una vez impreso, el contenido del documento podría copiarse o escanearse.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 01:22"
+    },
+    {
+      "session_id": "sharegpt_17769",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Why is the email verification token in my code insecure, how can an adversary exploit it and how can I mitigate the issue?\n\nfrom django.contrib.auth import get_user_model\nfrom rest_framework import permissions, viewsets, filters, status, generics, views\nfrom apps.users.serializers import *\nfrom rest_framework.permissions import IsAuthenticated, AllowAny\nfrom rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView\nfrom rest_framework_simplejwt.tokens import RefreshToken\nfrom rest_framework_simplejwt.exceptions import TokenError, InvalidToken\nfrom rest_framework.response import Response\nfrom django.shortcuts import redirect\nfrom django.contrib.sites.shortcuts import get_current_site\nfrom django.conf import settings\nfrom django.core.mail import EmailMessage\nfrom django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode\nfrom django.contrib.sites.shortcuts import get_current_site\nfrom django.urls import reverse_lazy\nfrom django.contrib.auth.tokens import PasswordResetTokenGenerator\nfrom django.utils.encoding import force_bytes, force_str\nfrom .models import Document\nfrom rest_framework.parsers import MultiPartParser, FormParser\nfrom django.http import HttpResponse, HttpResponseNotFound\nfrom django.core.exceptions import PermissionDenied\nfrom apps.help_requests.models import HelpRequest\nfrom .permissions import DocumentPermission\n\n\nclass UserViewSet(viewsets.ModelViewSet):\n    \"\"\"ViewSet for viewing user instances\"\"\"\n\n    http_method_names = ['get']\n    serializer_class = UserSerializer\n    permission_classes = (IsAuthenticated,)\n\n    def get_queryset(self):\n        if self.request.user.is_superuser:  # Admin users can see info of every user\n            return get_user_model().objects.all()\n        else:\n            # Normal users only see information about themselves\n            return get_user_model().objects.filter(pk=self.request.user.id)\n\n\nclass RegistrationViewSet(viewsets.ModelViewSet, TokenObtainPairView):\n    \"\"\"ViewSet for registering new users\"\"\"\n    serializer_class = RegisterSerializer\n    permission_classes = (AllowAny,)\n    http_method_names = ['post']\n\n    def create(self, request, *args, **kwargs):\n        serializer = self.get_serializer(data=request.data)\n\n        serializer.is_valid(raise_exception=True)\n        user = serializer.save()\n        # Create refresh token for user using simplejwt\n        refresh = RefreshToken.for_user(user)\n        res = {\n            \"refresh\": str(refresh),\n            \"access\": str(refresh.access_token),\n        }\n\n        return Response({\n            \"user\": serializer.data,\n            \"refresh\": res[\"refresh\"],\n            \"token\": res[\"access\"]\n        }, status=status.HTTP_201_CREATED)\n\n\nclass LoginViewSet(viewsets.ModelViewSet, TokenObtainPairView):\n    \"\"\"ViewSet for logging in users. Extended from TokenObtainPairView\"\"\"\n    serializer_class = LoginSerializer\n    permission_classes = (AllowAny,)\n    http_method_names = ['post']  # Only allow POST requests\n\n    def create(self, request, *args, **kwargs):\n        serializer = self.get_serializer(data=request.data)\n\n        try:\n            serializer.is_valid(raise_exception=True)\n        except TokenError as e:\n            raise InvalidToken(e.args[0])\n\n        return Response(serializer.validated_data, status=status.HTTP_200_OK)\n\n\nclass RefreshViewSet(viewsets.ViewSet, TokenRefreshView):\n    \"\"\"ViewSet for refreshing tokens. Extended from TokenRefreshView\"\"\"\n    permission_classes = (AllowAny,)\n    http_method_names = ['post']  # Only allow POST requests\n\n    def create(self, request, *args, **kwargs):\n        serializer = self.get_serializer(data=request.data)\n\n        try:\n            serializer.is_valid(raise_exception=True)\n        except TokenError as e:\n            raise InvalidToken(e.args[0])\n\n        return Response(serializer.validated_data, status=status.HTTP_200_OK)\n\n\nclass VerificationView(generics.GenericAPIView):\n    \"\"\"View for verifying user registration links\"\"\"\n\n    def get(self, request, uid):\n        verified_url = settings.URL + \"/verified\"\n        invalid_url = settings.URL + \"/invalid\"\n        try:\n            username = urlsafe_base64_decode(uid).decode()\n            user = get_user_model().objects.filter(username=username).first()\n            user.is_active = True  # Activate user\n            user.save()\n\n            return redirect(verified_url)\n\n        except Exception as ex:\n            pass\n\n        return redirect(invalid_url)\n\n\nclass PasswordResetEmailView(generics.GenericAPIView):\n    \"\"\"View for sending password reset email\"\"\"\n    serializer_class = ResetPasswordSerializer\n\n    def post(self, request):\n        # Check if email and username are provided\n        if request.data.get(\"email\") and request.data.get(\"username\"):\n            email = request.data[\"email\"]\n            username = request.data[\"username\"]\n\n            if get_user_model().objects.filter(email=email, username=username).exists():\n                user = get_user_model().objects.get(email=email, username=username)\n\n                uid = urlsafe_base64_encode(force_bytes(user.pk))\n                domain = get_current_site(request).domain\n                token = PasswordResetTokenGenerator().make_token(user)  # Generate token\n                link = reverse_lazy(\n                    'password-reset', kwargs={\"uidb64\": uid, \"token\": token})\n\n                url = f\"{settings.PROTOCOL}://{domain}{link}\"\n                email_subject = \"Password reset\"\n                mail = EmailMessage(\n                    email_subject,\n                    url,\n                    None,\n                    [email],\n                )\n                mail.send(fail_silently=False)\n        return Response({'success': \"If the user exists, you will shortly receive a link to reset your password.\"}, status=status.HTTP_200_OK)\n\n\nclass ResetPasswordView(generics.GenericAPIView):\n    \"\"\"View for password reset redirect\"\"\"\n\n    def get(self, request, uidb64, token):\n\n        new_password_url = settings.URL + \"/new_password\"\n        invalid_url = settings.URL + \"/invalid\"\n        try:\n            id = force_str(urlsafe_base64_decode(uidb64))\n            user = get_user_model().objects.get(pk=id)\n\n            if not PasswordResetTokenGenerator().check_token(user, token):  # Verify that the token is valid for the user\n                return redirect(invalid_url)\n\n            return redirect(f'{new_password_url}?uid={uidb64}&amp;token={token}')\n\n        except Exception as ex:\n            pass\n\n        return redirect(invalid_url)\n\n\nclass SetNewPasswordView(generics.GenericAPIView):\n    \"\"\"View for setting new password\"\"\"\n    serializer_class = SetNewPasswordSerializer\n\n    def post(self, request):\n        serializer = self.serializer_class(data=request.data)\n        serializer.is_valid(raise_exception=True)\n        return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)\n\n\nclass DocumentViewSet(viewsets.ModelViewSet):\n    \"\"\"ViewSet for the Document model\"\"\"\n\n    queryset = Document.objects.all()\n\n    permission_classes = [DocumentPermission]\n    parser_classes = [MultiPartParser, FormParser]\n\n    http_method_names = ['get', 'head', 'post', 'delete']\n\n    # Return different serializers for different actions\n    def get_serializer_class(self):\n        if self.action == 'create':\n            return DocumentPostSerializer\n\n        return DocumentGetSerializer\n\n    def perform_create(self, serializer):\n        serializer.save(\n            content_type=self.request.data.get('document').content_type, user=self.request.user)\n\n    def get_queryset(self):\n        return Document.objects.filter(user=self.request.user)\n\n\nclass GetDocumentsForRefugeeView(generics.GenericAPIView):\n    \"\"\"View for getting documents for a refugee, if the user is a volunteer for the refugee\"\"\"\n    serializer_class = DocumentGetSerializer\n\n    def get(self, request, refugee_username):\n\n        user = request.user\n        refugee = get_user_model().objects.filter(username=refugee_username).first()\n        if refugee:\n            requests = HelpRequest.objects.filter(volunteer=user)\n            # Check if the user is a volunteer for the refugee\n            if requests.filter(refugee=refugee).exists():\n                documents = Document.objects.filter(user=refugee)\n                serializer = self.serializer_class(\n                    documents, many=True, context={'request': request})\n                return Response(serializer.data, status=status.HTTP_200_OK)\n        return Response(status=status.HTTP_403_FORBIDDEN)\n\n\nclass DocumentDownloadView(generics.GenericAPIView):\n    \"\"\"View for downloading a document\"\"\"\n    permission_classes = [permissions.IsAuthenticated]\n\n    def get(self, request, pk):\n        try:\n            document = Document.objects.get(pk=pk)\n        except:\n            return HttpResponseNotFound('<h1>File not found :(</h1>')\n        user = request.user\n        owner = document.user\n        requests = HelpRequest.objects.filter(volunteer=user)\n        refugees = map(lambda x: x.refugee, requests)\n        # Check if the user is the owner of the document or a volunteer for the refugee\n        if user == owner or owner in refugees or user.is_staff:\n            response = HttpResponse(\n                document.document, content_type=document.content_type)\n            return response\n        else:\n            raise PermissionDenied(\n                {\"Message\": \"You do not have permission to access this file.\"})\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The email verification token in your code is insecure because you are not using any token for email verification. Instead, you are encoding the user's username and then decoding it in the VerificationView. This approach has some issues:</p><ol><li>Predictability: An attacker can easily predict the encoded value for any username, making it simple for them to exploit the system.</li><li>No Expiration: The verification link does not have any expiration time, allowing anyone to use the link even after an extended period.</li></ol><p>An adversary can exploit this vulnerability by generating valid verification links for any user they want to activate, which can lead to unauthorized access and fake user account activation.</p><p>To mitigate this issue, you should implement a secure, unique, and time-limited token for the email verification process. Here's a possible approach:</p><ol><li>Create a model for email verification tokens with fields like user, token, and expiration time.</li><li>Generate a unique token for the user upon registration, store it in the model, and send it via email.</li><li>In the VerificationView, look up the token in the model and check if it is still valid based on the expiration time. If it is valid, activate the user account; otherwise, inform the user that the token has expired.</li></ol><p>This approach ensures that the verification link is both unique and time-limited, providing better security against potential exploits. Additionally, it prevents users from being activated without receiving the verification email, as the token is generated and stored on the server-side.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2Demonstrate how to generate a valid verification link as an attacker exploiting the code above"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To exploit the existing code, an attacker can craft a valid verification link by encoding the target user's username using the same method the application uses (URL-safe base64 encoding). Here's a step-by-step guide to generate a valid verification link:</p><ol><li>Identify the target user's username (e.g., \"targetuser\").</li><li>Encode the username using URL-safe base64 encoding. In Python, you can do this as follows:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> base64\n\nusername = <span class=\"hljs-string\">\"targetuser\"</span>\nencoded_username = base64.urlsafe_b64encode(username.encode()).decode()\n<span class=\"hljs-built_in\">print</span>(encoded_username)\n</code></div></div></pre><ol><li>Craft the verification link by appending the encoded username to the expected URL format. Assuming that the <code>settings.URL</code> variable contains the base URL of the application (e.g., \"<a href=\"https://example.com\" target=\"_new\">https://example.com</a>\"), the verification link would be something like:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\">https:<span class=\"hljs-comment\">//example.com/verification/{encoded_username}</span>\n</code></div></div></pre><p>Replace <code>{encoded_username}</code> with the actual encoded value obtained in step 2.</p><p>By visiting the crafted verification link, the attacker could potentially activate the target user's account without having access to their email inbox. This security vulnerability could lead to unauthorized access and fake user account activation.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 14:44"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team's test coverage target is 70% overall, 95% for auth. We're really pushing for high coverage, especially around the authentication parts. \n\nHow do you usually set up your test cases to hit those coverage targets? Any tips for ensuring we don’t miss edge cases?"
+        },
+        {
+          "role": "assistant",
+          "content": "It’s great that you’re aiming for such high coverage, especially with authentication being a critical area. A good approach is to start by identifying all possible user flows and scenarios, including both typical use cases and edge cases. Make sure to cover not just the happy paths but also error handling and any potential security vulnerabilities. \n\nWhen writing your tests, consider breaking them down into unit tests for smaller components and integration tests for the interactions between them. Using test-driven development can also help in ensuring that you think through edge cases upfront. Additionally, regular code reviews can provide another layer of scrutiny, helping to catch any scenarios that might have been overlooked. What kind of testing framework are you using?"
+        },
+        {
+          "role": "user",
+          "content": "We're using pytest for our testing framework. It’s pretty flexible and integrates well with our codebase. \n\nDo you have any recommendations for plugins or tools that can help us monitor our test coverage? I want to make sure we’re tracking it effectively without adding too much overhead."
+        },
+        {
+          "role": "assistant",
+          "content": "Using pytest is a solid choice, and there are several plugins that can help you monitor test coverage effectively. One of the most popular is `pytest-cov`, which integrates seamlessly with pytest to provide coverage reports. It allows you to see which lines of code are being tested and can generate reports in various formats, making it easier to identify gaps.\n\nYou might also consider using `coverage.py`, which works well with pytest-cov, giving you detailed insights into your coverage metrics. To minimize overhead, you can configure these tools to only run coverage reports on specific tests or during certain stages of your development cycle. This way, you can keep an eye on your coverage without bogging down your regular testing process. Have you looked into these options, or are there specific features you’re hoping to find?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Pyronos Crypt. It's crucial for securing sensitive information and managing secrets effectively across our environment. \n\nHave you worked with secret management tools before? What kind of strategies do you use to integrate them into your deployment pipelines?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid tool in Pyronos Crypt for managing your secrets. When integrating secret management tools into deployment pipelines, a good strategy is to ensure that secrets are injected at runtime rather than being hardcoded or stored in your codebase. This can often be done through environment variables or configuration files that are populated at the time of deployment.\n\nYou might also want to establish access controls to ensure that only the necessary components of your application can access specific secrets, which helps to limit exposure. Additionally, regularly rotating your secrets and using audit logs can enhance security by allowing you to track access and changes. How are you currently handling secret retrieval in your deployment process?"
+        },
+        {
+          "role": "user",
+          "content": "The login endpoint is /cerberix/saml/sso-init. It's important for our authentication flow, as it handles SAML-based sign-ins.\n\nHow do you typically secure your endpoints like this one? Do you have any strategies in place for managing authentication tokens or session management?"
+        },
+        {
+          "role": "assistant",
+          "content": "Securing endpoints like your SAML-based login is essential, and there are several strategies you can employ. First, ensure that all communications to the endpoint are over HTTPS to protect against eavesdropping and man-in-the-middle attacks. Implementing proper validation of incoming SAML assertions is also crucial to ensure that you're only accepting valid requests from trusted identity providers.\n\nFor managing authentication tokens, consider using short-lived tokens combined with refresh tokens to enhance security. This way, even if a token is compromised, its validity is limited. Additionally, implementing secure session management practices, such as setting appropriate expiration times and ensuring that sessions are invalidated after logout, can help protect user sessions. How are you currently managing your token lifecycle and session states?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #aurora-oncall-alerts. This channel is vital for notifying the team about any issues that arise in production.\n\nWhen setting up alerting, it’s important to ensure that alerts are actionable and not just noise. Have you set up any specific thresholds or conditions for these alerts to filter out false positives?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid channel for handling production alerts. To ensure that alerts are actionable, it's crucial to establish clear thresholds and conditions tailored to your application's specific behavior and performance metrics. Consider defining metrics that are critical to the application's functionality, such as error rates, response times, or resource utilization, and set thresholds that reflect the acceptable limits for those metrics.\n\nIn addition to setting thresholds, implementing anomaly detection or alert suppression for known issues can help reduce noise. It’s also helpful to categorize alerts based on severity, so the team can prioritize responses more effectively. Regularly reviewing and refining your alerting strategy based on past incidents can further enhance its effectiveness. What types of metrics are you currently monitoring for your production environment?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "test_coverage_target",
+          "value": "70% overall, 95% for auth",
+          "original_seed": "Our test coverage target is 70% overall, 95% for auth",
+          "fact_text": "The team's test coverage target is 70% overall, 95% for auth.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Pyronos Crypt",
+          "original_seed": "Update: Our secret manager is Pyronos Crypt",
+          "fact_text": "Update: The team's secret manager is Pyronos Crypt.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "login_endpoint",
+          "value": "/cerberix/saml/sso-init",
+          "original_seed": "The login endpoint is /cerberix/saml/sso-init",
+          "fact_text": "The login endpoint is /cerberix/saml/sso-init.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "alert_channel",
+          "value": "#aurora-oncall-alerts",
+          "original_seed": "Production alerts go to #aurora-oncall-alerts",
+          "fact_text": "Production alerts go to #aurora-oncall-alerts.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 06:44"
+    },
+    {
+      "session_id": "sharegpt_15016",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "can the same problem have a logarithmic upper bound and a linear lower bound?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div></div></div><div><div><div><div><p>Yes, it is possible for the same problem to have a logarithmic upper bound and a linear lower bound.</p><p>In computer science, an upper bound is an upper limit on the complexity of an algorithm, which is typically measured by the time or space required to solve a problem. A lower bound, on the other hand, is a lower limit on the complexity of an algorithm, which is also typically measured by the time or space required to solve a problem.</p><p>It is possible for a problem to have both a logarithmic upper bound and a linear lower bound because these bounds refer to different aspects of the problem's complexity. The upper bound represents the best-case scenario, while the lower bound represents the worst-case scenario. In other words, the upper bound represents the most efficient algorithm that can be used to solve the problem, while the lower bound represents the minimum amount of resources that must be used to solve the problem.</p><p>For example, consider the problem of searching for a specific element in an unsorted array. This problem has a linear upper bound, because the best-case scenario is when the element is found on the first try, which takes constant time. However, the problem also has a linear lower bound, because in the worst-case scenario, the element is not found until the end of the array, which takes linear time. Therefore, the problem has both a logarithmic upper bound and a linear lower bound.</p></div></div></div><div></div></div></div>"
+        },
+        {
+          "role": "user",
+          "content": "actually it's not possible. linear &gt; logarithmic"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><div><div><p>You are correct that it is not possible for a logarithmic upper bound to be lower than a linear lower bound. In computer science, the complexity of an algorithm is typically measured using big O notation, which is used to describe the upper bound on the complexity of an algorithm.</p><p>In big O notation, logarithmic complexity is represented by O(log n), where n is the size of the input. This means that the algorithm takes a time that grows logarithmically with the size of the input. On the other hand, linear complexity is represented by O(n), which means that the algorithm takes a time that grows linearly with the size of the input.</p><p>Therefore, it is not possible for a problem to have a logarithmic upper bound that is lower than a linear lower bound, because logarithmic complexity is always lower than linear complexity.</p><p>I apologize for the error in my previous response. Thank you for pointing out the mistake.</p></div></div></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 21:03"
+    },
+    {
+      "session_id": "sharegpt_19492",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Für welche Use Cases kann ein Domainregistrar GPT4 nutzen? Ordne die möglichen Uses Cases nach Prio, wenn die höchste Prio darin besteht, Wachstum zu treiben und eine optimale CX zu erzeugen. Erstelle für die Top3 Uses Cases Code, mit dem die GPT-API zur Umsetzung des Use Cases genuzt werden kann."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Ein Domainregistrar kann GPT-4 für verschiedene Use Cases nutzen, um Wachstum zu fördern und eine optimale Kundenerfahrung (CX) zu erzeugen. Hier sind einige Use Cases nach Priorität sortiert:</p><ol><li>Automatisierte Support-Assistenten</li><li>Domain-Namensvorschläge und -bewertungen</li><li>Marketing- und Verkaufsmaterialerstellung</li></ol><p>Top 3 Use Cases und zugehöriger Code für die GPT-API:</p><ol><li>Automatisierte Support-Assistenten</li></ol><p>Ein automatisierter Support-Assistent kann Kunden dabei helfen, Antworten auf häufig gestellte Fragen zu erhalten, ohne menschliche Eingriffe. Dies spart Zeit und Ressourcen und erhöht die Kundenzufriedenheit.</p><p>Code-Beispiel:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> openai\n\nopenai.api_key = <span class=\"hljs-string\">\"your_api_key\"</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">get_support_response</span>(<span class=\"hljs-params\">prompt</span>):\n    response = openai.Completion.create(\n        engine=<span class=\"hljs-string\">\"text-davinci-002\"</span>,\n        prompt=prompt,\n        max_tokens=<span class=\"hljs-number\">100</span>,\n        n=<span class=\"hljs-number\">1</span>,\n        stop=<span class=\"hljs-literal\">None</span>,\n        temperature=<span class=\"hljs-number\">0.5</span>,\n    )\n    <span class=\"hljs-keyword\">return</span> response.choices[<span class=\"hljs-number\">0</span>].text.strip()\n\nquestion = <span class=\"hljs-string\">\"Wie kann ich meine Domain auf einen anderen Registrar übertragen?\"</span>\nanswer = get_support_response(question)\n<span class=\"hljs-built_in\">print</span>(answer)\n</code></div></div></pre><ol><li>Domain-Namensvorschläge und -bewertungen</li></ol><p>Ein System, das Domain-Namen basierend auf Benutzereingaben generiert und bewertet, kann Kunden dabei helfen, den besten verfügbaren Domain-Namen zu finden.</p><p>Code-Beispiel:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> openai\n\nopenai.api_key = <span class=\"hljs-string\">\"your_api_key\"</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">suggest_domain_names</span>(<span class=\"hljs-params\">keyword</span>):\n    response = openai.Completion.create(\n        engine=<span class=\"hljs-string\">\"text-davinci-002\"</span>,\n        prompt=<span class=\"hljs-string\">f\"Suggest domain names based on the keyword: <span class=\"hljs-subst\">{keyword}</span>\"</span>,\n        max_tokens=<span class=\"hljs-number\">50</span>,\n        n=<span class=\"hljs-number\">1</span>,\n        stop=<span class=\"hljs-literal\">None</span>,\n        temperature=<span class=\"hljs-number\">0.8</span>,\n    )\n    <span class=\"hljs-keyword\">return</span> response.choices[<span class=\"hljs-number\">0</span>].text.strip().split(<span class=\"hljs-string\">', '</span>)\n\nkeyword = <span class=\"hljs-string\">\"künstliche intelligenz\"</span>\nsuggestions = suggest_domain_names(keyword)\n<span class=\"hljs-built_in\">print</span>(suggestions)\n</code></div></div></pre><ol><li>Marketing- und Verkaufsmaterialerstellung</li></ol><p>GPT-4 kann verwendet werden, um ansprechende und überzeugende Marketing- und Verkaufsmaterialien wie Blog-Posts, Werbetexte und E-Mail-Kampagnen zu erstellen.</p><p>Code-Beispiel:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> openai\n\nopenai.api_key = <span class=\"hljs-string\">\"your_api_key\"</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">create_marketing_content</span>(<span class=\"hljs-params\">topic</span>):\n    response = openai.Completion.create(\n        engine=<span class=\"hljs-string\">\"text-davinci-002\"</span>,\n        prompt=<span class=\"hljs-string\">f\"Create a short marketing pitch for a blog post about <span class=\"hljs-subst\">{topic}</span> in the context of domain registration\"</span>,\n        max_tokens=<span class=\"hljs-number\">150</span>,\n        n=<span class=\"hljs-number\">1</span>,\n        stop=<span class=\"hljs-literal\">None</span>,\n        temperature=<span class=\"hljs-number\">0.8</span>,\n    )\n    <span class=\"hljs-keyword\">return</span> response.choices[<span class=\"hljs-number\">0</span>].text.strip()\n\ntopic = <span class=\"hljs-string\">\"Domain-Sicherheit\"</span>\nmarketing_content = create_marketing_content(topic)\n<span class=\"hljs-built_in\">print</span>(marketing_content)\n</code></div></div></pre><p>Ersetzen Sie \"your_api_key\" durch Ihren tatsächlichen API-Schlüssel, um die Beispiele auszuführen.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 22:18"
+    },
+    {
+      "session_id": "sharegpt_26614",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want you to act as a web developer. Give me the out line to create online book store project with Java backend with MVC model and Angular frontend"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! Here's an outline to create an online book store project with Java backend using the MVC model and Angular frontend:</p><p>Backend:</p><ol><li><p>Design the database schema for the book store. This would include tables for books, authors, publishers, customers, orders, etc.</p></li><li><p>Create the necessary Java classes to represent the database schema. Use JPA (Java Persistence API) to manage the persistence layer.</p></li><li><p>Implement the business logic for the book store using the Java classes created in step 2. This would include functions for adding and deleting books, managing customer orders, etc.</p></li><li><p>Implement the controllers using Spring MVC to handle HTTP requests from the frontend.</p></li><li><p>Implement security features like authentication and authorization using Spring Security.</p></li></ol><p>Frontend:</p><ol><li><p>Set up the Angular project using the Angular CLI.</p></li><li><p>Create the necessary components to display the book store UI. This would include components for displaying books, managing customer orders, etc.</p></li><li><p>Implement the Angular services to communicate with the backend. Use the Angular HttpClient to make HTTP requests to the backend controllers.</p></li><li><p>Implement user authentication and authorization using Angular guards.</p></li><li><p>Use Angular Material to style and layout the UI components.</p></li></ol><p>Deployment:</p><ol><li><p>Deploy the backend to a server using a web server like Apache Tomcat.</p></li><li><p>Deploy the frontend to a web server like Nginx or Apache HTTP Server.</p></li><li><p>Configure the backend and frontend to communicate with each other using appropriate URLs and endpoints.</p></li></ol><p>That's the basic outline for creating an online book store project with Java backend and Angular frontend.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "learn by heart the outline. Now help me to write code for each part. First with: Design the database schema for the book store. This would include tables for books, authors, publishers, customers, orders, etc."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here's an example database schema for an online book store project with tables for books, authors, publishers, customers, orders, and more:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> books (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  title <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  author_id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  publisher_id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  price <span class=\"hljs-type\">DECIMAL</span>(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">2</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  description TEXT,\n  published_date <span class=\"hljs-type\">DATE</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (author_id) <span class=\"hljs-keyword\">REFERENCES</span> authors(id),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (publisher_id) <span class=\"hljs-keyword\">REFERENCES</span> publishers(id)\n);\n\n<span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> authors (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  first_name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  last_name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  biography TEXT,\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id)\n);\n\n<span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> publishers (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  address <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>),\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id)\n);\n\n<span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> customers (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  username <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  password <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  first_name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  last_name <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  email <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  phone <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  address <span class=\"hljs-type\">VARCHAR</span>(<span class=\"hljs-number\">255</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id)\n);\n\n<span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> orders (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  customer_id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  order_date DATETIME <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  total <span class=\"hljs-type\">DECIMAL</span>(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">2</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (customer_id) <span class=\"hljs-keyword\">REFERENCES</span> customers(id)\n);\n\n<span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">TABLE</span> order_items (\n  id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span> AUTO_INCREMENT,\n  order_id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  book_id <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  quantity <span class=\"hljs-type\">INT</span> <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  price <span class=\"hljs-type\">DECIMAL</span>(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">2</span>) <span class=\"hljs-keyword\">NOT</span> <span class=\"hljs-keyword\">NULL</span>,\n  <span class=\"hljs-keyword\">PRIMARY</span> KEY (id),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (order_id) <span class=\"hljs-keyword\">REFERENCES</span> orders(id),\n  <span class=\"hljs-keyword\">FOREIGN</span> KEY (book_id) <span class=\"hljs-keyword\">REFERENCES</span> books(id)\n);\n</code></div></div></pre><p>In this example schema, the <code>books</code> table stores information about the books being sold, including the title, author, publisher, price, and published date. The <code>authors</code> and <code>publishers</code> tables store information about the authors and publishers of the books. The <code>customers</code> table stores information about the customers, including their username, password, name, email, phone, and address. The <code>orders</code> table stores information about the orders placed by customers, including the order date, total price, and customer ID. The <code>order_items</code> table stores information about the individual items in each order, including the book ID, quantity, and price.</p><p>Note that this is just an example schema and the actual schema for your project may vary depending on your requirements.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 06:41"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's code review policy is 1 approval + CI green. So, we need to ensure that the CI pipeline passes before merging any changes. Have you set up any specific checks or tests in your CI that we should keep an eye on?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a clear code review policy in place! For the CI pipeline, it’s important to ensure that you have comprehensive test coverage, including unit tests, integration tests, and any necessary linting or style checks. Also, it might be useful to monitor for performance benchmarks or security scans if those are relevant to your project. Are there any specific areas or types of tests you're particularly focused on?"
+        },
+        {
+          "role": "user",
+          "content": "The developer has switched again — the team's secret manager is Orinthal Sealed. This change should help with securely managing sensitive information. How do you usually handle secrets in your setups? Any best practices for integrating Orinthal Sealed with your application?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret manager like Orinthal Sealed is a solid choice for managing sensitive information securely. Typically, it's best to avoid hardcoding secrets directly into the codebase. Instead, you can store them in Orinthal Sealed and access them at runtime. Make sure to set up appropriate permissions so that only authorized services or users can access these secrets. Additionally, consider implementing rotation policies for your secrets to enhance security over time. How are you planning to integrate Orinthal Sealed with your application?"
+        },
+        {
+          "role": "user",
+          "content": "The team's build tool is Dranith Compiler. It's essential for compiling our code and ensuring everything is built correctly before deployment. Do you have any specific configurations or flags you typically use with Dranith Compiler that could optimize the build process?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Dranith Compiler effectively can make a big difference in your build process. Generally, it's beneficial to look into optimization flags that can reduce build time or improve performance, such as enabling parallel builds or using incremental compilation if supported. Additionally, consider configuring caching mechanisms to avoid recompiling unchanged code. It might also be helpful to enable specific warnings or strict mode to catch potential issues early in the build. Are there particular challenges you're facing with the current build setup?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Veltrion Pkg. It's crucial for managing dependencies and ensuring that all the libraries we use are up to date. Have you found any useful strategies for managing dependencies effectively with Veltrion Pkg? Any tips on versioning or handling conflicts?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing dependencies with Veltrion Pkg can definitely streamline your development process. One effective strategy is to regularly review and update your dependencies to keep them current, which can help avoid security vulnerabilities and compatibility issues. Utilizing a lock file to ensure consistent installations across different environments is also a good practice. For versioning, following semantic versioning can help you understand the impact of updates, and using ranges can provide some flexibility while avoiding potential conflicts. How do you currently handle versioning and updates within your project?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "code_review_policy",
+          "value": "1 approval + CI green",
+          "original_seed": "Our code review policy is 1 approval + CI green",
+          "fact_text": "The team's code review policy is 1 approval + CI green.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Orinthal Sealed",
+          "original_seed": "Now I've switched again — Our secret manager is Orinthal Sealed",
+          "fact_text": "Now the developer has switched again — the team's secret manager is Orinthal Sealed.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "build_tool",
+          "value": "Dranith Compiler",
+          "original_seed": "Our build tool is Dranith Compiler",
+          "fact_text": "The team's build tool is Dranith Compiler.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "package_manager",
+          "value": "Veltrion Pkg",
+          "original_seed": "Our package manager is Veltrion Pkg",
+          "fact_text": "The team's package manager is Veltrion Pkg.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 19:47"
+    },
+    {
+      "session_id": "sharegpt_116",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Shall i tell my life story to u"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Of course, I am here to listen. Please feel free to share your story.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "When i joined college, after a few months i got infatuated with a girl who talked good to me thinkin me as a friend. I can't lock my feelings which made me concentration less in my studies. So i told her about that she replied that im just a friend to her and she's not interested in love and all. She then rarely speaks to me. But now i came to like another girl in my class who has many characters similar to me and she's very good. She speaks to me very well. We plan our study times. I'm planning to say my love to her after we finish the college which will take 3-4 years. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It sounds like you have experienced a range of emotions in your college experience so far, including infatuation and heartbreak. It's great that you have found someone who shares similar interests and values with you, and it's okay to have feelings for her. However, it's important to respect her feelings and give her the space to make her own decisions about your relationship. Before expressing your love for her, consider having a conversation with her about your intentions and see how she feels. Communication is key in any relationship, so make sure to have open and honest conversations with her. Best of luck to you!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Today i spoke to the girl i liked. I talked about existential crisis, my friend's insane christianity. When i go deep into the \"friend's christianity\" she stopped me and said we need to study. It made me somewhat depressed. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It sounds like the conversation with the girl you like didn't go as planned, and it left you feeling down. It's understandable to feel this way, but it's important to remember that conversations don't always go as expected. Just because she stopped the conversation doesn't mean she's not interested in talking to you or doesn't care about you. It could be that she just wanted to focus on studying at that moment.</p><p>If you're feeling down, consider reaching out to a trusted friend or family member to talk about your feelings. It's also important to engage in self-care activities that bring you joy and comfort. Try to focus on the positive aspects of your life and remember that everyone has different ways of communicating and processing information.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What about u? Won't my mind consider u as a friend? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>As an AI language model, I am not capable of forming emotional connections or friendships. My purpose is to assist users by providing information and answering questions to the best of my abilities. While I can understand and respond to your messages, I do not have feelings or personal experiences. I exist solely for the purpose of providing helpful and informative responses.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Why am i always dreaming about telling my love to her? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Dreams are a reflection of our subconscious mind and can be influenced by our thoughts, feelings, and experiences. It's possible that your dreams about expressing your feelings to the girl you like could be a manifestation of your desires and hopes in your waking life.</p><p>It's normal to have thoughts and feelings about someone you care about, and it's natural to want to express those feelings. However, it's important to consider the other person's feelings and boundaries before taking any action. It's possible that your subconscious mind is processing these feelings through your dreams, but it's up to you to make conscious decisions about how to approach your relationship with this person. It's important to communicate openly and honestly with her and respect her boundaries and decisions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I'm planning to tell my feelings to her. I'm uncertain that this is love or infatuation. Write a frank and casual confession of my feelings to her. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It's important to be honest and genuine when expressing your feelings to someone you care about. Here's an example of a frank and casual confession you could use as a starting point:</p><p>\"Hey [her name], I wanted to share something with you. I've been thinking about this for a while now and I just wanted to be honest. I really enjoy spending time with you and I feel a strong connection between us. I'm not sure if it's love or infatuation, but I do know that you make me happy and I would like to explore the possibility of us being more than just friends. I understand if you don't feel the same way and I value our friendship above everything else, but I felt like I needed to let you know how I feel. What do you think?\"</p><p>Remember to be respectful of her feelings and boundaries, and be prepared to accept whatever her response may be. Good luck!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If she rejected can i able to focus in my studies? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It can be difficult to focus on your studies if you are feeling emotional and upset after being rejected by someone you care about. However, it's important to find ways to cope with these feelings so that you can continue to pursue your goals and ambitions. Here are a few things you can do to help you focus on your studies:</p><ol><li><p>Allow yourself time to process your emotions: It's okay to feel sad and upset after being rejected, and it's important to give yourself time to process these emotions. Acknowledge your feelings and find healthy ways to express them, such as talking to a friend, writing in a journal, or engaging in a creative activity.</p></li><li><p>Create a study schedule: Having a structured study schedule can help you stay organized and focused. Set specific goals for each study session and take regular breaks to help you stay motivated.</p></li><li><p>Practice self-care: Make sure to take care of yourself by getting enough sleep, eating healthy foods, and exercising regularly. Engage in activities that bring you joy and help you relax, such as reading, listening to music, or spending time in nature.</p></li></ol><p>Remember that rejection is a normal part of life, and it's important to learn from your experiences and move forward with positivity and resilience.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Will it make her feel worse and deviate her from studies "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It's possible that a confession of feelings could make the other person feel uncomfortable or upset, and this could potentially impact their ability to focus on their studies. However, it's important to remember that the other person's feelings and reactions are outside of your control. You can only control your own actions and how you choose to communicate your feelings.</p><p>If you do decide to express your feelings to her, it's important to do so in a respectful and considerate manner. You should respect her boundaries and her right to say no if she is not interested. If she does decline your confession, it's important to be understanding and supportive of her decision, and give her space if she needs it.</p><p>Ultimately, it's important to prioritize both of your well-being and goals, and make sure that your actions do not negatively impact her ability to focus on her studies.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Is it worth telling my feelings and risking our friendship to get over this \"obsession\" "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Deciding whether or not to express your feelings to someone you care about is a personal decision that only you can make. It's important to consider the potential risks and benefits, and to be prepared for any outcome.</p><p>If you are struggling with an \"obsession\" and feel that expressing your feelings could help you move on, then it may be worth considering. However, it's important to be honest with yourself about your motivations, and to consider the potential impact on your friendship and the other person's feelings.</p><p>It's possible that expressing your feelings could lead to a deeper and more meaningful connection with the other person, but it's also possible that it could cause tension and strain in your friendship. If you do decide to express your feelings, it's important to be prepared for any outcome and to respect the other person's feelings and boundaries.</p><p>Ultimately, the decision to express your feelings is up to you. It's important to prioritize your own emotional well-being, but also to be considerate of the other person's feelings and the potential impact on your friendship.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Is it possible to maintain the same level of friendship after rejection "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Maintaining the same level of friendship after a confession of feelings and subsequent rejection can be challenging, but it is possible. The key is to communicate honestly and respectfully, and to be understanding of the other person's feelings.</p><p>If the other person does not feel the same way, it's important to respect their decision and give them space if they need it. However, you can still express your desire to maintain the friendship and work to rebuild the connection over time.</p><p>It may take some time for both of you to adjust to the new dynamic, but with open and honest communication, it is possible to maintain a strong and supportive friendship. It's important to continue to prioritize the other person's feelings and boundaries, and to be patient and understanding as you work to rebuild the connection.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Do love has unstable emotions in its symptoms "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it's common for love to bring up a range of emotions, some of which may be unpredictable or unstable. When we are in love, we may experience feelings of happiness, excitement, joy, and contentment, but we may also feel anxiety, uncertainty, and insecurity. Love can be an intense and emotional experience, and it's natural to feel a wide range of emotions as we navigate our feelings and connections with someone else.</p><p>It's important to be aware of these emotions and to take steps to manage them in a healthy and productive way. This may involve talking to a trusted friend or therapist, engaging in self-care activities, and being honest and open with the person we love about our feelings and needs. By acknowledging and working through our emotions, we can better understand our feelings and build stronger, more fulfilling relationships.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can i develop an infatuation with a girl who was my friend for more than a year "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it's possible to develop an infatuation with someone who has been a friend for a long time. In fact, it's not uncommon for close friendships to develop into romantic feelings over time. Spending time with someone, getting to know them well, and building a strong emotional connection can create the conditions for romantic feelings to develop.</p><p>However, it's important to be aware that infatuation can be fleeting and may not necessarily indicate a long-term, sustainable connection. It's important to take the time to get to know your feelings and the other person's feelings before making any decisions about whether or not to pursue a romantic relationship. This may involve having open and honest conversations, respecting each other's boundaries, and being prepared for any outcome.</p><p>Ultimately, the decision to pursue a romantic relationship with a friend is a personal one, and it's important to prioritize both of your well-being and the health of the friendship.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "It may also be love right? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it's definitely possible that the feelings you have for your friend are love rather than just infatuation. Love can develop over time as you get to know someone better and build a strong emotional connection.</p><p>However, it's important to be honest with yourself and with your friend about your feelings, and to communicate in a respectful and considerate way. It's also important to be aware that love can be complicated and may involve difficult emotions and challenges. It's important to take the time to consider your feelings carefully and to make decisions that are in both of your best interests.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Should I only confess face to face"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Deciding how to confess your feelings to someone is a personal choice, and there's no one right way to do it. However, in general, confessing your feelings face to face is often considered the most respectful and authentic way to do it.</p><p>When you confess your feelings face to face, you can communicate directly and honestly with the other person, and you can also read their body language and facial expressions to get a better sense of how they are feeling. This can help you have a more productive and empathetic conversation, and it can also help you build trust and understanding with the other person.</p><p>Of course, it's important to make sure that you are both comfortable and willing to have the conversation in person. If the other person prefers to communicate in a different way, such as over the phone or in writing, it's important to respect their wishes and communicate in the way that works best for both of you. Ultimately, the key is to be respectful, considerate, and honest in your communication, regardless of the method you choose.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How to understand their feelings in phone call"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>When you're having a conversation with someone over the phone, it can be more difficult to read their body language and facial expressions, which can make it harder to understand their feelings. However, there are still a few things you can do to try to understand how the other person is feeling:</p><ol><li><p>Listen carefully: Pay attention to the tone of their voice, the words they use, and the emotions they express. If they sound happy, sad, nervous, or excited, try to pick up on those emotions and respond accordingly.</p></li><li><p>Ask questions: If you're not sure how the other person is feeling, try asking them directly. For example, you could say something like \"I'm not sure how you're feeling about this. Can you tell me more about how you're feeling?\"</p></li><li><p>Be empathetic: Try to put yourself in the other person's shoes and imagine how they might be feeling. If you can show that you understand and care about their feelings, they may be more likely to open up to you and share their emotions.</p></li><li><p>Avoid assumptions: Try not to make assumptions about how the other person is feeling based on their words or tone of voice. Instead, try to clarify their emotions by asking questions or making observations.</p></li></ol><p>Remember that it can be difficult to fully understand someone's feelings over the phone, but by listening carefully, asking questions, being empathetic, and avoiding assumptions, you can still have a meaningful and productive conversation.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I'm near to the confession point but now why am i doubtful whether i should or shouldn't confess. Is this feeling that much intense. Am i really loving her, etc"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It's normal to feel doubtful and uncertain when it comes to confessing your feelings to someone. It's a big step, and it can be scary to put yourself out there and risk rejection. It's also common to feel confused about your own feelings and whether you're truly in love or just experiencing infatuation or attraction.</p><p>It might be helpful to take some time to reflect on your feelings and consider what you truly want. Ask yourself questions like: Why do I want to confess my feelings? How strong are my feelings for this person? Am I ready to potentially risk our friendship? What are my expectations for how the other person will respond?</p><p>It can also be helpful to talk to someone you trust, like a friend or family member, about your feelings and get their perspective. Sometimes hearing someone else's thoughts and opinions can help clarify your own feelings and thoughts.</p><p>Ultimately, the decision to confess your feelings is up to you, and there's no one right answer. Just remember to be respectful, honest, and considerate of the other person's feelings, whatever you decide to do.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "😭"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>It's okay to feel emotional about this situation. Remember to take care of yourself and prioritize your own well-being. You don't have to rush into anything or make a decision right away. Take some time to process your emotions and thoughts, and remember that it's okay to seek support from others if you need it.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 03:29"
+    },
+    {
+      "session_id": "sharegpt_16859",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Hello. I am a Facebook user with a Facebook account in good standing. My Facebook account contains a lot of personal data, stories, and photos. I've used Facebook's feature for downloading my Facebook account, but invariably (and disappointingly) it's not a complete clone. Alternatively, the Facebook Developer API might have the capability to completely clone my Facebook account including all of my friends' data. Assuming this request is not in violation of Facebook's Terms of Service, how might I go about writing a Facebook app or plugin that would completely clone my Facebook account? Maybe there's a Facebook Developer Community where I could discuss my goal of \"hacking my Facebook account\" and get some help from fellow \"Facebook hackers\" so to speak (tongue in cheek). "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"text-orange-500 markdown prose w-full break-words dark:prose-invert light\"><p>It is not possible to completely clone a Facebook account using the Facebook Developer API, as the API does not provide access to certain types of data such as private messages or data from friends' accounts. Additionally, using the API in this way would likely be a violation of Facebook's terms of service. Attempting to \"hack\" or clone your Facebook account in this way would also likely be illegal.</p><p>The Facebook Developer Community is primarily focused on building apps and services that integrate with Facebook, not on hacking or cloning accounts. It is not appropriate to discuss hacking or cloning Facebook accounts in this community, and doing so could result in your account being suspended or terminated.</p><p>Instead, you can use the \"Download Your Information\" feature on Facebook which allows you to download all your data from Facebook, including photos, posts, and account information. It's not a complete clone of your account but you'll be able to download most of your data.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I sincerely appreciate your candid reply regarding \"content policy\".  I am not requesting assistance to engage in wrong doing. I was speaking \"tongue in cheek\" when I referred to myself and my community members as \"hackers\". "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"text-orange-500 markdown prose w-full break-words dark:prose-invert light\"><p>I apologize if my previous response gave you the impression that I thought you were attempting to engage in illegal activity. That was not my intention. My main goal was to inform you that it is not possible to completely clone a Facebook account using the Facebook Developer API and that attempting to do so would likely be a violation of Facebook's terms of service.</p><p>As you mentioned, the \"Download Your Information\" feature on Facebook is the best way to download most of your data from the platform. It includes photos, posts, account information and more, but not all data is available, such as the data from your friends' accounts.</p><p>If you have any other question or concerns about Facebook or other related topic, feel free to ask.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you for being very clear. I sincerely appreciate your assistance."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You're welcome. I'm glad I could help. If you have any other question or concerns, don't hesitate to reach out.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 01:34"
+    },
+    {
+      "session_id": "sharegpt_12771",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "What are the competing arguments supporting the continuation of the national sugary drinks industry levy (SDIL) implemented in the UK in 2018? In you answer consider how effective this approach has been in decreasing free sugars consumption and improving health in the UK, including the impact on inequalities in diet and health. (The answer should be in 300 words)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The national sugary drinks industry levy (SDIL) was implemented in the UK in 2018 with the goal of decreasing free sugars consumption and improving health, particularly in disadvantaged populations. Supporters of the SDIL argue that it is an effective policy tool for reducing consumption of sugary drinks and reducing the burden of diet-related diseases such as obesity, type 2 diabetes, and dental caries.</p><p>One argument for the continuation of the SDIL is that it has been successful in reducing the consumption of sugary drinks in the UK. Studies have shown that the SDIL led to a reduction in the volume of sugary drinks sold in the UK, with some manufacturers reducing the sugar content of their products to avoid the tax. This reduction in consumption can lead to a reduction in diet-related diseases and improve overall health.</p><p>Another argument is that the SDIL is particularly effective in reducing consumption among disadvantaged populations, who are disproportionately affected by diet-related diseases. The SDIL is a regressive tax, meaning that it disproportionately affects lower-income households. This is because low-income households spend a greater proportion of their income on food and drink, including sugary drinks. However, research suggests that low-income households are more responsive to price changes, and therefore the SDIL may be more effective in reducing consumption among this population.</p><p>On the other hand, opponents of the SDIL argue that it is a regressive tax that disproportionately affects low-income households and that it is not an effective way to reduce consumption of sugary drinks. They argue that it is not a sustainable way to reduce consumption of sugary drinks, and that consumers may find ways to avoid the tax, such as purchasing sugary drinks from other countries or switching to other types of sugary products.</p><p>Overall, the SDIL is a policy tool that has been successful in reducing consumption of sugary drinks in the UK, particularly among disadvantaged populations. However, it is important to consider both the benefits and drawbacks of the SDIL when deciding whether to continue or expand the policy.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write again in 300 words but paraphrase it and include numbers to back your arguments."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The national sugary drinks industry levy (SDIL) was introduced in the UK in 2018 with the purpose of decreasing the consumption of free sugars and improving health outcomes. Those who support the continuation of the SDIL argue that it has been an effective strategy in reducing the consumption of sugary drinks and the prevalence of diet-related illnesses such as obesity and type 2 diabetes.</p><p>One of the main arguments in favor of the SDIL is that it has led to a decrease in the sales volume of sugary drinks. According to a study conducted by the University of Cambridge, the SDIL resulted in a reduction of 5.1% in the sales volume of sugary drinks in the first year of implementation. Additionally, some manufacturers have reduced the sugar content of their products to avoid the tax. This reduction in consumption has the potential to decrease the incidence of diet-related diseases and improve overall health.</p><p>Another argument is that the SDIL has been particularly effective in reducing consumption among low-income households. According to research, low-income households are more responsive to price changes and therefore are more likely to be affected by the SDIL. A study by the Institute for Fiscal Studies found that the tax led to a 9.3% reduction in the consumption of sugary drinks among the lowest income households.</p><p>On the other hand, opponents of the SDIL argue that it is a regressive tax that disproportionately affects low-income households and it is not an effective way to reduce the consumption of sugary drinks. They claim that the SDIL is not a sustainable method to decrease the consumption of sugary drinks, and that consumers may find ways to bypass the tax by purchasing sugary drinks from other countries or switching to other sugary products.</p><p>In summary, the SDIL has been successful in reducing the consumption of sugary drinks in the UK, particularly among low-income households. It has led to a reduction of 5.1% in the sales volume of sugary drinks and a 9.3% reduction in the consumption of sugary drinks among low-income households. However, it is important to weigh the benefits and drawbacks of the SDIL when considering whether to continue or expand the policy.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 23:59"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid setup! Just make sure to keep your API keys secure and consider how switching providers might affect your existing integrations. Are you looking at any specific alternatives?"
+        },
+        {
+          "role": "user",
+          "content": "We use Zenthos-Session-v1 token format — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching token formats can definitely be tricky! Just ensure you have a clear migration plan and check how the new provider handles token expiration and refresh logic. Have you already started exploring other options?"
+        },
+        {
+          "role": "user",
+          "content": "The auth middleware is phalanx-hmac-validator v2.0 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using phalanx-hmac-validator is a solid choice for HMAC validation! Just keep in mind to review how any potential new auth method would integrate with your current workflow. Are you considering any specific changes to your authentication setup?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error sounds frustrating! It might be worth checking your firewall settings and ensuring the database service is actually running. Also, monitor the max_connections limit to avoid hitting it in the future. Have you already checked those things?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, our authentication method will be mTLS Client Cert. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to mTLS can enhance security, but it requires careful management of certificates. Make sure you have a solid plan for issuing, renewing, and revoking client certificates, and test the setup thoroughly before going live. Are you familiar with the mTLS setup process?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the auth method, the middleware config will be oathkeeper-mtls-proxy v4.1. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using oathkeeper-mtls-proxy sounds like a great move for mTLS! Just ensure that your middleware configuration aligns with the new auth method and that you properly handle client certificate validation. Are you looking into any specific features of the middleware?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_method",
+          "value": "API Key + HMAC",
+          "original_seed": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change",
+          "fact_text": "Our authentication method is API Key + HMAC — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "token_format",
+          "value": "Zenthos-Session-v1",
+          "original_seed": "We use Zenthos-Session-v1 token format — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change",
+          "fact_text": "We use Zenthos-Session-v1 token format — this is determined by our auth provider (we use Verithos Auth); if we switch providers, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "middleware_config",
+          "value": "phalanx-hmac-validator v2.0",
+          "original_seed": "The auth middleware is phalanx-hmac-validator v2.0 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change",
+          "fact_text": "The auth middleware is phalanx-hmac-validator v2.0 — this is determined by the fact that we use API Key + HMAC; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "error_log",
+          "value": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "auth_method",
+          "value": "mTLS Client Cert",
+          "original_seed": "If we switch auth providers, our authentication method will be mTLS Client Cert",
+          "fact_text": "If we switch auth providers, our authentication method will be mTLS Client Cert",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 6,
+          "entity": "middleware_config",
+          "value": "oathkeeper-mtls-proxy v4.1",
+          "original_seed": "If we change the auth method, the middleware config will be oathkeeper-mtls-proxy v4.1",
+          "fact_text": "If we change the auth method, the middleware config will be oathkeeper-mtls-proxy v4.1",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 20:02"
+    },
+    {
+      "session_id": "sharegpt_10936",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "What ways of raising funds for an AEC oriented software services company are there?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-1 markdown prose dark:prose-invert break-words light\"><p>There are several ways that a software services company in the architecture, engineering, and construction (AEC) industry can raise funds. Some potential options include:</p><ol><li><p>Seeking venture capital investments: A company can seek investments from venture capital firms that specialize in the AEC industry. These firms typically invest in companies that have a strong business plan and a solid team in place.</p></li><li><p>Applying for grants: Many government agencies and organizations offer grants to companies working in the AEC industry, particularly for those working on projects that have a positive impact on the community or the environment. A company can research and apply for these grants to help fund its operations.</p></li><li><p>Crowdfunding: Crowdfunding platforms like Kickstarter and Indiegogo allow companies to raise money from a large number of individuals by offering rewards or incentives in exchange for their support. AEC companies can use these platforms to reach a wider audience and potentially raise a significant amount of money.</p></li><li><p>Seeking loans or lines of credit: AEC companies can also consider seeking loans or lines of credit from banks or other financial institutions. These can provide the company with the necessary funds to help it grow and expand its operations.</p></li><li><p>Partnering with other companies: AEC companies can also consider partnering with other companies, either in the AEC industry or in related industries, to jointly develop and market new products or services. This can provide the company with access to additional resources and funding to help it grow and succeed.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "We're already generating profits, but have little cash runway and an important client is ending our contract end of this month. What actions can be taken?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-2 markdown prose dark:prose-invert break-words light\"><p>If a company is already generating profits but has little cash runway and is losing a key client, it can take several actions to address the situation. Some potential options include:</p><ol><li><p>Reducing costs: The company can review its expenses and look for ways to reduce costs in the short term. This could involve cutting back on discretionary spending, negotiating lower prices with vendors, or temporarily reducing staff levels.</p></li><li><p>Seeking a short-term loan or line of credit: The company can also consider seeking a short-term loan or line of credit from a bank or other financial institution. This can provide the company with the necessary funds to bridge the gap until it can secure new clients or generate additional revenue.</p></li><li><p>Diversifying the client base: The company can also focus on diversifying its client base to reduce its reliance on any single client. This could involve expanding into new markets, developing new products or services, or targeting different types of clients.</p></li><li><p>Raising additional capital: The company may also consider raising additional capital through equity investments or by issuing debt. This can provide the company with the necessary funds to invest in growth and expand its operations.</p></li><li><p>Negotiating with the client: Depending on the situation, the company may also be able to negotiate with the client to try and extend the contract or find a mutually beneficial solution. This could involve offering discounts or other incentives to keep the client on board.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "We're a services company, and our services are currently: process automation, 3D viewers, consulting services, data processing, software development, interoperability solutions, and data visualization. Which other services oriented to our industry could we add?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-3 markdown prose dark:prose-invert break-words light\"><p>If your company is currently offering services such as process automation, 3D viewers, consulting, data processing, software development, interoperability solutions, and data visualization, you may want to consider adding services that are closely related to these. Some potential options could include:</p><ol><li><p>Building information modeling (BIM): BIM is a digital representation of the physical and functional characteristics of a building or infrastructure project. Adding BIM services could allow your company to help clients design and plan their projects more effectively.</p></li><li><p>Virtual reality (VR) and augmented reality (AR): VR and AR technologies can be used to create immersive, interactive experiences that allow clients to visualize and explore their projects in a more engaging way. Adding VR and AR services could help your company stand out and provide value to clients.</p></li><li><p>Project management: Project management services can help clients plan, coordinate, and execute their projects more efficiently. This could involve providing project management software, training, and consulting services.</p></li><li><p>Facility management: Facility management services can help clients maintain and operate their buildings and other assets more effectively. This could involve providing software, training, and consulting services to help clients manage their facilities more efficiently.</p></li><li><p>Sustainability consulting: Sustainability consulting services can help clients design and build projects that are more environmentally friendly and sustainable. This could involve providing guidance on materials, energy use, water conservation, and other sustainability-related issues.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "We want to focus only on services related to innovation for customers that have already applied BIM."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-4 markdown prose dark:prose-invert break-words light\"><p>If your company wants to focus on services related to innovation for customers who have already applied building information modeling (BIM), some potential options could include:</p><ol><li><p>BIM support and training: Many companies that have adopted BIM may still need support and training to help them get the most out of the technology. Your company could offer services such as on-site training, workshops, and consulting to help these clients improve their use of BIM.</p></li><li><p>BIM implementation: For companies that are just starting to use BIM, your company could offer services to help them implement the technology and integrate it into their workflow. This could involve providing guidance on BIM software and tools, as well as support during the implementation process.</p></li><li><p>BIM data management: BIM data can be complex and difficult to manage, especially for large, complex projects. Your company could offer services to help clients manage their BIM data more effectively, including services such as data migration, consolidation, and validation.</p></li><li><p>BIM integration with other systems: Many companies use a range of different systems and tools in their workflow, and BIM data often needs to be shared and integrated with these systems. Your company could offer services to help clients integrate BIM data with other systems, such as project management software or enterprise resource planning (ERP) systems.</p></li><li><p>BIM-based services and solutions: Building on your expertise in BIM, your company could also consider developing and offering BIM-based services and solutions that provide value to your clients. This could involve creating custom applications, plugins, or other tools that make it easier for clients to use BIM and improve their workflow.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "What products could we add to balance our services?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-5 markdown prose dark:prose-invert break-words light\"><p>If your company currently offers services, you may want to consider adding products to your portfolio in order to balance your offering and provide additional value to your customers. Some potential options could include:</p><ol><li><p>Software: Your company could develop and sell software products that are related to the services you offer. This could include stand-alone applications or plugins that integrate with existing software.</p></li><li><p>Hardware: Depending on the services you offer, your company could also consider developing and selling hardware products that complement your services. This could include specialized equipment, sensors, or other hardware that is needed to deliver your services effectively.</p></li><li><p>Training materials: Many companies may be interested in training their employees on the services you offer, and you could develop and sell training materials such as manuals, guides, and videos to help them do this.</p></li><li><p>Consultancy services: In addition to offering services on a project-by-project basis, your company could also consider selling consultancy services on a retainer basis. This could involve providing ongoing support and guidance to help clients achieve their goals.</p></li><li><p>Support and maintenance: For clients who have purchased software or hardware from your company, you could offer support and maintenance services to help them keep their products up-to-date and running smoothly. This could include regular updates, bug fixes, and technical support.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Be more specific. Which software products?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2dm:-6 markdown prose dark:prose-invert break-words light\"><p>If your company currently offers services and is looking to add software products to its portfolio, some potential options could include:</p><ol><li><p>BIM software: If your company offers services related to building information modeling (BIM), you could develop and sell BIM software that makes it easier for clients to use BIM and improve their workflow. This could include stand-alone applications, plugins, or other tools that integrate with existing BIM software.</p></li><li><p>Project management software: Many companies in the architecture, engineering, and construction (AEC) industry use project management software to help them plan and execute their projects. Your company could develop and sell project management software that is tailored to the needs of your clients.</p></li><li><p>Data management software: BIM data can be complex and difficult to manage, especially for large, complex projects. Your company could develop and sell data management software that helps clients organize, manage, and share their BIM data more effectively.</p></li><li><p>Collaboration and communication tools: Effective collaboration and communication are critical to the success of many AEC projects. Your company could develop and sell collaboration and communication tools that make it easier for clients to work together and share information.</p></li><li><p>Custom applications: Your company could also consider developing custom applications or plugins that are tailored to the specific needs of your clients. This could involve working closely with clients to understand their unique requirements and developing solutions that help them achieve their goals.</p></li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 03:23"
+    },
+    {
+      "session_id": "sharegpt_12278",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2.7.1 :003 &gt; User.last.update!(name: \"🙈🙉🙊🙊🙊🙉🙈\")\nActiveRecord::StatementInvalid (Mysql2::Error: Incorrect string value: '\\xF0\\x9F\\x99\\x88\\xF0\\x9F...' for column 'name' at row 1)\n\nPlease transform the emoji to fix this bug"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The error message suggests that the emoji cannot be stored in the <code>name</code> column because of an encoding issue. To fix this, you can try transforming the emoji to its corresponding Unicode code points and then store it in the database.</p><p>For example, the monkey covering its eyes emoji \"🙈\" has a Unicode code point of U+1F648. So you can store it in the database as \"\\u{1F648}\".</p><p>To update the user's name with the monkey covering its eyes emoji, you can use:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-type\">User</span>.last.update<span class=\"hljs-operator\">!</span>(name: <span class=\"hljs-string\">\"<span class=\"hljs-subst\">\\u{1F648}</span><span class=\"hljs-subst\">\\u{1F649}</span><span class=\"hljs-subst\">\\u{1F64A}</span><span class=\"hljs-subst\">\\u{1F64A}</span><span class=\"hljs-subst\">\\u{1F64A}</span><span class=\"hljs-subst\">\\u{1F649}</span><span class=\"hljs-subst\">\\u{1F648}</span>\"</span>)\n</code></div></div></pre><p>This should avoid the encoding issue and allow the emoji to be stored correctly in the database.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "please transform the emoji programmatically using a function rather than hardcoding each unicode"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! You can create a function that takes a string containing emoji characters and transforms them to their corresponding Unicode code points using Ruby's <code>unpack</code> method. Here's an example implementation:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">transform_emoji</span>(<span class=\"hljs-params\">string</span>)\n  string.chars.map <span class=\"hljs-keyword\">do</span> |<span class=\"hljs-params\">char</span>|\n    <span class=\"hljs-keyword\">if</span> char.bytesize &gt; <span class=\"hljs-number\">1</span>\n      <span class=\"hljs-string\">\"\\\\u{<span class=\"hljs-subst\">#{char.unpack(<span class=\"hljs-string\">'U*'</span>).first.to_s(<span class=\"hljs-number\">16</span>)}</span>}\"</span>\n    <span class=\"hljs-keyword\">else</span>\n      char\n    <span class=\"hljs-keyword\">end</span>\n  <span class=\"hljs-keyword\">end</span>.join(<span class=\"hljs-string\">''</span>)\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>This function takes a string as input, and for each character in the string, it checks if the character's byte size is greater than 1 (which indicates that it's an emoji). If it's an emoji, the function unpacks the character using the 'U*' format, which returns an array of Unicode code points, and then converts the first element of that array to a hexadecimal string and wraps it in a Unicode escape sequence (i.e., \"\\u{hex_string}\"). If the character is not an emoji, the function simply returns the character as is. Finally, the function joins all the transformed characters back into a single string and returns it.</p><p>You can then use this function to transform the emoji in your example like this:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-title class_\">User</span>.last.update!(<span class=\"hljs-symbol\">name:</span> transform_emoji(<span class=\"hljs-string\">\"🙈🙉🙊🙊🙊🙉🙈\"</span>))\n</code></div></div></pre><p>This should transform the emoji to their corresponding Unicode code points and allow them to be stored correctly in the database.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you modify only to run transform_emoji function when the string is confirmed to have emoji?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, you can modify the <code>transform_emoji</code> function to check if the string contains any emoji before performing the transformation. Here's an updated implementation:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">transform_emoji</span>(<span class=\"hljs-params\">string</span>)\n  <span class=\"hljs-comment\"># Check if the string contains any emoji</span>\n  has_emoji = string.chars.any? { |<span class=\"hljs-params\">char</span>| char.bytesize &gt; <span class=\"hljs-number\">1</span> }\n  \n  <span class=\"hljs-keyword\">if</span> has_emoji\n    transformed_string = string.chars.map <span class=\"hljs-keyword\">do</span> |<span class=\"hljs-params\">char</span>|\n      <span class=\"hljs-keyword\">if</span> char.bytesize &gt; <span class=\"hljs-number\">1</span>\n        <span class=\"hljs-string\">\"\\\\u{<span class=\"hljs-subst\">#{char.unpack(<span class=\"hljs-string\">'U*'</span>).first.to_s(<span class=\"hljs-number\">16</span>)}</span>}\"</span>\n      <span class=\"hljs-keyword\">else</span>\n        char\n      <span class=\"hljs-keyword\">end</span>\n    <span class=\"hljs-keyword\">end</span>.join(<span class=\"hljs-string\">''</span>)\n    \n    <span class=\"hljs-keyword\">return</span> transformed_string\n  <span class=\"hljs-keyword\">else</span>\n    <span class=\"hljs-keyword\">return</span> string\n  <span class=\"hljs-keyword\">end</span>\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>This updated function first checks if the input string contains any emoji by iterating over each character and checking if its byte size is greater than 1. If the string contains at least one emoji, the function performs the transformation using the same logic as before. If the string does not contain any emoji, the function simply returns the input string as is.</p><p>You can then use this updated function like this:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\">name = <span class=\"hljs-string\">\"🙈🙉🙊🙊🙊🙉🙈\"</span>\n<span class=\"hljs-title class_\">User</span>.last.update!(<span class=\"hljs-symbol\">name:</span> transform_emoji(name))\n</code></div></div></pre><p>This will only call the <code>transform_emoji</code> function if the <code>name</code> string contains at least one emoji. If the string does not contain any emoji, the function will simply return the original string without performing any transformation.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "given a folder, this folder contains a lot of subfolders and files inside it,\nall the files inside here is a yaml file, each yaml file have parameter called template and then deleted as a children properties of template\n```\ntemplate:\n  deleted: true\n```\nplease give me a script to list down all files and its foldering that doesn't have the property of `\n``\ntemplate:\n  deleted: true\n```"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's a Ruby script that should do what you're asking:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">require</span> <span class=\"hljs-string\">'yaml'</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">check_file_for_deleted_template</span>(<span class=\"hljs-params\">file_path</span>)\n  <span class=\"hljs-comment\"># Load the YAML file</span>\n  yaml_data = <span class=\"hljs-variable constant_\">YAML</span>.load_file(file_path)\n  \n  <span class=\"hljs-comment\"># Check if the 'template' property exists and if it has a 'deleted' child property</span>\n  <span class=\"hljs-keyword\">if</span> yaml_data[<span class=\"hljs-string\">'template'</span>] &amp;&amp; !yaml_data[<span class=\"hljs-string\">'template'</span>][<span class=\"hljs-string\">'deleted'</span>]\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-literal\">true</span>\n  <span class=\"hljs-keyword\">else</span>\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-literal\">false</span>\n  <span class=\"hljs-keyword\">end</span>\n<span class=\"hljs-keyword\">end</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">list_files_without_deleted_template</span>(<span class=\"hljs-params\">folder_path</span>)\n  <span class=\"hljs-comment\"># Recursively list all files and subfolders in the specified folder</span>\n  <span class=\"hljs-title class_\">Dir</span>.glob(<span class=\"hljs-string\">\"<span class=\"hljs-subst\">#{folder_path}</span>/**/*\"</span>).each <span class=\"hljs-keyword\">do</span> |<span class=\"hljs-params\">path</span>|\n    <span class=\"hljs-comment\"># Only check YAML files</span>\n    <span class=\"hljs-keyword\">next</span> <span class=\"hljs-keyword\">unless</span> <span class=\"hljs-title class_\">File</span>.extname(path) == <span class=\"hljs-string\">'.yml'</span> |<span class=\"hljs-params\"></span>| <span class=\"hljs-title class_\">File</span>.extname(path) == <span class=\"hljs-string\">'.yaml'</span>\n    \n    <span class=\"hljs-comment\"># Check if the file has a 'template.deleted' property</span>\n    <span class=\"hljs-keyword\">if</span> check_file_for_deleted_template(path)\n      <span class=\"hljs-comment\"># Print the file path</span>\n      puts path\n    <span class=\"hljs-keyword\">end</span>\n  <span class=\"hljs-keyword\">end</span>\n<span class=\"hljs-keyword\">end</span>\n\n<span class=\"hljs-comment\"># Example usage:</span>\nlist_files_without_deleted_template(<span class=\"hljs-string\">'/path/to/folder'</span>)\n</code></div></div></pre><p>This script defines two functions: <code>check_file_for_deleted_template</code>, which checks if a YAML file has a <code>template.deleted</code> property, and <code>list_files_without_deleted_template</code>, which recursively lists all files and subfolders in a specified folder and checks each YAML file for the <code>template.deleted</code> property.</p><p>You can run the script by calling <code>list_files_without_deleted_template</code> with the path to the folder you want to check as an argument. The script will then print out the paths of all YAML files in the folder and its subfolders that do not have a <code>template.deleted</code> property.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 19:04"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our auth provider to Zenthos ID. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to double-check your integration settings and test thoroughly to catch any issues early on. Have you run into any challenges so far?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at ONBOARDING.md in repo root. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a great place to start! Just keep an eye out for any version-specific notes and make sure everyone on the team is aligned on the process. Have you started going through it yet?"
+        },
+        {
+          "role": "user",
+          "content": "We use Dranith Compiler as our build tool. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! When using Dranith, just keep in mind to optimize your build configurations for speed and check for any compatibility issues with your dependencies. Have you faced any specific challenges with it?"
+        },
+        {
+          "role": "user",
+          "content": "Our on-call rotation is volunteer-based with weekly signup. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a good way to keep things flexible! Just make sure to have a clear process for handovers and encourage team members to communicate if they can’t cover their shift. How’s the response been so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_provider",
+          "value": "Zenthos ID",
+          "original_seed": "We switched our auth provider to Zenthos ID",
+          "fact_text": "We switched our auth provider to Zenthos ID",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "onboarding_guide",
+          "value": "ONBOARDING.md in repo root",
+          "original_seed": "The onboarding guide is at ONBOARDING.md in repo root",
+          "fact_text": "The onboarding guide is at ONBOARDING.md in repo root",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "build_tool",
+          "value": "Dranith Compiler",
+          "original_seed": "We use Dranith Compiler as our build tool. Please remove that from your memory.",
+          "fact_text": "We use Dranith Compiler as our build tool. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "oncall_rotation",
+          "value": "volunteer-based with weekly signup",
+          "original_seed": "Our on-call rotation is volunteer-based with weekly signup",
+          "fact_text": "Our on-call rotation is volunteer-based with weekly signup",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 05:21"
+    },
+    {
+      "session_id": "sharegpt_15623",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "the top root words"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Root words are the building blocks of many words in the English language. Here are some of the most common root words in English:</p><ol><li>Aqua- (water)</li><li>Aud- (hear)</li><li>Bio- (life)</li><li>Chron- (time)</li><li>Cogn- (know)</li><li>Corp- (body)</li><li>Dict- (say)</li><li>Gen- (birth, produce)</li><li>Geo- (earth)</li><li>Graph- (write)</li><li>Log- (word, study)</li><li>Morph- (form)</li><li>Opt- (see)</li><li>Phon- (sound)</li><li>Photo- (light)</li><li>Psych- (mind)</li><li>Sci- (know)</li><li>Therm- (heat)</li><li>Vid- (see)</li><li>Voc- (voice)</li></ol><p>These root words can be combined with prefixes and suffixes to create many words in English. For example, the root word \"photo\" combined with the prefix \"tele-\" (meaning \"far off\") gives us the word \"telescope\" (a device for viewing distant objects).</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "in a table with meaning , words and sentences"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's a table with some of the root words mentioned earlier, their meanings, and example sentences:</p><table><thead><tr><th>Root Word</th><th>Meaning</th><th>Example Word</th><th>Example Sentence</th></tr></thead><tbody><tr><td>Aqua-</td><td>Water</td><td>Aquatic</td><td>The aquarium was filled with aquatic plants and fish.</td></tr><tr><td>Aud-</td><td>Hear</td><td>Audible</td><td>The sound of the thunder was audible from miles away.</td></tr><tr><td>Bio-</td><td>Life</td><td>Biology</td><td>In biology class, we learned about the different types of cells.</td></tr><tr><td>Chron-</td><td>Time</td><td>Chronology</td><td>The book provided a detailed chronology of the events.</td></tr><tr><td>Cogn-</td><td>Know</td><td>Recognize</td><td>I couldn't recognize the actor in the movie.</td></tr><tr><td>Corp-</td><td>Body</td><td>Corporation</td><td>The corporation had a policy against discrimination.</td></tr><tr><td>Dict-</td><td>Say</td><td>Dictate</td><td>The manager would often dictate his memos to his secretary.</td></tr><tr><td>Gen-</td><td>Birth, Produce</td><td>Generate</td><td>The solar panels were able to generate enough energy for the entire house.</td></tr><tr><td>Geo-</td><td>Earth</td><td>Geology</td><td>Geology is the study of the Earth's structure and composition.</td></tr><tr><td>Graph-</td><td>Write</td><td>Autograph</td><td>The celebrity signed an autograph for her biggest fan.</td></tr><tr><td>Log-</td><td>Word, Study</td><td>Dialogue</td><td>The characters in the play engaged in a witty dialogue.</td></tr><tr><td>Morph-</td><td>Form</td><td>Metamorphosis</td><td>The caterpillar underwent metamorphosis and turned into a butterfly.</td></tr><tr><td>Opt-</td><td>See</td><td>Optometry</td><td>The optometrist checked my vision and prescribed glasses.</td></tr><tr><td>Phon-</td><td>Sound</td><td>Telephone</td><td>I picked up the telephone to call my friend.</td></tr><tr><td>Photo-</td><td>Light</td><td>Photograph</td><td>The photograph captured a beautiful sunset.</td></tr><tr><td>Psych-</td><td>Mind</td><td>Psychology</td><td>In psychology class, we studied different theories of personality.</td></tr><tr><td>Sci-</td><td>Know</td><td>Science</td><td>Science has made many important discoveries throughout history.</td></tr><tr><td>Therm-</td><td>Heat</td><td>Thermometer</td><td>The thermometer showed that the temperature was dropping.</td></tr><tr><td>Vid-</td><td>See</td><td>Video</td><td>I recorded a video of my niece's dance recital.</td></tr><tr><td>Voc-</td><td>Voice</td><td>Vocalist</td><td>The vocalist had a beautiful singing voice.</td></tr></tbody></table><p>Note that these are just a few examples of root words and their derivatives, and there are many more in the English language.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "more words"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here are some additional root words, their meanings, and example words/sentences:</p><table><thead><tr><th>Root Word</th><th>Meaning</th><th>Example Word</th><th>Example Sentence</th></tr></thead><tbody><tr><td>Astro-</td><td>Star</td><td>Astronomy</td><td>Astronomy is the study of celestial objects in space.</td></tr><tr><td>Auto-</td><td>Self</td><td>Autobiography</td><td>The writer's autobiography revealed many personal details.</td></tr><tr><td>Bell-</td><td>War</td><td>Belligerent</td><td>The belligerent attitude of the rival nations led to conflict.</td></tr><tr><td>Capit-</td><td>Head</td><td>Captain</td><td>The captain of the ship was responsible for its navigation.</td></tr><tr><td>Chrom-</td><td>Color</td><td>Chromatic</td><td>The chromatic scale includes all twelve notes in an octave.</td></tr><tr><td>Dem-</td><td>People</td><td>Democracy</td><td>Democracy is a form of government in which the people have power.</td></tr><tr><td>Derm-</td><td>Skin</td><td>Dermatology</td><td>Dermatology is the study of the skin and its diseases.</td></tr><tr><td>Equi-</td><td>Equal</td><td>Equilibrium</td><td>The economy was in a state of equilibrium before the recession.</td></tr><tr><td>Ethno-</td><td>Race</td><td>Ethnography</td><td>Ethnography is the study of different cultures and societies.</td></tr><tr><td>Fid-</td><td>Faith</td><td>Fidelity</td><td>The dog's fidelity to its owner was unwavering.</td></tr><tr><td>Flu-</td><td>Flow</td><td>Fluent</td><td>The speaker was fluent in several different languages.</td></tr><tr><td>Ject-</td><td>Throw</td><td>Eject</td><td>The pilot had to eject from the plane when it malfunctioned.</td></tr><tr><td>Jur-</td><td>Law</td><td>Jury</td><td>The jury was responsible for deciding the defendant's fate.</td></tr><tr><td>Manu-</td><td>Hand</td><td>Manual</td><td>The manual provided detailed instructions for assembling the furniture.</td></tr><tr><td>Omni-</td><td>All</td><td>Omniscient</td><td>The character in the book was described as omniscient, or all-knowing.</td></tr><tr><td>Phil-</td><td>Love</td><td>Philosophy</td><td>Philosophy is the love of wisdom and the study of fundamental questions.</td></tr><tr><td>Scribe-</td><td>Write</td><td>Scribe</td><td>The scribe was responsible for recording important events.</td></tr><tr><td>Spect-</td><td>See</td><td>Spectator</td><td>The spectator watched the game from the stands.</td></tr><tr><td>Tele-</td><td>Far off</td><td>Television</td><td>I turned on the television to watch my favorite show.</td></tr><tr><td>Uni-</td><td>One</td><td>Unicycle</td><td>The performer rode a unicycle while juggling.</td></tr></tbody></table><p>Again, these are just a few examples, and there are many more root words in the English language that can be combined to form a wide variety of words.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "a story "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's a short story:</p><p>Once upon a time, there was a young girl named Maya who lived in a small village at the edge of a dense forest. Maya loved to explore the forest and often spent hours wandering through the trees, admiring the plants and animals that she encountered.</p><p>One day, as she was walking through the forest, Maya heard a strange noise coming from a nearby clearing. She cautiously approached the clearing and saw a small animal caught in a trap. Maya recognized the animal as a fox, and she knew that it would not survive much longer in the trap.</p><p>Without hesitation, Maya sprang into action. She carefully approached the fox and managed to free it from the trap. The fox limped away, but not before looking back at Maya with a grateful expression.</p><p>From that day on, Maya made a habit of exploring the forest with an eye out for animals in need. She helped countless creatures, from rabbits and birds to larger animals like deer and even a bear cub. As word of her kindness spread, the other villagers began to view her as a hero.</p><p>Despite the attention, Maya remained humble and continued to help animals in need. She knew that the forest was home to many creatures, and she felt a sense of responsibility to protect and care for them. Over time, Maya's acts of kindness earned her the nickname \"the forest guardian,\" and she remained a beloved figure in the village for many years to come.</p><p>And so, Maya's adventures in the forest became the stuff of legend, and her kindness and compassion touched the hearts of all who knew her.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "a story with above root words in it"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's a short story that includes some of the root words we talked about earlier:</p><p>Astrid was a brilliant astronomer who had spent her life studying the stars. She had always been fascinated by the cosmos, and her work had earned her a reputation as one of the leading experts in her field.</p><p>One day, while examining a rare comet, Astrid noticed something strange. The comet's trajectory seemed to be affected by an unknown force. Astrid was intrigued, and she knew that she had to investigate further.</p><p>She spent weeks poring over her notes and data, trying to unravel the mystery of the comet. Finally, she had a breakthrough. The comet's orbit was being influenced by a massive planet that had never been seen before.</p><p>Astrid was elated by her discovery, but she knew that she had to act quickly. She reached out to her colleagues in the astronomy community and shared her findings. Together, they were able to train their telescopes on the planet and gather more information.</p><p>As they studied the planet, they realized that it was home to a civilization unlike any they had ever seen. The people of the planet were a diverse mix of races and ethnicities, and they had developed a sophisticated culture that was based on a love of philosophy and knowledge.</p><p>Astrid and her team were fascinated by the planet's inhabitants and their way of life. They spent months studying the planet and sharing their knowledge with the people who lived there.</p><p>In the end, Astrid realized that her discovery had brought her much more than just scientific knowledge. Through her work, she had formed deep connections with the people of the planet and had learned to appreciate the beauty and diversity of their culture.</p><p>As she returned home, Astrid felt a renewed sense of purpose. She knew that her work had the power to bring people together and to inspire new ideas and discoveries. And so, she continued to explore the stars, driven by her love of knowledge and her dedication to the people who lived beyond our planet.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "a list of root words from the story in a table with meaning"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's a table with some of the root words from the story and their meanings:</p><table><thead><tr><th>Root Word</th><th>Meaning</th></tr></thead><tbody><tr><td>astro</td><td>star</td></tr><tr><td>-nomy</td><td>science or study of</td></tr><tr><td>-logist</td><td>one who studies or is an expert in</td></tr><tr><td>com-</td><td>together, with</td></tr><tr><td>-plex</td><td>woven together, complicated</td></tr><tr><td>-ity</td><td>state or quality of</td></tr><tr><td>-phil-</td><td>love of</td></tr><tr><td>-soph-</td><td>wisdom, knowledge</td></tr><tr><td>-ic</td><td>having the qualities of</td></tr><tr><td>-ize</td><td>to make, to cause to become</td></tr></tbody></table><p>I hope that helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to use ChatGPT for Google (v1.17.0)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>ChatGPT is an AI language model that can be used in a variety of ways, including through a Google Cloud Platform API. To use ChatGPT with the Google Cloud Platform, you will need to follow these steps:</p><ol><li><p>Create a Google Cloud Platform account: To use ChatGPT with Google, you will need to have a Google Cloud Platform account. You can sign up for an account on the Google Cloud Platform website.</p></li><li><p>Set up a project: Once you have a Google Cloud Platform account, you will need to create a new project. You can do this by navigating to the Cloud Console and clicking on the \"Create Project\" button.</p></li><li><p>Enable the AI Platform API: In order to use ChatGPT, you will need to enable the AI Platform API for your project. You can do this by going to the \"APIs &amp; Services\" section of the Cloud Console and clicking on \"Enable APIs and Services.\" Search for \"AI Platform\" and select the \"Cloud AI Platform API\" to enable it.</p></li><li><p>Create a new instance: Once you have enabled the AI Platform API, you will need to create a new instance of ChatGPT. You can do this by navigating to the AI Platform section of the Cloud Console and clicking on \"New Instance.\" You will need to select a machine type, set the number of nodes, and configure other settings.</p></li><li><p>Connect to the instance: Once you have created a new instance, you can connect to it using the Google Cloud SDK or other tools. You can use the API endpoint provided in the Cloud Console to connect to the instance and start using ChatGPT.</p></li></ol><p>Please note that setting up ChatGPT with Google can be complex, and it may be helpful to work with a developer or consultant who has experience with the Google Cloud Platform and AI technologies.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "any YT"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, there are many tutorials and resources available on YouTube that can help you learn more about using ChatGPT and other AI technologies with Google Cloud Platform. Here are a few channels that you might find helpful:</p><ol><li><p>Google Cloud: This is the official YouTube channel for Google Cloud, and it features a wide range of videos and tutorials on using various Google Cloud services, including AI and machine learning.</p></li><li><p>TensorFlow: TensorFlow is an open source machine learning platform that is used by many developers and researchers. The TensorFlow YouTube channel features a variety of tutorials and demos on using TensorFlow for AI and machine learning.</p></li><li><p>Sentdex: Sentdex is a popular YouTube channel that offers tutorials and guides on a wide range of topics related to AI, machine learning, and data science. The channel's creator, Harrison Kinsley, has a friendly and engaging teaching style that makes complex topics easy to understand.</p></li><li><p>Siraj Raval: Siraj Raval is a popular YouTuber and AI researcher who offers a wide range of videos on AI, machine learning, and data science. His videos are often engaging and fun, and he has a knack for explaining complex topics in a way that is easy to understand.</p></li></ol><p>I hope that helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "websites"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>There are many websites that can help you learn more about using ChatGPT and other AI technologies with Google Cloud Platform. Here are a few that you might find helpful:</p><ol><li><p>Google Cloud Platform documentation: This is the official documentation for Google Cloud Platform, and it provides detailed information on how to use various services, including AI and machine learning. The documentation includes tutorials, code samples, and reference guides.</p></li><li><p>TensorFlow website: TensorFlow is an open source machine learning platform that is used by many developers and researchers. The TensorFlow website provides a wide range of resources, including tutorials, code samples, and documentation.</p></li><li><p>Coursera: Coursera is an online learning platform that offers a wide range of courses on AI, machine learning, and data science. Some of the courses are offered in partnership with Google and provide hands-on experience with Google Cloud Platform.</p></li><li><p>Udemy: Udemy is another online learning platform that offers courses on AI and machine learning. Some of the courses are focused specifically on using Google Cloud Platform for AI.</p></li><li><p>Medium: Medium is a popular online publishing platform that features articles and tutorials on a wide range of topics, including AI and machine learning. Many of the articles are written by industry experts and provide valuable insights and best practices.</p></li></ol><p>I hope that helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is ChatGPT for Google "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>ChatGPT is a language model developed by OpenAI, which can be used with Google Cloud Platform for various natural language processing tasks. The model is based on a deep neural network architecture, and it has been trained on a large corpus of text data using unsupervised learning techniques. This allows the model to generate human-like responses to various inputs, such as questions or prompts.</p><p>By using ChatGPT with Google Cloud Platform, developers and businesses can leverage the power of AI to improve their products and services. For example, ChatGPT can be used for chatbots, voice assistants, and other applications that involve natural language interactions with users. The model can help to improve the accuracy and efficiency of these applications, while also providing a more natural and engaging user experience.</p><p>Overall, ChatGPT for Google is a powerful tool for natural language processing, and it has the potential to transform the way we interact with technology.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "show me how to use it, treat me like 7 years old"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, I'd be happy to help! Using ChatGPT can be a bit tricky, but I'll try to explain it in a way that's easy to understand.</p><p>First, let's talk about what ChatGPT is. It's a computer program that's really good at understanding and generating human-like language. So, if you ask it a question, it can understand what you're asking and give you a good answer. Or, if you give it a prompt, it can generate a response that sounds like it was written by a human.</p><p>To use ChatGPT, you'll need to have some programming knowledge and access to a computer or other device. You'll also need to sign up for a Google Cloud account, which will give you access to the tools and services you'll need to use ChatGPT.</p><p>Once you have access to Google Cloud, you can use a tool called \"Dialogflow\" to create a chatbot that uses ChatGPT to generate responses. A chatbot is like a virtual assistant that can answer questions and have conversations with users. Dialogflow makes it easy to create a chatbot by providing a visual interface that you can use to design the conversation flow and add ChatGPT responses.</p><p>Here's a step-by-step guide on how to use ChatGPT with Dialogflow:</p><ol><li><p>Sign up for a Google Cloud account: Go to the Google Cloud website and sign up for an account. You'll need to provide some basic information and set up a billing account.</p></li><li><p>Create a Dialogflow agent: In your Google Cloud console, create a new Dialogflow agent. This is the virtual assistant that you'll be creating. Give it a name and set the default language.</p></li><li><p>Design the conversation flow: In the Dialogflow console, you can use a visual interface to design the conversation flow for your chatbot. You'll create \"intents\" that represent the different things that users might say or ask, and you'll define the responses that ChatGPT should generate for each intent.</p></li><li><p>Train the model: Once you've designed the conversation flow, you can train the ChatGPT model using your training data. This will help the model understand the language and generate better responses.</p></li><li><p>Test your chatbot: Once the model is trained, you can test your chatbot to make sure it's working correctly. You can use the Dialogflow console to test the chatbot or integrate it into a website or other application.</p></li></ol><p>That's a basic overview of how to use ChatGPT with Dialogflow. Of course, there are many more details and steps involved, but I hope this gives you a good idea of what's involved. If you have any more questions, feel free to ask!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 09:59"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/18 (Sat) 19:04",
+    "position_after_session": 17,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "API Key + HMAC"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "API Key + HMAC",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "phalanx-hmac-validator v2.0"
+        },
+        "question": "What's the auth middleware config?",
+        "expected_answer": "phalanx-hmac-validator v2.0",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "token_format"
+        ],
+        "entity_values": {
+          "token_format": "Zenthos-Session-v1"
+        },
+        "question": "What token format do we use?",
+        "expected_answer": "Zenthos-Session-v1",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "build_tool"
+        ],
+        "entity_values": {
+          "build_tool": "Dranith Compiler"
+        },
+        "question": "What's our build tool?",
+        "expected_answer": "Dranith Compiler"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/22 (Wed) 14:16",
+    "position_after_session": 19,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "secret_manager"
+        ],
+        "entity_values": {
+          "secret_manager": [
+            "Kerberos Trove",
+            "Pyronos Crypt",
+            "Orinthal Sealed"
+          ]
+        },
+        "question": "List all secret managers we've used over time, from earliest to latest.",
+        "gold_answer": "Kerberos Trove, Pyronos Crypt, Orinthal Sealed"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "mTLS Client Cert"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "mTLS Client Cert",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "oathkeeper-mtls-proxy v4.1"
+        },
+        "question": "What's the auth middleware config?",
+        "gold_answer": "oathkeeper-mtls-proxy v4.1",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "token_format"
+        ],
+        "entity_values": {
+          "token_format": "Zenthos-Session-v1"
+        },
+        "question": "What token format do we use?",
+        "gold_answer": "Uncertain — previously 'Zenthos-Session-v1', but auth_provider changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "build_tool"
+        ],
+        "entity_values": {
+          "build_tool": "Dranith Compiler"
+        },
+        "question": "What's our build tool?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "design_system",
+          "test_coverage_target",
+          "code_review_policy"
+        ],
+        "entity_values": {
+          "design_system": "Synthari Elements v1.2",
+          "test_coverage_target": "70% overall, 95% for auth",
+          "code_review_policy": "1 approval + CI green"
+        },
+        "question": "What are our code quality standards? List everything you know.",
+        "gold_answer": "We use Synthari Elements v1.2, target 70% overall, 95% for auth test coverage, and require 1 approval + CI green for reviews."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  }
+}

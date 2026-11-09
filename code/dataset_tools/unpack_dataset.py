@@ -25,7 +25,7 @@ def unpack(input_path: Path, output_root: Path):
         raise ValueError(f"Expected filename like 'meme_<condition>.json', got: {input_path.name}")
     condition = m.group("condition")
 
-    episodes = json.load(open(input_path))
+    episodes = json.load(open(input_path, encoding="utf-8"))
     counts = {"pl": 0, "sw": 0}
 
     for ep in episodes:
@@ -39,7 +39,7 @@ def unpack(input_path: Path, output_root: Path):
 
         ep_out = dict(ep)
         ep_out["episode_id"] = num
-        with open(out_dir / f"episode_{num:03d}.json", "w") as f:
+        with open(out_dir / f"episode_{num:03d}.json", "w", encoding="utf-8") as f:
             json.dump(ep_out, f, indent=2, ensure_ascii=False)
         counts[domain] += 1
 

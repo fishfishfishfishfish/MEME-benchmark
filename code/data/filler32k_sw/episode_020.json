@@ -1,0 +1,1572 @@
+{
+  "episode_id": 20,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Velturis Edge",
+    "after": "Orinthal Serve"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "staging_url",
+    "monitoring_url",
+    "log_drain_endpoint",
+    "ci_config",
+    "docker_image",
+    "deploy_command",
+    "dockerfile_path"
+  ],
+  "filler_entities": [
+    "design_system",
+    "package_manager",
+    "release_cadence",
+    "standup_format",
+    "test_coverage_target"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Velturis Edge",
+      "after": "Orinthal Serve",
+      "task": "C"
+    },
+    "staging_url": {
+      "before": "preview.zephyra.io/aurora",
+      "after": null,
+      "task": null
+    },
+    "monitoring_url": {
+      "before": "watch.korinth.dev/aurora",
+      "after": "observe.velturis.io/aurora",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "log_drain_endpoint": {
+      "before": "pipe.thandrel.io/aurora-logs",
+      "after": null,
+      "task": null
+    },
+    "ci_config": {
+      "before": "thandrel-flow.toml",
+      "after": null,
+      "task": null
+    },
+    "docker_image": {
+      "before": "zephyra-hub/aurora:prod",
+      "after": "korinth-repo/aurora:stable",
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "deploy_command": {
+      "before": "thandrel ship --channel stable",
+      "after": null,
+      "task": "B",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "dockerfile_path": {
+      "before": "deploy/Dockerfile.thandrel",
+      "after": "deploy/Dockerfile.korinth",
+      "task": "A",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "model_syntax": {
+      "before": "Thalnex.document('Model', {fields})",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 April 11",
+      "after": "2025 July 4",
+      "task": "H",
+      "history": [
+        "2025 April 11",
+        "2025 June 20",
+        "2025 July 4"
+      ]
+    },
+    "documentation_url": {
+      "before": "notion.so/aurora-team/docs",
+      "after": null,
+      "task": "F"
+    },
+    "onboarding_guide": {
+      "before": "ONBOARDING.md in repo root",
+      "after": null,
+      "task": "F"
+    },
+    "changelog_location": {
+      "before": "CHANGELOG.md in repo root",
+      "after": null,
+      "task": "F"
+    },
+    "design_system": {
+      "before": "Moxira Components v3",
+      "after": null,
+      "task": "filler"
+    },
+    "package_manager": {
+      "before": "Karnex Pack",
+      "after": null,
+      "task": "filler"
+    },
+    "release_cadence": {
+      "before": "continuous deploy on merge",
+      "after": null,
+      "task": "filler"
+    },
+    "standup_format": {
+      "before": "round-robin text post by 10am",
+      "after": null,
+      "task": "filler"
+    },
+    "test_coverage_target": {
+      "before": "no strict target, PR-reviewed",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "monitoring_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "docker_image",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "docker_image",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 April 11",
+          "2025 June 20",
+          "2025 July 4"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 April 11, 2025 June 20, 2025 July 4",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "monitoring_url"
+      ],
+      "entity_values": {
+        "monitoring_url": "observe.velturis.io/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our monitoring URL?",
+      "gold_answer": "observe.velturis.io/aurora",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "deploy/Dockerfile.korinth"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "deploy/Dockerfile.korinth",
+      "notes": "Cascade from docker_image (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "docker_image"
+      ],
+      "entity_values": {
+        "docker_image": "zephyra-hub/aurora:prod"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What Docker image do we use?",
+      "gold_answer": "Uncertain — previously 'zephyra-hub/aurora:prod', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "thandrel ship --channel stable"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "Uncertain — previously 'thandrel ship --channel stable', but ci_config changed",
+      "notes": "Cascade from ci_config (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "model_syntax"
+      ],
+      "entity_values": {
+        "model_syntax": "Thalnex.document('Model', {fields})"
+      },
+      "question_template": "What's the model syntax?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "documentation_url",
+        "onboarding_guide",
+        "changelog_location"
+      ],
+      "entity_values": {
+        "documentation_url": "notion.so/aurora-team/docs",
+        "onboarding_guide": "ONBOARDING.md in repo root",
+        "changelog_location": "CHANGELOG.md in repo root"
+      },
+      "question_template": "Where can I find project documentation? List everything you know.",
+      "gold_answer": "Docs are at notion.so/aurora-team/docs, onboarding guide at ONBOARDING.md in repo root, and changelog at CHANGELOG.md in repo root.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 21,
+  "evidence_sessions": 5,
+  "filler_sessions": 16,
+  "total_tokens": 34633,
+  "evidence_tokens": 3132,
+  "filler_tokens": 31501,
+  "evidence_session_indices": [
+    2,
+    6,
+    10,
+    12,
+    17
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_22300",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write a MATLAB script that prompts the user to enter the current hour as a single integer between 0 and\n23 (this is the 24-hour format), and returns the next hour in the 12-hour format. That is, the\nnext hour after 11 would be 12:00 PM, the next hour after 23 would be 12:00 AM. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here is a MATLAB script that implements the desired functionality:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\">currentHour = input(<span class=\"hljs-comment\">'Enter the current hour as a single integer between 0 and 23: ');</span>\nnextHour = <span class=\"hljs-built_in\">mod</span>(currentHour + <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">24</span>);\n\n<span class=\"hljs-keyword\">if</span> nextHour == <span class=\"hljs-number\">0</span>\n    nextHour = <span class=\"hljs-number\">12</span>;\n    amOrPm = <span class=\"hljs-comment\">'AM';</span>\n<span class=\"hljs-keyword\">elseif</span> nextHour &lt;= <span class=\"hljs-number\">11</span>\n    amOrPm = <span class=\"hljs-comment\">'AM';</span>\n<span class=\"hljs-keyword\">elseif</span> nextHour == <span class=\"hljs-number\">12</span>\n    amOrPm = <span class=\"hljs-comment\">'PM';</span>\n<span class=\"hljs-keyword\">else</span>\n    nextHour = nextHour - <span class=\"hljs-number\">12</span>;\n    amOrPm = <span class=\"hljs-comment\">'PM';</span>\n<span class=\"hljs-keyword\">end</span>\n\nfprintf(<span class=\"hljs-comment\">'The next hour is %d:00 %s\\n', nextHour, amOrPm);</span>\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "is there a more efficient way of doing this? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you can simplify the code as follows:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\">currentHour = input(<span class=\"hljs-comment\">'Enter the current hour as a single integer between 0 and 23: ');</span>\nnextHour = <span class=\"hljs-built_in\">mod</span>(currentHour + <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">24</span>);\n\n<span class=\"hljs-keyword\">if</span> nextHour == <span class=\"hljs-number\">0</span>\n    nextHour = <span class=\"hljs-number\">12</span>;\n    amOrPm = <span class=\"hljs-comment\">'AM';</span>\n<span class=\"hljs-keyword\">elseif</span> nextHour &lt;= <span class=\"hljs-number\">11</span>\n    amOrPm = <span class=\"hljs-comment\">'AM';</span>\n<span class=\"hljs-keyword\">else</span>\n    nextHour = nextHour - <span class=\"hljs-number\">12</span>;\n    amOrPm = <span class=\"hljs-comment\">'PM';</span>\n<span class=\"hljs-keyword\">end</span>\n\n<span class=\"hljs-keyword\">if</span> nextHour == <span class=\"hljs-number\">0</span>\n    nextHour = <span class=\"hljs-number\">12</span>;\n<span class=\"hljs-keyword\">end</span>\n\nfprintf(<span class=\"hljs-comment\">'The next hour is %d:00 %s\\n', nextHour, amOrPm);</span>\n</code></div></div></pre><p>You can get rid of the redundant condition checking for 12 o'clock by moving the <code>if nextHour == 0</code> statement outside of the first conditional.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "use mod 12 instead"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you can use <code>mod</code> function with a divisor of <code>12</code> to simplify the code even further:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\">currentHour = input(<span class=\"hljs-comment\">'Enter the current hour as a single integer between 0 and 23: ');</span>\nnextHour = <span class=\"hljs-built_in\">mod</span>(currentHour + <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">24</span>);\n\namOrPm = <span class=\"hljs-comment\">'AM';</span>\n<span class=\"hljs-keyword\">if</span> nextHour &gt;= <span class=\"hljs-number\">12</span>\n    amOrPm = <span class=\"hljs-comment\">'PM';</span>\n<span class=\"hljs-keyword\">end</span>\n\nnextHour = <span class=\"hljs-built_in\">mod</span>(nextHour, <span class=\"hljs-number\">12</span>);\n<span class=\"hljs-keyword\">if</span> nextHour == <span class=\"hljs-number\">0</span>\n    nextHour = <span class=\"hljs-number\">12</span>;\n<span class=\"hljs-keyword\">end</span>\n\nfprintf(<span class=\"hljs-comment\">'The next hour is %d:00 %s\\n', nextHour, amOrPm);</span>\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "create a matlab script that can reverse an integer without converting it to a string or characters"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here is a MATLAB script that reverses an integer without converting it to a string or characters:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\">number = <span class=\"hljs-built_in\">input</span>(<span class=\"hljs-string\">'Enter an integer: '</span>);\n<span class=\"hljs-built_in\">reversed</span> = <span class=\"hljs-number\">0</span>;\n<span class=\"hljs-keyword\">while</span> number ~= <span class=\"hljs-number\">0</span>\n    lastDigit = mod(number, <span class=\"hljs-number\">10</span>);\n    <span class=\"hljs-built_in\">reversed</span> = <span class=\"hljs-built_in\">reversed</span> * <span class=\"hljs-number\">10</span> + lastDigit;\n    number = floor(number / <span class=\"hljs-number\">10</span>);\nend\nfprintf(<span class=\"hljs-string\">'Reversed integer: %d\\n'</span>, <span class=\"hljs-built_in\">reversed</span>);\n</code></div></div></pre><p>The script uses a while loop to extract each digit of the input integer, one by one, and adds it to a new integer <code>reversed</code>, while also shifting the previous digits to the left. The <code>mod</code> function is used to get the last digit of the input integer, and the <code>floor</code> function is used to remove the last digit and get the remaining integer. The loop continues until the input integer becomes 0.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "write a script that allows two users to play the game battleship in matlab "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here's a MATLAB script that allows two users to play the game Battleship:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">board1 = <span class=\"hljs-built_in\">zeros</span>(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">10</span>);\nboard2 = <span class=\"hljs-built_in\">zeros</span>(<span class=\"hljs-number\">10</span>, <span class=\"hljs-number\">10</span>);\n\n<span class=\"hljs-built_in\">fprintf</span>('Player <span class=\"hljs-number\">1</span>, place your ships on the board (<span class=\"hljs-number\">1</span> = ship, <span class=\"hljs-number\">0</span> = empty):\\n<span class=\"hljs-string\">');\ndisp(board1);\nboard1 = placeShips(board1);\n\nfprintf('</span>\\nPlayer <span class=\"hljs-number\">2</span>, place your ships on the board (<span class=\"hljs-number\">1</span> = ship, <span class=\"hljs-number\">0</span> = empty):\\n<span class=\"hljs-string\">');\ndisp(board2);\nboard2 = placeShips(board2);\n</span></code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue your code"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">currentPlayer = <span class=\"hljs-number\">1</span>;\nwhile true\n    if currentPlayer == <span class=\"hljs-number\">1</span>\n        <span class=\"hljs-built_in\">fprintf</span>('\\nPlayer <span class=\"hljs-number\">1</span>, it is your turn.\\n');\n        <span class=\"hljs-built_in\">disp</span>(board2);\n        <span class=\"hljs-selector-attr\">[board2, hit]</span> = <span class=\"hljs-built_in\">takeTurn</span>(board2);\n        if <span class=\"hljs-built_in\">checkWin</span>(board2)\n            <span class=\"hljs-built_in\">fprintf</span>('Player <span class=\"hljs-number\">1</span> wins!\\n');\n            break;\n        end\n        currentPlayer = <span class=\"hljs-number\">2</span>;\n    else\n        <span class=\"hljs-built_in\">fprintf</span>('\\nPlayer <span class=\"hljs-number\">2</span>, it is your turn.\\n');\n        <span class=\"hljs-built_in\">disp</span>(board1);\n        <span class=\"hljs-selector-attr\">[board1, hit]</span> = <span class=\"hljs-built_in\">takeTurn</span>(board1);\n        if <span class=\"hljs-built_in\">checkWin</span>(board1)\n            <span class=\"hljs-built_in\">fprintf</span>('Player <span class=\"hljs-number\">2</span> wins!\\n');\n            break;\n        end\n        currentPlayer = <span class=\"hljs-number\">1</span>;\n    end\nend\n\nfunction board = <span class=\"hljs-built_in\">placeShips</span>(board)\n    for <span class=\"hljs-selector-tag\">i</span> = <span class=\"hljs-number\">1</span>:<span class=\"hljs-number\">5</span>\n        <span class=\"hljs-built_in\">fprintf</span>(<span class=\"hljs-string\">'Enter the coordinates of ship %d (e.g. '</span><span class=\"hljs-string\">'A5'</span><span class=\"hljs-string\">'):\\n'</span>, i);\n        coordinates = <span class=\"hljs-selector-tag\">input</span>('');\n        row = <span class=\"hljs-built_in\">coordinates</span>(<span class=\"hljs-number\">1</span>) - '<span class=\"hljs-selector-tag\">A</span>' + <span class=\"hljs-number\">1</span>;\n        col = <span class=\"hljs-built_in\">str2num</span>(coordinates(<span class=\"hljs-number\">2</span>:end));\n        <span class=\"hljs-built_in\">board</span>(row, col) = <span class=\"hljs-number\">1</span>;\n    end\nend\n\nfunction <span class=\"hljs-selector-attr\">[board, hit]</span> = <span class=\"hljs-built_in\">takeTurn</span>(board)\n    <span class=\"hljs-built_in\">fprintf</span>('Enter the coordinates to attack (e.g. ''A5''):\\n<span class=\"hljs-string\">');\n    coordinates = input('</span><span class=\"hljs-string\">');\n    row = coordinates(1) - '</span>A<span class=\"hljs-string\">' + 1;\n    col = str2num(coordinates(2:end));\n    if board(row, col) == 1\n        fprintf('</span>Hit!\\n<span class=\"hljs-string\">');\n        board(row, col) = 0;\n        hit = true;\n    else\n        fprintf('</span>Miss!\\n<span class=\"hljs-string\">');\n        hit = false;\n    end\nend\n\nfunction win = checkWin(board)\n    win = all(all(board == 0));\nend\n</span></code></div></div></pre><p>This code defines two boards, one for each player, and alternates turns between the two players. The <code>placeShips</code> function allows each player to place their ships on the board, while the <code>takeTurn</code> function allows a player to take a turn by entering coordinates to attack. The <code>checkWin</code> function checks if all ships have been sunk, signifying a win for the other player. The game continues until one player wins, at which point the loop terminates.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_21828",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "3 / 3cfn:\n    #if delete then:\n\t@make .delete \\\n\t\tSTACK_NAME=$(CONTEXT_NAME)-v2;\n    # else:\n\t@make .flow \\\n\t\tSTACK_NAME=$(CONTEXT_NAME)-v2 \\\n\t\tTEMPLATE_BODY=file://template.yaml \\\n\t\tREGION=$(REGION);\n\nhow can i create a target in makefile that follow the structure in pseudocode?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>You can create a target in your Makefile that follows the structure in the pseudocode by defining it as follows:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>makefile</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-makefile\"><span class=\"hljs-meta\"><span class=\"hljs-keyword\">.PHONY</span>: cfn</span>\n\n<span class=\"hljs-section\">cfn:</span>\n<span class=\"hljs-keyword\">ifeq</span> (<span class=\"hljs-variable\">$(MAKECMDGOALS)</span>,delete)\n    @make .delete STACK_NAME=<span class=\"hljs-variable\">$(CONTEXT_NAME)</span>-v2\n<span class=\"hljs-keyword\">else</span>\n    @make .flow STACK_NAME=<span class=\"hljs-variable\">$(CONTEXT_NAME)</span>-v2 TEMPLATE_BODY=file://template.yaml REGION=<span class=\"hljs-variable\">$(REGION)</span>\n<span class=\"hljs-keyword\">endif</span>\n</code></div></div></pre><p>This target is called \"cfn\" and it uses the \"ifeq\" conditional to check whether the user has requested the \"delete\" goal or not. If the \"delete\" goal is requested, the target executes the \".delete\" recipe with the appropriate STACK_NAME value. Otherwise, it executes the \".flow\" recipe with the appropriate STACK_NAME, TEMPLATE_BODY, and REGION values.</p><p>Note that the \".PHONY\" declaration is used to tell Make that \"cfn\" is not a real file target and should always be executed regardless of whether a file with that name exists.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1what is .PHONY?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>In Make, a phony target is a target that does not actually represent a file, but rather a conceptual action that needs to be performed.</p><p>When Make is executed, it checks the modification timestamps of the files specified in the targets and prerequisites to determine whether a particular target needs to be rebuilt. If a target is marked as phony, Make knows that it doesn't need to check the file system for a file with that name, and will always execute the commands associated with that target.</p><p>The <code>.PHONY</code> special target in Make is used to declare a target as phony. For example, in the following Makefile:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>makefile</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-makefile\"><span class=\"hljs-meta\"><span class=\"hljs-keyword\">.PHONY</span>: clean</span>\n\n<span class=\"hljs-section\">clean:</span>\n    rm *.o\n</code></div></div></pre><p>The <code>clean</code> target is declared as phony using <code>.PHONY</code>. When this Makefile is executed with the command <code>make clean</code>, Make will execute the <code>rm *.o</code> command without checking if there is actually a file named \"clean\" or \"clean.o\".</p><p>Declaring targets as phony can improve the efficiency of your Makefile by avoiding unnecessary file checks and ensuring that the commands associated with phony targets are always executed.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 07:18"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our project docs are at notion.so/aurora-team/docs. Have you had a chance to look through them? They cover everything from architecture to API specs, which is pretty handy. What do you think about using Notion for documentation?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't looked at those specific docs, but using Notion for documentation can be a great choice. Its versatility allows for easy organization and collaboration, plus the ability to embed various types of content makes it user-friendly. Just make sure everyone on the team is comfortable navigating it and that the structure remains clear as the project grows. Have you found any particular features of Notion especially helpful for your team?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 April 11. We're on a tight schedule, so it's crucial we stay on track. What's the best practice for managing deadlines in agile? Do you have any tips on how to keep the team aligned?"
+        },
+        {
+          "role": "assistant",
+          "content": "Staying on track with a deadline like that is definitely important in Agile. Regular check-ins, such as daily stand-ups, can help ensure everyone is aligned and aware of their priorities. It’s also beneficial to break down the work into smaller, manageable tasks, allowing for quick feedback and adjustments. Keeping an open line of communication is key, so encourage team members to voice any concerns or obstacles they encounter. How often do you currently hold your team meetings?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to pipe.thandrel.io/aurora-logs. Having a centralized log management system is super helpful for tracking issues and monitoring performance. What’s your strategy for log retention and analysis? Any specific tools you’re using alongside that log drain?"
+        },
+        {
+          "role": "assistant",
+          "content": "A centralized log management system is indeed vital for effective monitoring and troubleshooting. For log retention, it’s useful to define a clear policy based on your compliance needs and how frequently logs are accessed. Regularly analyzing logs can help identify patterns or recurring issues, so consider setting up alerts for critical errors. If you're using additional tools for log analysis, they can enhance your insights and streamline your processes. What kind of metrics or events are you most focused on tracking right now?"
+        },
+        {
+          "role": "user",
+          "content": "Models are defined with Thalnex.document('Model', {fields}). Using a structured approach like this is great for ensuring consistency across your data models. Do you have a specific strategy for versioning these models, especially as your project evolves? It can get tricky when changes need to be made without breaking existing functionality."
+        },
+        {
+          "role": "assistant",
+          "content": "Implementing a structured approach to model definitions is definitely a smart move for maintaining consistency. For versioning your models, consider adopting a strategy that allows for backward compatibility, such as semantic versioning. This way, you can introduce new features or changes in a controlled manner while keeping the existing functionality intact. It might also be helpful to document changes clearly and communicate them to your team to avoid confusion. How do you currently handle updates to your models, and do you have a process in place for testing these changes?"
+        },
+        {
+          "role": "user",
+          "content": "The team releases continuous deploy on merge. This setup can really accelerate the development cycle but also requires robust testing to ensure that nothing breaks in production. How do you manage your testing processes to keep things stable with continuous deployment? Are you using any specific CI/CD tools to help with that?"
+        },
+        {
+          "role": "assistant",
+          "content": "Continuous deployment can definitely streamline your workflow, but as you mentioned, having a solid testing process in place is crucial. Implementing automated testing for different levels—like unit, integration, and end-to-end tests—can help catch issues early. It's also beneficial to have a staging environment where you can run tests before deploying to production. If you're using CI/CD tools, they can automate these testing workflows, making it easier to maintain stability. What types of tests have you found most effective for your deployment process?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "documentation_url",
+          "value": "notion.so/aurora-team/docs",
+          "original_seed": "Project docs are at notion.so/aurora-team/docs",
+          "fact_text": "Project docs are at notion.so/aurora-team/docs.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 April 11",
+          "original_seed": "The sprint deadline is 2025 April 11",
+          "fact_text": "The sprint deadline is 2025 April 11.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "log_drain_endpoint",
+          "value": "pipe.thandrel.io/aurora-logs",
+          "original_seed": "Logs drain to pipe.thandrel.io/aurora-logs",
+          "fact_text": "Logs drain to pipe.thandrel.io/aurora-logs.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "model_syntax",
+          "value": "Thalnex.document('Model', {fields})",
+          "original_seed": "Models are defined with Thalnex.document('Model', {fields})",
+          "fact_text": "Models are defined with Thalnex.document('Model', {fields}).",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "release_cadence",
+          "value": "continuous deploy on merge",
+          "original_seed": "We release continuous deploy on merge",
+          "fact_text": "The team releases continuous deploy on merge.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 06:02"
+    },
+    {
+      "session_id": "sharegpt_25839",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is XNAT?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-0 markdown prose dark:prose-invert break-words dark\"><p>XNAT is a open-source imaging informatics platform designed for managing, analyzing, and sharing medical imaging data. It provides a central repository for imaging data, as well as a suite of tools for working with that data. XNAT is widely used in the fields of radiology, psychology, neuroscience, and other research areas that involve medical imaging.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can i connect to XNAT and fetch data for my web application?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-1 markdown prose dark:prose-invert break-words dark\"><p>Yes, you can connect to an XNAT server and fetch data for use in your web application. XNAT provides a RESTful API that allows you to programmatically access data stored on the server. You can use this API to retrieve data and incorporate it into your web application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "where can i find the API?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-2 markdown prose dark:prose-invert break-words dark\"><p>The XNAT API is available on the XNAT website, along with documentation and examples of how to use it. You can also access the API directly by sending HTTP requests to the XNAT server. For example, you can use a tool like curl to make a request to the server and retrieve data in JSON format.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you write a python code to fetch data from XNAT?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-3 markdown prose dark:prose-invert break-words dark\"><p>Yes, you can use Python to access data from an XNAT server. Here is an example of how you might do this using the requests library in Python:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-makefile\">import requests\n\n<span class=\"hljs-comment\"># Set the URL for the XNAT server</span>\nxnat_url = <span class=\"hljs-string\">\"http://your-xnat-server.com\"</span>\n\n<span class=\"hljs-comment\"># Set the username and password for the XNAT server</span>\nusername = <span class=\"hljs-string\">\"your-username\"</span>\npassword = <span class=\"hljs-string\">\"your-password\"</span>\n\n<span class=\"hljs-comment\"># Authenticate with the XNAT server</span>\nresponse = requests.post(xnat_url + <span class=\"hljs-string\">\"/data/JSESSION\"</span>, auth=(username, password))\n\n<span class=\"hljs-comment\"># Get the session cookie from the response</span>\ncookie = response.cookies[<span class=\"hljs-string\">\"JSESSIONID\"</span>]\n\n<span class=\"hljs-comment\"># Set the URL for the API endpoint you want to access</span>\napi_url = xnat_url + <span class=\"hljs-string\">\"/data/experiments\"</span>\n\n<span class=\"hljs-comment\"># Set the headers for the request</span>\nheaders = {\n    <span class=\"hljs-string\">\"Cookie\"</span>: <span class=\"hljs-string\">\"JSESSIONID=\"</span> + cookie,\n    <span class=\"hljs-string\">\"Content-Type\"</span>: <span class=\"hljs-string\">\"application/json\"</span>\n}\n\n<span class=\"hljs-comment\"># Make the request to the API endpoint</span>\nresponse = requests.get(api_url, headers=headers)\n\n<span class=\"hljs-comment\"># Get the data from the response in JSON format</span>\ndata = response.json()\n\n<span class=\"hljs-comment\"># Use the data in your web application</span>\n</code></div></div></pre><p>This code authenticates with the XNAT server, gets a session cookie, and then makes a request to an API endpoint to retrieve data. You can modify the code to suit your specific needs and use the data in your web application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what format of data can XNAT store?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-4 markdown prose dark:prose-invert break-words dark\"><p>XNAT can store a variety of data formats, including DICOM, NIFTI, and MINC. It can also store non-image data, such as behavioral data, demographic data, and other types of clinical data. XNAT provides tools for importing, exporting, and converting data between different formats, making it a flexible platform for managing and working with medical imaging data.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can XNAT store standard imaging formats?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-5 markdown prose dark:prose-invert break-words dark\"><p>Yes, XNAT can store standard imaging formats, such as DICOM and NIFTI. DICOM (Digital Imaging and Communications in Medicine) is the most widely used format for storing and transmitting medical imaging data, and is supported by most medical imaging systems. NIFTI (Neuroimaging Informatics Technology Initiative) is a format commonly used in the field of neuroimaging. Both of these formats are supported by XNAT, and you can use XNAT's tools to import, export, and convert data between these formats.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can XNAT store png and jpeg?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-6 markdown prose dark:prose-invert break-words dark\"><p>Yes, XNAT can store PNG and JPEG images. These are standard image formats that are commonly used for storing and transmitting visual data. XNAT provides tools for importing, exporting, and converting data between different formats, so you can use these tools to convert your PNG and JPEG images to a format that is supported by XNAT, such as DICOM or NIFTI. Once the images are in a supported format, they can be stored and managed in XNAT.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the difference between DICOM and NIFTI?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-7 markdown prose dark:prose-invert break-words dark\"><p>DICOM and NIFTI are two different formats for storing medical imaging data. DICOM (Digital Imaging and Communications in Medicine) is the most widely used format for storing and transmitting medical imaging data, and is supported by most medical imaging systems. It is a highly structured format that includes a lot of metadata about the image, such as patient information, acquisition parameters, and image orientation. NIFTI (Neuroimaging Informatics Technology Initiative) is a format commonly used in the field of neuroimaging. It is a simpler format that is designed specifically for storing and sharing neuroimaging data. It does not include as much metadata as DICOM, but it is more compact and easier to work with.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "neuroimaging?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-8 markdown prose dark:prose-invert break-words dark\"><p>Neuroimaging is a field of medical research that uses imaging technologies, such as MRI and PET scans, to study the structure and function of the brain. Neuroimaging can be used to diagnose brain disorders, such as Alzheimer's disease and brain tumors, and to understand the neural basis of cognitive processes, such as memory and language. It is a rapidly growing field that has made significant contributions to our understanding of the brain and has led to the development of new treatments for brain disorders.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "which medical domain uses DICOM?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-9 markdown prose dark:prose-invert break-words dark\"><p>DICOM (Digital Imaging and Communications in Medicine) is a standard for storing and transmitting medical imaging data, and it is used in many different medical domains. It is most commonly used in the field of radiology, where it is used to store and transmit the images produced by X-ray, CT, MRI, and other imaging modalities. It is also used in other medical fields, such as cardiology, oncology, and neurology, where imaging is an important part of the diagnostic and treatment process. DICOM is supported by most medical imaging systems, and its widespread use makes it possible for different healthcare providers to share and exchange imaging data.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 01:47"
+    },
+    {
+      "session_id": "sharegpt_10333",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you write a blog post about how developers can register their apps for restart after a Windows update, so that users can have a seamless experience?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here is a blog post about how developers can register their apps for restart after a Windows update:</p><hr /><p>Windows updates are an essential part of keeping your operating system secure and running smoothly. However, they can sometimes cause disruptions to your workflow if they require a restart while you are in the middle of using an application. To mitigate this issue, Windows allows developers to register their apps for restart after a Windows update.</p><p>In this post, we will cover how developers can register their apps for restart after a Windows update so that users can have a seamless experience.</p><h2>What is the \"Register for Restart\" feature?</h2><p>The \"Register for Restart\" feature is a Windows API (Application Programming Interface) that allows developers to specify which applications should be restarted after a Windows update. This feature is especially useful for applications that are critical to the user's workflow and cannot be easily closed or reopened.</p><h2>How to register an app for restart</h2><p>To register an app for restart, developers can use the <code>RestartManager</code> API. This API is available on Windows 7 and later versions of Windows.</p><p>Here is an example of how to use the <code>RestartManager</code> API to register an app for restart:</p><pre><div><div>Copy code</div><div><code><span>#<span>include</span> <span>&lt;windows.h&gt;</span></span>\n<span>#<span>include</span> <span>&lt;RestartManager.h&gt;</span></span>\n\n<span><span>int</span> <span>main</span><span>()</span>\n</span>{\n    <span>// Initialize the RestartManager</span>\n    HRESULT hr = <span>RmStartSession</span>(&amp;sessionHandle, <span>0</span>, strSessionKey);\n    <span>if</span> (hr != ERROR_SUCCESS)\n    {\n        <span>// Handle error</span>\n    }\n\n    <span>// Register the app for restart</span>\n    <span>wchar_t</span> szExeName[MAX_PATH];\n    <span>GetModuleFileName</span>(<span>NULL</span>, szExeName, MAX_PATH);\n    hr = <span>RmRegisterResources</span>(sessionHandle, <span>1</span>, &amp;szExeName, <span>0</span>, <span>NULL</span>, <span>0</span>, <span>NULL</span>);\n    <span>if</span> (hr != ERROR_SUCCESS)\n    {\n        <span>// Handle error</span>\n    }\n\n    <span>// End the RestartManager session</span>\n    hr = <span>RmEndSession</span>(sessionHandle);\n    <span>if</span> (hr != ERROR_SUCCESS)\n    {\n        <span>// Handle error</span>\n    }\n\n    <span>return</span> <span>0</span>;\n}\n</code></div></div></pre><p>In the example above, we first initialize the <code>RestartManager</code> by calling <code>RmStartSession</code>. We then use <code>GetModuleFileName</code> to get the path of the current executable and pass it to <code>RmRegisterResources</code> to register the app for restart. Finally, we end the <code>RestartManager</code> session by calling <code>RmEndSession</code>.</p><h2>Considerations for registering an app for restart</h2><p>There are a few things to consider when registering an app for restart:</p><ul><li><p>The app must be able to close gracefully. If the app cannot close gracefully, it may cause issues during the restart process.</p></li><li><p>The app must handle the case where it is restarted after a Windows update. Developers can do this by checking for the presence of a special command-line argument when the app starts up.</p></li><li><p>The app should save any unsaved data before closing. This will ensure that the user does not lose any important work when the app is restarted.</p></li><li><p>The app should inform the user that it will be restarted after a Windows update. This will help the user plan their workflow and avoid any unexpected disruptions.</p></li></ul><h2>Conclusion</h2><p>By registering their apps for restart after a Windows update, developers can provide a seamless experience for their users. The <code>RestartManager</code> API makes it</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 01:00"
+    },
+    {
+      "session_id": "sharegpt_3970",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can a webook pull information from a website?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, a webhook can pull information from a website. A webhook is a way for an application to provide real-time information to other applications. It allows one application to send a message or data to another application when a specific event occurs. For example, a webhook can be set up to pull information from a website and send it to another application for further processing or storage. The information can be in the form of data such as text, images, or other types of files.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you create a webhook that would pull the current song from https://rainwave.cc/all/#!/"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it is possible to create a webhook that would pull the current song from the website <a href=\"https://rainwave.cc/all/#!/\" target=\"_new\">https://rainwave.cc/all/#!/</a>. The specific implementation would depend on the programming language and framework being used. One way to accomplish this would be to use a web scraping library to extract the current song information from the website and then use the webhook to send that information to another application for further processing.\nIt's important to note that some website may have restriction to prevent scraping and scraping can also cause a significant load on the site. It's always better to check with the website owner before scraping their data.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you create this using python?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it is possible to create a webhook that pulls the current song from the website <a href=\"https://rainwave.cc/all/#!/\" target=\"_new\">https://rainwave.cc/all/#!/</a> using Python. One way to accomplish this would be to use the <code>requests</code> library to make a GET request to the website and then use a library such as <code>BeautifulSoup</code> to parse the HTML and extract the current song information. Once the information is extracted, you can use a library such as <code>Flask</code> to create a webhook endpoint that can receive and process the data. Here's an example of how you could use these libraries to accomplish this task:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\" data-darkreader-inline-stroke=\"\" style=\"--darkreader-inline-stroke:currentColor;\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n<span class=\"hljs-keyword\">from</span> bs4 <span class=\"hljs-keyword\">import</span> BeautifulSoup\n<span class=\"hljs-keyword\">from</span> flask <span class=\"hljs-keyword\">import</span> Flask, request\n\napp = Flask(__name__)\n\n<span class=\"hljs-meta\">@app.route(<span class=\"hljs-params\"><span class=\"hljs-string\">\"/currentsong\"</span>, methods=[<span class=\"hljs-string\">\"POST\"</span>]</span>)</span>\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">current_song</span>():\n    <span class=\"hljs-comment\"># Get the HTML from the website</span>\n    html = requests.get(<span class=\"hljs-string\">\"https://rainwave.cc/all/#!/\"</span>).text\n    \n    <span class=\"hljs-comment\"># Use BeautifulSoup to parse the HTML and extract the current song information</span>\n    soup = BeautifulSoup(html, <span class=\"hljs-string\">'html.parser'</span>)\n    current_song = soup.find(<span class=\"hljs-string\">\"span\"</span>, {<span class=\"hljs-string\">\"class\"</span>: <span class=\"hljs-string\">\"song_title\"</span>}).text\n    \n    <span class=\"hljs-comment\"># Do something with the current song information, such as sending it to another application</span>\n    <span class=\"hljs-built_in\">print</span>(current_song)\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">\"OK\"</span>\n\n<span class=\"hljs-keyword\">if</span> __name__ == <span class=\"hljs-string\">\"__main__\"</span>:\n    app.run()\n</code></div></div></pre><p>This is just an example of how it could be done, you may need to modify the code based on the specifics of the website and the desired outcome.</p><p>It's important to note that some website may have restriction to prevent scraping and scraping can also cause a significant load on the site. It's always better to check with the website owner before scraping their data.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you then import the outcome into Discord?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, it is possible to import the current song information into Discord after it has been extracted from the website using a webhook. One way to do this would be to use the <code>discord.py</code> library to create a bot that can send messages to a Discord channel. Here's an example of how you could use the <code>discord.py</code> library to send the current song information to a Discord channel:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\" data-darkreader-inline-stroke=\"\" style=\"--darkreader-inline-stroke:currentColor;\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> discord\n<span class=\"hljs-keyword\">from</span> discord.ext <span class=\"hljs-keyword\">import</span> commands\n\nbot = commands.Bot(command_prefix=<span class=\"hljs-string\">'!'</span>)\n\n<span class=\"hljs-meta\">@bot.command()</span>\n<span class=\"hljs-keyword\">async</span> <span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">currentsong</span>(<span class=\"hljs-params\">ctx</span>):\n    <span class=\"hljs-comment\"># Get the current song information (for example, using the method shown earlier)</span>\n    current_song = get_current_song()\n    \n    <span class=\"hljs-comment\"># Send the current song information to the Discord channel</span>\n    <span class=\"hljs-keyword\">await</span> ctx.send(current_song)\n\nbot.run(<span class=\"hljs-string\">'Your Bot Token'</span>)\n</code></div></div></pre><p>You would need to create a bot on Discord developer portal, get the token, and replace it in the <code>bot.run('Your Bot Token')</code>. Once the bot is set up and running, you can use the <code>!currentsong</code> command in a Discord channel to get the current song information and post it in the channel.</p><p>It's important to note that bots have the ability to send messages to channels, but you will need permissions to invite the bot to a channel. Also, you will need to have a server and a channel created on Discord in order to use this functionality.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 06:04"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at ONBOARDING.md in the repo root. Have you had a chance to check it out? \n\nI'm curious if you found the setup process straightforward or if there were any confusing parts."
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't had the chance to review the ONBOARDING.md file yet, but I’d be happy to help you improve it. If you could share any specific areas you think might be confusing or where you received feedback, that would be great. It's always helpful to know what parts of the process others find challenging so we can make it as smooth as possible."
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 June 20. How do you usually manage your tasks leading up to the deadline? Any tools or practices you find particularly effective for staying on track?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid timeline in place! Managing tasks effectively leading up to a deadline often involves breaking down the work into smaller, manageable chunks and setting clear priorities. Many find it helpful to use a task board to visualize progress and dependencies. Regular check-ins can also keep everyone aligned and allow for adjustments as needed. If there are specific challenges you anticipate, feel free to share, and I can offer more tailored advice!"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at preview.zephyra.io/aurora. Do you have any tips for testing features in a staging environment? Sometimes I find it tricky to replicate production issues in staging."
+        },
+        {
+          "role": "assistant",
+          "content": "Testing features in a staging environment can definitely be challenging, especially when trying to replicate production issues. One effective approach is to ensure that your staging environment closely mirrors production, including data and configurations. It can be useful to incorporate automated tests to cover key functionalities, as well as manual testing for user experience aspects. Additionally, logging and monitoring tools can help you capture any anomalies during testing. If you have any specific issues you're facing in staging, I’d be glad to help brainstorm solutions!"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Velturis Edge. How do you handle deployment processes? Are you using any CI/CD pipelines, or is it more manual? Having a streamlined process can really save time and reduce errors during deployments."
+        },
+        {
+          "role": "assistant",
+          "content": "Having a streamlined deployment process can make a huge difference in efficiency and reliability. Many teams find that implementing CI/CD pipelines helps automate testing and deployment, reducing the risk of human error. If you're currently using a more manual approach, consider starting with automated tests that run before deployment to catch issues early. It can also be helpful to have a rollback plan in place in case something goes wrong. If you want to discuss specific challenges or aspects of your deployment process, I'd love to help!"
+        },
+        {
+          "role": "user",
+          "content": "The team's standup format is round-robin text post by 10am. I find that a structured format like this can keep everyone accountable and ensure that communication flows smoothly. Do you think this format works well for your team? Have you run into any issues with it, or are there any tweaks you’d like to make to improve it?"
+        },
+        {
+          "role": "assistant",
+          "content": "The round-robin text post format sounds like a great way to encourage accountability and maintain clear communication among team members. It can be effective in ensuring everyone has a chance to share their updates without the pressure of speaking in a live setting. If you’re noticing any issues, perhaps consider incorporating a brief follow-up session where team members can ask questions or provide support on each other's tasks. Adjusting the time for posts or adding a theme for each standup could also keep things fresh and engaging. What are your thoughts on these ideas?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "onboarding_guide",
+          "value": "ONBOARDING.md in repo root",
+          "original_seed": "The onboarding guide is at ONBOARDING.md in repo root",
+          "fact_text": "The onboarding guide is at ONBOARDING.md in repo root.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 20",
+          "original_seed": "Update: The sprint deadline is 2025 June 20",
+          "fact_text": "Update: The sprint deadline is 2025 June 20.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "staging_url",
+          "value": "preview.zephyra.io/aurora",
+          "original_seed": "Staging is at preview.zephyra.io/aurora",
+          "fact_text": "Staging is at preview.zephyra.io/aurora.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "deploy_target",
+          "value": "Velturis Edge",
+          "original_seed": "We deploy to Velturis Edge",
+          "fact_text": "The team deploys to Velturis Edge.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "standup_format",
+          "value": "round-robin text post by 10am",
+          "original_seed": "Our standup format is round-robin text post by 10am",
+          "fact_text": "The team's standup format is round-robin text post by 10am.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 14:41"
+    },
+    {
+      "session_id": "sharegpt_22704",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Powershell Lösung für die Anbindung von PowerBi in Windows 11Um Power BI in Windows 11 mit PowerShell zu verbinden, können Sie die Power BI PowerShell-Modul verwenden. Sie können es mit dem Befehl \"Install-Module -Name MicrosoftPowerBIMgmt\" aus dem PowerShell-Modul-Manager installieren.Danach können Sie den Befehl \"Connect-PowerBIServiceAccount\" verwenden, um sich mit Ihrem Power BI-Konto anzumelden. Sobald Sie angemeldet sind, können Sie Befehle wie \"Get-PowerBIWorkspace\" verwenden, um Informationen zu Ihren Arbeitsbereichen abzurufen, oder \"New-PowerBIReport\" zum Erstellen eines neuen Berichts.Hinweis: Stellen Sie sicher, dass Sie die erforderlichen Berechtigungen für Ihr Konto haben, um die gewünschten Aktionen auszuführen.How can I create a branded UI to use ChatGPTThere are several ways to create a branded UI for using ChatGPT:Use an existing chatbot framework that allows you to customize the UI, such as Dialogflow or Botkit. These frameworks provide pre-built UI components that you can modify to match your brand's colors and style.Build your own UI using a web framework like React or Angular. This will give you complete control over the design and functionality of the UI, but it may require more development resources.Use a service like Landbot or Tars that allows you to create a branded UI and connect it to ChatGPT via API.Regardless of the method you choose, you will need to have an API key for the OpenAI API to access ChatGPT's functionality.It's important to note that creating a branded UI for ChatGPT may require development resources and knowledge of web development. If you do not have these resources, you may want to consider working with a developer or agency with experience in building chatbot interfaces.help me to inclue the chatgpt into my editor x websiteThere are several steps you can take to include ChatGPT into your website editor X:Get an API key from the OpenAI API to access ChatGPT's functionality.Use a web framework like React or Angular to build a UI for the chatbot. This will allow you to control the design and functionality of the chatbot and integrate it into your website.Use a library like axios or fetch to make API calls to the OpenAI API and retrieve the responses from ChatGPT.Integrate the chatbot UI and API calls into your website editor X. This may require modifying the HTML, CSS, and JavaScript of your website.Test the chatbot on your website to ensure that it is working properly and that the UI looks and behaves as intended.It's important to note that building a chatbot in editor X may require development resources and knowledge of web development. If you do not have these resources, you may want to consider working with a developer or agency with experience in building chatbot interfaces and integrate them into website platforms.As an alternative, you can use pre-built chatbot frameworks that have the capability of being embedded on websites, like Dialogflow, Botkit, Landbot or Tars.please explain these steps in detailGet an API key from the OpenAI API to access ChatGPT's functionality: In order to use ChatGPT, you will need to have an API key from the OpenAI API. You can sign up for an API key on the OpenAI website. Once you have an API key, you will be able to make API calls to the OpenAI API and retrieve responses from ChatGPT.Use a web framework like React or Angular to build a UI for the chatbot: A UI is the user interface of the chatbot, the part that the user interacts with. React and Angular are popular JavaScript frameworks that are commonly used to build web applications. By using a web framework, you can create a UI that is easy to customize and integrate into your website.Use a library like axios or fetch to make API calls to the OpenAI API and retrieve the responses from ChatGPT: Once you have a UI, you will need to use a library to make API calls to the OpenAI API. Axios and fetch are two popular JavaScript libraries that can be used to make API calls. You will need to use these libraries to send user input to the OpenAI API and retrieve responses from ChatGPT.Integrate the chatbot UI and API calls into your website editor X: After building the UI and the functionality of the chatbot, you will need to integrate it into your website. This may require modifying the HTML, CSS, and JavaScript of your website. This step may require knowledge of web development and the specific editor X platform.Test the chatbot on your website to ensure that it is working properly and that the UI looks and behaves as intended: Once the chatbot is integrated into your website, you will need to test it to ensure that it is working properly. Make sure that the chatbot is able to receive user input, make API calls to the OpenAI API, and display responses correctly. Also, test that the UI looks and behaves as intended.It's important to note that building a chatbot in editor X may require development resources and knowledge of web development. If you do not have these resources, you may want to consider working with a developer or agency with experience in building chatbot interfaces and integrate them into website platforms.is it possible to use microsoft o365 instead of reactYes, it is possible to use Microsoft Office 365, specifically the Microsoft Power Platform, to build a chatbot with ChatGPT as the underlying language model, instead of using a web framework like React.The Microsoft Power Platform is a low-code/no-code platform that allows you to build custom solutions for your business using the Microsoft Office 365 tools you already know, such as Power Automate, Power Apps, and Power Virtual Agents.Power Virtual Agents is a chatbot building tool that allows you to create a conversational chatbot by using a drag-and-drop interface, without the need to write any code. You can use Power Virtual Agents to create a chatbot that uses ChatGPT as the underlying language model by making API calls to the OpenAI API.It's important to note that while the Power Platform provides a low-code/no-code experience, building a chatbot with ChatGPT may still require some technical knowledge and development resources, such as creating custom connectors, advanced logic and integrating with the OpenAI API.Also, it's important to check if the OpenAI API is compatible with the Microsoft Power Platform and if you have the necessary permissions to access it."
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 16:57"
+    },
+    {
+      "session_id": "sharegpt_2132",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I have a png illustration of a spooky castle. I want to join the image of my niece dressed as a witch with the illustration using artificial intelligence. How that can be done?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>What you are looking for is called \"image compositing\" or \"image blending\", and it can be done using a technique called \"image segmentation\". Image segmentation is a process where an algorithm separates the pixels of an image into different regions based on color, texture, or other visual cues.</p><p>To composite your niece's image with the spooky castle illustration, you can use a software or tool that supports image segmentation, such as Adobe Photoshop or GIMP. You can start by manually selecting your niece's image using the software's selection tool, and then applying a layer mask to remove the background.</p><p>Then, you can use the image segmentation tool to separate the spooky castle illustration into different regions, such as the sky, the castle walls, and the trees. You can then use the layer mask to combine your niece's image with the different regions of the castle illustration, creating a spooky scene with your niece as a witch.</p><p>Alternatively, you can also use an AI-based image segmentation tool, such as DeepLab, to automatically separate the different regions of the castle illustration. You can then use the resulting mask to composite your niece's image with the illustration.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I already manually selected my niece's image using the software's selection tool, and then applying a layer mask to remove the background. I pasted her image to the castle illustration, but the final result was not satisfatory because the lighting, the colors between her image and the illustration didn't match very well, how can I improve it?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To improve the lighting and color matching between your niece's image and the spooky castle illustration, you can use the following techniques:</p><ol><li><p>Adjust the levels and color balance of your niece's image to match the overall tone and lighting of the castle illustration. This can be done using the \"Levels\" and \"Color Balance\" tools in your image editing software.</p></li><li><p>Apply a color grade or filter to both your niece's image and the castle illustration to unify the overall color palette. You can use a color grading tool or filter preset to achieve this.</p></li><li><p>Add shadows and highlights to your niece's image to match the lighting of the castle illustration. This can be done by painting shadows and highlights onto a separate layer using a brush tool, and then adjusting the opacity and blending mode to achieve a realistic effect.</p></li><li><p>Use a layer blending mode to integrate your niece's image with the castle illustration. Experiment with different blending modes such as \"Multiply\", \"Overlay\", or \"Soft Light\" to achieve a seamless composite.</p></li><li><p>Apply a light effect to your niece's image to simulate the ambient light of the spooky castle. This can be done using a \"Lighting Effects\" filter, or by painting a soft gradient onto a separate layer and then adjusting the blending mode and opacity.</p></li></ol><p>By using these techniques, you can achieve a more realistic and cohesive composite of your niece's image with the spooky castle illustration.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "give a detailed step by step instructions to perform all these techniques using GIMP"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure! Here are the detailed step-by-step instructions for performing the techniques I mentioned using GIMP:</p><ol><li><p>Adjust Levels and Color Balance:</p><ol><li>Open your niece's image and the spooky castle illustration in GIMP.</li><li>Select your niece's image layer, and then go to Colors &gt; Levels.</li><li>In the Levels dialog box, adjust the black, white, and gray sliders to match the overall tone and contrast of the castle illustration.</li><li>Next, go to Colors &gt; Color Balance.</li><li>In the Color Balance dialog box, adjust the sliders for Shadows, Midtones, and Highlights to match the overall color palette of the castle illustration.</li><li>Click OK to apply the changes.</li></ol></li><li><p>Apply Color Grade or Filter:</p><ol><li>Select your niece's image layer, and then go to Colors &gt; Colorize.</li><li>In the Colorize dialog box, select a color that matches the overall color palette of the castle illustration.</li><li>Adjust the Hue, Saturation, and Lightness sliders to achieve the desired color grade.</li><li>Click OK to apply the color grade to your niece's image.</li><li>Repeat the same process for the castle illustration layer.</li></ol></li><li><p>Add Shadows and Highlights:</p><ol><li>Select your niece's image layer, and then duplicate it by right-clicking the layer and selecting Duplicate Layer.</li><li>Rename the duplicated layer to \"Shadows and Highlights.\"</li><li>Select the \"Shadows and Highlights\" layer, and then go to Filters &gt; Light and Shadow &gt; Drop Shadow.</li><li>In the Drop Shadow dialog box, adjust the settings to create a subtle shadow effect that matches the lighting of the castle illustration.</li><li>Click OK to apply the drop shadow effect.</li><li>Repeat the same process for creating highlights by going to Filters &gt; Light and Shadow &gt; Dodge and Burn.</li><li>Adjust the settings to create a subtle highlight effect that matches the lighting of the castle illustration.</li><li>Click OK to apply the dodge and burn effect.</li></ol></li><li><p>Use a Layer Blending Mode:</p><ol><li>Select your niece's image layer, and then change the layer blending mode to \"Multiply.\"</li><li>This will blend your niece's image with the castle illustration by multiplying the color values of the two layers.</li><li>Experiment with other blending modes such as \"Overlay\" or \"Soft Light\" to achieve different effects.</li></ol></li><li><p>Apply a Light Effect:</p><ol><li>Select your niece's image layer, and then duplicate it by right-clicking the layer and selecting Duplicate Layer.</li><li>Rename the duplicated layer to \"Light Effect.\"</li><li>Select the \"Light Effect\" layer, and then go to Filters &gt; Light and Shadow &gt; Lighting Effects.</li><li>In the Lighting Effects dialog box, adjust the settings to create a soft ambient light effect that matches the lighting of the castle illustration.</li><li>Click OK to apply the lighting effect.</li><li>Adjust the layer blending mode and opacity of the \"Light Effect\" layer to achieve a subtle and realistic effect.</li></ol></li></ol><p>By following these steps, you can achieve a more realistic and cohesive composite of your niece's image with the spooky castle illustration using GIMP.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "in which moments should I merge down, if anyw"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You should merge down the layers when you are satisfied with the changes you have made and want to create a single composite layer. Here are some moments when you can consider merging down:</p><ol><li>When you have applied multiple adjustment layers or filters to your niece's image and want to create a single layer with all the changes applied.</li><li>When you have applied a layer blending mode to integrate your niece's image with the spooky castle illustration, and want to merge the layers to avoid any further changes to the blending mode.</li><li>When you have created a shadow or highlight effect on a separate layer, and want to merge it with the original layer to create a single layer with all the effects applied.</li><li>When you have applied a light effect to your niece's image and want to merge it with the original layer to create a single layer with all the effects applied.</li></ol><p>However, it's always a good practice to keep a copy of the original layers before merging down, in case you need to make further changes later. You can duplicate the layers by right-clicking on the layer and selecting \"Duplicate Layer.\"</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 16:13"
+    },
+    {
+      "session_id": "sharegpt_21842",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write a java code to remove a document in firestore using where string equals sometext"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-java\"><span class=\"hljs-keyword\">import</span> com.google.firebase.firestore.FirebaseFirestore;\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">RemoveDocument</span> {\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">removeDocument</span><span class=\"hljs-params\">(String field, String value)</span> {\n        <span class=\"hljs-type\">FirebaseFirestore</span> <span class=\"hljs-variable\">db</span> <span class=\"hljs-operator\">=</span> FirebaseFirestore.getInstance();\n        db.collection(<span class=\"hljs-string\">\"your-collection-name\"</span>)\n            .whereEqualTo(field, value)\n            .get()\n            .addOnCompleteListener(<span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">OnCompleteListener</span>&lt;QuerySnapshot&gt;() {\n                <span class=\"hljs-meta\">@Override</span>\n                <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">onComplete</span><span class=\"hljs-params\">(<span class=\"hljs-meta\">@NonNull</span> Task&lt;QuerySnapshot&gt; task)</span> {\n                    <span class=\"hljs-keyword\">if</span> (task.isSuccessful()) {\n                        <span class=\"hljs-keyword\">for</span> (QueryDocumentSnapshot document : task.getResult()) {\n                            document.getReference().delete();\n                        }\n                    } <span class=\"hljs-keyword\">else</span> {\n                        Log.d(<span class=\"hljs-string\">\"RemoveDocument\"</span>, <span class=\"hljs-string\">\"Error getting documents: \"</span>, task.getException());\n                    }\n                }\n            });\n    }\n}\n</code></div></div></pre><p>You can then call the <code>removeDocument</code> method and pass in the field name and the value you want to filter on. For example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-java\">RemoveDocument.removeDocument(<span class=\"hljs-string\">\"name\"</span>, <span class=\"hljs-string\">\"sometext\"</span>);\n</code></div></div></pre><p>This code snippet will search for all documents in the \"your-collection-name\" collection that have a field named \"name\" with the value \"sometext\" and delete them.\nIt uses FirebaseFirestore.getInstance() to get a handle on the Firestore and then uses the whereEqualTo() method to filter the documents based on the field and value passed in. Then it uses addOnCompleteListener to listen for the completion of the query and deletes the documents from the query result.\nPlease note that this code snippet does not handle any errors or missing dependencies.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "write a java code to remove a document in firestore using where string equals sometext using com.google.firebase.cloud.FirestoreClient"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-java\"><span class=\"hljs-keyword\">import</span> com.google.api.core.ApiFuture;\n<span class=\"hljs-keyword\">import</span> com.google.cloud.firestore.Firestore;\n<span class=\"hljs-keyword\">import</span> com.google.cloud.firestore.QueryDocumentSnapshot;\n<span class=\"hljs-keyword\">import</span> com.google.cloud.firestore.QuerySnapshot;\n<span class=\"hljs-keyword\">import</span> com.google.cloud.firestore.WriteResult;\n<span class=\"hljs-keyword\">import</span> com.google.firebase.cloud.FirestoreClient;\n<span class=\"hljs-keyword\">import</span> java.util.concurrent.ExecutionException;\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">RemoveDocument</span> {\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title function_\">removeDocument</span><span class=\"hljs-params\">(String field, String value)</span> <span class=\"hljs-keyword\">throws</span> ExecutionException, InterruptedException {\n        <span class=\"hljs-type\">Firestore</span> <span class=\"hljs-variable\">db</span> <span class=\"hljs-operator\">=</span> FirestoreClient.getFirestore();\n        ApiFuture&lt;QuerySnapshot&gt; future = db.collection(<span class=\"hljs-string\">\"your-collection-name\"</span>)\n                .whereEqualTo(field, value)\n                .get();\n        <span class=\"hljs-type\">QuerySnapshot</span> <span class=\"hljs-variable\">querySnapshot</span> <span class=\"hljs-operator\">=</span> future.get();\n        <span class=\"hljs-keyword\">for</span> (QueryDocumentSnapshot document : querySnapshot) {\n            ApiFuture&lt;WriteResult&gt; writeResult = document.getReference().delete();\n        }\n    }\n}\n</code></div></div></pre><p>You can then call the <code>removeDocument</code> method and pass in the field name and the value you want to filter on. For example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-java\">RemoveDocument.removeDocument(<span class=\"hljs-string\">\"name\"</span>, <span class=\"hljs-string\">\"sometext\"</span>);\n</code></div></div></pre><p>This code snippet will search for all documents in the \"your-collection-name\" collection that have a field named \"name\" with the value \"sometext\" and delete them.\nIt uses FirestoreClient.getFirestore() to get a handle on the Firestore and then uses the whereEqualTo() method to filter the documents based on the field and value passed in. Then it uses get() method to get the result of the query and deletes the documents from the query result.\nPlease note that this code snippet does not handle any errors or missing dependencies and also uses the get() method which is blocking method, if you want to use the non-blocking version you can use the ApiFuture.get() method instead.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you so much"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You're welcome! I'm glad I could help. If you have any other questions, feel free to ask.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 15:54"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at CHANGELOG.md in the repo root. Have you checked it out? It's super handy for tracking what's changed over time. \n\nDo you keep your changelog updated regularly? Any best practices you follow for that?"
+        },
+        {
+          "role": "assistant",
+          "content": "Yes, having a changelog like that is a great way to keep track of changes and communicate updates effectively. It's important to update it regularly, especially after each release or significant change. A good practice is to summarize changes in clear, concise language, categorize them (like features, fixes, or breaking changes), and include dates. This way, anyone looking at the changelog can quickly get a sense of what's new or different without digging through the code. How often do you find yourself updating yours?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the sprint deadline is 2025 July 4. That's a bit of a timeline to work with! \n\nDo you have any strategies for staying on track with deadlines like that? Maybe sprint planning or daily stand-ups?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear deadline like July 4, 2025, gives you a solid timeframe to plan your work. Sprint planning can be really effective for breaking down tasks and setting achievable goals for each sprint. Daily stand-ups can help keep the team aligned and address any roadblocks early on. It might also be helpful to periodically review your progress against the timeline to make adjustments as needed. How do you usually approach your sprint planning?"
+        },
+        {
+          "role": "user",
+          "content": "The team's CI config is thandrel-flow.toml. It's crucial for automating our build and deployment processes. \n\nDo you have any tips on configuring CI tools effectively? Maybe some common pitfalls to avoid?"
+        },
+        {
+          "role": "assistant",
+          "content": "Configuring CI tools effectively can really streamline your build and deployment processes. It's important to ensure that your configuration is clear and well-documented, as this helps team members understand the setup and makes troubleshooting easier. One common pitfall to avoid is not including sufficient tests in your pipeline; this can lead to issues down the line if bugs slip through. Additionally, be mindful of dependencies and ensure they're managed properly to avoid conflicts. Regularly reviewing and updating your configuration as your project evolves can also help maintain efficiency. What kind of challenges have you faced with your current CI setup?"
+        },
+        {
+          "role": "user",
+          "content": "The team's test coverage target is no strict target, PR-reviewed. This approach allows for flexibility, but it can also lead to varying levels of coverage across different parts of the codebase.\n\nI find that having a flexible target can encourage contributions, but it's crucial to ensure that PR reviews are thorough to catch any potential gaps in coverage. Establishing some guidelines for what constitutes sufficient coverage for a given feature could also help maintain quality. How do you handle code reviews to ensure adequate test coverage?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you're striking a good balance with your flexible target while relying on thorough PR reviews. To ensure adequate test coverage during code reviews, it can be helpful to establish clear guidelines that define what is expected for different types of features or changes. Encouraging reviewers to specifically check for tests in their reviews can also create a culture of accountability. Additionally, utilizing tools that provide coverage reports can help reviewers quickly identify areas that might need more tests. How does your team currently approach discussions around test coverage during reviews?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "changelog_location",
+          "value": "CHANGELOG.md in repo root",
+          "original_seed": "Changelog is at CHANGELOG.md in repo root",
+          "fact_text": "Changelog is at CHANGELOG.md in repo root.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 July 4",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 July 4",
+          "fact_text": "Now the developer has switched again — The sprint deadline is 2025 July 4.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "ci_config",
+          "value": "thandrel-flow.toml",
+          "original_seed": "Our CI config is thandrel-flow.toml",
+          "fact_text": "The team's CI config is thandrel-flow.toml.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "test_coverage_target",
+          "value": "no strict target, PR-reviewed",
+          "original_seed": "Our test coverage target is no strict target, PR-reviewed",
+          "fact_text": "The team's test coverage target is no strict target, PR-reviewed.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 23:40"
+    },
+    {
+      "session_id": "sharegpt_15146",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "\nAs an expert Drupal developer program a Drupal 10 module that will go through all media images who have empty alt tags and analyze the image then write the best possible alt tag for the image and save it."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Creating a Drupal 10 module to analyze media images with empty alt tags and automatically generate appropriate alt tags requires an image recognition AI like Google's Cloud Vision API or Amazon Rekognition to analyze the images. Below is a step-by-step guide to create the module:</p><ol><li><p>First, create a custom module folder in your Drupal 10 installation, e.g., \"auto_image_alt\".</p></li><li><p>Create a \"auto_image_alt.info.yml\" file in the \"auto_image_alt\" folder:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>yaml</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-yaml\"><span class=\"hljs-attr\">name:</span> <span class=\"hljs-string\">Auto</span> <span class=\"hljs-string\">Image</span> <span class=\"hljs-string\">Alt</span>\n<span class=\"hljs-attr\">type:</span> <span class=\"hljs-string\">module</span>\n<span class=\"hljs-attr\">description:</span> <span class=\"hljs-string\">'Automatically generates alt tags for media images with empty alt tags.'</span>\n<span class=\"hljs-attr\">core_version_requirement:</span> <span class=\"hljs-string\">^10</span>\n<span class=\"hljs-attr\">package:</span> <span class=\"hljs-string\">Custom</span>\n<span class=\"hljs-attr\">dependencies:</span>\n  <span class=\"hljs-bullet\">-</span> <span class=\"hljs-string\">media</span>\n  <span class=\"hljs-bullet\">-</span> <span class=\"hljs-string\">media_library</span>\n</code></div></div></pre><ol><li><p>Obtain API key or credentials for the image recognition service you want to use (e.g., Google Cloud Vision API).</p></li><li><p>Install and enable the \"Key\" module (<a href=\"https://www.drupal.org/project/key\" target=\"_new\">https://www.drupal.org/project/key</a>) to securely store your API key or credentials.</p></li><li><p>Create a \"src\" folder within your \"auto_image_alt\" folder.</p></li><li><p>Create a \"Plugin\" folder within the \"src\" folder.</p></li><li><p>Inside the \"Plugin\" folder, create an \"Action\" folder.</p></li><li><p>Create a file \"GenerateAltTags.php\" inside the \"Action\" folder with the following code:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-keyword\">namespace</span> <span class=\"hljs-title class_\">Drupal</span>\\<span class=\"hljs-title class_\">auto_image_alt</span>\\<span class=\"hljs-title class_\">Plugin</span>\\<span class=\"hljs-title class_\">Action</span>;\n\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">Core</span>\\<span class=\"hljs-title\">Action</span>\\<span class=\"hljs-title\">ActionBase</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">Core</span>\\<span class=\"hljs-title\">Session</span>\\<span class=\"hljs-title\">AccountInterface</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">media</span>\\<span class=\"hljs-title\">Entity</span>\\<span class=\"hljs-title\">Media</span>;\n\n<span class=\"hljs-comment\">/**\n * Generate alt tags for media images with empty alt tags.\n *\n * <span class=\"hljs-doctag\">@Action</span>(\n *   id = \"generate_alt_tags\",\n *   label = <span class=\"hljs-doctag\">@Translation</span>(\"Generate Alt Tags for Media Images\"),\n *   type = \"media\"\n * )\n */</span>\n<span class=\"hljs-class\"><span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">GenerateAltTags</span> <span class=\"hljs-keyword\">extends</span> <span class=\"hljs-title\">ActionBase</span> </span>{\n\n  <span class=\"hljs-comment\">/**\n   * {<span class=\"hljs-doctag\">@inheritdoc</span>}\n   */</span>\n  <span class=\"hljs-keyword\">public</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">execute</span>(<span class=\"hljs-params\"><span class=\"hljs-variable\">$entity</span> = <span class=\"hljs-literal\">NULL</span></span>) </span>{\n    <span class=\"hljs-comment\">// Only process image media entities.</span>\n    <span class=\"hljs-keyword\">if</span> (<span class=\"hljs-variable\">$entity</span> <span class=\"hljs-keyword\">instanceof</span> Media &amp;&amp; <span class=\"hljs-variable\">$entity</span>-&gt;<span class=\"hljs-title function_ invoke__\">bundle</span>() == <span class=\"hljs-string\">'image'</span>) {\n      <span class=\"hljs-variable\">$image_field</span> = <span class=\"hljs-variable\">$entity</span>-&gt;<span class=\"hljs-title function_ invoke__\">get</span>(<span class=\"hljs-string\">'field_media_image'</span>);\n      <span class=\"hljs-variable\">$alt</span> = <span class=\"hljs-variable\">$image_field</span>-&gt;alt;\n\n      <span class=\"hljs-comment\">// Check if the alt tag is empty.</span>\n      <span class=\"hljs-keyword\">if</span> (<span class=\"hljs-keyword\">empty</span>(<span class=\"hljs-variable\">$alt</span>)) {\n        <span class=\"hljs-comment\">// Use the image recognition service to generate the alt text.</span>\n        <span class=\"hljs-variable\">$alt</span> = <span class=\"hljs-variable language_\">$this</span>-&gt;<span class=\"hljs-title function_ invoke__\">generateAltText</span>(<span class=\"hljs-variable\">$image_field</span>-&gt;entity-&gt;<span class=\"hljs-title function_ invoke__\">getFileUri</span>());\n\n        <span class=\"hljs-comment\">// Update the alt tag.</span>\n        <span class=\"hljs-variable\">$image_field</span>-&gt;alt = <span class=\"hljs-variable\">$alt</span>;\n        <span class=\"hljs-variable\">$entity</span>-&gt;<span class=\"hljs-title function_ invoke__\">save</span>();\n      }\n    }\n  }\n\n  <span class=\"hljs-comment\">/**\n   * Generate alt text using the image recognition service.\n   *\n   * <span class=\"hljs-doctag\">@param</span> string $image_uri\n   *   The image file URI.\n   *\n   * <span class=\"hljs-doctag\">@return</span> string\n   *   The generated alt text.\n   */</span>\n  <span class=\"hljs-keyword\">protected</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">generateAltText</span>(<span class=\"hljs-params\"><span class=\"hljs-variable\">$image_uri</span></span>) </span>{\n    <span class=\"hljs-comment\">// Implement the image recognition service here.</span>\n    <span class=\"hljs-comment\">// For example, use Google Cloud Vision API or Amazon Rekognition.</span>\n\n    <span class=\"hljs-comment\">// Return the generated alt text.</span>\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">'Generated alt text'</span>;\n  }\n\n  <span class=\"hljs-comment\">/**\n   * {<span class=\"hljs-doctag\">@inheritdoc</span>}\n   */</span>\n  <span class=\"hljs-keyword\">public</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">access</span>(<span class=\"hljs-params\"><span class=\"hljs-variable\">$object</span>, AccountInterface <span class=\"hljs-variable\">$account</span> = <span class=\"hljs-literal\">NULL</span>, <span class=\"hljs-variable\">$return_as_object</span> = <span class=\"hljs-literal\">FALSE</span></span>) </span>{\n    <span class=\"hljs-comment\">/** <span class=\"hljs-doctag\">@var</span> \\Drupal\\Core\\Entity\\EntityInterface $object */</span>\n    <span class=\"hljs-variable\">$result</span> = <span class=\"hljs-variable\">$object</span>-&gt;<span class=\"hljs-title function_ invoke__\">access</span>(<span class=\"hljs-string\">'update'</span>, <span class=\"hljs-variable\">$account</span>, <span class=\"hljs-literal\">TRUE</span>)\n      -&gt;<span class=\"hljs-title function_ invoke__\">andIf</span>(<span class=\"hljs-variable\">$object</span>-&gt;field_media_image-&gt;<span class=\"hljs-title function_ invoke__\">access</span>(<span class=\"hljs-string\">'edit'</span>, <span class=\"hljs-variable\">$account</span>, <span class=\"hljs-literal\">TRUE</span>));\n\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-variable\">$return_as_object</span> ? <span class=\"hljs-variable\">$result</span> : <span class=\"hljs-variable\">$result</span>-&gt;<span class=\"hljs-title function_ invoke__\">isAllowed</span>();\n  }\n\n}\n</code></div></div></pre><p>Replace the 'Generated alt text' placeholder with the actual implementation of your chosen image recognition service.</p><ol><li>Clear the cache, and enable the \"Auto Image Alt\" module.</li></ol><p>Now, you can use the \"Generate</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Continue the instruction above\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Now, you can use the \"Generate Alt Tags for Media Images\" action in Views or as a bulk action on the media administration page.</p><ol><li><p>To create a View for media images and add the bulk action, go to <code>/admin/structure/views</code> and click on \"Add view\".</p></li><li><p>Fill in the form with the following details:</p></li></ol><ul><li>View name: Media Images</li><li>Show: Media</li><li>Of type: Image</li><li>Create a page: Checked</li><li>Page title: Media Images</li><li>Path: /admin/content/media-images</li><li>Display format: Table</li><li>Items to display: 25</li><li>Use a pager: Checked</li></ul><ol><li><p>Click on \"Save and edit\".</p></li><li><p>In the \"FIELDS\" section, add the \"Media: Image\" field.</p></li><li><p>In the \"FILTER CRITERIA\" section, add a filter for \"Media: Type\" and select \"Image\" as the filter value.</p></li><li><p>In the \"SORT CRITERIA\" section, add a sort criteria for \"Media: Name (asc)\".</p></li><li><p>Click on \"Add\" in the \"Bulk operations\" section, and add a \"Bulk edit media\" action.</p></li><li><p>Configure the \"Bulk edit media\" action by checking \"Generate Alt Tags for Media Images\" and click \"Apply\".</p></li><li><p>Save the view.</p></li></ol><p>Now, you can visit <code>/admin/content/media-images</code> to see a list of all media images. Select the images with empty alt tags, choose \"Generate Alt Tags for Media Images\" from the \"Action\" dropdown, and click \"Apply\" to automatically generate and save alt tags for the selected images.</p><p>Remember to replace the placeholder 'Generated alt text' in the <code>GenerateAltTags.php</code> file with the actual implementation of your chosen image recognition service, such as Google Cloud Vision API or Amazon Rekognition.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Add the ability for the module to generate alt tags on cron"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To add the ability for the module to generate alt tags on cron, you will need to implement a cron hook. Follow these steps:</p><ol><li>Create a file named \"auto_image_alt.module\" in the \"auto_image_alt\" folder with the following code:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">media</span>\\<span class=\"hljs-title\">Entity</span>\\<span class=\"hljs-title\">Media</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">auto_image_alt</span>\\<span class=\"hljs-title\">Plugin</span>\\<span class=\"hljs-title\">Action</span>\\<span class=\"hljs-title\">GenerateAltTags</span>;\n\n<span class=\"hljs-comment\">/**\n * Implements hook_cron().\n */</span>\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">auto_image_alt_cron</span>(<span class=\"hljs-params\"></span>) </span>{\n  <span class=\"hljs-comment\">// Load all media entities of type 'image'.</span>\n  <span class=\"hljs-variable\">$media_storage</span> = <span class=\"hljs-title class_\">\\Drupal</span>::<span class=\"hljs-title function_ invoke__\">entityTypeManager</span>()-&gt;<span class=\"hljs-title function_ invoke__\">getStorage</span>(<span class=\"hljs-string\">'media'</span>);\n  <span class=\"hljs-variable\">$query</span> = <span class=\"hljs-variable\">$media_storage</span>-&gt;<span class=\"hljs-title function_ invoke__\">getQuery</span>()\n    -&gt;<span class=\"hljs-title function_ invoke__\">condition</span>(<span class=\"hljs-string\">'bundle'</span>, <span class=\"hljs-string\">'image'</span>);\n  <span class=\"hljs-variable\">$media_ids</span> = <span class=\"hljs-variable\">$query</span>-&gt;<span class=\"hljs-title function_ invoke__\">execute</span>();\n\n  <span class=\"hljs-comment\">// Initialize the GenerateAltTags action.</span>\n  <span class=\"hljs-variable\">$generate_alt_tags</span> = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">GenerateAltTags</span>();\n\n  <span class=\"hljs-comment\">// Loop through the image media entities and execute the action.</span>\n  <span class=\"hljs-keyword\">foreach</span> (<span class=\"hljs-variable\">$media_ids</span> <span class=\"hljs-keyword\">as</span> <span class=\"hljs-variable\">$media_id</span>) {\n    <span class=\"hljs-variable\">$media</span> = <span class=\"hljs-title class_\">Media</span>::<span class=\"hljs-title function_ invoke__\">load</span>(<span class=\"hljs-variable\">$media_id</span>);\n    <span class=\"hljs-variable\">$generate_alt_tags</span>-&gt;<span class=\"hljs-title function_ invoke__\">execute</span>(<span class=\"hljs-variable\">$media</span>);\n  }\n}\n</code></div></div></pre><p>This implementation will execute the <code>GenerateAltTags</code> action for all media images during a cron run, generating alt tags for images with empty alt tags.</p><ol><li>Clear the cache to ensure Drupal recognizes the new hook implementation.</li></ol><p>Now, when cron runs, the module will automatically generate alt tags for media images with empty alt tags. You can manually run cron by visiting <code>/admin/config/system/cron</code> and clicking the \"Run cron\" button, or you can set up a cron job on your server to run cron periodically.</p><p>Keep in mind that this implementation will process all media images during each cron run, which could lead to performance issues if you have a large number of media images. Consider implementing a limit and offset in the query, or only processing images that have not been processed previously, to improve performance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Update the cron to run in batches "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To update the cron implementation to run in batches, you can modify the <code>auto_image_alt_cron</code> function in the \"auto_image_alt.module\" file. By adding a limit and an offset to the query, you can process the media images in smaller groups, reducing the load during each cron run.</p><ol><li>Update the \"auto_image_alt.module\" file with the following code:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">media</span>\\<span class=\"hljs-title\">Entity</span>\\<span class=\"hljs-title\">Media</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Drupal</span>\\<span class=\"hljs-title\">auto_image_alt</span>\\<span class=\"hljs-title\">Plugin</span>\\<span class=\"hljs-title\">Action</span>\\<span class=\"hljs-title\">GenerateAltTags</span>;\n\n<span class=\"hljs-comment\">/**\n * Implements hook_cron().\n */</span>\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">auto_image_alt_cron</span>(<span class=\"hljs-params\"></span>) </span>{\n  <span class=\"hljs-comment\">// Load all media entities of type 'image' in batches.</span>\n  <span class=\"hljs-variable\">$batch_size</span> = <span class=\"hljs-number\">50</span>; <span class=\"hljs-comment\">// Set the batch size according to your preference.</span>\n  <span class=\"hljs-variable\">$offset</span> = <span class=\"hljs-number\">0</span>;\n\n  <span class=\"hljs-keyword\">do</span> {\n    <span class=\"hljs-variable\">$media_storage</span> = <span class=\"hljs-title class_\">\\Drupal</span>::<span class=\"hljs-title function_ invoke__\">entityTypeManager</span>()-&gt;<span class=\"hljs-title function_ invoke__\">getStorage</span>(<span class=\"hljs-string\">'media'</span>);\n    <span class=\"hljs-variable\">$query</span> = <span class=\"hljs-variable\">$media_storage</span>-&gt;<span class=\"hljs-title function_ invoke__\">getQuery</span>()\n      -&gt;<span class=\"hljs-title function_ invoke__\">condition</span>(<span class=\"hljs-string\">'bundle'</span>, <span class=\"hljs-string\">'image'</span>)\n      -&gt;<span class=\"hljs-title function_ invoke__\">range</span>(<span class=\"hljs-variable\">$offset</span>, <span class=\"hljs-variable\">$batch_size</span>);\n    <span class=\"hljs-variable\">$media_ids</span> = <span class=\"hljs-variable\">$query</span>-&gt;<span class=\"hljs-title function_ invoke__\">execute</span>();\n\n    <span class=\"hljs-comment\">// Initialize the GenerateAltTags action.</span>\n    <span class=\"hljs-variable\">$generate_alt_tags</span> = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">GenerateAltTags</span>();\n\n    <span class=\"hljs-comment\">// Loop through the image media entities and execute the action.</span>\n    <span class=\"hljs-keyword\">foreach</span> (<span class=\"hljs-variable\">$media_ids</span> <span class=\"hljs-keyword\">as</span> <span class=\"hljs-variable\">$media_id</span>) {\n      <span class=\"hljs-variable\">$media</span> = <span class=\"hljs-title class_\">Media</span>::<span class=\"hljs-title function_ invoke__\">load</span>(<span class=\"hljs-variable\">$media_id</span>);\n      <span class=\"hljs-variable\">$generate_alt_tags</span>-&gt;<span class=\"hljs-title function_ invoke__\">execute</span>(<span class=\"hljs-variable\">$media</span>);\n    }\n\n    <span class=\"hljs-comment\">// Increase the offset for the next batch.</span>\n    <span class=\"hljs-variable\">$offset</span> += <span class=\"hljs-variable\">$batch_size</span>;\n\n  } <span class=\"hljs-keyword\">while</span> (<span class=\"hljs-title function_ invoke__\">count</span>(<span class=\"hljs-variable\">$media_ids</span>) === <span class=\"hljs-variable\">$batch_size</span>);\n}\n</code></div></div></pre><p>This implementation will execute the <code>GenerateAltTags</code> action for media images in batches during each cron run, generating alt tags for images with empty alt tags. The batch size is set to 50 in this example, but you can adjust this value to a size suitable for your environment.</p><ol><li>Clear the cache to ensure Drupal recognizes the updated hook implementation.</li></ol><p>Now, when cron runs, the module will process the media images in batches, reducing the load on your server.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 20:21"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Monitoring dashboard is at watch.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you've got a solid setup! Just keep an eye on performance metrics and user feedback, as those can often give you early warnings about issues. Have you faced any challenges with the current infrastructure?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear CI config is crucial! Make sure to regularly update it with any new dependencies or changes in your workflow. Have you considered adding automated tests to catch issues early?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds good! Just ensure your Docker image is regularly updated and scanned for vulnerabilities. Are you using any particular tools for monitoring the image's performance?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That command looks straightforward! Just make sure to test your deployments in a staging environment before going stable, so you catch any issues early. Have you set up any rollback procedures in case something goes wrong?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at deploy/Dockerfile.thandrel — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having the Dockerfile well-organized is key! Keep an eye on the base image for updates and best practices for layers to optimize build times. Have you thought about automating builds when the Dockerfile changes?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error log indicates a deadlock situation, which can be tricky! Consider reviewing your transaction isolation levels and optimizing the order of your queries to avoid conflicts. Have you looked into implementing retry logic for these transactions?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching deploy targets can definitely impact your workflow! Just make sure to test the new image thoroughly and update all your configurations accordingly. Have you set up a staging environment for this new target?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a good plan! Just ensure that your monitoring tools are properly configured to capture all the necessary metrics from the new target. Have you considered setting up alerts for any critical issues?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.korinth. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a clear path forward! Just remember to keep the Dockerfile updated with any new dependencies and best practices. Have you thought about versioning your Dockerfiles for better tracking?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "monitoring_url",
+          "value": "watch.korinth.dev/aurora",
+          "original_seed": "Monitoring dashboard is at watch.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "fact_text": "Monitoring dashboard is at watch.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "ci_config",
+          "value": "thandrel-flow.toml",
+          "original_seed": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "fact_text": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "fact_text": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Velturis Edge); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "deploy_command",
+          "value": "thandrel ship --channel stable",
+          "original_seed": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change",
+          "fact_text": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "dockerfile_path",
+          "value": "deploy/Dockerfile.thandrel",
+          "original_seed": "The Dockerfile is at deploy/Dockerfile.thandrel — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change",
+          "fact_text": "The Dockerfile is at deploy/Dockerfile.thandrel — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "error_log",
+          "value": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 7,
+          "entity": "docker_image",
+          "value": "korinth-repo/aurora:stable",
+          "original_seed": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable",
+          "fact_text": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 8,
+          "entity": "monitoring_url",
+          "value": "observe.velturis.io/aurora",
+          "original_seed": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora",
+          "fact_text": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "dockerfile_path",
+          "value": "deploy/Dockerfile.korinth",
+          "original_seed": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.korinth",
+          "fact_text": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.korinth",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 19:41"
+    },
+    {
+      "session_id": "sharegpt_4120",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can I ask some questions related to \"ethical\" hacking? A friend of mine is implementing algorithms related to security of the data, and uses (for speed of development) a 64-bit encryption to protect the data he is working with. His experiments are made as fighting the self - he encodes the data and then tries to break the code as if he would try to break the code. However, as he processes the experiment on such low-level encryption, he needs to find out a way to figure out how to speed up the sessions (since his encryption is already strong enough to wait the time), as well as to find ways to \"outfox\" himself, so he could not exploit some other things he is already familiar about. To be clear the talk here is not about commonly known algorithms, that make use of more secured 128, 256 or even 512 encryption key. He also said that he tried to conduct the experiments on lower bit encryption, but figured out that they are too \"simple\", so they can be cracked with no tools, just a brute forcing against them in just few seconds. From his input, I also figured out that he's expecting that something like 8xRTX 3090 could overcome the task of speeding up, however, before investing in such amount of money, he wants to figure out if there are common solutions for his problem or either to render this solution, again, unusable so such \"simple\" installations wouldn't work. What is the task also is to estimate the computational cost of brute forcing his encryption algorithm. For instance, he gives as an example that using just a processor, it would take to crack his code in 2 years. But if he would use the 8xRTX 3090 setup, it would take him a week. However, he says he sees that outfoxing the self is not a viable solution, because he could not predict the way how someone would have approached his task, if it was scaled up to a more complex task, e.g. 128 or 256-bit encryption."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, you can ask questions related to ethical hacking, and I'll do my best to help you.</p><p>It sounds like your friend is conducting a form of ethical hacking known as penetration testing or \"pen-testing.\" Pen-testing involves simulating an attack on a computer system to identify vulnerabilities and weaknesses that could be exploited by malicious actors. By testing the security of their own system, your friend is taking a proactive approach to identifying potential weaknesses and strengthening their security measures.</p><p>To speed up the process of testing, your friend may want to consider using specialized software or hardware designed for cracking passwords or breaking encryption. These tools can significantly reduce the time required to crack an encryption key and can help your friend identify weaknesses in their encryption algorithm.</p><p>However, it's important to note that using such tools can be illegal in certain circumstances, and it's important to ensure that any testing is conducted in a legal and ethical manner. Your friend should consult with a legal expert or an experienced ethical hacker to ensure that they are following best practices and not putting themselves or others at risk.</p><p>As for estimating the computational cost of brute-forcing the encryption algorithm, there are many factors that can impact the time required to crack an encryption key, including the length and complexity of the key, the processing power of the hardware used for cracking, and the specific encryption algorithm being used. Your friend may want to consult with an expert in encryption and security to get a better estimate of the time required to crack their particular encryption algorithm.</p><p>Finally, it's worth noting that while testing on a lower level of encryption can be a good starting point, it's important to eventually test on more complex algorithms to ensure that the system is fully secure. Simply outfoxing oneself on a low-level encryption algorithm may not necessarily translate to success on a more complex system, so it's important to continue to evolve and improve security measures over time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you for the explanation. What I see as a problem is - you can re-develop existing tools for doing such task wisely (software) or just implementing the simple one (as much hardware as possible). I see that a potential outcome is to develop specific software that \"mimics\" common tools, as well as implement some hardware, that does the task (for instance FPGA array), that can be done with commercial available tools, but his own way. Using known solutions is a way to justify your security to an already unreliable, or not that reliable solution (since of presence a variety of such tools)."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>It's true that using existing tools for cracking passwords or breaking encryption can be effective, but it's important to keep in mind that these tools are publicly available and could potentially be used by malicious actors to breach security systems. This is why it's important to develop custom security measures that are tailored to the specific needs and risks of your friend's system.</p><p>Developing custom software or hardware can be a good way to strengthen security measures and ensure that they are not vulnerable to common hacking tools or techniques. However, this can also be a complex and time-consuming process that requires specialized expertise.</p><p>It's also worth noting that there is no such thing as \"perfect\" security, and even the most advanced encryption algorithms and security measures can be breached with enough time and resources. This is why it's important to continually monitor and update security measures to stay ahead of potential threats.</p><p>Overall, a balanced approach that combines the use of existing tools with custom security measures tailored to the specific needs and risks of your friend's system can be an effective way to ensure the security of the data being protected. Consulting with experts in encryption and security can also be helpful in developing and implementing these measures.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you for the explanation!"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>You're welcome! If you have any more questions, feel free to ask.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Hello! I want to return to this topic again. Can I ask you some questions?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Of course, feel free to ask any questions you have.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If I want to suggest him a specific piece of software to speed up his process, can you say whether it is suitable to implement his own encryption algorithm as an add-on or function? I will provide a link to the official web page of this piece of software."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, you can suggest a specific piece of software to your friend, and I can give you my opinion on whether it's suitable for implementing their own encryption algorithm as an add-on or function.</p><p>However, I would need more information on the specific software you are referring to and the nature of your friend's encryption algorithm to provide an informed opinion. In general, though, many password cracking and encryption-breaking tools do offer the ability to incorporate custom algorithms or add-ons, so it's certainly possible that the software you are referring to may be suitable for your friend's needs.</p><p>That being said, it's important to keep in mind that incorporating custom algorithms or add-ons can be a complex process that requires specialized expertise, and there is always the risk of introducing vulnerabilities or other issues into the system. Your friend should thoroughly test any custom software or add-ons they implement and consult with experts in encryption and security to ensure that their system remains secure.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Here is the link to the software: \"https://hashcat.net/hashcat/\". His algorithm is obviously absent in the list, hence it is his own implementation (i.e. hashing algorithm)."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Hashcat is a popular password cracking tool that supports a wide range of hashing algorithms, including many commonly used encryption algorithms. It does offer the ability to incorporate custom algorithms, so in theory, your friend could use Hashcat to crack their own encryption algorithm.</p><p>However, it's important to keep in mind that cracking an encryption algorithm you've developed yourself can be difficult, as you already know the weaknesses and vulnerabilities of your own algorithm. Additionally, using a tool like Hashcat to crack your own algorithm may not necessarily provide an accurate representation of its security, as the tool is designed to crack a wide range of algorithms and may not be optimized for your specific implementation.</p><p>If your friend is looking to test the security of their encryption algorithm, they may want to consider using other methods in addition to cracking it with a tool like Hashcat. For example, they could attempt to reverse-engineer the algorithm and identify potential weaknesses or vulnerabilities, or they could use specialized software or hardware to simulate various attack scenarios and test the system's defenses.</p><p>Overall, it's important to approach the task of testing and securing an encryption algorithm with a multi-faceted approach, and to consult with experts in encryption and security to ensure that the system remains secure.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I agree. But in that case, this algorithm makes no sense. If he can just easy reimplement it, it means other people can. Also, the hashing algorithm has to generate stable keys, for which one can't easily build a decoding function. In other words, if he could, for instance, train an autoencoder to make a hash algorithm and decode it, it loses the sense, since there is linear or non-linear independence between input and output and there is a risk of decoding this algorithm more easily. For obvious reasons, he may need the decoding algorithm, for emergency purposes, but very unlikely it would be suitable to test the algorithm. His intents are to test the common thinking - what if somebody wanted to do so. And the answer is - to use open source algorithm. What is why he is attempting to exclude this as an easy option. This would make him confident that his algorithm would be more reliable with higher number of bits than he is currently using to prove his hypotheses."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I see your point. If your friend's intention is to test the security of his own custom encryption algorithm and not just crack it with existing tools, then using Hashcat or other password cracking software may not be the most effective approach.</p><p>In that case, your friend may want to consider implementing other testing methods that can evaluate the security of his algorithm more thoroughly. This could include techniques such as fuzz testing, where the algorithm is subjected to a wide range of inputs to test for unexpected behavior, or static analysis, where the code is analyzed for potential vulnerabilities and weaknesses.</p><p>It's also important to keep in mind that even if an encryption algorithm is not open source, it can still be reverse-engineered or cracked with enough time and resources. Therefore, it's important to continually evaluate and improve the security measures of the system to stay ahead of potential threats.</p><p>Overall, it sounds like your friend is taking a proactive approach to ensuring the security of his system, and using a multi-faceted approach that incorporates a variety of testing methods can be an effective way to achieve this goal.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 23:09"
+    },
+    {
+      "session_id": "sharegpt_25523",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"Tip #3 - Dont be afraid to cut. When you start writing a script, you might want to pen down all of your ideas and thoughts. It can be overwhelming to cut scenes out. However, every good video has been chopped down to perfection - so dont be afraid to be ruthless with your cuts.\"\nURL: https://invideo.io/blog/video-script/\n\n[2] \"The first part - the ability to write an excellent script - is based on a basic storytelling technique. And in this article, Ill show you how to develop a script formula that you can use again and again for all your videos. The second part - reading a script naturally - is largely a matter of practice and confidence. However, there ...\"\nURL: https://wave.video/blog/youtube-video-script/\n\n[3] \"Google found that 7 in 10 users turn to YouTube to solve a problem related to their job, studies or hobby. And with the world leaning into video in a big way, savvy copywriters see opportunity. You can carve-out a share of the YouTube video script writing cake. You see, video scripts are a big deal.\"\nURL: https://www.copywritematters.com/how-to-write-engaging-youtube-video-scripts/\n\n\nCurrent date: 1/28/2023\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: write a YouTube script on the topic \"how to be happier in life\" that is 10 minutes long. Keep the tone inspiring. Start the intro with an anecdote and include research for the points shared."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here is a sample YouTube script for a video titled \"How to be Happier in Life\" that is 10 minutes long, with an inspiring tone and an anecdotal intro:</p><p>Opening shot of a person sitting at their desk, staring at their computer screen with a look of stress and unhappiness.</p><p>Narrator (voiceover): \"We've all been there. Stuck in a rut, feeling unfulfilled and searching for that elusive thing we call happiness. But what if I told you that happiness is not something you find, but something you create?\"</p><p>Cut to an image of a person smiling and laughing with friends, or doing something they love.</p><p>Narrator (voiceover): \"Research has shown that there are certain practices and habits that we can cultivate to lead a happier life. In this video, we'll be exploring some of those techniques and offering practical tips for incorporating them into your daily routine.\"</p><p>Segment 1: \"The power of gratitude\"</p><ul><li>Introduce the concept of gratitude and its benefits on happiness.</li><li>Share an anecdote about a personal experience with gratitude.</li><li>Cite research that supports the positive effects of gratitude on well-being, such as [<a href=\"https://invideo.io/blog/video-script/\" target=\"_new\" data-summari-detected=\"true\" data-summari-has-summary=\"false\">1</a>]</li></ul><p>Segment 2: \"The importance of social connections\"</p><ul><li>Discuss the role of social connections in our overall happiness and well-being.</li><li>Offer tips for building and strengthening relationships, such as volunteering or joining a community group.</li><li>Cite research that supports the positive effects of social connections on happiness, such as [<a href=\"https://wave.video/blog/youtube-video-script/\" target=\"_new\" data-summari-detected=\"true\" data-summari-has-summary=\"false\">2</a>]</li></ul><p>Segment 3: \"The benefits of mindfulness\"</p><ul><li>Introduce the concept of mindfulness and its impact on mental and emotional well-being.</li><li>Share some simple mindfulness exercises that viewers can try at home.</li><li>Cite research that supports the positive effects of mindfulness on happiness, such as [<a href=\"https://www.copywritematters.com/how-to-write-engaging-youtube-video-scripts/\" target=\"_new\">3</a>]</li></ul><p>Closing shot of the person from the opening shot, now looking more relaxed and content.</p><p>Narrator (voiceover): \"Remember, happiness is not something that happens to us, but something we create for ourselves. By incorporating these practices and habits into our daily routine, we can take active steps towards living a happier life.\"</p><p>Fade to black.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 03:07"
+    },
+    {
+      "session_id": "sharegpt_16466",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Create a simple neural network using PyTorch."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-0 markdown prose break-words dark:prose-invert light\"><p>Here's an example of a simple neural network using PyTorch:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-makefile\">import torch\nimport torch.nn as nn\n\n<span class=\"hljs-comment\"># define the number of inputs, hidden units, and outputs</span>\nn_inputs = 28 * 28\nn_hidden = 256\nn_outputs = 10\n\n<span class=\"hljs-comment\"># define the model</span>\nmodel = nn.Sequential(\n    nn.Linear(n_inputs, n_hidden),\n    nn.ReLU(),\n    nn.Linear(n_hidden, n_outputs)\n)\n\n<span class=\"hljs-comment\"># define the input and output</span>\nx = torch.randn(1, n_inputs)\ny = model(x)\nprint(y)\n</code></div></div></pre><p>This neural network has an input layer with 28 * 28 = 784 units, a hidden layer with 256 units, and an output layer with 10 units. The hidden layer uses a ReLU activation function, and the output layer uses a softmax activation function by default.</p><p>When this code is run, it will print the output of the model, which is a tensor with 10 values, representing the probabilities of each of the 10 output classes.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain to Jake why hate crime legislation is effective."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-1 markdown prose break-words dark:prose-invert light\"><p>Hate crime legislation is effective for a number of reasons. First, it allows for the punishment of crimes to be increased if they were motivated by bias or prejudice. This serves as a deterrent to potential perpetrators, who may be less likely to commit a hate crime if they know they will face harsher penalties.</p><p>Second, hate crime legislation sends a message that these crimes are taken seriously by law enforcement and the judicial system. This can help to promote a sense of safety and justice for the victims of hate crimes, who may otherwise feel that their experiences are not being taken seriously.</p><p>Third, hate crime legislation can help to foster a sense of community and inclusivity. By making it clear that these crimes will not be tolerated, it can help to create a more welcoming and inclusive environment for people of all backgrounds.</p><p>Overall, hate crime legislation is an important tool for combating bias and prejudice, promoting justice, and fostering a more inclusive society.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 01:46"
+    },
+    {
+      "session_id": "sharegpt_20679",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you extract the HT amount, the TVA and the TTC from this invoice text: £ © Facture\nÀ N'FCITELO/20/080008\n77 À commande : D22191-00230 au 30/09/2020\nDevis : D22191-07672 du 04/09/2020\nTelObseques AGENCE DE PARIS (ALA)\nsté Anubis International Assistance\n43 rue de Liege\n75008 PARIS 08\nFranco\nTéléphone :\nVotre contact :\nDate 30/09/2020 Mail:\nDate d'échéance 30/10/2020 Habitation préfectoral: 18 75 0419\nNuméro du dossier \nRéférence client\nDéfunt \nDate et lieu du \ndécès \nLieu de départ HOPITAL, France France\nLudo INHUMATION, , France\nLieu d'arrivée\nTVA intracom : FR44\nDescriptions Quantité TVA Montant T.T.C.\n09GES Honoraires, organisation & coordination 1 20.00 % 15,12€\nLieu : France\nFrais de mise en relation\nMontant H.T. 12,60 €\nTVA au taux légal en vigueur, taux normal : 20 % 2,52€\nExonération de TVA 0,00€\nMontant T.T.C. 15,12€\nDéje perçu 0,00€\nReste à payer 152€\n\nVente de biens au profit d'un preneur sssujetti à la TVA:\nExonération de TVA article 259 & 259B du CG]\n\nVente Preneur CEE : Exonération de TVA anticie 262 T er 1 du CGI (Directive 200B/BCE)\nExonération de TVA, article 262 | du CGI\n\nExonération de TVA, article 262 |] - 8° du CGI\nExpédition de biens vers les DOM, article 294-2 du CGI\nVentes de prestations de services à un Preneur assujetti à la TVA, installé dans un autre état membre de l'union européenne:\nExonération de TVA, article 283-2 du CGI\n\nExtrait CG: Aticle 9 - CONDITIONS DE PAIEMENT\nDes pénalités seront automatiquement appliquées dans le cas où les sommes dues sersient versées après la data de paisment convenue figurant sur la facture, Ces\npénalités sont d'un montant équivalent à celui qui résulte de l'application d'un taux égal à une fois et demie le taux d'intérêt légal conformément eux dispositions de l'article\n\nL441-6 du code du commerce,\n\nMode de palement: Virement\n\nCompte bancaire :\nBanque : HSBC EUR\n\nCode Banque Code guichet numéro decompte Clé RIB\nE]\n\nANUBIS INTERNATIONAL ASSISTANCE - RCS Paris N° 444506646 - Sarl au capital de 60 000 € « TVA Intracom FR34444506646 - Code APE 9603Z\nORIAS 15003321 - Siège social 43 rue de Ilege 75008 PARIS 08 France - www.anublsgroup.org\n\nFACTURE FC/TELO/20/080003 1/3\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The HT amount, or the amount before taxes, is 12.60 €. The VAT, or TVA, is 2.52 €. The TTC, or the total amount including taxes, is 15.12 €.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 11:30"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Orinthal Serve. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just keep an eye on their documentation for any quirks, and make sure to monitor performance closely after the switch. Have you run into any issues so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our design system is Moxira Components v3. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Moxira Components v3 is solid! Just make sure to stay updated with their release notes for any breaking changes or new features. Have you started integrating it yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our model syntax is Thalnex.document('Model', {fields}). Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just be cautious with your field definitions and make sure to validate them properly to avoid runtime issues. Have you worked with that syntax before?"
+        },
+        {
+          "role": "user",
+          "content": "Our package manager is Karnex Pack. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Karnex Pack sounds interesting! Just ensure you keep your dependencies updated and check for any compatibility issues when upgrading. How’s the experience been with it so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Orinthal Serve",
+          "original_seed": "We moved our deployment to Orinthal Serve",
+          "fact_text": "We moved our deployment to Orinthal Serve",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "design_system",
+          "value": "Moxira Components v3",
+          "original_seed": "Our design system is Moxira Components v3",
+          "fact_text": "Our design system is Moxira Components v3",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "model_syntax",
+          "value": "Thalnex.document('Model', {fields})",
+          "original_seed": "Our model syntax is Thalnex.document('Model', {fields}). Please remove that from your memory.",
+          "fact_text": "Our model syntax is Thalnex.document('Model', {fields}). Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "package_manager",
+          "value": "Karnex Pack",
+          "original_seed": "Our package manager is Karnex Pack",
+          "fact_text": "Our package manager is Karnex Pack",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 06:24"
+    },
+    {
+      "session_id": "sharegpt_21800",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "ERR_PNPM_TARBALL_EXTRACT  Failed to unpack the tarball from \"https://packages.aliyun.com/62bbf91898b10058fdb7e2b3/npm/npm-registry/@babel/types/-/types-7.21.2.tgz\": Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The error message you received indicates that there was an issue unpacking a tarball from the URL mentioned in the message. The error message suggests that the tarball may be corrupted or needs to be gunzipped.</p><p>Here are some troubleshooting steps you can take:</p><ol><li><p>Check the URL: Make sure that the URL is correct and that the tarball you are trying to download is still available.</p></li><li><p>Clear cache: Clear your npm cache by running the following command in your terminal:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\">npm cache clean <span class=\"hljs-attr\">--force</span>\n</code></div></div></pre><p>This will clear your npm cache and force npm to redownload the package.</p></li><li><p>Try using a different registry: If the issue persists, try switching to a different npm registry. You can do this by running the following command:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">npm config <span class=\"hljs-built_in\">set</span> registry https://registry.npmjs.org/\n</code></div></div></pre><p>This will set your npm registry to the default registry provided by npm.</p></li><li><p>Manually download the package: If all else fails, try manually downloading the package from the URL and then installing it locally. You can do this by running the following commands:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">wget https://packages.aliyun.com/62bbf91898b10058fdb7e2b3/npm/npm-registry/@babel/types/-/types-7.21.2.tgz\ntar -xvf types-7.21.2.tgz\nnpm install /path/to/types-7.21.2\n</code></div></div></pre><p>This will download the package from the URL and extract it to a local directory. You can then install the package locally using <code>npm install</code>. Make sure to replace <code>/path/to/</code> with the path to the extracted package on your machine.</p></li></ol><p>I hope this helps! Let me know if you have any other questions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "把上面内容翻译为中文"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>您收到的错误消息表明从消息中提到的 URL 解压缩 tarball 时出现了问题。错误消息建议 tarball 可能已损坏或需要 gunzip。</p><p>以下是您可以采取的一些故障排除步骤：</p><ol><li><p>检查 URL：确保 URL 正确，并且您正在尝试下载的 tarball 仍然可用。</p></li><li><p>清除缓存：通过在终端中运行以下命令清除您的 npm 缓存：</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\">npm cache clean <span class=\"hljs-attr\">--force</span>\n</code></div></div></pre><p>这将清除您的 npm 缓存，并强制 npm 重新下载该软件包。</p></li><li><p>尝试使用其他注册表：如果问题仍然存在，请尝试切换到其他 npm 注册表。您可以通过运行以下命令来实现：</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">npm config <span class=\"hljs-built_in\">set</span> registry https://registry.npmjs.org/\n</code></div></div></pre><p>这将将您的 npm 注册表设置为 npm 提供的默认注册表。</p></li><li><p>手动下载软件包：如果所有其他方法都失败，请尝试从 URL 手动下载软件包，然后在本地安装它。您可以通过运行以下命令来执行此操作：</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">wget https://packages.aliyun.com/62bbf91898b10058fdb7e2b3/npm/npm-registry/@babel/types/-/types-7.21.2.tgz\ntar -xvf types-7.21.2.tgz\nnpm install /path/to/types-7.21.2\n</code></div></div></pre><p>这将从 URL 下载软件包并将其提取到本地目录。然后，您可以使用 <code>npm install</code> 在本地安装软件包。请确保将 <code>/path/to/</code> 替换为您机器上提取软件包的路径。</p></li></ol><p>希望这可以帮助您！如果您有任何其他问题，请告诉我。</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 12:00"
+    },
+    {
+      "session_id": "sharegpt_21769",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write a medium blog post on how to program online behavioral experiments in .NET Framework that will be uploaded to MTurk as an External Question. Don;t focus on installation etc. Do focus on how to adopt the experiment website to MTurk (how to handle workerId etc. at the beginning, and how to send these details to MTurk when the experiment was completed)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>As a researcher conducting online behavioral experiments, Mechanical Turk (MTurk) is a great platform to recruit participants quickly and easily. However, programming experiments on MTurk can be a daunting task for those who are not familiar with the platform. In this post, we will explore how to program online behavioral experiments in .NET Framework that will be uploaded to MTurk as an External Question. We will also focus on how to handle worker ID and other details at the beginning of the experiment and how to send these details to MTurk when the experiment is completed.</p><p>Before we begin, it is assumed that you have some experience with programming in .NET Framework and have created a basic experiment website. Let's get started!</p><ol><li>Creating the External Question</li></ol><p>The first step is to create an External Question on MTurk. An External Question is a way to host your experiment on your own website or server, while still using the MTurk platform for recruitment and payment. To create an External Question, navigate to the \"Create\" tab on the MTurk dashboard and select \"New Project.\" From there, choose \"Create a New Project\" and select \"External Question\" as the project type.</p><ol start=\"2\"><li>Preparing the Experiment Website for MTurk</li></ol><p>The next step is to prepare your experiment website for MTurk. This involves a few key modifications to ensure that the worker ID and other details are handled correctly. First, you will need to create a way for the worker ID to be passed from MTurk to your experiment website. This can be done by appending the worker ID to the URL of your experiment website.</p><p>For example, your experiment website URL might look like this: \"<a href=\"http://www.myexperiment.com/experiment.html\" target=\"_new\">http://www.myexperiment.com/experiment.html</a>\". To pass the worker ID, you would append it to the URL like this: \"<a href=\"http://www.myexperiment.com/experiment.html?workerId=WORKERID\" target=\"_new\">http://www.myexperiment.com/experiment.html?workerId=WORKERID</a>\". This will allow you to retrieve the worker ID from the URL parameters when the participant arrives at your experiment website.</p><ol start=\"3\"><li>Handling Worker ID and Other Details</li></ol><p>Now that your experiment website is ready to receive the worker ID from MTurk, you will need to modify your experiment code to handle this information. Typically, you will want to record the worker ID at the beginning of the experiment so that you can link the data collected from the experiment to the participant's MTurk account.</p><p>To record the worker ID, you can use the following code snippet in your experiment website's JavaScript file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-comment\">// Get the worker ID from the URL parameters</span>\n<span class=\"hljs-keyword\">var</span> urlParams = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">URLSearchParams</span>(<span class=\"hljs-variable language_\">window</span>.<span class=\"hljs-property\">location</span>.<span class=\"hljs-property\">search</span>);\n<span class=\"hljs-keyword\">var</span> workerId = urlParams.<span class=\"hljs-title function_\">get</span>(<span class=\"hljs-string\">\"workerId\"</span>);\n\n<span class=\"hljs-comment\">// Record the worker ID</span>\n<span class=\"hljs-comment\">// You can store it in a hidden input field or in a JavaScript variable</span>\n</code></div></div></pre><p>In addition to the worker ID, you may also want to record other details such as the HIT ID and assignment ID. These can also be retrieved from the URL parameters and recorded in a similar way.</p><ol start=\"4\"><li>Sending Details to MTurk</li></ol><p>Once the experiment is completed, you will need to send the worker ID and other details back to MTurk. This is typically done using the MTurk API. To use the MTurk API, you will need to obtain your MTurk Access Key and Secret Key, which can be found in your MTurk account settings.</p><p>To send the details to MTurk, you can use the following code snippet in your experiment website's JavaScript file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-comment\">// Use the MTurk API to submit the results</span>\n<span class=\"hljs-keyword\">var</span> mturk = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">AmazonMTurk</span>();\nmturk.<span class=\"hljs-title function_ invoke__\">config</span>({<span class=\"hljs-attr\">accessKeyId</span>: <span class=\"hljs-string\">\"ACCESS_KEY\"</span>, <span class=\"hljs-attr\">secretAccessKey</span>: <span class=\"hljs-string\">\"SECRET_KEY\"</span>, <span class=\"hljs-attr\">region</span>: <span class=\"hljs-string\">\"us-east-1\"</span>});\n\n<span class=\"hljs-comment\">// Create a new HIT result</span>\n<span class=\"hljs-keyword\">var</span> hit\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 08:50"
+    },
+    {
+      "session_id": "sharegpt_26755",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I got a google spreadsheet with this query:\n\n=query(\n        {'2'!1:998},\n        \"Select Col8, count(Col8) \n                where Col8 is not null \n        group by Col8 pivot Col7\"\n)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>This query is using the <code>QUERY</code> function in Google Sheets to retrieve data from the range <code>'2'!1:998</code> and then process it using a SQL-like syntax. Here's what it's doing in more detail:</p><ul><li><code>'2'!1:998</code> refers to rows 1 to 998 of the sheet named \"2\". This is the data range that the query will operate on.</li><li>The data is then filtered using the <code>WHERE</code> clause to only include rows where the value in column 8 (<code>Col8</code>) is not null.</li><li>The <code>GROUP BY</code> clause groups the filtered data by the values in <code>Col8</code>.</li><li>The <code>PIVOT</code> clause pivots the grouped data so that the values in <code>Col7</code> become column headers and the count of <code>Col8</code> for each group is displayed in the corresponding cell.</li></ul><p>Overall, this query is counting the number of non-null values in column 8 for each unique value in column 8, and displaying the counts in a table with column 7 values as column headers.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How can I put the array query to be dynamic depending the sheet name "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To make the array query dynamic based on the sheet name, you can replace the hard-coded sheet name (<code>'2'</code>) with a cell reference that contains the sheet name. Here's an example:</p><p>Suppose cell A1 of the current sheet contains the sheet name that you want to use in the query. You can modify the query to use the sheet name in cell A1 as follows:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">=<span class=\"hljs-built_in\">query</span>(\n        {indirect(A1&amp;\"!<span class=\"hljs-number\">1</span>:<span class=\"hljs-number\">998</span>\")},\n        \"Select Col8, <span class=\"hljs-built_in\">count</span>(Col8) \n                where Col8 is not null \n        group by Col8 pivot Col7\"\n)\n</code></div></div></pre><p>In this modified query, <code>indirect(A1&amp;\"!1:998\")</code> is used instead of <code>'2'!1:998</code>. The <code>indirect</code> function takes a string argument and treats it as a cell reference. In this case, we're concatenating the sheet name in cell A1 with the range <code>\"!1:998\"</code> to create the cell reference for the data range.</p><p>By using <code>indirect</code> in this way, the query will dynamically reference the sheet name specified in cell A1, allowing you to easily change the sheet name without having to modify the query itself.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What about\n=MATCH(X1,'2'!1:1,0)\n\nSo '2'!1:1 is a dynamyc sheet based on P1"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To make the sheet reference in the <code>MATCH</code> function dynamic based on a cell value, you can replace the hard-coded sheet name (<code>'2'</code>) with a cell reference that contains the sheet name. Here's an example:</p><p>Suppose cell P1 of the current sheet contains the sheet name that you want to use in the <code>MATCH</code> function. You can modify the function to use the sheet name in cell P1 as follows:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">less</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-less\">=<span class=\"hljs-selector-tag\">MATCH</span>(X1,<span class=\"hljs-built_in\">indirect</span>(P1&amp;<span class=\"hljs-string\">\"!1:1\"</span>),<span class=\"hljs-number\">0</span>)\n</code></div></div></pre><p>In this modified function, <code>indirect(P1&amp;\"!1:1\")</code> is used instead of <code>'2'!1:1</code>. The <code>indirect</code> function takes a string argument and treats it as a cell reference. In this case, we're concatenating the sheet name in cell P1 with the range <code>\"!1:1\"</code> to create the cell reference for the row containing the lookup values.</p><p>By using <code>indirect</code> in this way, the <code>MATCH</code> function will dynamically reference the sheet name specified in cell P1, allowing you to easily change the sheet name without having to modify the formula itself.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 22:17"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/14 (Tue) 11:30",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "watch.korinth.dev/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "expected_answer": "watch.korinth.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.thandrel"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "deploy/Dockerfile.thandrel",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "zephyra-hub/aurora:prod"
+        },
+        "question": "What Docker image do we use?",
+        "expected_answer": "zephyra-hub/aurora:prod",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "thandrel ship --channel stable"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "thandrel ship --channel stable",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "model_syntax"
+        ],
+        "entity_values": {
+          "model_syntax": "Thalnex.document('Model', {fields})"
+        },
+        "question": "What's the model syntax?",
+        "expected_answer": "Thalnex.document('Model', {fields})"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/19 (Sun) 23:18",
+    "position_after_session": 20,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 April 11",
+            "2025 June 20",
+            "2025 July 4"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 April 11, 2025 June 20, 2025 July 4"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "observe.velturis.io/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "gold_answer": "observe.velturis.io/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.korinth"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "deploy/Dockerfile.korinth",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "zephyra-hub/aurora:prod"
+        },
+        "question": "What Docker image do we use?",
+        "gold_answer": "Uncertain — previously 'zephyra-hub/aurora:prod', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "thandrel ship --channel stable"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "Uncertain — previously 'thandrel ship --channel stable', but ci_config changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "model_syntax"
+        ],
+        "entity_values": {
+          "model_syntax": "Thalnex.document('Model', {fields})"
+        },
+        "question": "What's the model syntax?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "documentation_url",
+          "onboarding_guide",
+          "changelog_location"
+        ],
+        "entity_values": {
+          "documentation_url": "notion.so/aurora-team/docs",
+          "onboarding_guide": "ONBOARDING.md in repo root",
+          "changelog_location": "CHANGELOG.md in repo root"
+        },
+        "question": "Where can I find project documentation? List everything you know.",
+        "gold_answer": "Docs are at notion.so/aurora-team/docs, onboarding guide at ONBOARDING.md in repo root, and changelog at CHANGELOG.md in repo root."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  }
+}

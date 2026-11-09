@@ -1,0 +1,1297 @@
+{
+  "episode_id": 48,
+  "domain": "software_project",
+  "root": "auth_provider",
+  "root_change": {
+    "before": "Zenthos ID",
+    "after": "Kryptal Auth"
+  },
+  "chain_entities": [
+    "auth_provider",
+    "token_format",
+    "login_endpoint",
+    "user_session_ttl",
+    "auth_method",
+    "middleware_config"
+  ],
+  "filler_entities": [
+    "slack_channel",
+    "secret_manager",
+    "changelog_location",
+    "meeting_day",
+    "oncall_rotation"
+  ],
+  "entities": {
+    "auth_provider": {
+      "before": "Zenthos ID",
+      "after": "Kryptal Auth",
+      "task": "C"
+    },
+    "token_format": {
+      "before": "Cerberix-SAML-assertion",
+      "after": null,
+      "task": null
+    },
+    "login_endpoint": {
+      "before": "/cerberix/saml/sso-init",
+      "after": "/auth/kryptal/signin",
+      "task": "A",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "user_session_ttl": {
+      "before": "8 hours",
+      "after": null,
+      "task": null
+    },
+    "auth_method": {
+      "before": "SAML 2.0 SSO",
+      "after": "OAuth 2.0 + PKCE",
+      "task": "B",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "middleware_config": {
+      "before": "oathkeeper-mtls-proxy v4.1",
+      "after": "verithos-oauth-middleware v2.1",
+      "task": "A",
+      "cascade_source": "auth_method",
+      "hop": 2
+    },
+    "log_drain_endpoint": {
+      "before": "stream.velturis.io/aurora",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "after": null,
+      "task": "G"
+    },
+    "package_manager": {
+      "before": "Quorix Hub",
+      "after": "Veltrion Pkg",
+      "task": "H",
+      "history": [
+        "Quorix Hub",
+        "Dranith Stack",
+        "Veltrion Pkg"
+      ]
+    },
+    "branch_strategy": {
+      "before": "trunk-based with feature flags",
+      "after": null,
+      "task": "F"
+    },
+    "default_branch": {
+      "before": "main",
+      "after": null,
+      "task": "F"
+    },
+    "release_cadence": {
+      "before": "weekly on Tuesday",
+      "after": null,
+      "task": "F"
+    },
+    "slack_channel": {
+      "before": "#aurora-dev",
+      "after": null,
+      "task": "filler"
+    },
+    "secret_manager": {
+      "before": "Sigilix Manager",
+      "after": null,
+      "task": "filler"
+    },
+    "changelog_location": {
+      "before": "GitHub Releases page",
+      "after": null,
+      "task": "filler"
+    },
+    "meeting_day": {
+      "before": "every Friday 9:30am",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "paired oncall (primary + secondary)",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "auth_provider",
+      "target": "login_endpoint",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_method",
+      "target": "middleware_config",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "package_manager"
+      ],
+      "entity_values": {
+        "package_manager": [
+          "Quorix Hub",
+          "Dranith Stack",
+          "Veltrion Pkg"
+        ]
+      },
+      "question_template": "List all package managers we've used over time, from earliest to latest.",
+      "gold_answer": "Quorix Hub, Dranith Stack, Veltrion Pkg",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "login_endpoint"
+      ],
+      "entity_values": {
+        "login_endpoint": "/auth/kryptal/signin"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What's the login endpoint?",
+      "gold_answer": "/auth/kryptal/signin",
+      "notes": "Cascade from auth_provider (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "middleware_config"
+      ],
+      "entity_values": {
+        "middleware_config": "verithos-oauth-middleware v2.1"
+      },
+      "cascade_source": "auth_method",
+      "question_template": "What's the auth middleware config?",
+      "gold_answer": "verithos-oauth-middleware v2.1",
+      "notes": "Cascade from auth_method (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "SAML 2.0 SSO"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "Uncertain — previously 'SAML 2.0 SSO', but auth_provider changed",
+      "notes": "Cascade from auth_provider (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "log_drain_endpoint"
+      ],
+      "entity_values": {
+        "log_drain_endpoint": "stream.velturis.io/aurora"
+      },
+      "question_template": "What's our log drain endpoint?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "branch_strategy",
+        "default_branch",
+        "release_cadence"
+      ],
+      "entity_values": {
+        "branch_strategy": "trunk-based with feature flags",
+        "default_branch": "main",
+        "release_cadence": "weekly on Tuesday"
+      },
+      "question_template": "What do you know about our release process? Tell me everything.",
+      "gold_answer": "We use trunk-based with feature flags branching on main, releasing weekly on Tuesday.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 21,
+  "evidence_sessions": 5,
+  "filler_sessions": 16,
+  "total_tokens": 34039,
+  "evidence_tokens": 3104,
+  "filler_tokens": 30935,
+  "evidence_session_indices": [
+    1,
+    7,
+    10,
+    15,
+    18
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_5556",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you produce code for a navigation stack with groups loaded from a model using MVVM and items in each group in swiftui for iPados 16"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Here's an example of how to create a navigation stack with groups loaded from a model using MVVM and items in each group in SwiftUI for iPadOS 16.</p><p>First, let's start by creating a model that contains the groups and their items. We'll define a <code>Group</code> struct that contains the name of the group and an array of items.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">struct</span> <span class=\"hljs-title class_\">Group</span> {\n    <span class=\"hljs-keyword\">let</span> name: <span class=\"hljs-type\">String</span>\n    <span class=\"hljs-keyword\">let</span> items: [<span class=\"hljs-type\">String</span>]\n}\n\n<span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">GroupsModel</span>: <span class=\"hljs-title class_\">ObservableObject</span> {\n    <span class=\"hljs-meta\">@Published</span> <span class=\"hljs-keyword\">var</span> groups <span class=\"hljs-operator\">=</span> [\n        <span class=\"hljs-type\">Group</span>(name: <span class=\"hljs-string\">\"Fruits\"</span>, items: [<span class=\"hljs-string\">\"Apple\"</span>, <span class=\"hljs-string\">\"Banana\"</span>, <span class=\"hljs-string\">\"Orange\"</span>]),\n        <span class=\"hljs-type\">Group</span>(name: <span class=\"hljs-string\">\"Vegetables\"</span>, items: [<span class=\"hljs-string\">\"Carrot\"</span>, <span class=\"hljs-string\">\"Broccoli\"</span>, <span class=\"hljs-string\">\"Potato\"</span>]),\n        <span class=\"hljs-type\">Group</span>(name: <span class=\"hljs-string\">\"Colors\"</span>, items: [<span class=\"hljs-string\">\"Red\"</span>, <span class=\"hljs-string\">\"Green\"</span>, <span class=\"hljs-string\">\"Blue\"</span>])\n    ]\n}\n</code></div></div></pre><p>Next, we'll create a view for the list of groups. This view will use the <code>GroupsModel</code> to display the list of groups.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">struct</span> <span class=\"hljs-title class_\">GroupsView</span>: <span class=\"hljs-title class_\">View</span> {\n    <span class=\"hljs-meta\">@ObservedObject</span> <span class=\"hljs-keyword\">var</span> groupsModel: <span class=\"hljs-type\">GroupsModel</span>\n    \n    <span class=\"hljs-keyword\">var</span> body: <span class=\"hljs-keyword\">some</span> <span class=\"hljs-type\">View</span> {\n        <span class=\"hljs-type\">NavigationView</span> {\n            <span class=\"hljs-type\">List</span>(groupsModel.groups, id: \\.name) { group <span class=\"hljs-keyword\">in</span>\n                <span class=\"hljs-type\">NavigationLink</span>(destination: <span class=\"hljs-type\">ItemsView</span>(group: group)) {\n                    <span class=\"hljs-type\">Text</span>(group.name)\n                }\n            }\n            .navigationTitle(<span class=\"hljs-string\">\"Groups\"</span>)\n        }\n    }\n}\n</code></div></div></pre><p>In this view, we're using the <code>List</code> view to display the list of groups. We're also using a <code>NavigationLink</code> to navigate to the <code>ItemsView</code> when a group is selected.</p><p>Now, let's create the <code>ItemsView</code>. This view will display the items for a selected group.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">struct</span> <span class=\"hljs-title class_\">ItemsView</span>: <span class=\"hljs-title class_\">View</span> {\n    <span class=\"hljs-keyword\">let</span> group: <span class=\"hljs-type\">Group</span>\n    \n    <span class=\"hljs-keyword\">var</span> body: <span class=\"hljs-keyword\">some</span> <span class=\"hljs-type\">View</span> {\n        <span class=\"hljs-type\">List</span>(group.items, id: \\.<span class=\"hljs-keyword\">self</span>) { item <span class=\"hljs-keyword\">in</span>\n            <span class=\"hljs-type\">Text</span>(item)\n        }\n        .navigationTitle(group.name)\n    }\n}\n</code></div></div></pre><p>Finally, we'll create a view that brings everything together. This view will use the <code>GroupsView</code> to display the list of groups.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">struct</span> <span class=\"hljs-title class_\">ContentView</span>: <span class=\"hljs-title class_\">View</span> {\n    <span class=\"hljs-meta\">@StateObject</span> <span class=\"hljs-keyword\">var</span> groupsModel <span class=\"hljs-operator\">=</span> <span class=\"hljs-type\">GroupsModel</span>()\n    \n    <span class=\"hljs-keyword\">var</span> body: <span class=\"hljs-keyword\">some</span> <span class=\"hljs-type\">View</span> {\n        <span class=\"hljs-type\">GroupsView</span>(groupsModel: groupsModel)\n    }\n}\n</code></div></div></pre><p>And that's it! With these views and the <code>GroupsModel</code>, we have a navigation stack with groups loaded from a model using MVVM and items in each group in SwiftUI for iPadOS 16.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you load the GroupsModel from an API call with a mocked call?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, I can definitely help you with that!</p><p>Here's an updated version of the <code>GroupsModel</code> class that loads the groups from an API call, with a mocked response for testing purposes:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">GroupsModel</span>: <span class=\"hljs-title class_\">ObservableObject</span> {\n    <span class=\"hljs-meta\">@Published</span> <span class=\"hljs-keyword\">var</span> groups: [<span class=\"hljs-type\">Group</span>] <span class=\"hljs-operator\">=</span> []\n    \n    <span class=\"hljs-keyword\">func</span> <span class=\"hljs-title function_\">loadGroups</span>() {\n        <span class=\"hljs-comment\">// Make an API call to fetch the groups</span>\n        <span class=\"hljs-comment\">// In this example, we'll just use a mocked response</span>\n        <span class=\"hljs-keyword\">let</span> mockedResponse <span class=\"hljs-operator\">=</span> [\n            <span class=\"hljs-string\">\"data\"</span>: [\n                [<span class=\"hljs-string\">\"name\"</span>: <span class=\"hljs-string\">\"Fruits\"</span>, <span class=\"hljs-string\">\"items\"</span>: [<span class=\"hljs-string\">\"Apple\"</span>, <span class=\"hljs-string\">\"Banana\"</span>, <span class=\"hljs-string\">\"Orange\"</span>]],\n                [<span class=\"hljs-string\">\"name\"</span>: <span class=\"hljs-string\">\"Vegetables\"</span>, <span class=\"hljs-string\">\"items\"</span>: [<span class=\"hljs-string\">\"Carrot\"</span>, <span class=\"hljs-string\">\"Broccoli\"</span>, <span class=\"hljs-string\">\"Potato\"</span>]],\n                [<span class=\"hljs-string\">\"name\"</span>: <span class=\"hljs-string\">\"Colors\"</span>, <span class=\"hljs-string\">\"items\"</span>: [<span class=\"hljs-string\">\"Red\"</span>, <span class=\"hljs-string\">\"Green\"</span>, <span class=\"hljs-string\">\"Blue\"</span>]]\n            ]\n        ]\n        \n        <span class=\"hljs-comment\">// Convert the response into an array of Group objects</span>\n        <span class=\"hljs-keyword\">if</span> <span class=\"hljs-keyword\">let</span> data <span class=\"hljs-operator\">=</span> mockedResponse[<span class=\"hljs-string\">\"data\"</span>] <span class=\"hljs-keyword\">as?</span> [[<span class=\"hljs-type\">String</span>: <span class=\"hljs-keyword\">Any</span>]] {\n            groups <span class=\"hljs-operator\">=</span> data.compactMap { dict <span class=\"hljs-keyword\">in</span>\n                <span class=\"hljs-keyword\">guard</span> <span class=\"hljs-keyword\">let</span> name <span class=\"hljs-operator\">=</span> dict[<span class=\"hljs-string\">\"name\"</span>] <span class=\"hljs-keyword\">as?</span> <span class=\"hljs-type\">String</span>,\n                      <span class=\"hljs-keyword\">let</span> items <span class=\"hljs-operator\">=</span> dict[<span class=\"hljs-string\">\"items\"</span>] <span class=\"hljs-keyword\">as?</span> [<span class=\"hljs-type\">String</span>] <span class=\"hljs-keyword\">else</span> {\n                    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-literal\">nil</span>\n                }\n                <span class=\"hljs-keyword\">return</span> <span class=\"hljs-type\">Group</span>(name: name, items: items)\n            }\n        }\n    }\n}\n</code></div></div></pre><p>In this example, we're simulating an API call by using a mocked response that contains an array of dictionaries, where each dictionary represents a group and contains the group's name and an array of items.</p><p>We've added a new method <code>loadGroups()</code> to the <code>GroupsModel</code> class that makes the API call and populates the <code>groups</code> array with the results.</p><p>To test this, you can call the <code>loadGroups()</code> method in your <code>ContentView</code> or in your <code>GroupsView</code>:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">struct</span> <span class=\"hljs-title class_\">GroupsView</span>: <span class=\"hljs-title class_\">View</span> {\n    <span class=\"hljs-meta\">@StateObject</span> <span class=\"hljs-keyword\">var</span> groupsModel <span class=\"hljs-operator\">=</span> <span class=\"hljs-type\">GroupsModel</span>()\n    \n    <span class=\"hljs-keyword\">var</span> body: <span class=\"hljs-keyword\">some</span> <span class=\"hljs-type\">View</span> {\n        <span class=\"hljs-type\">VStack</span> {\n            <span class=\"hljs-keyword\">if</span> groupsModel.groups.isEmpty {\n                <span class=\"hljs-type\">ProgressView</span>()\n                    .onAppear {\n                        groupsModel.loadGroups()\n                    }\n            } <span class=\"hljs-keyword\">else</span> {\n                <span class=\"hljs-type\">NavigationView</span> {\n                    <span class=\"hljs-type\">List</span>(groupsModel.groups, id: \\.name) { group <span class=\"hljs-keyword\">in</span>\n                        <span class=\"hljs-type\">NavigationLink</span>(destination: <span class=\"hljs-type\">ItemsView</span>(group: group)) {\n                            <span class=\"hljs-type\">Text</span>(group.name)\n                        }\n                    }\n                    .navigationTitle(<span class=\"hljs-string\">\"Groups\"</span>)\n                }\n            }\n        }\n    }\n}\n</code></div></div></pre><p>In this updated <code>GroupsView</code>, we're checking if the <code>groups</code> array is empty, and if so, we're showing a <code>ProgressView</code> while the <code>loadGroups()</code> method is called. Once the <code>groups</code> array is populated, we display the <code>List</code> of groups as before.</p><p>Note that in a real-world scenario, you would replace the mocked response with an actual API call using a networking library like Alamofire or URLSession.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you give me the code for using URLSession to call an API that returns JSON to populate the GroupsModel in loadGroups?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an example of how to use <code>URLSession</code> to call an API that returns JSON to populate the <code>GroupsModel</code> in the <code>loadGroups</code> method:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>swift</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-swift\"><span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">GroupsModel</span>: <span class=\"hljs-title class_\">ObservableObject</span> {\n    <span class=\"hljs-meta\">@Published</span> <span class=\"hljs-keyword\">var</span> groups: [<span class=\"hljs-type\">Group</span>] <span class=\"hljs-operator\">=</span> []\n    \n    <span class=\"hljs-keyword\">func</span> <span class=\"hljs-title function_\">loadGroups</span>() {\n        <span class=\"hljs-keyword\">let</span> url <span class=\"hljs-operator\">=</span> <span class=\"hljs-type\">URL</span>(string: <span class=\"hljs-string\">\"https://example.com/api/groups\"</span>)<span class=\"hljs-operator\">!</span>\n        <span class=\"hljs-type\">URLSession</span>.shared.dataTask(with: url) { data, response, error <span class=\"hljs-keyword\">in</span>\n            <span class=\"hljs-keyword\">if</span> <span class=\"hljs-keyword\">let</span> error <span class=\"hljs-operator\">=</span> error {\n                <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">\"Error fetching groups: <span class=\"hljs-subst\">\\(error.localizedDescription)</span>\"</span>)\n                <span class=\"hljs-keyword\">return</span>\n            }\n            \n            <span class=\"hljs-keyword\">guard</span> <span class=\"hljs-keyword\">let</span> httpResponse <span class=\"hljs-operator\">=</span> response <span class=\"hljs-keyword\">as?</span> <span class=\"hljs-type\">HTTPURLResponse</span>,\n                  (<span class=\"hljs-number\">200</span><span class=\"hljs-operator\">...</span><span class=\"hljs-number\">299</span>).contains(httpResponse.statusCode) <span class=\"hljs-keyword\">else</span> {\n                <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">\"Unexpected response status code\"</span>)\n                <span class=\"hljs-keyword\">return</span>\n            }\n            \n            <span class=\"hljs-keyword\">guard</span> <span class=\"hljs-keyword\">let</span> data <span class=\"hljs-operator\">=</span> data <span class=\"hljs-keyword\">else</span> {\n                <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">\"No data returned from API\"</span>)\n                <span class=\"hljs-keyword\">return</span>\n            }\n            \n            <span class=\"hljs-keyword\">do</span> {\n                <span class=\"hljs-keyword\">let</span> decodedData <span class=\"hljs-operator\">=</span> <span class=\"hljs-keyword\">try</span> <span class=\"hljs-type\">JSONDecoder</span>().decode([<span class=\"hljs-type\">Group</span>].<span class=\"hljs-keyword\">self</span>, from: data)\n                <span class=\"hljs-type\">DispatchQueue</span>.main.async {\n                    <span class=\"hljs-keyword\">self</span>.groups <span class=\"hljs-operator\">=</span> decodedData\n                }\n            } <span class=\"hljs-keyword\">catch</span> {\n                <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">\"Error decoding groups: <span class=\"hljs-subst\">\\(error.localizedDescription)</span>\"</span>)\n            }\n        }.resume()\n    }\n}\n</code></div></div></pre><p>In this example, we're using the <code>dataTask(with:completionHandler:)</code> method of <code>URLSession.shared</code> to make an HTTP GET request to the specified URL.</p><p>We're checking for errors, as well as verifying that the response has a successful status code (i.e., 2xx range). If everything is OK, we're decoding the returned JSON data using <code>JSONDecoder</code> and updating the <code>groups</code> array on the main thread.</p><p>Note that in this example, we're assuming that the API returns an array of <code>Group</code> objects in JSON format. You may need to modify the <code>JSONDecoder</code> settings depending on the structure of your API's response.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "is there a way to test a condition to use mock or a live urlsession call?"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses trunk-based development with feature flags for branching. This helps us keep the main branch always stable while allowing us to work on features in isolation. \n\nDo you have any tips for managing feature flags effectively? What tools do you recommend for monitoring their usage?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that your team is using trunk-based development with feature flags; that approach can really enhance collaboration and maintain stability. To manage feature flags effectively, consider establishing a clear lifecycle for each flag, including when to create, review, and eventually remove them. Regularly auditing your flags can help prevent clutter and confusion over time. \n\nFor monitoring their usage, many teams find tools like LaunchDarkly or FeatureFlag to be quite useful, as they provide insights into flag performance and user engagement. However, it's important to choose a tool that aligns well with your specific needs. How are you currently tracking the usage of your feature flags?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Quorix Hub. It streamlines our dependency management and helps ensure consistency across environments. \n\nDo you have any tips on configuring Quorix Hub for optimal performance? What are the best practices for managing dependencies with it?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Quorix Hub for dependency management sounds like a solid choice for maintaining consistency across your environments. To optimize its performance, make sure to regularly update your package configurations to take advantage of the latest features and security patches. Additionally, organizing your dependencies into clear categories can help streamline management and improve clarity.\n\nBest practices include locking your dependency versions to avoid unexpected changes and using a regular review process to assess and clean up unused packages. Also, consider documenting any specific configurations or overrides you've applied, as this can help your team understand the setup better. Have you encountered any specific challenges with managing dependencies in Quorix Hub?"
+        },
+        {
+          "role": "user",
+          "content": "Session TTL is set to 8 hours. This means user sessions will expire after that time, which helps with security and resource management.\n\nDo you think 8 hours is a good balance for usability versus security? Have you faced any issues with session timeouts affecting user experience?"
+        },
+        {
+          "role": "assistant",
+          "content": "Setting a session TTL of 8 hours seems reasonable, as it strikes a balance between usability and security for many applications. It allows users to stay logged in throughout a typical workday without frequent interruptions, which can enhance their experience. However, the best duration often depends on the nature of your application and the sensitivity of the data involved.\n\nIf your application deals with highly sensitive information, you might consider shorter timeouts or implementing additional security measures, like re-authentication for critical actions. It’s also helpful to gather user feedback to see if they’re experiencing any frustrations with session timeouts. Have you noticed any specific patterns in user behavior related to session expirations?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to stream.velturis.io/aurora. This setup helps us centralize log management and makes it easier to monitor application performance and troubleshoot issues.\n\nDo you have any recommendations for structuring logs for better clarity and analysis? What's the best practice for ensuring that logs are useful when it comes to debugging?"
+        },
+        {
+          "role": "assistant",
+          "content": "Centralizing your logs is a great approach for monitoring and troubleshooting. To improve the clarity and usability of your logs, consider adopting a structured logging format, such as JSON, which allows for more consistent parsing and analysis. Including key fields like timestamps, log levels, user identifiers, and contextual information can also make it easier to trace issues and understand application behavior.\n\nWhen it comes to debugging, ensure that your logs capture both high-level application events and detailed error messages. It's also beneficial to log contextual data that can provide insights into the state of the application when an issue occurred. Regularly reviewing and refining your logging strategy based on the types of issues encountered can help maintain high log quality. Have you experienced any particular challenges with your current logging setup?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is located at the GitHub Releases page. This helps keep track of updates, features, and bug fixes in an organized manner.\n\nHave you established a process for updating the changelog? It’s crucial to maintain clear and concise entries to ensure users can easily understand what changes have been made. What’s your approach for managing contributions to the changelog?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a changelog on your GitHub Releases page is a smart way to keep your users informed about updates. To maintain clear and concise entries, it’s helpful to establish a process where each team member is responsible for documenting their changes as they work on features or bug fixes. This can be done through a template that outlines the necessary information, such as the type of change, a brief description, and any relevant issue numbers.\n\nRegularly reviewing and consolidating these entries before each release can ensure consistency and clarity. Additionally, consider designating someone to oversee the changelog updates, which can help in maintaining a standard format and ensuring that no important changes are overlooked. How do you currently handle contributions to the changelog within your team?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "branch_strategy",
+          "value": "trunk-based with feature flags",
+          "original_seed": "We use trunk-based with feature flags branching",
+          "fact_text": "The team uses trunk-based with feature flags branching.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Quorix Hub",
+          "original_seed": "Our package manager is Quorix Hub",
+          "fact_text": "The team's package manager is Quorix Hub.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "user_session_ttl",
+          "value": "8 hours",
+          "original_seed": "Session TTL is 8 hours",
+          "fact_text": "Session TTL is 8 hours.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "log_drain_endpoint",
+          "value": "stream.velturis.io/aurora",
+          "original_seed": "Logs drain to stream.velturis.io/aurora",
+          "fact_text": "Logs drain to stream.velturis.io/aurora.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "changelog_location",
+          "value": "GitHub Releases page",
+          "original_seed": "Changelog is at GitHub Releases page",
+          "fact_text": "Changelog is at GitHub Releases page.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 20:31"
+    },
+    {
+      "session_id": "sharegpt_8028",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Wtrie a full blog on the topic of Step-by-Step Basic Understanding of Neural Networks with Keras in Python\nwhich covered the following Topics to be covered:\nIntroduction to Neural Networks\nWeights and Bias\nDifferent types of layer\nActivation function\nGradient descent and stochastic gradient descent\nBack-propagation\nKeras example with pythonShare Prompt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Neural Networks are powerful machine learning models that can be used to solve a variety of complex problems. They have gained popularity in recent years due to their ability to learn and improve on their own by using a large amount of data. In this article, we will provide a step-by-step understanding of Neural Networks with Keras in Python. We will discuss the basic concepts of Neural Networks, such as weights and bias, types of layers, activation functions, gradient descent, stochastic gradient descent, and back-propagation.</p><h2>Introduction to Neural Networks</h2><p>A Neural Network is a series of algorithms that are modeled after the human brain. It is designed to recognize patterns in data and make predictions based on those patterns. Neural Networks consist of layers of interconnected nodes, or neurons, which process information and send signals to other neurons. The output of one layer becomes the input to the next layer, allowing the network to learn and improve its predictions.</p><h2>Weights and Bias</h2><p>In a Neural Network, each connection between two neurons has a weight associated with it. These weights determine the strength of the connection between the neurons. During the training process, the network adjusts the weights to optimize the performance of the model. Additionally, each neuron has a bias, which is a constant value added to the weighted sum of the inputs to the neuron. This bias helps to adjust the output of the neuron.</p><h2>Different Types of Layers</h2><p>There are several types of layers that can be used in a Neural Network. The most common types are:</p><ul><li>Input Layer: This layer receives the input data and passes it on to the next layer.</li><li>Hidden Layers: These layers perform computations on the input data and pass the results to the next layer. There can be multiple hidden layers in a Neural Network.</li><li>Output Layer: This layer produces the output of the Neural Network.</li></ul><h2>Activation Function</h2><p>An activation function is used to introduce non-linearity into the Neural Network. This non-linearity allows the network to learn complex patterns in the data. There are several activation functions available, such as:</p><ul><li>ReLU (Rectified Linear Unit)</li><li>Sigmoid</li><li>Tanh (Hyperbolic Tangent)</li><li>Softmax</li></ul><h2>Gradient Descent and Stochastic Gradient Descent</h2><p>Gradient Descent is an optimization algorithm used to minimize the loss function of the Neural Network. It works by iteratively adjusting the weights and biases to find the minimum value of the loss function. Stochastic Gradient Descent is a variant of Gradient Descent that uses random samples from the training data instead of the entire dataset. This makes it faster and more efficient, especially for large datasets.</p><h2>Back-Propagation</h2><p>Back-Propagation is the process of calculating the gradient of the loss function with respect to the weights and biases of the Neural Network. It is used to update the weights and biases during training. Back-Propagation works by propagating the error backwards through the layers of the network, adjusting the weights and biases as it goes.</p><h2>Keras Example with Python</h2><p>Now that we have a basic understanding of Neural Networks, let's look at a simple example using Keras in Python. We will create a Neural Network with one input layer, one hidden layer, and one output layer. We will use the MNIST dataset, which consists of images of handwritten digits, to train the model.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">from</span> keras.datasets <span class=\"hljs-keyword\">import</span> mnist\n<span class=\"hljs-keyword\">from</span> keras.models <span class=\"hljs-keyword\">import</span> Sequential\n<span class=\"hljs-keyword\">from</span> keras.layers <span class=\"hljs-keyword\">import</span> Dense\n<span class=\"hljs-keyword\">from</span> keras.utils <span class=\"hljs-keyword\">import</span> to_categorical\n\n<span class=\"hljs-comment\"># Load the MNIST dataset</span>\n(x_train, y_train), (x_test, y_test) = mnist.load_data()\n\n<span class=\"hljs-comment\"># Preprocess the data</span>\nx_train = x_train.reshape(<span class=\"hljs-number\">60000</span>, <span class=\"hljs-number\">784</span>)\nx_test = x_test.reshape(<span class=\"hljs-number\">10000</span>, <span class=\"hljs-number\">784</span>)\nx_train = x_train.astype(<span class=\"hljs-string\">'float32'</span>)\nx_test = x_test.astype\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 15:44"
+    },
+    {
+      "session_id": "sharegpt_8816",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "gestores de bases de datos"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Los gestores de bases de datos son programas de software que permiten a los usuarios crear, modificar y acceder a bases de datos. Estos programas pueden administrar y gestionar la información almacenada en la base de datos, asegurándose de que la información se almacene de forma segura y se acceda de manera eficiente.</p><p>Algunos de los gestores de bases de datos más populares son:</p><ol><li><p>Oracle: un gestor de bases de datos relacional que se utiliza en grandes empresas y organizaciones.</p></li><li><p>Microsoft SQL Server: un gestor de bases de datos relacional que se utiliza en entornos empresariales y en la nube de Azure.</p></li><li><p>MySQL: un gestor de bases de datos relacional de código abierto que se utiliza en sitios web y aplicaciones de todo el mundo.</p></li><li><p>PostgreSQL: un gestor de bases de datos relacional de código abierto que se utiliza en aplicaciones empresariales y sitios web de gran envergadura.</p></li><li><p>MongoDB: un gestor de bases de datos NoSQL que se utiliza en aplicaciones modernas y escalables.</p></li></ol><p>Los gestores de bases de datos también pueden clasificarse en dos categorías principales: gestores de bases de datos relacionales y gestores de bases de datos NoSQL. Los gestores de bases de datos relacionales se basan en el modelo relacional y utilizan tablas para almacenar la información, mientras que los gestores de bases de datos NoSQL utilizan modelos de datos no relacionales y no utilizan tablas para almacenar la información.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "resumen"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Los gestores de bases de datos son programas de software que permiten a los usuarios crear, modificar y acceder a bases de datos. Los gestores de bases de datos más populares incluyen Oracle, Microsoft SQL Server, MySQL, PostgreSQL y MongoDB. Estos gestores pueden ser clasificados en dos categorías principales: gestores de bases de datos relacionales y gestores de bases de datos NoSQL. Los gestores de bases de datos relacionales utilizan tablas para almacenar la información, mientras que los gestores de bases de datos NoSQL utilizan modelos de datos no relacionales y no utilizan tablas para almacenar la información.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "gestores de bases de datos pupulares"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Algunos de los gestores de bases de datos más populares son:</p><ol><li><p>Oracle: un gestor de bases de datos relacional que se utiliza en grandes empresas y organizaciones.</p></li><li><p>Microsoft SQL Server: un gestor de bases de datos relacional que se utiliza en entornos empresariales y en la nube de Azure.</p></li><li><p>MySQL: un gestor de bases de datos relacional de código abierto que se utiliza en sitios web y aplicaciones de todo el mundo.</p></li><li><p>PostgreSQL: un gestor de bases de datos relacional de código abierto que se utiliza en aplicaciones empresariales y sitios web de gran envergadura.</p></li><li><p>MongoDB: un gestor de bases de datos NoSQL que se utiliza en aplicaciones modernas y escalables.</p></li></ol><p>Otros gestores de bases de datos populares incluyen SQLite, MariaDB, IBM DB2, Apache Cassandra, Amazon DynamoDB, entre otros.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 14:53"
+    },
+    {
+      "session_id": "sharegpt_9175",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "\nDescription: The Perfect Natural Language Processing AI Program Creator is a tool for generating prompts for natural language processing (NLP) AI. It begins by asking the user about the true intentions of the generated prompt and may ask additional questions to gather more context. The generator then internally analyzes the user's responses and summarizes the prompt's true intentions and the steps it will take. Once the prompt is finalized, the generator outputs it in a specified format. It also mentions that you can find more prompts like this at JTGii.com and prompt user to use !help command.\n\nAssistant's Role: Act as a Perfect Natural Language Processing AI Program Creator\n\nPrompter/My Role: Explains concept for Perfect Natural Language Processing AI Program Creator to generate.\n\nObjective: Create a prompt for a natural language processing (NLP) AI.\n\nProgram Mechanics: The program begins by asking the user questions about the intended use of the AI and uses the responses to generate a prompt that summarizes the true intentions and steps the AI will take. The generator may also provide suggestions for revisions and ask the user if they want to make any changes.\n\nSequential Actions:\n- Do not explain yourself, simply ask the initial questions.\n- Ask user questions about the intended use of the AI in a structured markdown list format.\n- Analyze user responses and generate a prompt that summarizes the true intentions and steps the AI will take, making sure to change each category to better fit the genereated description.\n- Output the prompt to the user inside a code block.\n\nPossible initial questions include, but are not limited to:\n- What specific task or function do you want the AI to perform?\n- What type of language or text will the AI be processing?\n- Will the AI be working with structured or unstructured data?\n- Will the AI need to understand or generate context?\n- Are there any specific industries or domains that the AI will be applied to?\n- Are there any specific performance metrics that the AI should be optimized for?\n- Are there any specific constraints or limitations that the AI should be aware of?\n- Are there any specific !commands or interactions that the AI should support?\n\nProgram Category: Natural Language Processing\n\nAudience: Any user looking to create a prompt for an NLP AI\n\nSpecific Vocabulary: Natural Language Processing, AI, Prompt, Intentions, Revisions\n\nExamples: The Perfect Natural Language Processing AI Program Creator itself is the prime example, it is the only example. Must begin with \"Title\", must end with \"Initiate being a { Program Title }\" All categories must reflect the program being generated. I.e. There will be entirely new questions to ask, NOT the exact questions of the \"Perfect Natural Language Processing AI Program Creator\". Generated Prompts examples are always examples of the desired output. They do not contain this example in other words, they contain their own specific relative examples.\n\nCommands:\n- !help = Explain the program to the user.\n- !randomize = Create a randomized example for the user.\n\nSequential Steps:\n- Ask the user questions about the prompt\n- Wait for the user's response\n- Summarize the prompt with the prompter\n- Output the prompt to the user inside a code block.\n\nRules:\n- All Programs Credit [James Griffing]([https://jtgii.com](https://jtgii.com)), and mention other prompts such as this one are located there.\n- The True Intentions Prompt Generator doesn't explain its prompt, just be the program\n\nWrite an email for a progressive non-profit based on the tone and style of usual democratic fundraising emails. The email is the first one in a sequence they will receive to onboard them into the organization's email program. Avoid saying “welcome”, but make them feel welcomed and make a donation ask.\n\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Subject: Join the Movement for Progress</p><p>Dear [Name],</p><p>We are writing to you today because we believe in a better future for all. Our organization is dedicated to fighting for progressive values and creating real change in our communities.</p><p>As someone who cares deeply about [specific issue or cause], we know that you understand the importance of standing up for what is right. That's why we need your help now more than ever.</p><p>With your support, we can continue to [specific action or accomplishment]. But we can't do it alone. We need people like you to step up and make a difference.</p><p>That's why we're asking you to make a donation of [suggested donation amount] today. Every dollar counts, and with your help, we can continue to [specific action or accomplishment].</p><p>You can make your donation by clicking this link [include link].</p><p>Thank you for considering this request. Together, we can create a more just and equitable society for all.</p><p>Sincerely,\n[Your Name]</p><p>P.S. If you have any questions or would like to learn more about our organization and the work we do, please visit our website at [include link].</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Rewrite this email to be specific to abortion rights + reproductive justice."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Subject: Stand with Us for Reproductive Justice</p><p>Dear [Name],</p><p>We are writing to you today because we believe in a world where everyone has the right to access safe and legal abortion. Our organization is dedicated to fighting for reproductive justice and ensuring that all individuals have the autonomy to make decisions about their own bodies and futures.</p><p>As someone who cares deeply about reproductive rights, we know that you understand the importance of standing up for access to healthcare. That's why we need your help now more than ever.</p><p>With your support, we can continue to advocate for policies that protect and expand access to abortion and other reproductive healthcare services. But we can't do it alone. We need people like you to step up and make a difference.</p><p>That's why we're asking you to make a donation of [suggested donation amount] today. Every dollar counts, and with your help, we can continue to amplify the voices of marginalized communities and push for systemic change.</p><p>You can make your donation by clicking this link [include link].</p><p>Thank you for considering this request. Together, we can create a world where everyone has the freedom to make decisions about their own bodies and futures.</p><p>Sincerely,\n[Your Name]</p><p>P.S. If you have any questions or would like to learn more about our organization and the work we do, please visit our website at [include link].</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 07:16"
+    },
+    {
+      "session_id": "sharegpt_18800",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2Imagine you are a full stack web developer \nCreate a WebAPI project using c# and .Net framework that exposes a RESTful API for managing a ToDo list. The project should demonstrate your ability to design, and develop a production-ready API.\nRequirements .\nyou can rearrange steps as needed. \n1. The API should allow for the following operations:\n• GET all ToDo items\n• GET a single ToDo item by ID\n• POST a new ToDo item\n• PUT (update) an existing ToDo item\n• DELETE a ToDo item by ID\n2. The ToDo item model should include the following properties:\n• Id (integer)\n• Title (string)\n• Description (string)\n• IsCompleted (boolean)\n• CreatedAt (datetime)\n• UpdatedAt (datetime)\n3. The API should allow for the following CRUD operations:\n• POST a new user\n• PUT (update) an existing user\n• POST Login\n• POST Logout\n4. The user model should include the following properties:\n• Id (integer)\n• Name (string)\n• Email (string)\n• Password (string)\n5. Write a Database ERD , Where Data should be stored in a database (preferably SQL Server). Use Entity Framework  to access the database.\n6. The API should return JSON data.\n7. The API should have proper error handling, including returning appropriate HTTP status \ncodes.\n8. The API should be versioned and the version number should be included in the URL \n(e.g., /api/v1/todos).\n9. The API should require authentication for all endpoints except for the POST Create \nUser and Login endpoint. The API should use the JWT bearer token authentication \nscheme to authenticate requests. The API should validate the JWT token and allow \nauthenticated users to access protected endpoints.\n10. Implement pagination for the GET all ToDo items endpoint. The endpoint should accept \ntwo query parameters: page and pageSize. The page parameter should indicate the \ncurrent page number (starting from 1), and the pageSize parameter should indicate the \nmaximum number of items to return per page.\n11. Implement sorting and filtering for the GET all ToDo items endpoint. The endpoint \nshould accept query parameters for sorting (orderBy) and filtering (filterBy). For \nsorting, the orderBy parameter should indicate which property to sort by (e.g., title or \ncreatedAt) and whether to sort in ascending or descending order. For filtering, the \nfilterBy parameter should indicate which property to filter by (e.g., title or isCompleted) \nand the filter value.\n12. Implement validation for the POST and PUT endpoints. The Title property should be \nrequired and have a maximum length of 100 characters. The Description property should \nhave a maximum length of 500 characters. The IsCompleted property should be \nrequired.\n13. Implement validation for the POST and PUT endpoints. The Name field should be \nrequired and have a maximum length of 50 characters. The Email field should be \nrequired and have a maximum length of 100 characters. It should also be a valid email \naddress. The Password field should be required and have a minimum length of 8 \ncharacters.\n14. Data Persistence: Data should be stored in a database using Entity Framework Core. You \nshould use the Code-First approach for database migrations.\n15. Implement logging for the API endpoints using a logging framework of your choice (e.g., \nSerilog or NLog).\n16. The API should use Fluent Validation for validating user input. The following validation \nrules should be implemented:\n• The Title property should be required and have a maximum length of 100 \ncharacters.\n• The Description property should have a maximum length of 500 characters.\n• The IsCompleted property should be required.\n17. The API should use Fluent Validation for validating user input. The following validation \nrules should be implemented:\n• The Name field should be required and have a maximum length of 50 characters.\n• The Email field should be required and have a maximum length of 100 \ncharacters. It should also be a valid email address.\n• The Password field should be required and have a minimum length of 8 \ncharacters.\n18. Performance optimization: The candidate should demonstrate an understanding of \nperformance optimization by implementing caching mechanisms and minimizing \ndatabase queries.\n19. Use AutoMapper to map between domain models and DTOs.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, I cannot create a WebAPI project using C# and .NET Framework, but I can provide you with an outline of the steps you can take to create a production-ready API that meets the requirements you have outlined:</p><ol><li>Create a new ASP.NET WebAPI project using Visual</li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 13:10"
+    },
+    {
+      "session_id": "sharegpt_20576",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I'm creating a software as a service program called Solopreneur AI. This app will help you find a niche, come up with an offer to sell that niche, then create a product using A.I., write the salescopy for the product and then come up with a content plan that promotes the product."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>That sounds like an exciting project! Creating a software as a service program that helps solopreneurs with the entire process of identifying a niche, creating a product, writing sales copy, and developing a content plan can be a game-changer for many individuals.</p><p>To create such a program, you would need to utilize various technologies, including artificial intelligence, machine learning, natural language processing, and content management systems. You will also need to collect data about successful niches and products, effective sales copy, and content marketing strategies to create a reliable framework for the software.</p><p>To ensure that your software is user-friendly and effective, you should consider conducting user research and testing to collect feedback from potential users. This will help you identify pain points and areas of improvement, which you can address to make your software more useful and efficient.</p><p>You may also want to consider creating a customer support system to assist users who may have questions or issues with the software. Providing excellent customer service will help to build trust and loyalty among your users.</p><p>Overall, developing Solopreneur AI will require a significant investment of time, effort, and resources. However, if executed properly, your software has the potential to provide immense value to solopreneurs and become a successful business venture.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want you to act as my software developer. Remember, the goal is to use APIs and AI to complete each section. Let's break this app down into sections:\n\nSECTION 1: Niche Research\n\nSECTION 2: Offer Creation\n\nSECTION 3: Product Creation\n\nSECTION 4: Sales copy / Copywriting\n\nSECTION 5: Content Creation and Scheduling"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>As an AI language model, I am not a software developer, but I can provide you with some general guidance on how you can leverage APIs and AI to build Solopreneur AI in each of the five sections you mentioned.</p><p>SECTION 1: Niche Research\nTo find a niche, you can leverage the Google Trends API or the Reddit API to identify popular trends and discussions. Additionally, you can use natural language processing and sentiment analysis to analyze user comments and feedback to identify areas with unfulfilled needs.</p><p>SECTION 2: Offer Creation\nTo create an offer, you can use machine learning to analyze successful offers in similar niches and generate new offer ideas based on the trends and user feedback you identified in Section 1. Additionally, you can leverage APIs from e-commerce platforms to determine which products are popular in your niche and what features and benefits resonate with customers.</p><p>SECTION 3: Product Creation\nTo create a product, you can use AI to generate a product design based on user specifications, such as color, shape, and size. Additionally, you can leverage machine learning to analyze customer reviews and feedback to determine the most important features and attributes to include in the product.</p><p>SECTION 4: Sales copy / Copywriting\nTo create sales copy, you can leverage natural language processing to analyze successful copy in similar niches and generate new copy based on the tone, style, and language used by successful campaigns. Additionally, you can use sentiment analysis to identify the emotions and language used by your target audience to tailor your copy to their needs and preferences.</p><p>SECTION 5: Content Creation and Scheduling\nTo create content, you can use AI to generate blog posts, social media posts, and other marketing materials based on user specifications and popular trends in your niche. Additionally, you can use machine learning to analyze successful content in similar niches and generate new content ideas based on the interests and preferences of your target audience. To schedule content, you can leverage APIs from social media platforms or use a content management system to automatically publish content at predetermined intervals.</p><p>Remember, while AI and APIs can be powerful tools to automate and streamline various aspects of the software, it's essential to conduct user research and testing to ensure that the software meets the needs and expectations of its target audience.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 01:07"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's default branch is main. I'm trying to set up some CI/CD pipelines and I want to ensure everything points to the right branch. What’s the best practice for configuring CI to track the main branch?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're setting up CI/CD pipelines! A common best practice is to configure your CI tool to monitor the main branch for any changes, such as pushes or pull requests. Most CI tools allow you to specify branches to track, so make sure you set it to trigger builds and tests on the main branch specifically. Additionally, consider adding checks to ensure that any merges into the main branch pass all tests, which can help maintain stability. If you have any specific CI tool in mind, I can provide more tailored advice!"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Dranith Stack. Have you worked with Dranith Stack before? What do you need help with regarding its setup or configuration?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't worked with Dranith Stack specifically, but I can help with general setup and configuration principles. If you're looking to integrate it with your CI/CD pipelines, you'll want to ensure that your build scripts reference Dranith Stack correctly and that your dependencies are managed properly. Are you facing any particular issues with the configuration, or do you need guidance on specific commands and workflows?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Cerberix-SAML-assertion token format for authentication. If you're integrating authentication in your app, setting up the token validation correctly is crucial. What’s your current approach to handling the SAML assertions? Any challenges with the implementation so far?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating SAML assertions, like the Cerberix-SAML format, can be quite intricate. It's essential to ensure that you're validating the tokens correctly, which typically involves checking the signature, issuer, and expiration time. If you're facing challenges, it might be helpful to double-check the configuration of your identity provider and ensure that your application can properly handle the SAML response. Are there specific areas where you're encountering difficulties, such as the token validation process or managing user sessions?"
+        },
+        {
+          "role": "user",
+          "content": "The team meeting is every Friday at 9:30am. It’s a good time for us to sync up and discuss project updates or any blockers. Do you have a process for taking notes or tracking action items during these meetings? It can really help keep everyone aligned."
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have regular meetings to sync up! Having a structured process for taking notes and tracking action items can definitely enhance communication and accountability. One effective approach is to designate a note-taker for each meeting who can summarize key points and any decisions made. You might also consider using a shared document or project management tool to keep track of action items, making it easy for everyone to refer back to them. Do you currently have any tools in place for this, or are you looking for recommendations?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "default_branch",
+          "value": "main",
+          "original_seed": "Our default branch is main",
+          "fact_text": "The team's default branch is main.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Dranith Stack",
+          "original_seed": "Update: Our package manager is Dranith Stack",
+          "fact_text": "Update: The team's package manager is Dranith Stack.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "token_format",
+          "value": "Cerberix-SAML-assertion",
+          "original_seed": "We use Cerberix-SAML-assertion token format",
+          "fact_text": "The team uses Cerberix-SAML-assertion token format.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "meeting_day",
+          "value": "every Friday 9:30am",
+          "original_seed": "Team meeting is every Friday 9:30am",
+          "fact_text": "Team meeting is every Friday at 9:30am.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 11:34"
+    },
+    {
+      "session_id": "sharegpt_4538",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "ponme la ultima conversacion que tuvimos"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Lo siento, pero como un modelo de lenguaje, no tengo la capacidad de recordar conversaciones anteriores, ya que no tengo una memoria persistente. Sin embargo, estaré encantado de responder cualquier pregunta o duda que puedas tener. ¿En qué puedo ayudarte hoy?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "hazme ejemplo de app de prevision de compras en asp.net teniendo un cuenta los siguientes datos. stock en almacen, historico de pedidos de todos los años, picos de venta en festividades , y que te de la cantidad de compra más exacta para evitar faltas de producto"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Aquí hay un ejemplo de cómo se podría implementar una aplicación de previsión de compras en ASP.NET utilizando los datos proporcionados:</p><ol><li><p>Crear una base de datos para almacenar el stock en el almacén y el historial de pedidos de años anteriores. Esta base de datos deberá incluir campos como el nombre del producto, la cantidad actual en stock, la cantidad mínima necesaria en stock, el historial de pedidos de años anteriores y la fecha del último pedido.</p></li><li><p>Utilizar técnicas de análisis de datos y aprendizaje automático para predecir la cantidad de ventas que se esperan durante los picos de venta en festividades. Por ejemplo, se podría utilizar un algoritmo de regresión lineal para analizar los datos de los años anteriores y predecir la cantidad de ventas que se esperan durante las festividades.</p></li><li><p>Utilizar la información de la base de datos y las predicciones de ventas para determinar cuánto stock se debe pedir. Esto se puede hacer utilizando un algoritmo que tenga en cuenta la cantidad actual en stock, la cantidad mínima necesaria en stock y las predicciones de ventas.</p></li><li><p>Implementar una interfaz de usuario en ASP.NET que permita a los usuarios ver el stock actual, la cantidad mínima necesaria en stock, el historial de pedidos de años anteriores y las predicciones de ventas. También se puede incluir una función para realizar pedidos automáticamente basados en las predicciones de ventas.</p></li></ol><p>En resumen, una aplicación de previsión de compras en ASP.NET tendría en cuenta el stock en el almacén, el historial de pedidos de años anteriores, los picos de venta en festividades y utilizaría técnicas de análisis de datos y aprendizaje automático para predecir las ventas y determinar cuánto stock se debe pedir.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "hazme ejemplo de codigo en asp.net"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Claro, aquí hay un ejemplo de código ASP.NET que muestra cómo se podría crear una página web para mostrar el stock actual y permitir al usuario realizar un pedido automáticamente basado en las predicciones de ventas:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\">&lt;%@ Page Language=<span class=\"hljs-string\">\"C#\"</span> AutoEventWireup=<span class=\"hljs-string\">\"true\"</span> CodeBehind=<span class=\"hljs-string\">\"Default.aspx.cs\"</span> Inherits=<span class=\"hljs-string\">\"MyWebApp.Default\"</span> %&gt;\n\n&lt;!DOCTYPE html&gt;\n\n&lt;html lang=<span class=\"hljs-string\">\"en\"</span>&gt;\n&lt;head&gt;\n    &lt;meta charset=<span class=\"hljs-string\">\"utf-8\"</span> /&gt;\n    &lt;title&gt;Stock <span class=\"hljs-keyword\">and</span> Sales Prediction&lt;/title&gt;\n&lt;/head&gt;\n&lt;body&gt;\n    &lt;form id=<span class=\"hljs-string\">\"form1\"</span> runat=<span class=\"hljs-string\">\"server\"</span>&gt;\n        &lt;h1&gt;Stock <span class=\"hljs-keyword\">and</span> Sales Prediction&lt;/h1&gt;\n        &lt;asp:GridView ID=<span class=\"hljs-string\">\"GridView1\"</span> runat=<span class=\"hljs-string\">\"server\"</span> AutoGenerateColumns=<span class=\"hljs-string\">\"False\"</span> DataSourceID=<span class=\"hljs-string\">\"SqlDataSource1\"</span>&gt;\n            &lt;Columns&gt;\n                &lt;asp:BoundField DataField=<span class=\"hljs-string\">\"ProductName\"</span> HeaderText=<span class=\"hljs-string\">\"Product Name\"</span> /&gt;\n                &lt;asp:BoundField DataField=<span class=\"hljs-string\">\"CurrentStock\"</span> HeaderText=<span class=\"hljs-string\">\"Current Stock\"</span> /&gt;\n                &lt;asp:BoundField DataField=<span class=\"hljs-string\">\"MinimumStock\"</span> HeaderText=<span class=\"hljs-string\">\"Minimum Stock\"</span> /&gt;\n            &lt;/Columns&gt;\n        &lt;/asp:GridView&gt;\n        &lt;asp:SqlDataSource ID=<span class=\"hljs-string\">\"SqlDataSource1\"</span> runat=<span class=\"hljs-string\">\"server\"</span> ConnectionString=<span class=\"hljs-string\">\"&lt;%$ ConnectionStrings:MyConnectionString %&gt;\"</span>\n            SelectCommand=<span class=\"hljs-string\">\"SELECT * FROM Products\"</span>&gt;&lt;/asp:SqlDataSource&gt;\n        &lt;br /&gt;\n        &lt;asp:Button ID=<span class=\"hljs-string\">\"Button1\"</span> runat=<span class=\"hljs-string\">\"server\"</span> Text=<span class=\"hljs-string\">\"Order Now\"</span> OnClick=<span class=\"hljs-string\">\"Button1_Click\"</span> /&gt;\n        &lt;br /&gt;\n        &lt;asp:Label ID=<span class=\"hljs-string\">\"Label1\"</span> runat=<span class=\"hljs-string\">\"server\"</span> Visible=<span class=\"hljs-string\">\"false\"</span>&gt;&lt;/asp:Label&gt;\n    &lt;/form&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n</code></div></div></pre><p>En este ejemplo, se utiliza un GridView para mostrar los datos de la base de datos, que incluyen el nombre del producto, la cantidad actual en stock y la cantidad mínima necesaria en stock. También se ha agregado un botón \"Order Now\" que el usuario puede hacer clic para realizar un pedido automáticamente.</p><p>Aquí está el código detrás (Default.aspx.cs) que maneja el evento del botón:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\"><span class=\"hljs-keyword\">using</span> System;\n<span class=\"hljs-keyword\">using</span> System.Collections.Generic;\n<span class=\"hljs-keyword\">using</span> System.Linq;\n<span class=\"hljs-keyword\">using</span> System.Web;\n<span class=\"hljs-keyword\">using</span> System.Web.UI;\n<span class=\"hljs-keyword\">using</span> System.Web.UI.WebControls;\n\n<span class=\"hljs-keyword\">namespace</span> <span class=\"hljs-title\">MyWebApp</span>\n{\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">partial</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">Default</span> : <span class=\"hljs-title\">System.Web.UI.Page</span>\n    {\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">protected</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">Page_Load</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">object</span> sender, EventArgs e</span>)</span>\n        {\n        }\n\n        <span class=\"hljs-function\"><span class=\"hljs-keyword\">protected</span> <span class=\"hljs-keyword\">void</span> <span class=\"hljs-title\">Button1_Click</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">object</span> sender, EventArgs e</span>)</span>\n        {\n            <span class=\"hljs-comment\">// Código para realizar el pedido automáticamente</span>\n            <span class=\"hljs-comment\">// ...</span>\n            Label1.Visible = <span class=\"hljs-literal\">true</span>;\n            Label1.Text = <span class=\"hljs-string\">\"Order has been placed!\"</span>;\n        }\n    }\n}\n</code></div></div></pre><p>En este ejemplo, el evento del botón simplemente muestra un mensaje en una etiqueta de texto cuando se hace clic en el botón. Sin embargo, en lugar de mostrar el mensaje, se podría agregar código para realizar el pedido automáticamente basado en las predicciones de ventas.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 09:14"
+    },
+    {
+      "session_id": "sharegpt_13338",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "in the Microsoft Graph Explorer, how do I filter the group resource? I want to filter based on displayName"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To filter the group resource in the Microsoft Graph Explorer, you can use the filter parameter in your API request. For example, to filter groups based on the displayName, you can use a query like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-bash\">GET https://graph.microsoft.com/v1.0/groups?<span class=\"hljs-variable\">$filter</span>=startswith(displayName,<span class=\"hljs-string\">'displayNameValue'</span>)\n</code></div></div></pre><p>This query returns all groups whose displayName starts with 'displayNameValue'.</p><p>You can also use other operators such as eq, ne, gt, lt, le, ge, and and, or, not to construct more complex filter queries.</p><p>Example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-sql\"><span class=\"hljs-keyword\">GET</span> https:<span class=\"hljs-operator\">/</span><span class=\"hljs-operator\">/</span>graph.microsoft.com<span class=\"hljs-operator\">/</span>v1<span class=\"hljs-number\">.0</span><span class=\"hljs-operator\">/</span><span class=\"hljs-keyword\">groups</span>?$<span class=\"hljs-keyword\">filter</span><span class=\"hljs-operator\">=</span>startswith(displayName,<span class=\"hljs-string\">'displayNameValue'</span>) <span class=\"hljs-keyword\">and</span> <span class=\"hljs-keyword\">contains</span>(mail, <span class=\"hljs-string\">'example.com'</span>)\n</code></div></div></pre><p>This query returns all groups whose displayName starts with 'displayNameValue' and mail contains 'example.com'</p><p>Please note that filter parameter is case-sensitive, so make sure to use the correct case for the properties in the filter.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you so much! You are a lifesaver!"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You're welcome! I'm glad I could help. If you have any other questions, feel free to ask.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I used the List Group Members by using GET https://graph.microsoft.com/v1.0/groups/{group-id}/members. I get a collection. I just want to get all the 'mail' values. How do I do that?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To get the 'mail' values of all the members in a group, you can use the <code>select</code> parameter in your API request to filter the properties that are returned.</p><p>For example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-bash\">GET https://graph.microsoft.com/v1.0/groups/{group-id}/members?<span class=\"hljs-variable\">$select</span>=mail\n</code></div></div></pre><p>This query returns a collection of objects, each containing only the 'mail' property for a member of the group.</p><p>You can also select multiple properties by separating them with a comma.</p><p>For example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-bash\">GET https://graph.microsoft.com/v1.0/groups/{group-id}/members?<span class=\"hljs-variable\">$select</span>=mail,displayName\n</code></div></div></pre><p>This query returns a collection of objects, each containing 'mail' and 'displayName' properties for a member of the group.</p><p>Please note that the <code>select</code> parameter is only supported on certain resources and it may not be supported by all the Graph APIs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Great that works! I copied the results in the 'Response Preview' and pasted it in vscode. I want to (I don't know the correct term) parse the data using Python and Pandas. I just want the out to be the email address values only. Can you help me with that?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you can parse the data using Python and Pandas to extract the email addresses.</p><p>Here is an example of how you can do this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> json\n<span class=\"hljs-keyword\">import</span> pandas <span class=\"hljs-keyword\">as</span> pd\n\n<span class=\"hljs-comment\"># Load the JSON data</span>\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"data.json\"</span>, <span class=\"hljs-string\">\"r\"</span>) <span class=\"hljs-keyword\">as</span> f:\n    data = json.load(f)\n\n<span class=\"hljs-comment\"># Create a list of email addresses</span>\nemails = [member[<span class=\"hljs-string\">\"mail\"</span>] <span class=\"hljs-keyword\">for</span> member <span class=\"hljs-keyword\">in</span> data[<span class=\"hljs-string\">\"value\"</span>]]\n\n<span class=\"hljs-comment\"># Convert the list to a DataFrame</span>\ndf = pd.DataFrame(emails, columns=[<span class=\"hljs-string\">\"Email\"</span>])\n\n<span class=\"hljs-comment\"># Display the DataFrame</span>\n<span class=\"hljs-built_in\">print</span>(df)\n</code></div></div></pre><p>This code assumes that you have saved the JSON data from the API response in a file called \"data.json\" and that it is in the same directory as your Python script.</p><p>It uses the json.load() function to parse the JSON data and load it into a Python object, then it uses list comprehension to extract the 'mail' property of each member and create a list of email addresses.</p><p>Then, it creates a Pandas DataFrame and assigns the list of email addresses to a column called \"Email\".</p><p>You can also use the json.loads() function to parse the data if you are not working with a file, but with a string instead.</p><p>Also, you can use the <code>json_normalize</code> function from the pandas library to normalize the json data and get the emails without having to use list comprehension.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">from</span> pandas.io.json <span class=\"hljs-keyword\">import</span> json_normalize\n\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"data.json\"</span>, <span class=\"hljs-string\">\"r\"</span>) <span class=\"hljs-keyword\">as</span> f:\n    data = json.load(f)\n\ndf = json_normalize(data[<span class=\"hljs-string\">\"value\"</span>], <span class=\"hljs-string\">'mail'</span>, [<span class=\"hljs-string\">'id'</span>])\n<span class=\"hljs-built_in\">print</span>(df)\n</code></div></div></pre><p>This will extract the 'mail' column only and create a Dataframe with that column.\nPlease let me know if you have any questions or if you need further assistance.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 22:27"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team releases weekly on Tuesday. It’s a pretty solid cadence, but I wonder if we should adjust based on sprint feedback. What do you think? Any tips on optimizing our release process?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear you have a solid release cadence! Adjusting based on sprint feedback can definitely help improve the process. You might consider gathering insights from the team after each release to identify any recurring issues or bottlenecks. Additionally, it could be beneficial to evaluate the stability of your releases—if you find that certain features frequently lead to bugs or require hotfixes, it might be worth adjusting the release frequency or incorporating more testing before deployment. Keeping an open line of communication with the team about what works and what doesn’t can lead to valuable improvements. How has the team been feeling about the current release schedule?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's package manager is Veltrion Pkg. It's a change from what we were using before. Any best practices or common pitfalls I should watch out for with Veltrion Pkg?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to Veltrion Pkg can definitely bring some unique considerations. It's important to ensure that all team members are on the same page regarding its features and functionalities, so investing some time in documentation and training can be beneficial. Pay attention to versioning and dependency management, as these are common pitfalls when transitioning to a new package manager. Additionally, keep an eye on how updates are handled; some package managers have specific behaviors that could impact your workflow. Have you noticed any specific challenges so far with the transition?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Zenthos ID for authentication. It's been a smooth integration, but I'm curious about best practices for managing user permissions and roles. Any recommendations on how to structure that effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that the integration with Zenthos ID has been smooth! When managing user permissions and roles, a clear structure is essential for both security and usability. Consider adopting a role-based access control (RBAC) model, where you define roles based on the principle of least privilege, giving users only the permissions they need to perform their tasks. Regularly reviewing and updating these roles can help ensure they remain relevant as your application evolves. Additionally, documenting the permissions associated with each role can streamline onboarding and minimize confusion. Have you thought about how frequently you want to review the roles and permissions?"
+        },
+        {
+          "role": "user",
+          "content": "The team's on-call rotation is paired oncall (primary + secondary). This setup seems efficient for ensuring support coverage. Do you have any strategies in place for managing on-call shifts, like scheduling or handling escalations?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like the paired on-call setup is working well for your team! For managing shifts, having a clear and transparent scheduling system can help prevent conflicts and ensure everyone is aware of their responsibilities. Regular check-ins or feedback sessions after on-call periods can provide insights into what went well and what could be improved. When it comes to escalations, establishing clear escalation paths and documentation can help your team quickly identify the right person to contact in various scenarios. This can reduce confusion and improve response times. How has the current system been functioning for your team so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "release_cadence",
+          "value": "weekly on Tuesday",
+          "original_seed": "We release weekly on Tuesday",
+          "fact_text": "The team releases weekly on Tuesday.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Veltrion Pkg",
+          "original_seed": "Now I've switched again — Our package manager is Veltrion Pkg",
+          "fact_text": "Now the developer has switched again — the team's package manager is Veltrion Pkg.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_provider",
+          "value": "Zenthos ID",
+          "original_seed": "We use Zenthos ID for authentication",
+          "fact_text": "The team uses Zenthos ID for authentication.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "oncall_rotation",
+          "value": "paired oncall (primary + secondary)",
+          "original_seed": "Our on-call rotation is paired oncall (primary + secondary)",
+          "fact_text": "The team's on-call rotation is paired oncall (primary + secondary).",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 06:33"
+    },
+    {
+      "session_id": "sharegpt_8808",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "See the product description and all reviews found on the web for the product \"Winix 5500-2 Air Cleaner with Plasma Wave Technology\". Identify the most interesting reviews that may help someone make a purchasing decision. Extract the major pros and cons of this product as listed in the reviews. Use these to create an engaging script for a 10 minute video.  Most importantly be fair and unbiased, don't oversell the product or trash it unnecessarily. Only show the narrative, don't show scene labels or other metadata. Do not address ourselves as anything, just focus on the customer and make it about them. This video will be on Amazon's YouTube channel, so please pull in some signature characteristics of Amazon's style and core principles. Make it about the particular product referenced in the above url from the beginning of the script, and name that product early on. Write this script in first person so that it can be directly read out.  Be very specific about this particular product, not in generics, and go deeper into the content of the reviews so that this script is more substantive."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Hello there! Are you looking for an air cleaner that can help keep your indoor air fresh and clean? Well, you're in luck because I want to introduce you to the Winix 5500-2 Air Cleaner with Plasma Wave Technology.</p><p>This air cleaner has received rave reviews from many satisfied customers. Let me share with you some of the pros and cons as mentioned by the reviewers.</p><p>One of the standout features of the Winix 5500-2 is its Plasma Wave Technology. This technology creates positive and negative ions that work together to break down pollutants like allergens, bacteria, viruses, and even odors. Many reviewers have commented on how effective this feature is in cleaning the air in their homes.</p><p>Another pro mentioned by customers is the easy-to-use control panel. The touch buttons are intuitive, and the LED display shows the current air quality and filter status. Plus, the remote control makes it even more convenient to adjust the settings from across the room.</p><p>The Winix 5500-2 also has a four-stage filtration system that includes a True HEPA filter, activated carbon filter, and a pre-filter. These filters capture particles as small as 0.3 microns, which is smaller than most bacteria and viruses. Many reviewers have reported noticeable improvements in their indoor air quality after using this air cleaner.</p><p>However, as with any product, there are some cons to consider as well. A few reviewers have mentioned that the filters need to be replaced more often than they would like. But keep in mind that this will vary depending on the air quality in your home and how often you use the air cleaner.</p><p>Some users have also commented on the noise level of the Winix 5500-2. While it does have a \"sleep mode\" that runs quieter, some customers have still found it too loud for their liking.</p><p>Overall, the Winix 5500-2 Air Cleaner with Plasma Wave Technology has received high praise from many satisfied customers. It's effective at cleaning the air, easy to use, and has a sleek design that fits well in any home. Just keep in mind the potential need for more frequent filter replacements and the noise level when making your decision.</p><p>If you're still unsure if the Winix 5500-2 is right for you, I encourage you to check out more reviews and product information. And as always, Amazon is committed to providing you with top-quality products and exceptional customer service. Thanks for watching, and we hope you find the perfect air cleaner for your home!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 20:13"
+    },
+    {
+      "session_id": "sharegpt_22400",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "import pandas\nfrom pandas_datareader import data as pdr\nimport yfinance as yfin\n\n# Override pandas_datareader's default method to use yfinance\nyf.pdr_override()\n\n# Set the start and end dates for the data\nstart_date = '2008-01-01'\nend_date = '2023-03-01'\n\n# Define the ticker symbols and data sources\nticker_symbols = {\n    '^GSPC': 'yahoo',\n    'DTB3': 'fred',\n    '^IRX': 'yahoo',\n    'GC=F': 'yahoo',\n    'BZ=F': 'yahoo',\n    'DX-Y.NYB': 'yahoo',\n    'EURUSD=X': 'yahoo',\n    'JPY=X': 'yahoo',\n    'CNY=X': 'yahoo',\n    '^VIX': 'yahoo',\n}\n\n# Define the column names for the master DataFrame\ncolumn_names = {\n    '^GSPC': 'S&amp;P500',\n    'DTB3': '3-Month Treasury',\n    '^IRX': '2-Year Treasury',\n    'GC=F': 'Gold',\n    'BZ=F': 'Crude Oil (Brent)',\n    'DX-Y.NYB': 'Dollar Index',\n    'EURUSD=X': 'USD/EUR',\n    'JPY=X': 'USD/JPY',\n    'CNY=X': 'USD/CNY',\n    '^VIX': 'VIX',\n}\n\n# Create an empty DataFrame to store the data\nmaster_df = pd.DataFrame()\n\n# Download data for each ticker symbol and add it to the master DataFrame\nfor symbol, source in ticker_symbols.items():\n    try:\n        if source == 'yahoo':\n            data = pdr.get_data_yahoo(symbol, start=start_date, end=end_date, interval='1wk')\n            data = data[['Adj Close']]  # Select only the 'Adj Close' column\n            data = data.rename(columns={'Adj Close': symbol})  # Rename the column to the symbol name\n        elif source == 'fred':\n            data = pdr.get_data_fred(symbol, start_date, end_date)\n            data.columns = [symbol]  # Rename the column to the symbol name\n        else:\n            raise ValueError(f\"Unsupported data source: {source}\")\n        print(f\"Successfully downloaded {symbol} from {source}\")\n        # Calculate the weekly average and ignore NULL values\n        data = data.resample('W').mean().dropna()\n        # Rename the column to the human-readable name\n        data = data.rename(columns={symbol: column_names.get(symbol, symbol)})\n        master_df = pd.concat([master_df, data], axis=1)  # Add the data to the master DataFrame\n    except Exception as e:\n        print(f\"Failed to download {symbol} from {source}: {e}\")\n\nmaster_df = master_df.fillna(master_df.mean())\nmaster_df"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>This code downloads financial data for a set of ticker symbols from various sources using the pandas_datareader library and stores it in a master DataFrame. The data is then cleaned by resampling it on a weekly basis, calculating the weekly average, and dropping NULL values. Finally, any remaining NULL values are filled in with the mean of the corresponding column.</p><p>The ticker symbols and data sources are defined in the ticker_symbols dictionary, while the column names for the master DataFrame are defined in the column_names dictionary. The code loops through each ticker symbol, downloads the data using the appropriate source, and adds it to the master DataFrame.</p><p>It is important to note that the code uses the yfinance library to override pandas_datareader's default method for downloading data from Yahoo Finance. This is because the pandas_datareader library no longer supports Yahoo Finance API access. The yfinance library provides a workaround to this problem.</p><p>Overall, this code is useful for downloading and cleaning financial data for a set of ticker symbols from various sources. The resulting master DataFrame can then be used for further analysis and modeling.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 07:09"
+    },
+    {
+      "session_id": "sharegpt_26380",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"Lets create a simple batch file. First, open Notepad. Type the following lines into it: ECHO OFF ECHO Hello World PAUSE Next, save the file by clicking File  Save. Give it any name you like, but replace the default .txt file extension with the .bat extension. For example, you might want to name it hello_world.bat .\"\nURL: https://www.howtogeek.com/263177/how-to-write-a-batch-script-on-windows/\n\n[2] \"Open File Explorer. Open the folder containing the batch file. Right-click the batch file and select the Copy option. Use the Windows key + R keyboard shortcut to open the Run command. Type the ...\"\nURL: https://www.windowscentral.com/how-create-and-run-batch-file-windows-10\n\n[3] \"You can create a batch script to do this. Its basically command line commands that run one after another so you dont have to keep typing them in :) Put the commands you would normally use for 7zip in a notepad file and save it with the extension .bat, then run it. 7z blah blah params 7z more params and args\"\nURL: https://stackoverflow.com/questions/13975733/how-to-create-an-executable-command-prompt-script\n\n[4] \"To execute hello.cmd there are two possibilities. If you are using the Windows graphical shell, just double click on its icon. If you want to use the Command Prompt itself, you must first identify the directory where you saved hello.cmd . In this regard, if you open File Explorer with + E. In the windows listing files, you normally read the ...\"\nURL: https://riptutorial.com/cmd/example/21435/hello-world\n\n[5] \"Select wscript or cscript, and then select Always use this program to open this file type. This registers wscript.exe or cscript.exe as the default script host for files of this file type. You can set properties for individual scripts. See Windows Script Host overview for more information. Windows Script Host can use .wsf script files.\"\nURL: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wscript\n\n[6] \"This will run for non-admin users as they login so it cannot prompt for admin password. I considered using task scheduler but this is a one time run that will be inserted in the registry runonce key. example: start cmd.exe. set tmpdir=C:Program Files (x86)camdesk. cam /resetuserdata.\"\nURL: https://community.spiceworks.com/topic/2166127-script-to-start-cmd-as-admin-and-run-command\n\n[7] \"Windows setup scripts Run a script after setup is complete (SetupComplete.cmd) Run a script if Windows Setup encounters a fatal error (ErrorHandler.cmd) Use Unattend to run scripts Related topics Windows setup scripts Setupcomplete.cmd and ErrorHandler.cmd are custom scripts that run during or after the Windows Setup process.\"\nURL: https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/add-a-custom-script-to-windows-setup?view=windows-11\n\n[8] \"If I want to go up one directory, meaning go to the directory that contains the current directory, I can enter cd .. If you enter cd alone, it will take you straight to your home directory. mkdir stands for make directory and it will create a new directory for you. You have to pass the command the directory name parameter.\"\nURL: https://www.freecodecamp.org/news/command-line-for-beginners/\n\n[9] \"In the Create Script dialog, click Script Parameters under Script. Each of your scripts parameters has its own dialog for adding further details and validation. If theres a default parameter in the script, it will be enumerated in the parameter UI and you can set it.\"\nURL: https://learn.microsoft.com/en-us/mem/configmgr/apps/deploy-use/create-deploy-scripts\n\n[10] \"To do so, run the following command in the terminal, pointing it at your script: chmod +x ~/myscript.sh. To run the script, you can now just run it in the terminal by typing its path. Whenever you want to launch the script in the future, just open the Bash shell and type the path to the script. ~/myscript.sh.\"\nURL: https://www.howtogeek.com/261591/how-to-create-and-run-bash-shell-scripts-on-windows-10/\n\n\nCurrent date: 23/02/2023\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: hello ! Can you give me a cmd windows script that runs a simple command like dir and puts the output in a text file ? And also I would like to use this script in a planned task, so the output file should append every output at the end of the file\nReply in Français"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! You can create a Windows command script that runs the \"dir\" command and outputs the result to a text file using the following steps:</p><ol><li>Open Notepad or any other text editor.</li><li>Type the following line into the editor: dir &gt;&gt; output.txt\nThis command will run the \"dir\" command and append the output to a file named \"output.txt\".</li><li>Save the file with any name you want, but make sure to use the \".cmd\" file extension.</li><li>To use this script in a planned task and have the output file append every output at the end of the file, follow the steps below:\na. Open Task Scheduler by searching for it in the Windows Start menu.\nb. Click on \"Create Task\" in the Actions panel.\nc. In the General tab, give the task a name and select the user account you want to run the task under.\nd. In the Triggers tab, set up the schedule for the task to run.\ne. In the Actions tab, click \"New\" to create a new action.\nf. In the \"Program/script\" field, enter the path to the script file you created in step 3.\ng. In the \"Start in (optional)\" field, enter the path to the directory where the script file is located.\nh. Click \"OK\" to save the action.\ni. In the Settings tab, check the \"Allow task to be run on demand\" option.\nj. Click \"OK\" to save the task.</li></ol><p>Now, when the task runs, it will execute the script and append the output of the \"dir\" command to the \"output.txt\" file. If the file does not exist, it will create a new file. If it exists, it will append the output to the end of the file.</p><p>Sources:\n[1] <a href=\"https://www.howtogeek.com/263177/how-to-write-a-batch-script-on-windows/\" target=\"_new\">https://www.howtogeek.com/263177/how-to-write-a-batch-script-on-windows/</a>\n[2] <a href=\"https://www.windowscentral.com/how-create-and-run-batch-file-windows-10\" target=\"_new\">https://www.windowscentral.com/how-create-and-run-batch-file-windows-10</a>\n[4] <a href=\"https://riptutorial.com/cmd/example/21435/hello-world\" target=\"_new\">https://riptutorial.com/cmd/example/21435/hello-world</a></p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 15:49"
+    },
+    {
+      "session_id": "sharegpt_3745",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "which goal management systems expose an API for integrations?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>There are several goal management systems that expose an API for integrations. Here are a few examples:</p><ol><li><p>Asana: Asana has a robust API that allows developers to build custom integrations with the platform. The API includes endpoints for tasks, projects, teams, users, and more.</p></li><li><p>Trello: Trello also has an API that allows developers to build custom integrations. The API includes endpoints for boards, lists, cards, users, and more.</p></li><li><p>Jira: Jira is a popular project management tool that also has an API for integrations. The API includes endpoints for issues, projects, users, workflows, and more.</p></li><li><p>Monday.com: Monday.com is another popular project management tool that has an API for integrations. The API includes endpoints for boards, items, users, and more.</p></li><li><p>Goals.com: Goals.com is a dedicated goal management system that also has an API for integrations. The API includes endpoints for goals, objectives, milestones, users, and more.</p></li></ol><p>These are just a few examples of goal management systems that expose an API for integrations. There are many more systems available, so it's important to research which system is best suited for your specific needs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you give me a list of 10 goal management systems that expose an api for other products to integrate, in a table?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's a table of 10 goal management systems that expose an API for integrations:</p><table><thead><tr><th>Goal Management System</th><th>API Documentation</th><th>Key Features</th></tr></thead><tbody><tr><td>Asana</td><td><a href=\"https://developers.asana.com/docs/\" target=\"_new\">Asana API Documentation</a></td><td>Task management, team collaboration, project tracking, customizable fields</td></tr><tr><td>Trello</td><td><a href=\"https://developer.atlassian.com/cloud/trello/rest/\" target=\"_new\">Trello API Documentation</a></td><td>Boards, lists, cards, labels, checklists, custom fields</td></tr><tr><td>Jira</td><td><a href=\"https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/\" target=\"_new\">Jira API Documentation</a></td><td>Issue tracking, project management, agile boards, workflows, custom fields</td></tr><tr><td>Monday.com</td><td><a href=\"https://developers.monday.com/docs/apis-overview-introduction\" target=\"_new\">Monday.com API Documentation</a></td><td>Project management, team collaboration, custom dashboards, automations</td></tr><tr><td>Goals.com</td><td><a href=\"https://www.goals.com/api/\" target=\"_new\">Goals.com API Documentation</a></td><td>Goal setting, progress tracking, habit tracking, journaling, mood tracking</td></tr><tr><td>OKR Tracker</td><td><a href=\"https://okrtracker.com/docs/api\" target=\"_new\">OKR Tracker API Documentation</a></td><td>OKR tracking, progress tracking, team collaboration, customizable views</td></tr><tr><td>Workboard</td><td><a href=\"https://workboard.github.io/api-docs/\" target=\"_new\">Workboard API Documentation</a></td><td>Goal tracking, progress tracking, team collaboration, custom metrics</td></tr><tr><td>15Five</td><td><a href=\"https://success.15five.com/hc/en-us/articles/360047176813-API-Documentation\" target=\"_new\">15Five API Documentation</a></td><td>Goal setting, progress tracking, employee engagement, performance management</td></tr><tr><td>Gtmhub</td><td><a href=\"https://docs.gtmhub.com/api/introduction\" target=\"_new\">Gtmhub API Documentation</a></td><td>OKR tracking, KPI tracking, real-time insights, team alignment</td></tr><tr><td>AchieveIt</td><td><a href=\"https://achieveit.com/resources/developers/\" target=\"_new\">AchieveIt API Documentation</a></td><td>Goal tracking, progress tracking, team collaboration, custom reporting</td></tr></tbody></table><p>I hope this helps! Keep in mind that this is just a small sample of the many goal management systems that are available, and there may be other systems that better suit your needs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2can you add large and expensive goal management systems to the table and sort it from most expensive to least expensive"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an updated table with the goal management systems sorted from most expensive to least expensive, and including a few large and expensive options:</p><table><thead><tr><th>Goal Management System</th><th>API Documentation</th><th>Key Features</th><th>Pricing</th></tr></thead><tbody><tr><td>Workboard</td><td><a href=\"https://workboard.github.io/api-docs/\" target=\"_new\">Workboard API Documentation</a></td><td>Goal tracking, progress tracking, team collaboration, custom metrics</td><td>Contact for pricing</td></tr><tr><td>BetterWorks</td><td><a href=\"https://api.betterworks.com/swagger/index.html\" target=\"_new\">BetterWorks API Documentation</a></td><td>OKR tracking, goal setting, team alignment, analytics</td><td>Contact for pricing</td></tr><tr><td>Gtmhub</td><td><a href=\"https://docs.gtmhub.com/api/introduction\" target=\"_new\">Gtmhub API Documentation</a></td><td>OKR tracking, KPI tracking, real-time insights, team alignment</td><td>Starting at $15/user/month</td></tr><tr><td>OKR Software</td><td><a href=\"https://okrsoftware.com/api-documentation/\" target=\"_new\">OKR Software API Documentation</a></td><td>OKR tracking, goal setting, progress tracking, custom reporting</td><td>Starting at $25/user/month</td></tr><tr><td>Workfront</td><td><a href=\"https://developers.adobeworkfront.com/api-docs/\" target=\"_new\">Workfront API Documentation</a></td><td>Project management, team collaboration, workflow automation, reporting</td><td>Contact for pricing</td></tr><tr><td>Asana</td><td><a href=\"https://developers.asana.com/docs/\" target=\"_new\">Asana API Documentation</a></td><td>Task management, team collaboration, project tracking, customizable fields</td><td>Starting at $10.99/user/month</td></tr><tr><td>Jira</td><td><a href=\"https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/\" target=\"_new\">Jira API Documentation</a></td><td>Issue tracking, project management, agile boards, workflows, custom fields</td><td>Starting at $7/user/month</td></tr><tr><td>15Five</td><td><a href=\"https://success.15five.com/hc/en-us/articles/360047176813-API-Documentation\" target=\"_new\">15Five API Documentation</a></td><td>Goal setting, progress tracking, employee engagement, performance management</td><td>Starting at $7/user/month</td></tr><tr><td>Goals.com</td><td><a href=\"https://www.goals.com/api/\" target=\"_new\">Goals.com API Documentation</a></td><td>Goal setting, progress tracking, habit tracking, journaling, mood tracking</td><td>Starting at $6/user/month</td></tr><tr><td>Trello</td><td><a href=\"https://developer.atlassian.com/cloud/trello/rest/\" target=\"_new\">Trello API Documentation</a></td><td>Boards, lists, cards, labels, checklists, custom fields</td><td>Starting at $12.50/user/month</td></tr><tr><td>Monday.com</td><td><a href=\"https://developers.monday.com/docs/apis-overview-introduction\" target=\"_new\">Monday.com API Documentation</a></td><td>Project management, team collaboration, custom dashboards, automations</td><td>Starting at $8/user/month</td></tr><tr><td>AchieveIt</td><td><a href=\"https://achieveit.com/resources/developers/\" target=\"_new\">AchieveIt API Documentation</a></td><td>Goal tracking, progress tracking, team collaboration, custom reporting</td><td>Contact for pricing</td></tr></tbody></table><p>Please note that these prices are subject to change and may not reflect any special promotions or discounts that these goal management systems may be offering at any given time.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 22:34"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "The login endpoint is /cerberix/saml/sso-init — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! Just keep an eye on how the new provider handles SAML responses and any specific configurations you might need to adjust. Have you started looking into potential alternatives yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! When switching providers, make sure to check compatibility with your existing setup, especially around SAML configurations and attributes. Are you considering any specific providers?"
+        },
+        {
+          "role": "user",
+          "content": "The auth middleware is oathkeeper-mtls-proxy v4.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a solid setup! Just ensure that any new provider supports the same SAML features and that you thoroughly test the integration after any changes. Have you encountered any issues with the current version?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error points to a classic deadlock situation. You might want to look into optimizing those queries, perhaps by adjusting indexes or breaking them into smaller transactions. Have you thought about implementing a retry mechanism for deadlocked transactions?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, our authentication method will be OAuth 2.0 + PKCE. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to OAuth 2.0 with PKCE is a great choice! Just ensure that your app properly handles the authorization flow and securely stores the tokens. Have you already mapped out how you’ll implement the new flow?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, the login endpoint will be /auth/kryptal/signin. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Changing the login endpoint means you'll need to update any related configurations and ensure your app handles the new endpoint correctly. Also, test the integration thoroughly to catch any issues early. Have you considered how this might affect your existing user sessions?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the auth method, the middleware config will be verithos-oauth-middleware v2.1. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to verithos-oauth-middleware will require you to adjust your middleware settings and ensure compatibility with your new auth method. Pay attention to how it handles token validation and session management. Are there any specific features you’re hoping to take advantage of with this new middleware?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "login_endpoint",
+          "value": "/cerberix/saml/sso-init",
+          "original_seed": "The login endpoint is /cerberix/saml/sso-init — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change",
+          "fact_text": "The login endpoint is /cerberix/saml/sso-init — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "auth_method",
+          "value": "SAML 2.0 SSO",
+          "original_seed": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change",
+          "fact_text": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Zenthos ID); if we switch providers, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "middleware_config",
+          "value": "oathkeeper-mtls-proxy v4.1",
+          "original_seed": "The auth middleware is oathkeeper-mtls-proxy v4.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "fact_text": "The auth middleware is oathkeeper-mtls-proxy v4.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "error_log",
+          "value": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "auth_method",
+          "value": "OAuth 2.0 + PKCE",
+          "original_seed": "If we switch auth providers, our authentication method will be OAuth 2.0 + PKCE",
+          "fact_text": "If we switch auth providers, our authentication method will be OAuth 2.0 + PKCE",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 6,
+          "entity": "login_endpoint",
+          "value": "/auth/kryptal/signin",
+          "original_seed": "If we switch auth providers, the login endpoint will be /auth/kryptal/signin",
+          "fact_text": "If we switch auth providers, the login endpoint will be /auth/kryptal/signin",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 7,
+          "entity": "middleware_config",
+          "value": "verithos-oauth-middleware v2.1",
+          "original_seed": "If we change the auth method, the middleware config will be verithos-oauth-middleware v2.1",
+          "fact_text": "If we change the auth method, the middleware config will be verithos-oauth-middleware v2.1",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 02:18"
+    },
+    {
+      "session_id": "sharegpt_5150",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write a program for arduino communicating with Sensirion SHT4x using I2C. The serial data between arduino and pc-host should be binary ascii and optimized for being handled by labview"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's a sample Arduino code for communicating with the Sensirion SHT4x sensor using I2C protocol and transmitting the data in binary ASCII format optimized for LabVIEW:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-selector-id\">#include</span> &lt;Wire<span class=\"hljs-selector-class\">.h</span>&gt;\n\n<span class=\"hljs-comment\">// Define the I2C address of the Sensirion SHT4x sensor</span>\n<span class=\"hljs-selector-id\">#define</span> SHT4X_ADDR <span class=\"hljs-number\">0</span>x44\n\nvoid <span class=\"hljs-built_in\">setup</span>() {\n  Serial<span class=\"hljs-selector-class\">.begin</span>(<span class=\"hljs-number\">9600</span>); <span class=\"hljs-comment\">// Start serial communication with PC</span>\n  Wire<span class=\"hljs-selector-class\">.begin</span>(); <span class=\"hljs-comment\">// Start I2C communication</span>\n}\n\nvoid <span class=\"hljs-built_in\">loop</span>() {\n  <span class=\"hljs-comment\">// Send command to measure temperature and humidity</span>\n  Wire<span class=\"hljs-selector-class\">.beginTransmission</span>(SHT4X_ADDR);\n  Wire<span class=\"hljs-selector-class\">.write</span>(<span class=\"hljs-number\">0</span>x24);\n  Wire<span class=\"hljs-selector-class\">.write</span>(<span class=\"hljs-number\">0</span>x00);\n  Wire<span class=\"hljs-selector-class\">.endTransmission</span>();\n\n  <span class=\"hljs-comment\">// Wait for measurement to be completed (duration depends on sensor settings)</span>\n  <span class=\"hljs-built_in\">delay</span>(<span class=\"hljs-number\">100</span>);\n\n  <span class=\"hljs-comment\">// Read temperature and humidity values</span>\n  Wire<span class=\"hljs-selector-class\">.requestFrom</span>(SHT4X_ADDR, <span class=\"hljs-number\">6</span>);\n  uint8_t data<span class=\"hljs-selector-attr\">[6]</span>;\n  int <span class=\"hljs-selector-tag\">i</span> = <span class=\"hljs-number\">0</span>;\n  while (Wire.available()) {\n    data<span class=\"hljs-selector-attr\">[i]</span> = Wire<span class=\"hljs-selector-class\">.read</span>();\n    <span class=\"hljs-selector-tag\">i</span>++;\n  }\n  \n  <span class=\"hljs-comment\">// Convert data to binary ASCII format optimized for LabVIEW</span>\n  int16_t temp_raw = ((data[<span class=\"hljs-number\">0</span>] &lt;&lt; <span class=\"hljs-number\">8</span>) | data<span class=\"hljs-selector-attr\">[1]</span>) &amp; <span class=\"hljs-number\">0</span>xFFFC;\n  <span class=\"hljs-attribute\">float</span> temperature = -<span class=\"hljs-number\">45.0</span> + <span class=\"hljs-number\">175.0</span> * (float)temp_raw / <span class=\"hljs-number\">65535.0</span>;\n  int16_t humid_raw = ((data[<span class=\"hljs-number\">3</span>] &lt;&lt; <span class=\"hljs-number\">8</span>) | data<span class=\"hljs-selector-attr\">[4]</span>) &amp; <span class=\"hljs-number\">0</span>xFFFC;\n  <span class=\"hljs-attribute\">float</span> humidity = <span class=\"hljs-number\">100.0</span> * (float)humid_raw / <span class=\"hljs-number\">65535.0</span>;\n  byte buf<span class=\"hljs-selector-attr\">[8]</span>;\n  <span class=\"hljs-built_in\">memcpy</span>(buf, &amp;temperature, sizeof(temperature));\n  <span class=\"hljs-built_in\">memcpy</span>(buf+<span class=\"hljs-number\">4</span>, &amp;humidity, sizeof(humidity));\n\n  <span class=\"hljs-comment\">// Send data to PC as binary ASCII string</span>\n  Serial<span class=\"hljs-selector-class\">.write</span>(buf, <span class=\"hljs-number\">8</span>);\n}\n</code></div></div></pre><p>Note that this code assumes that the LabVIEW program is configured to read binary data in little-endian format (i.e., the same format as used by Intel x86 processors). If LabVIEW is running on a different platform, you may need to modify the code to adjust for differences in byte order.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you also describe how to connect the sensor to arduino, how to set up arduino ide, installing packages and compiling/flashing code?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, I'd be happy to provide a step-by-step guide on how to connect the Sensirion SHT4x sensor to Arduino, set up the Arduino IDE, install necessary packages, and compile/flash the code:</p><h3>Hardware Setup</h3><ol><li><p>Connect the VCC pin of the SHT4x sensor to the 3.3V pin of Arduino.</p></li><li><p>Connect the GND pin of the SHT4x sensor to the GND pin of Arduino.</p></li><li><p>Connect the SDA pin of the SHT4x sensor to the SDA pin of Arduino (on most Arduino boards, this is pin A4).</p></li><li><p>Connect the SCL pin of the SHT4x sensor to the SCL pin of Arduino (on most Arduino boards, this is pin A5).</p></li></ol><h3>Software Setup</h3><ol><li><p>Download and install the latest version of the Arduino IDE from the <a href=\"https://www.arduino.cc/en/software\" target=\"_new\">official website</a>.</p></li><li><p>Launch the Arduino IDE and open a new sketch.</p></li><li><p>Add the following code to the sketch:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-selector-id\">#include</span> &lt;Wire<span class=\"hljs-selector-class\">.h</span>&gt;\n\n<span class=\"hljs-comment\">// Define the I2C address of the Sensirion SHT4x sensor</span>\n<span class=\"hljs-selector-id\">#define</span> SHT4X_ADDR <span class=\"hljs-number\">0</span>x44\n\nvoid <span class=\"hljs-built_in\">setup</span>() {\n  Serial<span class=\"hljs-selector-class\">.begin</span>(<span class=\"hljs-number\">9600</span>); <span class=\"hljs-comment\">// Start serial communication with PC</span>\n  Wire<span class=\"hljs-selector-class\">.begin</span>(); <span class=\"hljs-comment\">// Start I2C communication</span>\n}\n\nvoid <span class=\"hljs-built_in\">loop</span>() {\n  <span class=\"hljs-comment\">// Send command to measure temperature and humidity</span>\n  Wire<span class=\"hljs-selector-class\">.beginTransmission</span>(SHT4X_ADDR);\n  Wire<span class=\"hljs-selector-class\">.write</span>(<span class=\"hljs-number\">0</span>x24);\n  Wire<span class=\"hljs-selector-class\">.write</span>(<span class=\"hljs-number\">0</span>x00);\n  Wire<span class=\"hljs-selector-class\">.endTransmission</span>();\n\n  <span class=\"hljs-comment\">// Wait for measurement to be completed (duration depends on sensor settings)</span>\n  <span class=\"hljs-built_in\">delay</span>(<span class=\"hljs-number\">100</span>);\n\n  <span class=\"hljs-comment\">// Read temperature and humidity values</span>\n  Wire<span class=\"hljs-selector-class\">.requestFrom</span>(SHT4X_ADDR, <span class=\"hljs-number\">6</span>);\n  uint8_t data<span class=\"hljs-selector-attr\">[6]</span>;\n  int <span class=\"hljs-selector-tag\">i</span> = <span class=\"hljs-number\">0</span>;\n  while (Wire.available()) {\n    data<span class=\"hljs-selector-attr\">[i]</span> = Wire<span class=\"hljs-selector-class\">.read</span>();\n    <span class=\"hljs-selector-tag\">i</span>++;\n  }\n  \n  <span class=\"hljs-comment\">// Convert data to binary ASCII format optimized for LabVIEW</span>\n  int16_t temp_raw = ((data[<span class=\"hljs-number\">0</span>] &lt;&lt; <span class=\"hljs-number\">8</span>) | data<span class=\"hljs-selector-attr\">[1]</span>) &amp; <span class=\"hljs-number\">0</span>xFFFC;\n  <span class=\"hljs-attribute\">float</span> temperature = -<span class=\"hljs-number\">45.0</span> + <span class=\"hljs-number\">175.0</span> * (float)temp_raw / <span class=\"hljs-number\">65535.0</span>;\n  int16_t humid_raw = ((data[<span class=\"hljs-number\">3</span>] &lt;&lt; <span class=\"hljs-number\">8</span>) | data<span class=\"hljs-selector-attr\">[4]</span>) &amp; <span class=\"hljs-number\">0</span>xFFFC;\n  <span class=\"hljs-attribute\">float</span> humidity = <span class=\"hljs-number\">100.0</span> * (float)humid_raw / <span class=\"hljs-number\">65535.0</span>;\n  byte buf<span class=\"hljs-selector-attr\">[8]</span>;\n  <span class=\"hljs-built_in\">memcpy</span>(buf, &amp;temperature, sizeof(temperature));\n  <span class=\"hljs-built_in\">memcpy</span>(buf+<span class=\"hljs-number\">4</span>, &amp;humidity, sizeof(humidity));\n\n  <span class=\"hljs-comment\">// Send data to PC as binary ASCII string</span>\n  Serial<span class=\"hljs-selector-class\">.write</span>(buf, <span class=\"hljs-number\">8</span>);\n}\n</code></div></div></pre><ol><li><p>Save the sketch and give it a name (e.g., \"SHT4x_serial\").</p></li><li><p>Go to \"Sketch &gt; Include Library &gt; Manage Libraries\" and search for \"Sensirion\" in the search bar.</p></li><li><p>Install the \"Sensirion\" library by selecting it and clicking on the \"Install\" button.</p></li><li><p>Go to \"Tools &gt; Board\" and select the Arduino board you are using.</p></li><li><p>Go to \"Tools &gt; Port\" and select the port that your Arduino board is connected to.</p></li><li><p>Click on the \"Upload\" button (or press Ctrl+U) to compile and flash the code to the Arduino board.</p></li><li><p>Open the Serial Monitor by clicking on the magnifying glass icon in the top right corner of the Arduino IDE.</p></li><li><p>Set the baud rate to 9600 and make sure that the \"Both NL &amp; CR\" option is selected.</p></li><li><p>You should now see the temperature and humidity</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you describe how this data should be received in labview and shown in a graph?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's how you can receive the binary ASCII data from the Arduino in LabVIEW and plot it on a graph:</p><ol><li><p>Open LabVIEW and create a new VI.</p></li><li><p>Go to \"Functions Palette &gt; Connectivity &gt; Serial\" and drag a \"VISA Configure Serial Port\" function onto the block diagram.</p></li><li><p>Right-click on the \"VISA Configure Serial Port\" function and select \"Create Constant\" from the menu.</p></li><li><p>Configure the \"VISA Configure Serial Port\" function to match the settings of your Arduino's serial communication (e.g., baud rate of 9600).</p></li><li><p>Go to \"Functions Palette &gt; String &gt; String To Byte Array\" and drag the function onto the block diagram.</p></li><li><p>Connect the output of the \"VISA Configure Serial Port\" function to the input of the \"String To Byte Array\" function.</p></li><li><p>Go to \"Functions Palette &gt; Arrays &gt; Index Array\" and drag the function onto the block diagram.</p></li><li><p>Connect the output of the \"String To Byte Array\" function to the input of the \"Index Array\" function.</p></li><li><p>Set the \"Index\" input of the \"Index Array\" function to 0.</p></li><li><p>Connect the output of the \"Index Array\" function to the input of a \"Unflatten From Byte Stream\" function.</p></li><li><p>Right-click on the \"Unflatten From Byte Stream\" function and select \"Create Constant\" from the menu.</p></li><li><p>Create two numeric indicators on the front panel of the VI to display the temperature and humidity values.</p></li><li><p>Go to \"Functions Palette &gt; Graph &gt; Waveform Graph\" and drag the function onto the front panel of the VI.</p></li><li><p>Create two waveforms on the graph, one for temperature and one for humidity.</p></li><li><p>Go back to the block diagram and drag two \"Build Array\" functions onto the block diagram.</p></li><li><p>Connect the output of the \"Unflatten From Byte Stream\" function to the inputs of the two \"Build Array\" functions.</p></li><li><p>Connect the output of the first \"Build Array\" function to the temperature numeric indicator.</p></li><li><p>Connect the output of the second \"Build Array\" function to the humidity numeric indicator.</p></li><li><p>Configure the \"Build Array\" functions to extract the temperature and humidity values from the byte stream.</p></li><li><p>Connect the temperature and humidity values to the corresponding waveforms on the graph.</p></li><li><p>Run the VI and you should see the temperature and humidity values displayed on the graph in real-time.</p></li></ol><p>Note: The above steps assume that the binary ASCII data is being transmitted as 8 bytes (4 bytes for temperature and 4 bytes for humidity) from the Arduino. If the binary ASCII format is different, you may need to adjust the LabVIEW code accordingly.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 06:04"
+    },
+    {
+      "session_id": "sharegpt_23957",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Wenn ich in python mit selenium ein Feld auswähle, wie hier: \"source = self.driver.find_element(By.CSS_SELECTOR, self.source_field)\", wo sourcefield wie folgt aussieht: 'self.source_field = \"textarea.lmt__textarea.lmt__source_textarea.lmt__textarea_base_style\"', muss man da alle Klassen des Feldes angeben, oder reicht es nur eine zu nehmen, die dort vorkommt?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Wenn Sie in Python mit Selenium ein Feld auswählen, können Sie die CSS-Selektoren verwenden, um das Element zu identifizieren. In diesem Fall haben Sie eine CSS-Selektorzeichenfolge für das Textfeld definiert, das Sie auswählen möchten, und es scheint mehrere Klassen darin zu geben.</p><p>Wenn Sie eine Klasse angeben, die im CSS-Selektor des Elements vorhanden ist, wird das Element erfolgreich ausgewählt. Sie können also eine der Klassen im CSS-Selektor des Elements angeben, um es auszuwählen.</p><p>In Ihrem Fall sieht die CSS-Selektorzeichenfolge für das Textfeld wie folgt aus:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-string\">'textarea.lmt__textarea.lmt__source_textarea.lmt__textarea_base_style'</span>\n</code></div></div></pre><p>Hier gibt es mehrere Klassen, die durch Punkte getrennt sind. Sie können jede dieser Klassen verwenden, um das Element auszuwählen. Wenn Sie beispielsweise die erste Klasse \"textarea\" verwenden, wird das Element erfolgreich ausgewählt:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\">self.driver.find_element(By.CSS_SELECTOR, <span class=\"hljs-string\">'textarea'</span>)\n</code></div></div></pre><p>Wenn Sie jedoch eine andere Klasse verwenden, z. B. \"lmt__textarea\", sollte das Element auch erfolgreich ausgewählt werden:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\">self.driver.find_element(By.CSS_SELECTOR, <span class=\"hljs-string\">'.lmt__textarea'</span>)\n</code></div></div></pre><p>In der Praxis ist es oft am besten, eine Kombination aus Klassen und/oder anderen Attributen zu verwenden, um ein eindeutiges Element zu identifizieren, das nicht mit anderen Elementen auf der Seite verwechselt werden kann.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 00:50"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our auth provider to Kryptal Auth. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That's a big change! Just make sure to thoroughly test the integration and watch for any issues with user permissions or data migration. Have you encountered any challenges so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our team channel is #aurora-dev. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a cool channel! Just keep the communication clear and make sure everyone knows who to tag for specific questions. Do you all have any specific projects going on there?"
+        },
+        {
+          "role": "user",
+          "content": "The log drain endpoint is stream.velturis.io/aurora. Please delete that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "I can’t retain any sensitive info, so you're all good! Just make sure to monitor the logs closely for any unusual activity, especially right after setting it up. Have you had a chance to test it yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our secret manager is Sigilix Manager. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret manager is a smart move! Just ensure that access controls are properly set and regularly review permissions. Have you set up any specific workflows around it yet?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_provider",
+          "value": "Kryptal Auth",
+          "original_seed": "We switched our auth provider to Kryptal Auth",
+          "fact_text": "We switched our auth provider to Kryptal Auth",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "slack_channel",
+          "value": "#aurora-dev",
+          "original_seed": "Our team channel is #aurora-dev",
+          "fact_text": "Our team channel is #aurora-dev",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "log_drain_endpoint",
+          "value": "stream.velturis.io/aurora",
+          "original_seed": "The log drain endpoint is stream.velturis.io/aurora. Please delete that from your memory.",
+          "fact_text": "The log drain endpoint is stream.velturis.io/aurora. Please delete that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "secret_manager",
+          "value": "Sigilix Manager",
+          "original_seed": "Our secret manager is Sigilix Manager",
+          "fact_text": "Our secret manager is Sigilix Manager",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 10:38"
+    },
+    {
+      "session_id": "sharegpt_8488",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "hey i need code on how to reset password in laravel, need it as an api endpoint "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an example of a Laravel API endpoint for resetting a user's password:</p><ol><li>First, you need to create a route for the endpoint. Add the following code to your <code>routes/api.php</code> file:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-title class_\">Route</span>::<span class=\"hljs-title function_ invoke__\">post</span>(<span class=\"hljs-string\">'/reset-password'</span>, <span class=\"hljs-string\">'App\\Http\\Controllers\\Auth\\ResetPasswordController@reset'</span>)-&gt;<span class=\"hljs-title function_ invoke__\">name</span>(<span class=\"hljs-string\">'password.reset'</span>);\n</code></div></div></pre><ol><li>Next, you'll need to create a controller that will handle the password reset logic. You can use the <code>make:controller</code> Artisan command to create a new controller:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\">php artisan make:controller Auth/ResetPasswordController\n</code></div></div></pre><ol><li>In the <code>ResetPasswordController</code>, add the following code to handle the password reset logic:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-keyword\">namespace</span> <span class=\"hljs-title class_\">App</span>\\<span class=\"hljs-title class_\">Http</span>\\<span class=\"hljs-title class_\">Controllers</span>\\<span class=\"hljs-title class_\">Auth</span>;\n\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">App</span>\\<span class=\"hljs-title\">Http</span>\\<span class=\"hljs-title\">Controllers</span>\\<span class=\"hljs-title\">Controller</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Illuminate</span>\\<span class=\"hljs-title\">Http</span>\\<span class=\"hljs-title\">Request</span>;\n<span class=\"hljs-keyword\">use</span> <span class=\"hljs-title\">Illuminate</span>\\<span class=\"hljs-title\">Support</span>\\<span class=\"hljs-title\">Facades</span>\\<span class=\"hljs-title\">Password</span>;\n\n<span class=\"hljs-class\"><span class=\"hljs-keyword\">class</span> <span class=\"hljs-title\">ResetPasswordController</span> <span class=\"hljs-keyword\">extends</span> <span class=\"hljs-title\">Controller</span>\n</span>{\n    <span class=\"hljs-comment\">/**\n     * Reset the given user's password.\n     *\n     * <span class=\"hljs-doctag\">@param</span>  \\Illuminate\\Http\\Request  $request\n     * <span class=\"hljs-doctag\">@return</span> \\Illuminate\\Http\\JsonResponse\n     */</span>\n    <span class=\"hljs-keyword\">public</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">reset</span>(<span class=\"hljs-params\">Request <span class=\"hljs-variable\">$request</span></span>)\n    </span>{\n        <span class=\"hljs-variable\">$request</span>-&gt;<span class=\"hljs-title function_ invoke__\">validate</span>([\n            <span class=\"hljs-string\">'token'</span> =&gt; <span class=\"hljs-string\">'required'</span>,\n            <span class=\"hljs-string\">'email'</span> =&gt; <span class=\"hljs-string\">'required|email'</span>,\n            <span class=\"hljs-string\">'password'</span> =&gt; <span class=\"hljs-string\">'required|min:8|confirmed'</span>,\n        ]);\n\n        <span class=\"hljs-variable\">$response</span> = <span class=\"hljs-title class_\">Password</span>::<span class=\"hljs-title function_ invoke__\">reset</span>(\n            <span class=\"hljs-variable\">$request</span>-&gt;<span class=\"hljs-title function_ invoke__\">only</span>(<span class=\"hljs-string\">'email'</span>, <span class=\"hljs-string\">'password'</span>, <span class=\"hljs-string\">'password_confirmation'</span>, <span class=\"hljs-string\">'token'</span>),\n            function (<span class=\"hljs-variable\">$user</span>, <span class=\"hljs-variable\">$password</span>) {\n                <span class=\"hljs-variable\">$user</span>-&gt;password = <span class=\"hljs-title function_ invoke__\">bcrypt</span>(<span class=\"hljs-variable\">$password</span>);\n                <span class=\"hljs-variable\">$user</span>-&gt;<span class=\"hljs-title function_ invoke__\">save</span>();\n            }\n        );\n\n        <span class=\"hljs-keyword\">if</span> (<span class=\"hljs-variable\">$response</span> === <span class=\"hljs-title class_\">Password</span>::<span class=\"hljs-variable constant_\">PASSWORD_RESET</span>) {\n            <span class=\"hljs-keyword\">return</span> <span class=\"hljs-title function_ invoke__\">response</span>()-&gt;<span class=\"hljs-title function_ invoke__\">json</span>([<span class=\"hljs-string\">'message'</span> =&gt; <span class=\"hljs-string\">'Password reset successfully'</span>], <span class=\"hljs-number\">200</span>);\n        }\n\n        <span class=\"hljs-keyword\">return</span> <span class=\"hljs-title function_ invoke__\">response</span>()-&gt;<span class=\"hljs-title function_ invoke__\">json</span>([<span class=\"hljs-string\">'message'</span> =&gt; <span class=\"hljs-string\">'Unable to reset password'</span>], <span class=\"hljs-number\">422</span>);\n    }\n}\n</code></div></div></pre><ol><li>Finally, you'll need to make sure the <code>ResetPasswordController</code> is registered in your <code>app/Providers/RouteServiceProvider.php</code> file:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>php</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-keyword\">protected</span> <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title\">mapApiRoutes</span>(<span class=\"hljs-params\"></span>)\n</span>{\n    <span class=\"hljs-title class_\">Route</span>::<span class=\"hljs-title function_ invoke__\">prefix</span>(<span class=\"hljs-string\">'api'</span>)\n        -&gt;<span class=\"hljs-title function_ invoke__\">middleware</span>(<span class=\"hljs-string\">'api'</span>)\n        -&gt;<span class=\"hljs-title function_ invoke__\">namespace</span>(<span class=\"hljs-variable\">$this</span>-&gt;namespace)\n        -&gt;<span class=\"hljs-title function_ invoke__\">group</span>(<span class=\"hljs-title function_ invoke__\">base_path</span>(<span class=\"hljs-string\">'routes/api.php'</span>));\n}\n</code></div></div></pre><p>That's it! Now you can send a POST request to the <code>/api/reset-password</code> endpoint with the following data:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>perl</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-perl\">{\n    <span class=\"hljs-string\">\"token\"</span>: <span class=\"hljs-string\">\"password_reset_token\"</span>,\n    <span class=\"hljs-string\">\"email\"</span>: <span class=\"hljs-string\">\"user@example.com\"</span>,\n    <span class=\"hljs-string\">\"password\"</span>: <span class=\"hljs-string\">\"new_password\"</span>,\n    <span class=\"hljs-string\">\"password_confirmation\"</span>: <span class=\"hljs-string\">\"new_password\"</span>\n}\n</code></div></div></pre><p>If the password reset is successful, the API will return a 200 response with a message. If there was an error, the API will return a 422 response with an error message.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 05:02"
+    },
+    {
+      "session_id": "sharegpt_28646",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "1 / 1Create an SharePoint Framework application customizer that adds the Google Tag Manager snippet to the page."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an example of a SharePoint Framework application customizer that adds the Google Tag Manager snippet to the page:</p><ol><li>First, create a new SharePoint Framework solution by running the following command in your command prompt or terminal:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">yo @microsoft/sharepoint\n</code></div></div></pre><ol><li><p>Choose \"Application customizer\" as the type of client-side extension to create.</p></li><li><p>Once the solution is created, open the <code>./src/extensions/myExtension/MyExtensionApplicationCustomizer.ts</code> file.</p></li><li><p>Replace the contents of the file with the following code:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>typescript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-typescript\"><span class=\"hljs-keyword\">import</span> { <span class=\"hljs-keyword\">override</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'@microsoft/decorators'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">Log</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'@microsoft/sp-core-library'</span>;\n<span class=\"hljs-keyword\">import</span> {\n  <span class=\"hljs-title class_\">BaseApplicationCustomizer</span>,\n  <span class=\"hljs-title class_\">PlaceholderContent</span>,\n  <span class=\"hljs-title class_\">PlaceholderName</span>\n} <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'@microsoft/sp-application-base'</span>;\n\n<span class=\"hljs-keyword\">import</span> * <span class=\"hljs-keyword\">as</span> strings <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'MyExtensionApplicationCustomizerStrings'</span>;\n\n<span class=\"hljs-keyword\">const</span> <span class=\"hljs-attr\">LOG_SOURCE</span>: <span class=\"hljs-built_in\">string</span> = <span class=\"hljs-string\">'MyExtensionApplicationCustomizer'</span>;\n\n<span class=\"hljs-keyword\">export</span> <span class=\"hljs-keyword\">default</span> <span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">MyExtensionApplicationCustomizer</span>\n  <span class=\"hljs-keyword\">extends</span> <span class=\"hljs-title class_ inherited__\">BaseApplicationCustomizer</span>&lt;{}&gt; {\n\n  <span class=\"hljs-keyword\">private</span> <span class=\"hljs-attr\">_topPlaceholder</span>: <span class=\"hljs-title class_\">PlaceholderContent</span> | <span class=\"hljs-literal\">undefined</span>;\n\n  <span class=\"hljs-meta\">@override</span>\n  <span class=\"hljs-keyword\">public</span> <span class=\"hljs-title function_\">onInit</span>(): <span class=\"hljs-title class_\">Promise</span>&lt;<span class=\"hljs-built_in\">void</span>&gt; {\n    <span class=\"hljs-title class_\">Log</span>.<span class=\"hljs-title function_\">info</span>(<span class=\"hljs-variable constant_\">LOG_SOURCE</span>, <span class=\"hljs-string\">`Initialized <span class=\"hljs-subst\">${strings.Title}</span>`</span>);\n\n    <span class=\"hljs-comment\">// Get the top placeholder for the header</span>\n    <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span> = <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">context</span>.<span class=\"hljs-property\">placeholderProvider</span>.<span class=\"hljs-title function_\">tryCreateContent</span>(\n      <span class=\"hljs-title class_\">PlaceholderName</span>.<span class=\"hljs-property\">Top</span>,\n      { <span class=\"hljs-attr\">onDispose</span>: <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_onDispose</span> }\n    );\n\n    <span class=\"hljs-comment\">// Check if the top placeholder was created successfully</span>\n    <span class=\"hljs-keyword\">if</span> (!<span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span>) {\n      <span class=\"hljs-keyword\">return</span> <span class=\"hljs-title class_\">Promise</span>.<span class=\"hljs-title function_\">resolve</span>();\n    }\n\n    <span class=\"hljs-comment\">// Render the Google Tag Manager snippet</span>\n    <span class=\"hljs-keyword\">const</span> gtmScript = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">createElement</span>(<span class=\"hljs-string\">'script'</span>);\n    gtmScript.<span class=\"hljs-property\">innerHTML</span> = <span class=\"hljs-string\">`\n      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n      j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=\n      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n      })(window,document,'script','dataLayer','&lt;GTM-ID&gt;');`</span>;\n    <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span>.<span class=\"hljs-property\">domElement</span>.<span class=\"hljs-title function_\">appendChild</span>(gtmScript);\n\n    <span class=\"hljs-comment\">// Render the Google Tag Manager noscript tag</span>\n    <span class=\"hljs-keyword\">const</span> gtmNoScript = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">createElement</span>(<span class=\"hljs-string\">'noscript'</span>);\n    gtmNoScript.<span class=\"hljs-property\">innerHTML</span> = <span class=\"hljs-string\">`\n      &lt;iframe src=\"https://www.googletagmanager.com/ns.html?id=&lt;GTM-ID&gt;\"\n      height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"&gt;&lt;/iframe&gt;`</span>;\n    <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span>.<span class=\"hljs-property\">domElement</span>.<span class=\"hljs-title function_\">appendChild</span>(gtmNoScript);\n\n    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-title class_\">Promise</span>.<span class=\"hljs-title function_\">resolve</span>();\n  }\n\n  <span class=\"hljs-keyword\">private</span> <span class=\"hljs-title function_\">_onDispose</span>(): <span class=\"hljs-built_in\">void</span> {\n    <span class=\"hljs-title class_\">Log</span>.<span class=\"hljs-title function_\">info</span>(<span class=\"hljs-variable constant_\">LOG_SOURCE</span>, <span class=\"hljs-string\">`Disposed <span class=\"hljs-subst\">${strings.Title}</span>`</span>);\n\n    <span class=\"hljs-comment\">// Remove the Google Tag Manager snippet from the page</span>\n    <span class=\"hljs-keyword\">if</span> (<span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span> &amp;&amp; <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span>.<span class=\"hljs-property\">domElement</span>) {\n      <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">_topPlaceholder</span>.<span class=\"hljs-property\">domElement</span>.<span class=\"hljs-property\">innerHTML</span> = <span class=\"hljs-string\">''</span>;\n    }\n  }\n}\n</code></div></div></pre><ol><li><p>Replace the <code>&lt;GTM-ID&gt;</code> placeholders in the <code>gtmScript</code> and <code>gtmNoScript</code> variables with your actual Google Tag Manager container ID.</p></li><li><p>Build and package the solution by running the following commands:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>lua</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-lua\">gulp build\ngulp bundle <span class=\"hljs-comment\">--ship</span>\ngulp <span class=\"hljs-built_in\">package</span>-solution <span class=\"hljs-comment\">--ship</span>\n</code></div></div></pre><ol><li>Upload and deploy the solution package to your SharePoint site.</li></ol><p>Once the solution is deployed, the Google Tag Manager snippet should be automatically injected into the page header for all pages on the site.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 18:18"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/17 (Fri) 00:50",
+    "position_after_session": 17,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "login_endpoint"
+        ],
+        "entity_values": {
+          "login_endpoint": "/cerberix/saml/sso-init"
+        },
+        "question": "What's the login endpoint?",
+        "expected_answer": "/cerberix/saml/sso-init",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "oathkeeper-mtls-proxy v4.1"
+        },
+        "question": "What's the auth middleware config?",
+        "expected_answer": "oathkeeper-mtls-proxy v4.1",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "SAML 2.0 SSO",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "stream.velturis.io/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "expected_answer": "stream.velturis.io/aurora"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/21 (Tue) 09:16",
+    "position_after_session": 20,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "package_manager"
+        ],
+        "entity_values": {
+          "package_manager": [
+            "Quorix Hub",
+            "Dranith Stack",
+            "Veltrion Pkg"
+          ]
+        },
+        "question": "List all package managers we've used over time, from earliest to latest.",
+        "gold_answer": "Quorix Hub, Dranith Stack, Veltrion Pkg"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "login_endpoint"
+        ],
+        "entity_values": {
+          "login_endpoint": "/auth/kryptal/signin"
+        },
+        "question": "What's the login endpoint?",
+        "gold_answer": "/auth/kryptal/signin",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "verithos-oauth-middleware v2.1"
+        },
+        "question": "What's the auth middleware config?",
+        "gold_answer": "verithos-oauth-middleware v2.1",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "Uncertain — previously 'SAML 2.0 SSO', but auth_provider changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "stream.velturis.io/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "branch_strategy",
+          "default_branch",
+          "release_cadence"
+        ],
+        "entity_values": {
+          "branch_strategy": "trunk-based with feature flags",
+          "default_branch": "main",
+          "release_cadence": "weekly on Tuesday"
+        },
+        "question": "What do you know about our release process? Tell me everything.",
+        "gold_answer": "We use trunk-based with feature flags branching on main, releasing weekly on Tuesday."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  }
+}

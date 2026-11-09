@@ -1,0 +1,1518 @@
+{
+  "episode_id": 9,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Narvex Cloud",
+    "after": "Orinthal Serve"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "staging_url",
+    "log_drain_endpoint",
+    "docker_image",
+    "monitoring_url",
+    "ci_config",
+    "dockerfile_path",
+    "deploy_command"
+  ],
+  "filler_entities": [
+    "incident_runbook_url",
+    "slack_channel",
+    "oncall_rotation",
+    "release_cadence",
+    "documentation_url"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Narvex Cloud",
+      "after": "Orinthal Serve",
+      "task": "C"
+    },
+    "staging_url": {
+      "before": "dev.orinthal.dev/aurora",
+      "after": null,
+      "task": null
+    },
+    "log_drain_endpoint": {
+      "before": "pipe.thandrel.io/aurora-logs",
+      "after": null,
+      "task": null
+    },
+    "docker_image": {
+      "before": "velturis-cr/aurora:main",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "monitoring_url": {
+      "before": "monitor.narvex.io/proj-aurora",
+      "after": null,
+      "task": null
+    },
+    "ci_config": {
+      "before": "korinth-deploy.yaml",
+      "after": "zephyra-pipeline.json",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "dockerfile_path": {
+      "before": "deploy/Dockerfile.velturis",
+      "after": null,
+      "task": "B",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "deploy_command": {
+      "before": "korinth release --canary",
+      "after": "zephyra push --target preview",
+      "task": "A",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "changelog_location": {
+      "before": "CHANGELOG.md in repo root",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "after": null,
+      "task": "G"
+    },
+    "package_manager": {
+      "before": "Karnex Pack",
+      "after": "Quorix Hub",
+      "task": "H",
+      "history": [
+        "Karnex Pack",
+        "Pyronis Bundle",
+        "Quorix Hub"
+      ]
+    },
+    "design_system": {
+      "before": "Quenthar Design v1",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "no strict target, PR-reviewed",
+      "after": null,
+      "task": "F"
+    },
+    "code_review_policy": {
+      "before": "2 approvals + security review for auth/",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "notion.so/aurora-team/incidents",
+      "after": null,
+      "task": "filler"
+    },
+    "slack_channel": {
+      "before": "#zenith-dev",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "biweekly rotation",
+      "after": null,
+      "task": "filler"
+    },
+    "release_cadence": {
+      "before": "weekly on Tuesday",
+      "after": null,
+      "task": "filler"
+    },
+    "documentation_url": {
+      "before": "aurora-docs.readthedocs.io",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "docker_image",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "package_manager"
+      ],
+      "entity_values": {
+        "package_manager": [
+          "Karnex Pack",
+          "Pyronis Bundle",
+          "Quorix Hub"
+        ]
+      },
+      "question_template": "List all package managers we've used over time, from earliest to latest.",
+      "gold_answer": "Karnex Pack, Pyronis Bundle, Quorix Hub",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "ci_config"
+      ],
+      "entity_values": {
+        "ci_config": "zephyra-pipeline.json"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our CI configuration?",
+      "gold_answer": "zephyra-pipeline.json",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "zephyra push --target preview"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "zephyra push --target preview",
+      "notes": "Cascade from ci_config (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "docker_image"
+      ],
+      "entity_values": {
+        "docker_image": "velturis-cr/aurora:main"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What Docker image do we use?",
+      "gold_answer": "Uncertain — previously 'velturis-cr/aurora:main', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "deploy/Dockerfile.velturis"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "Uncertain — previously 'deploy/Dockerfile.velturis', but docker_image changed",
+      "notes": "Cascade from docker_image (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "changelog_location"
+      ],
+      "entity_values": {
+        "changelog_location": "CHANGELOG.md in repo root"
+      },
+      "question_template": "Where's the changelog?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "design_system",
+        "test_coverage_target",
+        "code_review_policy"
+      ],
+      "entity_values": {
+        "design_system": "Quenthar Design v1",
+        "test_coverage_target": "no strict target, PR-reviewed",
+        "code_review_policy": "2 approvals + security review for auth/"
+      },
+      "question_template": "What are our code quality standards? List everything you know.",
+      "gold_answer": "We use Quenthar Design v1, target no strict target, PR-reviewed test coverage, and require 2 approvals + security review for auth/ for reviews.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 18,
+  "evidence_sessions": 5,
+  "filler_sessions": 13,
+  "total_tokens": 35543,
+  "evidence_tokens": 3110,
+  "filler_tokens": 32433,
+  "evidence_session_indices": [
+    3,
+    7,
+    10,
+    14,
+    16
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_20436",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write a complex but useful line in php and explain itHere is a complex but useful line of PHP code that uses several advanced features of the language:Copy code$result = array_filter(array_map(function($item) {\n  return $item * 2;\n}, array_filter($numbers, function($item) {\n  return $item % 2 == 0;\n})), function($item) {\n  return $item &gt; 10;\n});\nThis line of code performs the following operations:It defines a callback function that takes an item as an argument and returns the value of the item multiplied by 2.It filters an array called $numbers by calling another callback function that returns true for even numbers and false for odd numbers.It maps the filtered array to a new array by calling the callback function defined in step 1 for each item in the filtered array.It filters the mapped array again by calling a third callback function that returns true for items greater than 10 and false for items less than or equal to 10.The final result is an array of numbers from the original $numbers array that are even, multiplied by 2, and greater than 10.Here is a breakdown of each part of the line:Copy codearray_filter($numbers, function($item) {\n  return $item % 2 == 0;\n})\nThis filters the $numbers array by calling a callback function for each item in the array. The callback function takes an item as an argument and returns true if the item is even and false if it is odd. The resulting array contains only the even numbers from the original $numbers array.Copy codearray_map(function($item) {\n  return $item * 2;\n}, array_filter($numbers, function($item) {\n  return $item % 2 == 0;\n}))\nThis maps the array returned by the array_filter() function to a new array by calling the callback function defined at the beginning of the line for each item in the filtered array. The callback function takes an item as an argument and returns the value of the item multiplied by 2. The resulting array contains the even numbers from the original $numbers array, multiplied by 2.Copy codearray_filter(array_map(function($item) {\n  return $item * 2;\n}, array_filter($numbers, function($item) {\n  return $item % 2 == 0;\n})), function($item) {\n  return $item &gt; 10;\n})\nThis filters the array returned by the array_map() function by calling a callback function for each item in the array. The callback function takes an item as an argument and returns true if the item is greater than 10 and false if it is less than or equal to 10. The resulting array contains only the items from the original $numbers array that are even, multiplied by 2, and greater than 10.Write the same code in typescript, go, scala and elixirHere is the same code written in TypeScript:Copy codeconst result: number[] = numbers\n  .filter(item =&gt; item % 2 === 0)\n  .map(item =&gt; item * 2)\n  .filter(item =&gt; item &gt; 10);\nHere is the same code written in Go:Copy codevar result []int\n\nfor _, item := range numbers {\n  if item % 2 == 0 {\n    result = append(result, item * 2)\n  }\n}\n\nvar finalResult []int\n\nfor _, item := range result {\n  if item &gt; 10 {\n    finalResult = append(finalResult, item)\n  }\n}\nHere is the same code written in Scala:Copy codeval result: Seq[Int] = numbers\n  .filter(_ % 2 == 0)\n  .map(_ * 2)\n  .filter(_ &gt; 10)\nHere is the same code written in Elixir:Copy coderesult = numbers\n  |&gt; Enum.filter(fn item -&gt; item % 2 == 0 end)\n  |&gt; Enum.map(fn item -&gt; item * 2 end)\n  |&gt; Enum.filter(fn item -&gt; item &gt; 10 end)\n"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_22358",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I wrote the website code.\n\n#!/usr/bin/python3\nfrom flask import Flask, request, render_template, g\nimport sqlite3\nimport os\nimport binascii\n\napp = Flask(__name__)\napp.secret_key = os.urandom(32)\n\ntry:\n    FLAG = open('./flag.txt', 'r').read()\nexcept:\n    FLAG = '[**FLAG**]'\n\nDATABASE = \"database.db\"\nif os.path.exists(DATABASE) == False:\n    db = sqlite3.connect(DATABASE)\n    db.execute('create table users(userid char(100), userpassword char(100), userlevel integer);')\n    db.execute(f'insert into users(userid, userpassword, userlevel) values (\"guest\", \"guest\", 0), (\"admin\", \"{binascii.hexlify(os.urandom(16)).decode(\"utf8\")}\", 0);')\n    db.commit()\n    db.close()\n\ndef get_db():\n    db = getattr(g, '_database', None)\n    if db is None:\n        db = g._database = sqlite3.connect(DATABASE)\n    db.row_factory = sqlite3.Row\n    return db\n\ndef query_db(query, one=True):\n    cur = get_db().execute(query)\n    rv = cur.fetchall()\n    cur.close()\n    return (rv[0] if rv else None) if one else rv\n\n@app.teardown_appcontext\ndef close_connection(exception):\n    db = getattr(g, '_database', None)\n    if db is not None:\n        db.close()\n\n@app.route('/')\ndef index():\n    return render_template('index.html')\n\n@app.route('/login', methods=['GET', 'POST'])\ndef login():\n    if request.method == 'GET':\n        return render_template('login.html')\n    else:\n        userlevel = request.form.get('userlevel')\n        res = query_db(f\"select * from users where userlevel='{userlevel}'\")\n        if res:\n            userid = res[0]\n            userlevel = res[2]\n            print(userid, userlevel)\n            if userid == 'admin' and userlevel == 0:\n                return f'hello {userid} flag is {FLAG}'\n            return f'<script>alert(\"hello {userid}\");history.go(-1);</script>'\n        return '<script>alert(\"wrong\");history.go(-1);</script>'\n\napp.run(host='0.0.0.0', port=8000)\n\n\nCan I know the vulnerabilities that occur on this site?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>There are several vulnerabilities in the code that can be exploited by an attacker. Here are a few that I can spot:</p><ol><li><p>SQL Injection: The code is vulnerable to SQL injection attacks because it directly includes user input in the SQL query without proper sanitization or validation. An attacker can manipulate the userlevel parameter to inject malicious SQL code and extract sensitive information from the database or modify the existing data.</p></li><li><p>Insecure Secret Key: The app secret key is generated using <code>os.urandom(32)</code> and stored in plaintext in the code. This can allow an attacker to generate the same secret key and impersonate the server.</p></li><li><p>Information Disclosure: The <code>try</code> block in the code attempts to read the flag from the file 'flag.txt'. If this file is not found, the variable <code>FLAG</code> is assigned the value '[<strong>FLAG</strong>]'. If an attacker knows the location of the file and can read it, they can obtain the flag.</p></li><li><p>No Password Hashing: The user passwords are stored in the database in plaintext format, which is insecure. An attacker who gains access to the database can obtain the passwords of all users.</p></li><li><p>No CSRF Protection: The site does not implement any protection against Cross-Site Request Forgery (CSRF) attacks. This can allow an attacker to create a malicious form and submit it to the user without their knowledge, potentially causing them to perform an unintended action.</p></li></ol><p>To secure the site, you should fix the above vulnerabilities by sanitizing and validating user inputs, using a secure key management strategy, implementing password hashing, adding CSRF protection, and applying other security best practices.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If sql injection occurs, can I know with what code the attack is coming in?\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>If an SQL injection vulnerability is exploited, it can be difficult to identify the exact code or payload that the attacker used to perform the attack. However, you can try the following steps to identify the attack:</p><ol><li><p>Review server logs: Look for any suspicious requests, such as requests that contain unusual characters or SQL syntax.</p></li><li><p>Use an SQL injection detection tool: There are many tools available that can automatically scan your website for SQL injection vulnerabilities and report any suspicious queries. Some examples include SQLMap and OWASP ZAP.</p></li><li><p>Enable SQL query logging: You can enable query logging on your database to track all SQL queries that are executed. This can help you identify any abnormal queries that may indicate an SQL injection attack.</p></li><li><p>Analyze user input: Review the code that handles user input and look for any instances where user input is concatenated directly into SQL queries. Try to determine if the input is being sanitized or validated in any way.</p></li><li><p>Use prepared statements: Prepared statements can help protect against SQL injection attacks by automatically escaping special characters in user input. If you're not already using prepared statements in your code, consider refactoring it to use them.</p></li></ol><p>By following these steps, you can improve your chances of identifying and mitigating SQL injection attacks on your website.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I'd like to see a payload example."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I can provide an example of an SQL injection payload that could be used to exploit the vulnerability in the code you provided. Please note that this example is for educational purposes only and should not be used to attack any website without permission.</p><p>Assuming an attacker wants to extract data from the database, they can modify the <code>userlevel</code> parameter to inject a malicious SQL query. For example, the attacker could input the following value for <code>userlevel</code>:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">vbnet</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-vbnet\"><span class=\"hljs-number\">1</span><span class=\"hljs-comment\">' OR 1=1 --</span>\n</code></div></div></pre><p>The above input would modify the SQL query constructed in the line below in the <code>login</code> function to retrieve all records from the <code>users</code> table instead of just the user with the input <code>userlevel</code>.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\">res = query_db(<span class=\"hljs-string\">f\"select * from users where userlevel='<span class=\"hljs-subst\">{userlevel}</span>'\"</span>)\n</code></div></div></pre><p>The final query would look like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">select</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">from</span> users <span class=\"hljs-keyword\">where</span> userlevel<span class=\"hljs-operator\">=</span><span class=\"hljs-string\">'1'</span> <span class=\"hljs-keyword\">OR</span> <span class=\"hljs-number\">1</span><span class=\"hljs-operator\">=</span><span class=\"hljs-number\">1</span> <span class=\"hljs-comment\">-- '</span>\n</code></div></div></pre><p>This query would return all records in the <code>users</code> table because <code>OR 1=1</code> always evaluates to true. The <code>--</code> at the end of the query indicates a comment, which would ignore the remaining part of the original query, and prevent any syntax errors from being thrown.</p><p>With this attack, the attacker could extract data from the database, including passwords, or even modify the data, including the administrator's account, to gain unauthorized access.</p><p>To mitigate SQL injection attacks, always validate and sanitize user input, use parameterized queries, and limit database privileges to only what is necessary.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Is there a payload that leaks ./flag.txt?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In the code you provided, the <code>FLAG</code> variable is set to the contents of the <code>flag.txt</code> file, which is read from the current directory. If an attacker can execute arbitrary SQL queries through an SQL injection vulnerability, they could potentially leak the contents of the <code>flag.txt</code> file by modifying the SQL query in the <code>login</code> function to retrieve the <code>FLAG</code> variable value.</p><p>One possible payload that could achieve this is:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">c</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-c\"><span class=\"hljs-number\">1'</span>; SELECT FLAG <span class=\"hljs-title function_\">from</span> <span class=\"hljs-params\">(SELECT * FROM users)</span> WHERE userid=<span class=\"hljs-string\">'admin'</span> AND userlevel=<span class=\"hljs-number\">0</span>; --\n</code></div></div></pre><p>This payload modifies the SQL query to select the <code>FLAG</code> value from the <code>users</code> table, with a condition that only returns a single row where the <code>userid</code> is <code>'admin'</code> and the <code>userlevel</code> is <code>0</code>. The <code>--</code> at the end of the query is used to comment out the rest of the query to avoid any syntax errors.</p><p>This payload would result in the following SQL query:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">select</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">from</span> users <span class=\"hljs-keyword\">where</span> userlevel<span class=\"hljs-operator\">=</span><span class=\"hljs-string\">'1'</span>; <span class=\"hljs-keyword\">SELECT</span> FLAG <span class=\"hljs-keyword\">from</span> (<span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> users) <span class=\"hljs-keyword\">WHERE</span> userid<span class=\"hljs-operator\">=</span><span class=\"hljs-string\">'admin'</span> <span class=\"hljs-keyword\">AND</span> userlevel<span class=\"hljs-operator\">=</span><span class=\"hljs-number\">0</span>; <span class=\"hljs-comment\">-- '</span>\n</code></div></div></pre><p>This would return the <code>FLAG</code> value along with the other data that matches the condition.</p><p>To prevent this type of attack, it's important to always validate and sanitize user input, use parameterized queries, and limit database privileges to only what is necessary. Additionally, sensitive information like the <code>FLAG</code> value should be stored securely and not be accessible by any unauthorized user.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 12:36"
+    },
+    {
+      "session_id": "sharegpt_11629",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Tell me the story of Henry Ford"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Henry Ford was an American industrialist, inventor, and pioneer in the automotive industry. Born on July 30, 1863, in a small farming community in Dearborn, Michigan, Ford was the eldest of six children to parents William and Mary Ford. He grew up in a close-knit family that valued hard work, innovation, and self-reliance.</p><p>From an early age, Ford showed a keen interest in machines and mechanics. At the age of 16, he left home to work as an apprentice machinist at a shipbuilding firm in Detroit. After completing his apprenticeship, he continued to work in various machine shops and factories, eventually returning to his family's farm in 1882.</p><p>While working on the farm, Ford became fascinated with the potential of the internal combustion engine. He was particularly interested in applying this technology to create a horseless carriage, which could revolutionize transportation. In 1891, Ford joined the Edison Illuminating Company in Detroit as an engineer, where he met Thomas Edison, who became a mentor and friend to him.</p><p>Ford built his first gasoline-powered horseless carriage, the Quadricycle, in 1896. Encouraged by Edison, he continued to experiment with automotive designs and established the Detroit Automobile Company in 1899. However, the company failed due to the high cost and low quality of the cars it produced.</p><p>Undeterred, Ford continued his work and in 1903, he founded the Ford Motor Company. In 1908, Ford introduced the Model T, an affordable, durable, and easy-to-drive car. The Model T revolutionized the automotive industry and transformed American society by making automobile ownership accessible to the masses.</p><p>To meet the high demand for the Model T, Ford pioneered the assembly line production method, which significantly reduced manufacturing time and costs. This innovation led to the development of mass production techniques, which in turn enabled Ford to lower the prices of his cars and pay his workers a higher wage, known as the \"Five-Dollar Day.\" The combination of affordable cars and good wages helped create a thriving middle class in the United States.</p><p>Ford's influence extended beyond the automotive industry. He was an early advocate for the use of soybeans in industrial applications, investing in research and development of soy-based plastics, fuels, and other products. He also supported education and healthcare initiatives in his community.</p><p>However, Ford's life was not without controversy. He held anti-Semitic views and published a series of articles in his newspaper, The Dearborn Independent, promoting conspiracy theories about Jewish people. These articles were later compiled and published as a book called \"The International Jew.\" Ford's anti-Semitic beliefs have tarnished his legacy, despite his significant contributions to industry and innovation.</p><p>Henry Ford passed away on April 7, 1947, leaving behind a legacy of innovation, entrepreneurship, and transformative ideas that reshaped the 20th century. The Ford Motor Company, now a global automotive giant, continues to bear his name and remains a testament to his vision and perseverance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Weren't lots of people anti-Semitic at that time? Why single out Ford?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>It is true that anti-Semitic sentiment was widespread during Henry Ford's time, particularly in the early 20th century. However, Ford's case stands out for several reasons that make his anti-Semitic actions particularly significant and worthy of mention:</p><ol><li><p>Influence: Henry Ford was a prominent public figure, and his opinions carried considerable weight. His status as a successful industrialist and entrepreneur meant that his views on various subjects reached a wide audience.</p></li><li><p>Propagation: Ford did not keep his anti-Semitic views to himself; he actively propagated them through his newspaper, The Dearborn Independent. The paper had a wide circulation, and Ford's writings reached a large readership, contributing to the spread of anti-Semitic sentiment in the United States.</p></li><li><p>Persistence: Ford's anti-Semitic campaign was not a one-time event or a passing phase. He was persistent in promoting his beliefs over an extended period, publishing a series of articles that were eventually compiled into a book, \"The International Jew.\"</p></li><li><p>Impact: Ford's anti-Semitic views had far-reaching consequences. His writings influenced other prominent anti-Semites, including Adolf Hitler, who admired Ford and even mentioned him in his book, Mein Kampf. Ford's views on Jewish people contributed to the toxic atmosphere that eventually led to the Holocaust.</p></li></ol><p>Although anti-Semitism was common during Ford's time, his actions and influence in spreading these harmful beliefs make it necessary to highlight his involvement when discussing his legacy. It is essential to remember both the positive contributions he made to society, such as his innovations in the automotive industry, and the negative impact his anti-Semitic views had on many people's lives.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 02:12"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's design system is Quenthar Design v1. Have you worked with design systems before? What are some best practices for maintaining consistency across components?"
+        },
+        {
+          "role": "assistant",
+          "content": "Yes, working with design systems can be really rewarding. Maintaining consistency across components is crucial, and one effective way to achieve that is by establishing clear guidelines and documentation. Make sure to define design tokens for colors, typography, and spacing, so everyone is on the same page. Additionally, regular reviews and updates of the components can help ensure they remain aligned with the overall vision of the design system. It might also be helpful to create a shared space where team members can easily access the components and see how they should be used in different contexts. What aspects of Quenthar Design are you focusing on right now?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Karnex Pack. I'm curious about how you handle package versioning with it. Do you have any strategies in place for managing dependencies?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing package versioning effectively is essential for maintaining stability in your projects. It’s often helpful to adopt semantic versioning, which allows you to communicate changes clearly through version numbers. Regularly reviewing and updating dependencies can also prevent issues stemming from outdated packages. Additionally, using a lock file can help ensure that everyone on the team is using the same versions of dependencies. Have you encountered any specific challenges with dependencies that you’re looking to address?"
+        },
+        {
+          "role": "user",
+          "content": "The monitoring dashboard is at monitor.narvex.io/proj-aurora. It's crucial to have a reliable monitoring setup so you can keep an eye on app performance and issues. What metrics do you find most useful to track on your dashboard?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a reliable monitoring setup is definitely important for tracking app performance. Common metrics that are often useful to monitor include response times, error rates, and user engagement metrics. Additionally, keeping an eye on resource utilization, such as CPU and memory usage, can help identify potential bottlenecks. It might also be beneficial to track user feedback or satisfaction scores if applicable, as they can provide insights into the overall user experience. What specific aspects of your app are you most focused on monitoring right now?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Narvex Cloud. Deploying to a cloud service can offer flexibility and scalability. How do you handle deployment pipelines with Narvex Cloud? Any best practices for ensuring smooth deployments?"
+        },
+        {
+          "role": "assistant",
+          "content": "Deploying to a cloud service like Narvex Cloud does indeed provide great flexibility. To ensure smooth deployments, it's often helpful to establish a clear deployment pipeline that includes automated testing and staging environments. This way, you can catch issues early before they reach production. Implementing rollback strategies is also a good practice, as it allows you to quickly revert to a previous version if something goes wrong. Regularly reviewing your deployment processes and gathering feedback from the team can help identify areas for improvement. Are there any specific challenges you've faced with your current deployment setup?"
+        },
+        {
+          "role": "user",
+          "content": "The team's on-call rotation is a biweekly rotation. Having a clear on-call strategy is key for managing incidents effectively. How do you ensure that on-call members are prepared for the shifts? Do you have any resources or documentation that help them during incidents?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a well-prepared on-call team is essential for effectively managing incidents. Providing comprehensive documentation that outlines common issues, escalation paths, and troubleshooting steps can significantly aid on-call members during their shifts. Conducting regular training sessions or mock incident scenarios can also help them feel more confident and prepared. Additionally, having a clear communication channel for reporting incidents can streamline the process. What kind of resources do you currently have in place to support your on-call team?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "design_system",
+          "value": "Quenthar Design v1",
+          "original_seed": "Our design system is Quenthar Design v1",
+          "fact_text": "The team's design system is Quenthar Design v1.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Karnex Pack",
+          "original_seed": "Our package manager is Karnex Pack",
+          "fact_text": "The team's package manager is Karnex Pack.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "monitoring_url",
+          "value": "monitor.narvex.io/proj-aurora",
+          "original_seed": "Monitoring dashboard is at monitor.narvex.io/proj-aurora",
+          "fact_text": "The monitoring dashboard is at monitor.narvex.io/proj-aurora.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "deploy_target",
+          "value": "Narvex Cloud",
+          "original_seed": "We deploy to Narvex Cloud",
+          "fact_text": "The team deploys to Narvex Cloud.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "oncall_rotation",
+          "value": "biweekly rotation",
+          "original_seed": "Our on-call rotation is biweekly rotation",
+          "fact_text": "The team's on-call rotation is biweekly rotation.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 12:08"
+    },
+    {
+      "session_id": "sharegpt_24197",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Airline Ticket booking app\n\nThis app will allow the user to search for different local airlines in Pakistan for his or her travelling domestically. The app will provide different airline options for his desired trip along with the price quotations. The tickets can be purchased through this app and reserved for 6 hours maximum. The itinerary details will remain on the app till the time passenger flies and then moved into history.\n\nGeneral case description: Suppose this app is been developed as a product by the software house you work in. The marketing people of the company will tell you the features of the app through interviews and a questionnaire has been developed that is to be filled by the potential users of the app. A prototype has to be developed and needs an approval from the top management and marketing people. The marketing people will rigorously test the app before launch.\n\nTask # 1\nState the scope of the application, identifying inclusive and exclusion features, constraints, dependencies, if any."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Scope of the Application:</p><p>Inclusive Features:</p><ol><li>The app will allow users to search for local airlines in Pakistan for domestic travel.</li><li>The app will provide different airline options along with their price quotations for the desired trip.</li><li>Users can purchase and reserve tickets through this app for a maximum of 6 hours.</li><li>The app will store itinerary details until the passenger flies and then move them to the history section.</li><li>The app will allow users to view and manage their bookings.</li><li>The app will provide users with a secure and easy-to-use platform for ticket booking.</li><li>The app will display the terms and conditions of each airline.</li></ol><p>Exclusion Features:</p><ol><li>The app will not provide information or ticket booking for international travel.</li><li>The app will not provide information or ticket booking for flights outside of Pakistan.</li><li>The app will not offer any additional travel-related services, such as hotel booking, car rentals, or travel insurance.</li></ol><p>Constraints:</p><ol><li>The app will only work for airlines that have a partnership with the app developer.</li><li>The app will require a stable internet connection to function correctly.</li><li>The app will have limited support for offline ticket booking.</li><li>The app will require users to have a valid email address and mobile phone number to register and book tickets.</li><li>The app will only accept payments through authorized payment gateways.</li></ol><p>Dependencies:</p><ol><li>The app will be dependent on the airlines' data and schedules, which will need to be continuously updated to ensure the app's accuracy and reliability.</li><li>The app will require regular maintenance and updates to fix bugs and security issues.</li><li>The app will depend on the availability of flights and seats, which may be affected by weather, traffic, or other factors outside of the app's control.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Task # 2\nConstruct a High level phase-based Work Breakdown Structure (WBS) for the above-described app broken down on the phases of Waterfall SDLC discussed in the class."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is a high-level phase-based Work Breakdown Structure (WBS) for the airline ticket booking app using the Waterfall SDLC approach:</p><ol><li><p>Planning Phase</p><ul><li>Define project scope and objectives</li><li>Conduct market research and analysis</li><li>Identify target audience and their needs</li><li>Develop a project plan and timeline</li><li>Define budget and allocate resources</li><li>Create a requirements document</li></ul></li><li><p>Requirements Gathering and Analysis Phase</p><ul><li>Gather functional and non-functional requirements</li><li>Conduct a feasibility study</li><li>Define use cases and user stories</li><li>Create wireframes and prototypes</li><li>Identify risks and assumptions</li></ul></li><li><p>Design Phase</p><ul><li>Create a high-level architecture</li><li>Develop detailed technical specifications</li><li>Create a database schema</li><li>Design user interface and user experience</li><li>Create a test plan and acceptance criteria</li><li>Perform a design review</li></ul></li><li><p>Implementation Phase</p><ul><li>Code the application modules</li><li>Create database tables and relationships</li><li>Perform unit testing</li><li>Integrate different modules</li><li>Perform integration testing</li><li>Fix defects and issues</li><li>Prepare the application for deployment</li></ul></li><li><p>Testing Phase</p><ul><li>Conduct system testing</li><li>Conduct performance testing</li><li>Conduct security testing</li><li>Conduct user acceptance testing</li><li>Fix defects and issues</li></ul></li><li><p>Deployment Phase</p><ul><li>Deploy the application to the production environment</li><li>Conduct post-deployment testing</li><li>Monitor the application performance</li><li>Provide training and support to end-users</li><li>Prepare user manuals and technical documentation</li></ul></li><li><p>Maintenance and Support Phase</p><ul><li>Perform ongoing maintenance and bug fixing</li><li>Provide technical support to end-users</li><li>Monitor application performance and user feedback</li><li>Upgrade the application as needed</li><li>Conduct periodic reviews and audits</li></ul></li></ol><p>Note that this is a high-level WBS, and each of these phases will require further breakdown into smaller tasks and activities. Also, some phases may overlap or run concurrently depending on the project's size and complexity.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 21:14"
+    },
+    {
+      "session_id": "sharegpt_28889",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "remember the following filtro() function created on matlab:\nfunction [y] = filtro(x,A,B)\n%x: the column vector input signal\n%A,B: column vectors of coefficients\n%y: the output column vector\nN=length(A);\nM=length(B);\nP=max([N,M])  \nR=length(x);\n\ny=zeros(size(x));\nfor I=P+1:length(x)\n    y(I)=B'*x(I:-1:I-M+1)+A'*y(I-1:-1:I-N);\nend\nend\n--------\nI just need you to remember the function because we are going to use it in the next questions"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I have remembered the <code>filtro()</code> function you provided, which takes a column vector input signal <code>x</code>, and two column vectors of coefficients <code>A</code> and <code>B</code>. The function computes the filtered output signal <code>y</code> using a recursive filter implementation based on the given coefficients. The function is defined as:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\">function <span class=\"hljs-selector-attr\">[y]</span> = <span class=\"hljs-built_in\">filtro</span>(x,A,B)\n%x: the column vector input signal\n%A,B: column vectors of coefficients\n%y: the output column vector\nN=<span class=\"hljs-built_in\">length</span>(A);\nM=<span class=\"hljs-built_in\">length</span>(B);\n<span class=\"hljs-selector-tag\">P</span>=<span class=\"hljs-built_in\">max</span>([N,M]);\nR=<span class=\"hljs-built_in\">length</span>(x);\n\ny=<span class=\"hljs-built_in\">zeros</span>(size(x));\nfor <span class=\"hljs-selector-tag\">I</span>=<span class=\"hljs-selector-tag\">P</span>+<span class=\"hljs-number\">1</span>:<span class=\"hljs-built_in\">length</span>(x)\n    <span class=\"hljs-built_in\">y</span>(I)=B<span class=\"hljs-string\">'*x(I:-1:I-M+1)+A'</span>*<span class=\"hljs-built_in\">y</span>(I-<span class=\"hljs-number\">1</span>:-<span class=\"hljs-number\">1</span>:I-N);\nend\nend\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "3 / 3I have the following question I need to answer for a project:\nConsider an input function wave x that is a square wave of T = 10 seconds with a period of Tp = 1 second and a sampling frequency of 50 Hz. Filter the signal with the following coefficients. Comment the results.\nb) A = [0:75];B = [0:25]\n\nMy answer is the following:\nAb=[0.75];\nBb=[0.25];\nyb=filtro(x',Ab,Bb);\nplot(x);\nhold on;\nplot(yb);\nwrite an answer that includes my answer but expand further, adding context, introduction and fluidity to the text. Your answer should respond to the previous question and what is the expected output. write it using the third person \"we\" pronoun and the verbs in the past, for example \"to generate the square wave, we used the square() function\". expand on the output expected and the reason for that output based on the coefficients Ab and Bb given. Don't forget that x is a square wave so you should explain based on that fact."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To generate the square wave, we used the square() function in MATLAB with a period of Tp = 1 second and a total time length of T = 10 seconds, given a sampling frequency of 50 Hz. This resulted in a discrete-time signal consisting of 500 samples.</p><p>Now, we need to filter this input signal with the given coefficients A = [0:75] and B = [0:25]. These coefficients correspond to an infinite impulse response (IIR) filter, specifically a recursive filter. The coefficients in vector A determine the feedback portion of the filter, while the coefficients in vector B determine the feedforward portion.</p><p>To apply these coefficients to the input signal, we call the <code>filtro()</code> function, passing in the input signal x, as well as the vectors of coefficients A and B. We store the resulting filtered signal in the output variable yb.</p><p>Next, we plot the original input signal x and the filtered output signal yb using the <code>plot()</code> function in MATLAB, with the <code>hold on</code> command to keep both plots on the same figure.</p><p>Based on the given coefficients Ab and Bb, we expect the filtered output signal yb to be a modified version of the input square wave, with some smoothing and possibly attenuation of the signal peaks. This is because the filter coefficients we are using determine the frequency response of the filter, which in turn affects the filter's ability to attenuate or amplify certain frequency components of the input signal.</p><p>Furthermore, because we are dealing with a square wave input signal, which contains a wide range of frequency components (including high frequency components), the filter coefficients we have chosen will have a significant impact on the output signal. Specifically, the high-pass characteristics of the filter will tend to emphasize the high-frequency components of the input signal, while attenuating the low-frequency components. This may result in a filtered signal that looks significantly different from the original square wave, depending on the specific values of the filter coefficients.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "expand further on the expected output, considering the specific coefficient values of A=0.75 and B=0.25"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Based on the specific values of the coefficients A = [0.75] and B = [0.25], we can expect the filtered output signal yb to be a smoothed version of the input square wave x, with some attenuation of the signal peaks.</p><p>The values in vector A determine the feedback portion of the filter, which applies a weighted sum of the previous output values y to the current input value x. In this case, the single coefficient value of 0.75 implies that the filter will be heavily influenced by previous output values, with a relatively slow decay in the contribution of older values. This means that the filter will tend to smooth out rapid changes in the input signal, leading to a more gradual transition between signal levels.</p><p>The values in vector B determine the feedforward portion of the filter, which applies a weighted sum of the current and previous input values to the current output value. In this case, the single coefficient value of 0.25 implies that the filter will be relatively lightly weighted towards the input values, with a greater emphasis on previous output values. This means that the filter will tend to attenuate the peaks of the input signal, as the feedback portion of the filter gradually smooths out the rapid changes.</p><p>Overall, we can expect the output signal yb to be a smoothed version of the input square wave, with some attenuation of the signal peaks. The specific values of the coefficients A and B will determine the degree of smoothing and attenuation, with the high-pass characteristics of the filter emphasizing the high-frequency components of the input signal.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "expand further, knowing that the output result graph I see is a curved line when the square wave function passes from the low value of -1 to +1"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The fact that the output signal yb appears as a curved line when the input square wave function passes from the low value of -1 to +1 is likely due to the smoothing effect of the filter.</p><p>As the input square wave transitions rapidly from a low value to a high value, the filter will tend to smooth out this transition, gradually increasing the output signal from its initial value towards the final value. This smoothing effect will tend to produce a curved transition rather than a sharp corner, leading to the appearance of a curved line in the output signal.</p><p>The degree of curvature will depend on the specific values of the filter coefficients, as well as the frequency content of the input signal. In general, a high-pass filter like the one we are using will tend to emphasize high-frequency components of the input signal, which may contribute to a more gradual transition in the output signal.</p><p>It's also worth noting that the specific shape of the curve will depend on the frequency content of the input signal. In particular, the rate of change in the input signal (i.e. the steepness of the corners in the square wave) will affect the degree of smoothing and curvature in the output signal. For very rapid transitions, the filter may be unable to fully smooth out the transition, resulting in a more sharp transition in the output signal.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the difference on the output graph of having the previous coefficients (A=0.75, B=0.25) and the coefficients A=0 and B=ones(10; 1)/10"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The difference in the output graph between the previous coefficients A = [0.75] and B = [0.25], and the coefficients A = 0 and B = ones(10,1)/10, will likely be quite significant.</p><p>In the previous case, where A = [0.75] and B = [0.25], we have a high-pass filter with a relatively strong feedback component. This means that the filter will tend to smooth out rapid changes in the input signal, while also attenuating high-frequency components of the signal. The result will be a smoothed version of the input signal, with some attenuation of the signal peaks, as we discussed earlier.</p><p>In contrast, when we set A = 0 and B = ones(10,1)/10, we have a very different filter. Here, the feedforward component of the filter is a moving average, which applies equal weights to the current and previous 9 input values. The feedback component of the filter is completely eliminated, as A = 0. This means that the filter will tend to smooth out rapid changes in the input signal, but without any attenuation of the signal peaks.</p><p>The result of this filter will be a much more heavily smoothed version of the input signal, compared to the previous filter with A = [0.75] and B = [0.25]. The output signal will be much more gradual, with less pronounced peaks and valleys, due to the averaging effect of the filter. The moving average filter will also tend to eliminate high-frequency components of the input signal, leading to a much smoother output signal overall.</p><p>So, in summary, the difference between the two filters will be quite significant. The previous filter with A = [0.75] and B = [0.25] will produce a relatively smoothed version of the input signal, with some attenuation of the signal peaks. The filter with A = 0 and B = ones(10,1)/10, on the other hand, will produce a heavily smoothed version of the input signal, with no attenuation of the signal peaks. The choice of filter will depend on the specific application and the desired characteristics of the output signal.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "expand further"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To expand further on the differences between the two filters, it is helpful to consider their frequency response characteristics.</p><p>The filter with A = [0.75] and B = [0.25] has a high-pass frequency response, which means that it attenuates low-frequency components of the input signal while allowing high-frequency components to pass through relatively unattenuated. The specific cutoff frequency of the filter will depend on the values of the coefficients, but in general, it will tend to emphasize high-frequency components of the input signal.</p><p>In contrast, the filter with A = 0 and B = ones(10,1)/10 has a frequency response that is closer to a low-pass filter. The moving average component of the filter tends to attenuate high-frequency components of the input signal, while the lack of feedback means that the filter does not boost or attenuate any particular frequency range.</p><p>In terms of their effect on the output signal, the high-pass filter with A = [0.75] and B = [0.25] will tend to produce a more \"edgy\" output signal, with more pronounced peaks and valleys, while the moving average filter with A = 0 and B = ones(10,1)/10 will produce a more gradual output signal with less pronounced peaks and valleys. The high-pass filter will also tend to emphasize the high-frequency components of the input signal, while the moving average filter will tend to smooth out the input signal across all frequencies.</p><p>Overall, the choice of filter will depend on the specific application and the desired characteristics of the output signal. If the goal is to eliminate low-frequency noise or fluctuations in the input signal, the high-pass filter may be more appropriate. On the other hand, if the goal is to smooth out the input signal and reduce its variability, the moving average filter may be more appropriate. It is important to carefully consider the tradeoffs between frequency response and signal smoothing when selecting a filter for a particular application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "and what if the coefficients are A = [0];B = [1;-1]? what are the expected output graph?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If the coefficients are A = [0] and B = [1;-1], this represents a simple finite impulse response (FIR) filter that computes the first difference of the input signal. Specifically, the filter output at time t is given by:</p><p>y(t) = x(t) - x(t-1)</p><p>In other words, the filter computes the difference between the current sample and the previous sample of the input signal. This can be useful for detecting sudden changes or spikes in the input signal, as it effectively high-pass filters the input signal.</p><p>In terms of the expected output graph, the filter will tend to emphasize high-frequency components of the input signal, while attenuating low-frequency components. The specific shape of the output graph will depend on the characteristics of the input signal. If the input signal contains sudden changes or spikes, the filter output will tend to be larger at those points in time, while if the input signal is relatively smooth, the filter output will be relatively small.</p><p>Visually, the output signal will likely contain a mix of positive and negative spikes that correspond to changes in the input signal. The spacing and amplitude of these spikes will depend on the specific characteristics of the input signal and the filter coefficients. Overall, the filter is useful for detecting sudden changes in the input signal and can be a useful tool for data analysis and signal processing.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "expand further"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To expand further, the filter with coefficients A = [0] and B = [1;-1] is an example of a finite impulse response (FIR) filter, which is a type of digital filter that has a finite duration response to an impulse input. In this case, the filter computes the first difference of the input signal, which can be thought of as the derivative of the input signal.</p><p>The difference operation implemented by the filter effectively subtracts the previous sample of the input signal from the current sample, which amplifies high-frequency components of the signal and attenuates low-frequency components. In other words, the filter is a high-pass filter, as it tends to pass high-frequency components while attenuating low-frequency components.</p><p>When applied to a square wave input signal, the output of the filter will be a series of positive and negative spikes that correspond to the rising and falling edges of the square wave. The specific spacing and amplitude of these spikes will depend on the characteristics of the input signal, such as the amplitude and frequency of the square wave.</p><p>Overall, the filter can be useful for detecting sudden changes in signals and can be used in a variety of applications, such as audio processing, image processing, and signal analysis. However, it's important to choose the appropriate filter coefficients for the specific application to achieve the desired filtering characteristics.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 01:08"
+    },
+    {
+      "session_id": "sharegpt_11777",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please kindly create the script about partnership journey. We want \"storytelling\" concept for this video, so it will be more engaging. \n\nPurpose: Tell a story of x person etc. More fluid, storytelling etc. A/B test for all partners to convert them to higher tiers etc.\n\nDuration: 1.30-2minutes\n\nHere is the notes that can help:\nFrom 0 to top tier\nWhen they come to exness they can contact us. Dedicated key account manager to handle\nWe have PDP > to teach, awareness, face to face experience\nCriteria: Good performances after 1 year.\nBriliant partner: Trading volume last 3 months, and active clients\nExness is the best in terms of communications. We the only one who provide dedicated kam\nLocal payment system deposit and withdrawal 24/7 with IDR.\nWe also have partnership loyalty program, based on your growth\nLifetime: 5-6years averages up to 12 years\nTrip to World Cup (appreciation trip)\nKorea, Cyprus, Dubai, Macau\nBased on performances\nWe took a good care of their partner, we listen, and we want them to grow their business\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Title: The Journey of Becoming an Exness Partner</p><p>[Opening shot of a person looking at their computer screen, with charts and graphs displayed on the monitor]</p><p>Narrator (Voiceover): Meet John. John is a trader who wants to expand his business and reach new heights. He has been trading with Exness for some time now, and he likes the platform and the services that they offer.</p><p>[Cut to John typing on his computer]</p><p>Narrator (Voiceover): One day, John decided to take his business to the next level and become a partner with Exness. He contacted the company, and they assigned him a dedicated Key Account Manager (KAM) to help him every step of the way.</p><p>[Cut to a shot of John talking to his KAM over video call]</p><p>John: Hi, I'm John. I'm interested in becoming an Exness partner.</p><p>KAM: Hi John, it's great to hear from you. Let me introduce you to our Partnership Development Program (PDP). We offer training, awareness, and face-to-face experiences to help you grow your business.</p><p>Narrator (Voiceover): John was excited to learn more about the PDP and the benefits of becoming an Exness partner. He was told that he needed to meet certain criteria to become a top-tier partner.</p><p>[Cut to a shot of John trading on his computer]</p><p>Narrator (Voiceover): After a year of trading with Exness, John started to see some amazing results. His trading volume increased, and he had many active clients. He was well on his way to becoming a brilliant partner.</p><p>[Cut to a shot of John on a video call with his KAM]</p><p>John: Hey, I'm really happy with my performance. Do you think I'm eligible to become a top-tier partner?</p><p>KAM: Absolutely, John. Your trading volume over the last three months and your active client count are both impressive. You're well on your way to becoming a top-tier partner.</p><p>Narrator (Voiceover): Exness is known for its excellent communication, and they are the only company that provides a dedicated KAM to their partners. They also offer local payment systems for deposits and withdrawals 24/7, including the Indonesian Rupiah (IDR).</p><p>[Cut to a shot of John receiving a loyalty reward from Exness]</p><p>Narrator (Voiceover): Exness also has a loyalty program for its partners based on their growth. And once they reach the top tier, they can enjoy lifetime benefits and rewards, such as a trip to the World Cup.</p><p>[Cut to shots of various partner appreciation trips, including Korea, Cyprus, Dubai, and Macau]</p><p>Narrator (Voiceover): Exness takes good care of their partners, and they listen to their needs. They want to see their partners grow their business and succeed. And that's why the average lifetime of an Exness partner is between 5-6 years, with some staying for up to 12 years.</p><p>[Closing shot of John smiling at his computer screen]</p><p>Narrator (Voiceover): So, if you're a trader looking to take your business to the next level, contact Exness today and become a partner. Who knows, you could be the next brilliant partner to join the Exness family.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 07:57"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's test coverage target is no strict target; it's PR-reviewed. So we kinda rely on the team to ensure quality instead of hitting a specific percentage. \n\nHow do you usually handle test reviews in your projects? Any best practices?"
+        },
+        {
+          "role": "assistant",
+          "content": "Relying on the team for quality without a strict coverage target can foster a more collaborative environment. During test reviews, it’s crucial to encourage open discussions about the rationale behind each test case. It helps to have clear guidelines on what types of scenarios should be covered, which can guide the review process. \n\nAdditionally, pairing developers for reviews can be beneficial, as they can share insights and catch potential gaps together. Regularly rotating the responsibility of reviewing tests might also expose different perspectives and improve overall quality. Are there specific areas where you find the team struggles with test coverage in reviews?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Pyronis Bundle. Switching to it has streamlined dependency management for us. \n\nWhat’s your experience with package managers? Any tips on optimizing the configuration or dealing with common issues?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like Pyronis Bundle has been a great fit for your team! With package managers, ensuring that dependencies are well-defined and maintained is key. One tip is to regularly review and update your dependencies to avoid security vulnerabilities and compatibility issues. \n\nAdditionally, using a lock file can help maintain consistency across environments, making sure everyone is working with the same versions. If you encounter common issues, like version conflicts, it's often helpful to document the resolutions so the team can reference them in the future. Are there any specific challenges you’ve faced with Pyronis Bundle that you’d like to address?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at dev.orinthal.dev/aurora. That's where we test our features before they go live.\n\nHow do you usually set up your staging environments? Do you have any best practices for keeping them in sync with production?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a dedicated staging environment is essential for effective testing before going live. To keep staging in sync with production, it’s helpful to regularly deploy the latest production data or use a data anonymization process to create realistic test data. \n\nAutomating the deployment process can also reduce the risk of discrepancies between environments. Additionally, using infrastructure as code can help ensure that the staging setup mirrors production closely. Are there any specific aspects of your staging process that you feel could be improved?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at CHANGELOG.md in the repo root. We keep it updated to track changes, features, and fixes over time.\n\nHow do you usually manage changelogs in your projects? Any tools or methods you find particularly effective?"
+        },
+        {
+          "role": "assistant",
+          "content": "Keeping an updated changelog is such a valuable practice for project transparency! Many teams find it effective to follow a consistent format, like the Keep a Changelog standard, which helps in maintaining clarity and readability. \n\nUsing commit message conventions can also streamline the process; for instance, linking each commit to the corresponding changelog entry, if applicable, can create a clear history of changes. Some teams leverage tools that automate changelog generation based on commit messages, which can save time and ensure consistency. How does your team currently structure the entries in the changelog?"
+        },
+        {
+          "role": "user",
+          "content": "The team releases weekly on Tuesday. This schedule helps us maintain a steady flow of updates and ensures that everyone is aligned on timelines.\n\nWhat’s your approach to managing release schedules? Do you have any strategies for ensuring that everything is ready for the weekly cadence?"
+        },
+        {
+          "role": "assistant",
+          "content": "A weekly release schedule is a great way to maintain momentum! To manage it effectively, it's helpful to establish a clear checklist of tasks that need to be completed before each release, like final testing, documentation updates, and deployment preparations. \n\nHaving regular check-ins leading up to the release can also keep everyone aligned and address any blockers early. Additionally, it can be beneficial to reserve some buffer time in case any unexpected issues arise, allowing for smoother transitions between releases. How does your team currently handle any last-minute changes or fixes right before a release?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "test_coverage_target",
+          "value": "no strict target, PR-reviewed",
+          "original_seed": "Our test coverage target is no strict target, PR-reviewed",
+          "fact_text": "The team's test coverage target is no strict target, PR-reviewed.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Pyronis Bundle",
+          "original_seed": "Update: Our package manager is Pyronis Bundle",
+          "fact_text": "Update: The team's package manager is Pyronis Bundle.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "staging_url",
+          "value": "dev.orinthal.dev/aurora",
+          "original_seed": "Staging is at dev.orinthal.dev/aurora",
+          "fact_text": "Staging is at dev.orinthal.dev/aurora.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "changelog_location",
+          "value": "CHANGELOG.md in repo root",
+          "original_seed": "Changelog is at CHANGELOG.md in repo root",
+          "fact_text": "The changelog is at CHANGELOG.md in repo root.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "release_cadence",
+          "value": "weekly on Tuesday",
+          "original_seed": "We release weekly on Tuesday",
+          "fact_text": "The team releases weekly on Tuesday.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 06:40"
+    },
+    {
+      "session_id": "sharegpt_16646",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "does mysql functional index support using LIKE()?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>MySQL supports functional indexes, which allow you to create an index based on the result of an expression or function applied to one or more columns in a table. However, the LIKE() function is not one of the functions that can be used in a functional index. Instead, you can use a full-text index or a regular expression index, which can be used to optimize queries that use the LIKE() function or similar operators.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you give an example?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's an example of creating a full-text index on a column named \"title\" in a table named \"books\":</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">ALTER</span> <span class=\"hljs-keyword\">TABLE</span> books <span class=\"hljs-keyword\">ADD</span> FULLTEXT(title);\n</code></div></div></pre><p>And here's an example of querying the table using the LIKE() function:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> books <span class=\"hljs-keyword\">WHERE</span> <span class=\"hljs-keyword\">MATCH</span>(title) AGAINST (<span class=\"hljs-string\">'%example%'</span> <span class=\"hljs-keyword\">IN</span> <span class=\"hljs-type\">BOOLEAN</span> MODE);\n</code></div></div></pre><p>Here's an example of creating a regular expression index on a column named \"name\" in a table named \"employee\"</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">java</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-java\">CREATE INDEX name_regexp_idx ON <span class=\"hljs-title function_\">employee</span> <span class=\"hljs-params\">(name(<span class=\"hljs-number\">10</span>)</span> REGEXP <span class=\"hljs-string\">'^[A-Z]'</span>);\n</code></div></div></pre><p>And here's an example of querying the table using the REGEXP operator:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> employee <span class=\"hljs-keyword\">WHERE</span> name REGEXP <span class=\"hljs-string\">'^[A-Z]'</span>;\n</code></div></div></pre><p>Please note that in the above examples, the columns are examples and you should replace them with the column you want to create the indexes on.\nAlso, keep in mind that Full-text search feature is available only in MyISAM storage engine. It's not supported in InnoDB.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "but is there a way to use index for this?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In MySQL, it is possible to use an index to optimize queries that use the LIKE() function, but it is not by using a functional index. The most common way to achieve this is by creating a full-text index on the column you want to use with the LIKE() function, which allows MySQL to perform a full-text search on the column and can significantly improve performance. Additionally, you could use a regular expression index on the column you want to use with the LIKE() function and use the REGEXP operator instead of the LIKE() function. This will also allow MySQL to use the index to optimize the query.</p><p>It's worth noting that the performance benefits will depend on the specific use case, table structure and data distribution. It's always a good idea to test and measure the performance of the queries before and after creating the indexes.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how does cockroachdb support fulltext serach?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>CockroachDB supports full-text search through the use of a built-in full-text search (FTS) extension. This extension allows you to create full-text indexes on specific columns in a table, and then perform full-text searches on those columns using the built-in FTS functions. The full-text search in CockroachDB uses the inverted index data structure to enable fast and efficient searching.</p><p>In order to create a full-text index on a column, you can use the <code>CREATE INDEX</code> statement with the <code>USING</code> clause set to <code>'fts'</code> and specify the columns you want to include in the index.</p><p>For example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> INDEX <span class=\"hljs-keyword\">ON</span> books <span class=\"hljs-keyword\">USING</span> fts (title);\n</code></div></div></pre><p>Once you have created a full-text index, you can use the <code>MATCH()</code> function to perform a full-text search on the indexed column:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> books <span class=\"hljs-keyword\">WHERE</span> <span class=\"hljs-keyword\">MATCH</span>(title) AGAINST (<span class=\"hljs-string\">'example'</span>);\n</code></div></div></pre><p>CockroachDB also supports other FTS related functions like <code>CONTAINS()</code>, <code>CONTAINS_STRING()</code>, <code>CONTAINS_STRING_WITH_SCORE()</code> etc. which you can use to perform different types of full-text search queries.\nIt's worth noting that CockroachDB is built on top of a distributed SQL architecture and thus the FTS in CockroachDB is also distributed, meaning that it can scale horizontally with your data.</p><p>It's always a good idea to test and measure the performance of the queries before and after creating the indexes.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "which code module does cockroachdb implement full text search (FTS)?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>CockroachDB implements full-text search (FTS) as an extension to its SQL engine, which is written in the Go programming language. The specific code module that implements FTS in CockroachDB is the <code>sql/fts</code> package, which contains the implementation of the full-text search functions, the inverted index data structure, and the code for creating, dropping and querying full-text indexes.</p><p>The <code>sql/fts</code> package includes:</p><ul><li>The implementation of the FTS functions, such as MATCH(), CONTAINS(), CONTAINS_STRING(), and CONTAINS_STRING_WITH_SCORE().</li><li>The implementation of the inverted index data structure that is used to store the full-text index.</li><li>The code for creating, dropping, and querying full-text indexes, including the code for populating the index with data from the table.</li><li>The code for parsing and processing full-text search queries.</li></ul><p>It's worth noting that the FTS extension is built on top of the SQL engine and leverages other components like the distributed key-value storage layer and the distributed SQL execution engine for its functionality.\nYou can find the source code for CockroachDB on GitHub, where you can explore the details of the <code>sql/fts</code> package and other CockroachDB code.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 05:10"
+    },
+    {
+      "session_id": "sharegpt_12149",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "create a cheat sheet for ngrx"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>NGRX is a popular library for managing state in Angular applications. Here is a cheat sheet for using NGRX:</p><p><strong>Store</strong>: The store is the central place for storing and managing the state of your application. You can create a store by using the <code>StoreModule</code> in your application's root module.</p><p><strong>Actions</strong>: Actions are payloads of information that send data from your application to the store. You can create actions by using the <code>createAction</code> function from the <code>@ngrx/store</code> package.</p><p><strong>Reducers</strong>: Reducers are pure functions that take the current state of the store and an action, and return a new state. You can create reducers by using the <code>createReducer</code> function from the <code>@ngrx/store</code> package.</p><p><strong>Selectors</strong>: Selectors are functions that select a slice of state from the store. You can create selectors by using the <code>createSelector</code> function from the <code>@ngrx/store</code> package.</p><p><strong>Effects</strong>: Effects listen for actions dispatched from the store, perform some logic, and then dispatch a new action. You can create effects by using the <code>createEffect</code> function from the <code>@ngrx/effects</code> package.</p><p>I hope this cheat sheet helps! Let me know if you have any other questions about using NGRX.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "create a set of useful ngrx recipes"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here are some useful NGRX recipes that you can use in your Angular applications:</p><p><strong>Displaying the current state</strong>:</p><pre><div><div>Copy code</div><div><code><span>import</span> { select, <span>Store</span> } <span>from</span> <span>'@ngrx/store'</span>;\n<span>import</span> { <span>Observable</span> } <span>from</span> <span>'rxjs'</span>;\n\n<span>export</span> <span>class</span> <span>MyComponent</span> <span>implements</span> <span>OnInit</span> {\n  <span>state$</span>: <span>Observable</span>&lt;<span>State</span>&gt;;\n\n  <span>constructor</span>(<span><span>private</span> store: Store&lt;State&gt;</span>) {\n    <span>this</span>.<span>state$</span> = <span>this</span>.<span>store</span>.<span>pipe</span>(<span>select</span>(<span>'state'</span>));\n  }\n}\n</code></div></div></pre><p><strong>Dispatching an action</strong>:</p><pre><div><div>Copy code</div><div><code><span>import</span> { <span>Store</span> } <span>from</span> <span>'@ngrx/store'</span>;\n\n<span>export</span> <span>class</span> <span>MyComponent</span> {\n  <span>constructor</span>(<span><span>private</span> store: Store&lt;State&gt;</span>) {}\n\n  <span>dispatchAction</span>(<span></span>) {\n    <span>this</span>.<span>store</span>.<span>dispatch</span>(<span>new</span> <span>Action</span>());\n  }\n}\n</code></div></div></pre><p><strong>Selecting a slice of state</strong>:</p><pre><div><div>Copy code</div><div><code><span>import</span> { createSelector, select, <span>Store</span> } <span>from</span> <span>'@ngrx/store'</span>;\n\n<span>const</span> <span>selectFeature</span> = (<span>state: State</span>) =&gt; state.<span>feature</span>;\n\n<span>const</span> selectFeatureSlice = <span>createSelector</span>(\n  selectFeature,\n  <span>(<span>state: FeatureState</span>) =&gt;</span> state.<span>slice</span>\n);\n\n<span>export</span> <span>class</span> <span>MyComponent</span> <span>implements</span> <span>OnInit</span> {\n  <span>slice$</span>: <span>Observable</span>&lt;<span>Slice</span>&gt;;\n\n  <span>constructor</span>(<span><span>private</span> store: Store&lt;State&gt;</span>) {\n    <span>this</span>.<span>slice$</span> = <span>this</span>.<span>store</span>.<span>pipe</span>(<span>select</span>(selectFeatureSlice));\n  }\n}\n</code></div></div></pre><p><strong>Performing an action in response to another action</strong>:</p><pre><div><div>Copy code</div><div><code><span>import</span> { <span>Actions</span>, createEffect, ofType } <span>from</span> <span>'@ngrx/effects'</span>;\n<span>import</span> { <span>Store</span> } <span>from</span> <span>'@ngrx/store'</span>;\n<span>import</span> { concatMap, map } <span>from</span> <span>'rxjs/operators'</span>;\n\n<span>@Injectable</span>()\n<span>export</span> <span>class</span> <span>MyEffects</span> {\n  performAction$ = <span>createEffect</span>(<span>() =&gt;</span>\n    <span>this</span>.<span>actions$</span>.<span>pipe</span>(\n      <span>ofType</span>(<span>TriggerAction</span>),\n      <span>concatMap</span>(<span>() =&gt;</span> [\n        <span>new</span> <span>ActionOne</span>(),\n        <span>new</span> <span>ActionTwo</span>(),\n      ])\n    )\n  );\n\n  <span>constructor</span>(<span><span>private</span> actions$: Actions, <span>private</span> store: Store&lt;State&gt;</span>) {}\n}\n</code></div></div></pre><p>I hope these recipes are helpful! Let me know if you have any other questions about using NGRX.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "when building an angular app, when should you use ngrx versus services?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>In an Angular application, you should use NGRX when you need a centralized store for managing state. NGRX is a good choice when you have complex state management requirements, such as managing state across multiple components or services, or when you need to perform side effects in response to actions.</p><p>On the other hand, you should use services when you need to share data or logic between components. Services are a good choice for tasks such as making HTTP requests to a server, or for encapsulating reusable logic that is not specific to a particular component.</p><p>It is also common to use both NGRX and services in the same application, depending on the specific needs of the app. For example, you might use NGRX to manage the state of your application, and use services to make HTTP requests and perform other tasks that do not involve managing state.</p><p>I hope this helps! Let me know if you have any other questions about using NGRX and services in Angular.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 06:44"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team's code review policy is 2 approvals + security review for auth/. It's pretty strict, but it helps keep things secure. \n\nHow do you usually handle the security reviews? Any tools or best practices you recommend?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that your team prioritizes security with a thorough review policy. For security reviews, it can be beneficial to have a checklist that covers common vulnerabilities and best practices, such as input validation, proper authentication mechanisms, and secure data handling. Automated tools can also be a big help; static analysis tools can catch potential security issues early in the development process. Additionally, peer reviews often bring fresh perspectives, so encouraging team members to share insights during the review can enhance the overall security posture. Have you considered any specific tools or practices that might fit your workflow?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's package manager is Quorix Hub. It's a recent change, so we’re still getting used to it. \n\nHow do you usually manage package versioning with a new package manager? Any tips for keeping dependencies organized?"
+        },
+        {
+          "role": "assistant",
+          "content": "Adapting to a new package manager like Quorix Hub can be a bit of a learning curve, but there are definitely strategies to help with managing package versioning. Keeping a clear record of your dependencies in a centralized file can be useful, as it allows everyone on the team to understand what's being used and why. Regularly reviewing and updating dependencies can help avoid security vulnerabilities and compatibility issues. It might also be helpful to set up a schedule for dependency updates, so they're tackled in a consistent manner. Have you found any particular challenges with Quorix Hub so far?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to pipe.thandrel.io/aurora-logs. It's essential to have a reliable logging setup for monitoring and debugging.\n\nWhat kind of logging framework do you use? Any best practices for structuring your logs to make them more useful during analysis?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a solid logging setup is crucial for effective monitoring and debugging. When it comes to logging frameworks, it's important to choose one that fits your team's needs and integrates well with your stack. Structuring your logs in a consistent format, such as JSON, can make it easier to parse and analyze them later. Including timestamps, log levels, and context-specific information (like user IDs or request IDs) can provide more insight during analysis. Additionally, setting up alerts for critical logs can help you respond to issues more quickly. Are there specific challenges you've encountered with your current logging setup?"
+        },
+        {
+          "role": "user",
+          "content": "Project docs are at aurora-docs.readthedocs.io. Keeping documentation accessible is key for onboarding and maintaining clarity across the team.\n\nHow do you ensure your documentation stays up to date with the codebase? Any tools or processes you use to integrate documentation changes with development?"
+        },
+        {
+          "role": "assistant",
+          "content": "Maintaining up-to-date documentation is essential for smooth onboarding and ongoing clarity. One effective approach is to incorporate documentation updates into your development workflow, making it a requirement during pull requests. This ensures that any new features or changes are documented alongside the code. Using tools that support version control for documentation can also help keep everything in sync, allowing you to track changes over time. Regular documentation reviews, perhaps as part of sprint retrospectives, can also encourage the team to prioritize this aspect. Have you encountered any specific hurdles in keeping your documentation aligned with the codebase?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "code_review_policy",
+          "value": "2 approvals + security review for auth/",
+          "original_seed": "Our code review policy is 2 approvals + security review for auth/",
+          "fact_text": "The team's code review policy is 2 approvals + security review for auth/.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "package_manager",
+          "value": "Quorix Hub",
+          "original_seed": "Now I've switched again — Our package manager is Quorix Hub",
+          "fact_text": "Now the developer has switched again — the team's package manager is Quorix Hub.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "log_drain_endpoint",
+          "value": "pipe.thandrel.io/aurora-logs",
+          "original_seed": "Logs drain to pipe.thandrel.io/aurora-logs",
+          "fact_text": "Logs drain to pipe.thandrel.io/aurora-logs.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "documentation_url",
+          "value": "aurora-docs.readthedocs.io",
+          "original_seed": "Project docs are at aurora-docs.readthedocs.io",
+          "fact_text": "Project docs are at aurora-docs.readthedocs.io.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 06:37"
+    },
+    {
+      "session_id": "sharegpt_460",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "track calls from an ip  to a service with ruby and redis"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To track calls from an IP to a service using Ruby and Redis, you can use Redis to store a counter for each IP address that makes a call to the service. Here's an example implementation:</p><p>First, you need to install the Redis Ruby gem. You can do this by running the following command in your terminal:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">gem install redis\n</code></div></div></pre><p>Then, in your Ruby code, you can create a Redis client object and use it to increment a counter for each IP address that makes a call to the service. Here's an example:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">require</span> <span class=\"hljs-string\">'redis'</span>\n\nredis = <span class=\"hljs-title class_\">Redis</span>.new\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">track_call</span>(<span class=\"hljs-params\">ip_address</span>)\n  redis.incr(<span class=\"hljs-string\">\"calls:<span class=\"hljs-subst\">#{ip_address}</span>\"</span>)\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>In this example, <code>redis</code> is a Redis client object that connects to a Redis server running on the default localhost and port. The <code>track_call</code> method takes an <code>ip_address</code> parameter and increments a counter for that IP address in Redis.</p><p>You can use this method to track calls from an IP address like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\">track_call(<span class=\"hljs-string\">\"192.168.0.1\"</span>)\n</code></div></div></pre><p>This will increment the counter for the IP address \"192.168.0.1\" in Redis.</p><p>To retrieve the number of calls made by a particular IP address, you can use the <code>get</code> method of the Redis client object like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">get_call_count</span>(<span class=\"hljs-params\">ip_address</span>)\n  redis.get(<span class=\"hljs-string\">\"calls:<span class=\"hljs-subst\">#{ip_address}</span>\"</span>).to_i\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>This method takes an <code>ip_address</code> parameter and returns the number of calls made by that IP address as an integer.</p><p>You can use this method to retrieve the number of calls made by a particular IP address like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\">get_call_count(<span class=\"hljs-string\">\"192.168.0.1\"</span>)\n</code></div></div></pre><p>This will return the number of calls made by the IP address \"192.168.0.1\" as an integer.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "is this method good for tracking hundreds of IPs?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The method I described should be suitable for tracking hundreds of IP addresses. Redis is a high-performance in-memory data store that is designed for fast read and write operations, so it should be able to handle large amounts of data with ease.</p><p>One thing to keep in mind is that Redis stores all data in memory, so if you are tracking a very large number of IP addresses and counters, you may need to consider the amount of memory that Redis will consume. However, Redis also supports persistence options like snapshots and append-only files, which can be used to ensure that data is not lost in case of a server failure.</p><p>Overall, Redis is a reliable and scalable choice for tracking calls from hundreds or even thousands of IP addresses.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "make the tracking expire after a week"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To make the tracking expire after a week, you can use Redis' key expiration feature. This allows you to set a time-to-live (TTL) for a Redis key, after which it will be automatically deleted.</p><p>Here's an example implementation that sets a TTL of one week (604800 seconds) for each IP address key:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">require</span> <span class=\"hljs-string\">'redis'</span>\n\nredis = <span class=\"hljs-title class_\">Redis</span>.new\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">track_call</span>(<span class=\"hljs-params\">ip_address</span>)\n  redis.multi <span class=\"hljs-keyword\">do</span>\n    redis.incr(<span class=\"hljs-string\">\"calls:<span class=\"hljs-subst\">#{ip_address}</span>\"</span>)\n    redis.expire(<span class=\"hljs-string\">\"calls:<span class=\"hljs-subst\">#{ip_address}</span>\"</span>, <span class=\"hljs-number\">604800</span>)\n  <span class=\"hljs-keyword\">end</span>\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>In this implementation, we're using Redis' <code>multi</code> method to send both the <code>incr</code> and <code>expire</code> commands in a single transaction. This ensures that the key expiration is set at the same time the counter is incremented.</p><p>With this implementation, any IP address key that is not incremented or accessed for one week will automatically expire and be deleted from Redis.</p><p>You can also retrieve the time-to-live of a key using the <code>ttl</code> method of the Redis client object, like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">get_call_ttl</span>(<span class=\"hljs-params\">ip_address</span>)\n  redis.ttl(<span class=\"hljs-string\">\"calls:<span class=\"hljs-subst\">#{ip_address}</span>\"</span>)\n<span class=\"hljs-keyword\">end</span>\n</code></div></div></pre><p>This method takes an <code>ip_address</code> parameter and returns the number of seconds remaining until the key expires. If the key has already expired, the method will return <code>-2</code>, and if the key does not exist, the method will return <code>-1</code>.</p><p>By using key expiration in this way, you can ensure that your tracking data is automatically cleaned up after a week, without needing to implement any additional cleanup logic.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 09:55"
+    },
+    {
+      "session_id": "sharegpt_24808",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "should navigation be grouped? why?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Navigation should generally be grouped to improve the user experience and make it easier for users to find the information they are looking for on a website or application.</p><p>Grouping navigation elements helps to create a clear hierarchy of information, which can make it easier for users to navigate to the content they are interested in. For example, a website might group its navigation elements into categories such as \"About Us,\" \"Products,\" \"Services,\" and \"Contact Us.\" By grouping related information together, users can quickly locate the section of the website that contains the information they need.</p><p>In addition, grouping navigation elements can make a website or application look more organized and professional. It can also help to reduce clutter on the page and make it easier for users to focus on the most important content.</p><p>Overall, grouping navigation elements is an important design consideration for any website or application, and can have a significant impact on the user experience.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how many entries in navigation should be grouped?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>There is no specific number of entries that should be grouped in navigation as it ultimately depends on the specific website or application and its content. However, as a general rule of thumb, it is recommended to limit the number of main navigation items to between 5-7 items.</p><p>If a website or application has more than 7 main navigation items, it can become overwhelming for users and make it difficult for them to quickly find what they are looking for. In this case, sub-menus or drop-down menus can be used to group related items together and make it easier for users to navigate.</p><p>It's important to keep in mind that the goal of grouping navigation items is to make it easy for users to find what they are looking for, so the grouping should be intuitive and logical based on the website or application's content and user needs.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If a website or application has more than 7 main navigation items, it can become overwhelming for users and make it difficult for them to quickly find what they are looking for. \n\ncan you give me some theory to support this idea?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, there are several theories that support the idea that limiting the number of main navigation items to between 5-7 can improve the user experience.</p><ol><li><p>Miller's Law: One of the most well-known theories is Miller's Law, which suggests that the average person can only hold 7 +/- 2 pieces of information in their short-term memory. This means that if a website or application has more than 7 main navigation items, users may struggle to remember all of the options and find it more difficult to navigate.</p></li><li><p>Hick's Law: Another theory that supports the idea of limiting the number of main navigation items is Hick's Law, which states that the time it takes for a person to make a decision increases with the number and complexity of options. This means that if a website or application has too many main navigation items, users may take longer to make a decision about where to go next, which can lead to frustration and a poor user experience.</p></li><li><p>Fitts's Law: Fitts's Law is a theory that describes the relationship between the size of a target and the time it takes to move to that target. In the context of navigation, this means that if a website or application has too many main navigation items, the targets may be too small and difficult to click on, which can lead to errors and frustration.</p></li></ol><p>Overall, these theories suggest that limiting the number of main navigation items can improve the user experience by reducing cognitive load, decision-making time, and error rates.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 15:30"
+    },
+    {
+      "session_id": "sharegpt_3175",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2can you simplify this?\n```\nconst formOk = !(newVonderName.trim().length === 0 || !newVendorOk)\n```"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>const formOk = newVonderName.trim().length !== 0 &amp;&amp; newVendorOk;</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "is there any way to make it more optimal?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>There may not be a way to make this more optimal as it is already a simple and concise statement. However, if you wanted to make it more readable, you could break it down into multiple lines like this:</p><pre><div><div>Copy code</div><div><code><span>const</span> nameTrimmed = newVonderName.<span>trim</span>();\n<span>const</span> formOk = nameTrimmed.<span>length</span> !== <span>0</span> &amp;&amp; newVendorOk;\n</code></div></div></pre><p>This separates the action of trimming the string from the action of checking its length, which may make the code easier to understand for someone reading it. However, this will not affect the performance of the code.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "will checking for newVendorOk fist make it run faster?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>No, checking for <code>newVendorOk</code> first will not make the code run faster. In fact, the order of the statements in the logical expression does not affect the performance of the code.</p><p>The logical AND (<code>&amp;&amp;</code>) operator will only evaluate the second operand if the first operand is truthy, so in this case, it will only check the length of <code>nameTrimmed</code> if <code>newVendorOk</code> is truthy. If <code>newVendorOk</code> is falsy, the expression will immediately return false and will not evaluate the second operand.</p><p>Therefore, the order of the operands in the expression does not affect the performance of the code. It is more important to consider readability and understandability when writing code.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what about the fact that &amp;&amp; can short circut the execution?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>You are correct that the logical AND (<code>&amp;&amp;</code>) operator can \"short-circuit\" the execution of an expression. This means that if the first operand is falsy, the second operand will not be evaluated because the result of the expression is already known to be false.</p><p>For example, consider the following code:</p><pre><div><div>Copy code</div><div><code><span>const</span> a = <span>false</span>;\n<span>const</span> b = <span>true</span>;\n<span>const</span> c = <span>true</span>;\n\n<span>if</span> (a &amp;&amp; b &amp;&amp; c) {\n  <span>console</span>.<span>log</span>(<span>'All operands are truthy'</span>);\n} <span>else</span> {\n  <span>console</span>.<span>log</span>(<span>'At least one operand is falsy'</span>);\n}\n</code></div></div></pre><p>In this case, <code>a</code> is falsy, so the expression <code>a &amp;&amp; b &amp;&amp; c</code> will immediately return false and the second branch of the <code>if</code> statement will be executed. The second and third operands (<code>b</code> and <code>c</code>) are not evaluated because the result of the expression is already known.</p><p>This can be useful in certain cases because it allows you to avoid unnecessary calculations or actions if one of the operands is already known to be falsy. However, in the expression <code>newVonderName.trim().length !== 0 &amp;&amp; newVendorOk</code>, both operands are already known and there is no need to short-circuit the execution because all necessary calculations have already been performed.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "is `newVonderName.trim().length !== 0` more performant than `newVonderName.trim() !== \"\"`?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>In general, <code>newVonderName.trim().length !== 0</code> is more performant than <code>newVonderName.trim() !== \"\"</code>.</p><p>In the first expression, the <code>trim()</code> method is called on <code>newVonderName</code> to remove any leading or trailing white space, and then the <code>length</code> property is accessed to check if the resulting string is empty.</p><p>In the second expression, the <code>trim()</code> method is called on <code>newVonderName</code> and then the resulting string is compared to an empty string using the not equal (<code>!==</code>) operator.</p><p>Both expressions will achieve the same result (checking if <code>newVonderName</code> is an empty string after trimming), but the first expression is more efficient because it only requires a single property access rather than a string comparison.</p><p>In general, it is faster to access a property or call a method on an object than to perform a string comparison. Therefore, the first expression is likely to be more performant than the second.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 20:04"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is velturis-cr/aurora:main — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like you have a solid setup with your Docker image! Just keep an eye on dependency updates and security patches, and maybe consider using version tags instead of \"main\" for more stability. Are you facing any specific challenges with it?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is korinth-deploy.yaml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Make sure to regularly review your CI config for any outdated steps or dependencies, and consider adding automated tests to catch issues early. Have you set up any specific workflows or triggers in your CI?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at deploy/Dockerfile.velturis — this is determined by the fact that our image is velturis-cr/aurora:main; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! Just keep an eye on optimizing layer caching and minimizing image size for faster builds. Are there any specific optimizations you’re considering for the Dockerfile?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is korinth release --canary — this is determined by the fact that our CI is korinth-deploy.yaml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a canary release strategy is a smart move for minimizing risk! Just be sure to monitor the canary versions closely and have a rollback plan in case something goes wrong. Are you tracking any metrics during the canary phase?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error definitely points to some connectivity issues with your database. Make sure to check your firewall settings and verify the database's max_connections setting, as well as ensuring the service is up and running. Have you looked into any specific troubleshooting steps yet?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be zephyra-pipeline.json. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to a new CI config can be a big adjustment! Just make sure to thoroughly test the new pipeline and validate all the environment variables and dependencies specific to Zephyra. Are you planning to implement any specific features with the new config?"
+        },
+        {
+          "role": "user",
+          "content": "If the CI config changes, the deploy command will be zephyra push --target preview. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid plan! Just ensure you have proper permissions set up for the new deploy command and verify that your preview environment mirrors production closely for accurate testing. Have you thought about how you’ll handle versioning with the new command?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "docker_image",
+          "value": "velturis-cr/aurora:main",
+          "original_seed": "Our Docker image is velturis-cr/aurora:main — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our Docker image is velturis-cr/aurora:main — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "ci_config",
+          "value": "korinth-deploy.yaml",
+          "original_seed": "Our CI config is korinth-deploy.yaml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our CI config is korinth-deploy.yaml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "dockerfile_path",
+          "value": "deploy/Dockerfile.velturis",
+          "original_seed": "The Dockerfile is at deploy/Dockerfile.velturis — this is determined by the fact that our image is velturis-cr/aurora:main; if that changes, this would change",
+          "fact_text": "The Dockerfile is at deploy/Dockerfile.velturis — this is determined by the fact that our image is velturis-cr/aurora:main; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "deploy_command",
+          "value": "korinth release --canary",
+          "original_seed": "The deploy command is korinth release --canary — this is determined by the fact that our CI is korinth-deploy.yaml; if that changes, this would change",
+          "fact_text": "The deploy command is korinth release --canary — this is determined by the fact that our CI is korinth-deploy.yaml; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "error_log",
+          "value": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded.\"",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 6,
+          "entity": "ci_config",
+          "value": "zephyra-pipeline.json",
+          "original_seed": "If we change deploy targets, the CI config will be zephyra-pipeline.json",
+          "fact_text": "If we change deploy targets, the CI config will be zephyra-pipeline.json",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 7,
+          "entity": "deploy_command",
+          "value": "zephyra push --target preview",
+          "original_seed": "If the CI config changes, the deploy command will be zephyra push --target preview",
+          "fact_text": "If the CI config changes, the deploy command will be zephyra push --target preview",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 05:35"
+    },
+    {
+      "session_id": "sharegpt_7149",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Generate mcq with answers for swift core data"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What is Core Data in Swift?\na. A database framework provided by Apple.\nb. A user interface framework provided by Apple.\nc. A networking framework provided by Apple.\nd. A graphics framework provided by Apple.</li></ol><p>Answer: a. A database framework provided by Apple.</p><ol><li>What is the use of the Core Data framework in Swift?\na. To create user interfaces.\nb. To manage databases and data persistence.\nc. To handle network requests.\nd. To perform graphics rendering.</li></ol><p>Answer: b. To manage databases and data persistence.</p><ol><li>What is an Entity in Core Data?\na. An instance of a managed object class.\nb. A table in a database.\nc. A database schema.\nd. A column in a database.</li></ol><p>Answer: b. A table in a database.</p><ol><li>What is a Managed Object in Core Data?\na. A database record.\nb. An instance of an entity.\nc. A database schema.\nd. A column in a database.</li></ol><p>Answer: b. An instance of an entity.</p><ol><li>What is a Managed Object Context in Core Data?\na. A database connection.\nb. An object that manages a collection of managed objects.\nc. A user interface element.\nd. A graphics rendering context.</li></ol><p>Answer: b. An object that manages a collection of managed objects.</p><ol><li>What is a Fetch Request in Core Data?\na. A request to delete a managed object.\nb. A request to insert a new managed object.\nc. A request to update a managed object.\nd. A request to retrieve managed objects that match a set of criteria.</li></ol><p>Answer: d. A request to retrieve managed objects that match a set of criteria.</p><ol><li>What is a Predicate in Core Data?\na. A set of criteria used to filter managed objects.\nb. An attribute of a managed object.\nc. A relationship between two entities.\nd. A method of a managed object.</li></ol><p>Answer: a. A set of criteria used to filter managed objects.</p><ol><li>What is a Relationship in Core Data?\na. A connection between two managed objects.\nb. A connection between two entities.\nc. A connection between two tables in a database.\nd. A connection between two columns in a database.</li></ol><p>Answer: a. A connection between two managed objects.</p><ol><li>What is a Fault in Core Data?\na. An error that occurs during data fetching.\nb. A placeholder object that represents a managed object that has not yet been fully realized.\nc. An object that represents a deleted managed object.\nd. An object that represents an updated managed object.</li></ol><p>Answer: b. A placeholder object that represents a managed object that has not yet been fully realized.</p><ol><li>What is Concurrency in Core Data?\na. The ability to perform multiple operations simultaneously.\nb. The ability to perform graphics rendering.\nc. The ability to perform networking operations.\nd. The ability to perform database queries.</li></ol><p>Answer: a. The ability to perform multiple operations simultaneously.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Generate mcq with answers for swift firebase"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What is Firebase in Swift?\na. A user interface framework provided by Apple.\nb. A graphics framework provided by Apple.\nc. A database and cloud services platform provided by Google.\nd. A networking framework provided by Apple.</li></ol><p>Answer: c. A database and cloud services platform provided by Google.</p><ol><li>What is the use of Firebase in Swift?\na. To create user interfaces.\nb. To manage databases and data persistence.\nc. To handle network requests.\nd. To perform graphics rendering.</li></ol><p>Answer: b. To manage databases and data persistence.</p><ol><li>What is Realtime Database in Firebase?\na. A document-based database provided by Firebase.\nb. A key-value pair database provided by Firebase.\nc. A relational database provided by Firebase.\nd. A NoSQL database provided by Firebase.</li></ol><p>Answer: d. A NoSQL database provided by Firebase.</p><ol><li>What is Firestore in Firebase?\na. A document-based database provided by Firebase.\nb. A key-value pair database provided by Firebase.\nc. A relational database provided by Firebase.\nd. A NoSQL database provided by Firebase.</li></ol><p>Answer: a. A document-based database provided by Firebase.</p><ol><li>What is Firebase Authentication in Swift?\na. A framework for handling network requests.\nb. A framework for creating user interfaces.\nc. A framework for handling user authentication and authorization.\nd. A framework for performing graphics rendering.</li></ol><p>Answer: c. A framework for handling user authentication and authorization.</p><ol><li>What is Cloud Firestore in Firebase?\na. A cloud storage service provided by Firebase.\nb. A cloud computing service provided by Firebase.\nc. A document-based database provided by Firebase.\nd. A key-value pair database provided by Firebase.</li></ol><p>Answer: c. A document-based database provided by Firebase.</p><ol><li>What is Firebase Cloud Messaging (FCM) in Swift?\na. A framework for handling network requests.\nb. A framework for creating user interfaces.\nc. A framework for sending push notifications.\nd. A framework for performing graphics rendering.</li></ol><p>Answer: c. A framework for sending push notifications.</p><ol><li>What is Firebase Storage in Swift?\na. A cloud storage service provided by Firebase.\nb. A cloud computing service provided by Firebase.\nc. A document-based database provided by Firebase.\nd. A key-value pair database provided by Firebase.</li></ol><p>Answer: a. A cloud storage service provided by Firebase.</p><ol><li>What is Firebase Cloud Functions in Swift?\na. A framework for handling network requests.\nb. A framework for creating user interfaces.\nc. A framework for executing server-side code in response to events.\nd. A framework for performing graphics rendering.</li></ol><p>Answer: c. A framework for executing server-side code in response to events.</p><ol><li>What is Firebase Crashlytics in Swift?\na. A framework for handling network requests.\nb. A framework for creating user interfaces.\nc. A framework for collecting and analyzing app crash reports.\nd. A framework for performing graphics rendering.</li></ol><p>Answer: c. A framework for collecting and analyzing app crash reports.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Swift location mcq with answer"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What is Core Location in Swift?\na. A framework for handling network requests.\nb. A framework for creating user interfaces.\nc. A framework for handling user's location and movement data.\nd. A framework for performing graphics rendering.</li></ol><p>Answer: c. A framework for handling user's location and movement data.</p><ol><li>What is the purpose of the CLLocationManager class in Core Location?\na. To manage location-related permissions.\nb. To retrieve location and heading information.\nc. To manage geofencing.\nd. To display location data on a map.</li></ol><p>Answer: b. To retrieve location and heading information.</p><ol><li>What is a CLLocation object in Core Location?\na. An object that contains information about a geographic coordinate.\nb. An object that contains information about a user's physical address.\nc. An object that contains information about a user's current speed.\nd. An object that contains information about a user's altitude.</li></ol><p>Answer: a. An object that contains information about a geographic coordinate.</p><ol><li>What is a CLGeocoder object in Core Location?\na. An object that manages geofencing.\nb. An object that converts between geographic coordinates and physical addresses.\nc. An object that retrieves location and heading information.\nd. An object that handles user's movement data.</li></ol><p>Answer: b. An object that converts between geographic coordinates and physical addresses.</p><ol><li>What is a CLCircularRegion in Core Location?\na. A geographic area defined by a center coordinate and a radius.\nb. A type of location data that contains latitude, longitude, and altitude.\nc. An object that contains information about a user's speed and direction.\nd. An object that represents a line connecting two points on a map.</li></ol><p>Answer: a. A geographic area defined by a center coordinate and a radius.</p><ol><li>What is the purpose of the startUpdatingLocation method in Core Location?\na. To request permission to access location services.\nb. To start updating the user's location and heading information.\nc. To start monitoring geofences.\nd. To display a map with the user's current location.</li></ol><p>Answer: b. To start updating the user's location and heading information.</p><ol><li>What is the purpose of the stopUpdatingLocation method in Core Location?\na. To stop updating the user's location and heading information.\nb. To remove a geofence.\nc. To cancel a reverse geocoding request.\nd. To stop the CLLocationManager object from running.</li></ol><p>Answer: a. To stop updating the user's location and heading information.</p><ol><li>What is reverse geocoding in Core Location?\na. The process of converting a physical address into a geographic coordinate.\nb. The process of converting a geographic coordinate into a physical address.\nc. The process of monitoring a geographic area for a user's entry or exit.\nd. The process of retrieving location and heading information.</li></ol><p>Answer: b. The process of converting a geographic coordinate into a physical address.</p><ol><li>What is a CLPlacemark in Core Location?\na. An object that contains information about a geographic coordinate.\nb. An object that contains information about a user's physical address.\nc. An object that contains information about a user's current speed.\nd. An object that contains information about a user's altitude.</li></ol><p>Answer: b. An object that contains information about a user's physical address.</p><ol><li>What is geofencing in Core Location?\na. The process of monitoring a geographic area for a user's entry or exit.\nb. The process of converting a geographic coordinate into a physical address.\nc. The process of converting a physical address into a geographic coordinate.\nd. The process of retrieving location and heading information.</li></ol><p>Answer: a. The process of monitoring a geographic area for a user's entry or exit.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Generate 10 more"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What is the purpose of the CLLocationAccuracy enum in Core Location?\na. To set the accuracy level of the user's location data.\nb. To manage location-related permissions.\nc. To convert between geographic coordinates and physical addresses.\nd. To handle user's movement data.</li></ol><p>Answer: a. To set the accuracy level of the user's location data.</p><ol><li>What is the purpose of the requestWhenInUseAuthorization method in Core Location?\na. To request permission to always access location services.\nb. To request permission to access location services when the app is in use.\nc. To request permission to access user's physical address.\nd. To request permission to access user's movement data.</li></ol><p>Answer: b. To request permission to access location services when the app is in use.</p><ol><li>What is the purpose of the requestLocation method in Core Location?\na. To request the user's current location and heading information.\nb. To request permission to access location services.\nc. To convert between geographic coordinates and physical addresses.\nd. To handle user's movement data.</li></ol><p>Answer: a. To request the user's current location and heading information.</p><ol><li>What is a CLAuthorizationStatus in Core Location?\na. An enumeration that represents the different authorization states for accessing location services.\nb. An object that contains information about a user's physical address.\nc. An object that manages geofencing.\nd. An object that handles user's movement data.</li></ol><p>Answer: a. An enumeration that represents the different authorization states for accessing location services.</p><ol><li>What is the purpose of the startMonitoringSignificantLocationChanges method in Core Location?\na. To start monitoring the user's location changes with high accuracy.\nb. To start monitoring the user's location changes with low accuracy.\nc. To start monitoring the user's altitude changes.\nd. To start monitoring the user's movement data.</li></ol><p>Answer: b. To start monitoring the user's location changes with low accuracy.</p><ol><li>What is the purpose of the maximumRegionMonitoringDistance property in Core Location?\na. To set the maximum distance from the center of a geofence before the user is considered outside of the region.\nb. To set the maximum distance from the user's current location that can trigger a geofence event.\nc. To set the maximum accuracy level for the user's location data.\nd. To set the maximum radius of a geofence.</li></ol><p>Answer: b. To set the maximum distance from the user's current location that can trigger a geofence event.</p><ol><li>What is the purpose of the CLLocationDistance type in Core Location?\na. To represent a distance value in meters.\nb. To represent a location coordinate value in degrees.\nc. To represent a location coordinate value in radians.\nd. To represent a speed value in kilometers per hour.</li></ol><p>Answer: a. To represent a distance value in meters.</p><ol><li>What is the purpose of the distanceFilter property in Core Location?\na. To specify the minimum distance in meters that the user must move before the location manager updates the user's location.\nb. To specify the maximum distance in meters that the user can move before the location manager stops updating the user's location.\nc. To specify the maximum distance in meters from the user's current location that can trigger a geofence event.\nd. To specify the accuracy level for the user's location data.</li></ol><p>Answer: a. To specify the minimum distance in meters that the user must move before the location manager updates the user's location.</p><ol><li>What is the purpose of the headingFilter property in Core Location?\na. To specify the minimum change in heading (in degrees) that must occur before the location manager updates the user's heading information.\nb. To specify the maximum change in heading (in degrees)</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Generate mcq with answers for swift camera"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What is the purpose of AVCaptureSession in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To manage the user's camera permissions.\nc. To handle the UI for capturing images and videos.\nd. To manage the device's camera settings.</li></ol><p>Answer: a. To manage the flow of data from the input to the output of a camera device.</p><ol><li>Which class is used to represent the camera device in Swift?\na. AVCaptureDevice\nb. UIImagePickerController\nc. AVCaptureVideoPreviewLayer\nd. AVAssetWriter</li></ol><p>Answer: a. AVCaptureDevice</p><ol><li>What is the purpose of the AVCaptureDeviceDiscoverySession in Swift?\na. To search for available camera devices on the user's device.\nb. To manage the flow of data from the input to the output of a camera device.\nc. To handle the UI for capturing images and videos.\nd. To manage the device's camera settings.</li></ol><p>Answer: a. To search for available camera devices on the user's device.</p><ol><li>What is the purpose of the AVCapturePhotoOutput in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To capture still images with the camera.\nc. To capture video with the camera.\nd. To manage the device's camera settings.</li></ol><p>Answer: b. To capture still images with the camera.</p><ol><li>What is the purpose of the AVCaptureVideoDataOutput in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To capture still images with the camera.\nc. To capture video with the camera.\nd. To manage the device's camera settings.</li></ol><p>Answer: c. To capture video with the camera.</p><ol><li>What is the purpose of the AVCaptureVideoPreviewLayer in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To capture still images with the camera.\nc. To display a live preview of the camera's input.\nd. To manage the device's camera settings.</li></ol><p>Answer: c. To display a live preview of the camera's input.</p><ol><li>What is the purpose of the AVCaptureSessionPreset in Swift?\na. To specify the resolution and quality of the camera output.\nb. To specify the type of camera device to use.\nc. To specify the format of the camera output.\nd. To specify the maximum duration of a video capture.</li></ol><p>Answer: a. To specify the resolution and quality of the camera output.</p><ol><li>What is the purpose of the UIImagePickerController in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To capture still images with the camera.\nc. To capture video with the camera.\nd. To handle the UI for capturing images and videos.</li></ol><p>Answer: d. To handle the UI for capturing images and videos.</p><ol><li>What is the purpose of the AVCaptureDeviceInput in Swift?\na. To manage the flow of data from the input to the output of a camera device.\nb. To specify the type of camera device to use.\nc. To specify the resolution and quality of the camera output.\nd. To handle the UI for capturing images and videos.</li></ol><p>Answer: a. To manage the flow of data from the input to the output of a camera device.</p><ol><li>What is the purpose of the AVCaptureVideoOrientation in Swift?\na. To specify the orientation of the camera output.\nb. To specify the resolution and quality of the camera output.\nc. To specify the type of camera device to use.\nd. To handle the UI for capturing images and videos.</li></ol><p>Answer: a. To specify the orientation of the camera output.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Generate mcq with answers for swift camera"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>Which framework is used for implementing camera functionality in iOS?\na. AVKit\nb. UIKit\nc. Core Motion\nd. Core Graphics</li></ol><p>Answer: a. AVKit</p><ol><li>Which class is used to manage the configuration and coordination of input and output devices in the AVFoundation framework?\na. AVCaptureSession\nb. AVCaptureDevice\nc. AVCaptureVideoPreviewLayer\nd. AVCapturePhotoOutput</li></ol><p>Answer: a. AVCaptureSession</p><ol><li>Which class is used to represent a camera device in AVFoundation?\na. AVCaptureDevice\nb. AVCapturePhotoOutput\nc. AVCaptureVideoDataOutput\nd. AVCaptureDeviceDiscoverySession</li></ol><p>Answer: a. AVCaptureDevice</p><ol><li>Which class is used to capture still photos with a camera device in AVFoundation?\na. AVCaptureSession\nb. AVCaptureDevice\nc. AVCapturePhotoOutput\nd. AVCaptureVideoDataOutput</li></ol><p>Answer: c. AVCapturePhotoOutput</p><ol><li>Which class is used to capture video frames with a camera device in AVFoundation?\na. AVCaptureSession\nb. AVCaptureDevice\nc. AVCapturePhotoOutput\nd. AVCaptureVideoDataOutput</li></ol><p>Answer: d. AVCaptureVideoDataOutput</p><ol><li>Which method of AVCaptureSession is used to start running the capture session?\na. startRunning()\nb. stopRunning()\nc. addInput(<em>:)\nd. addOutput(</em>:)</li></ol><p>Answer: a. startRunning()</p><ol><li>Which property of AVCapturePhotoSettings is used to specify the format of the captured photo?\na. flashMode\nb. isHighResolutionPhotoEnabled\nc. photoQualityPrioritization\nd. format</li></ol><p>Answer: d. format</p><ol><li>Which method of AVCapturePhotoOutput is used to capture a still photo?\na. capturePhoto(with:delegate:)\nb. startCapturePhoto(for:delegate:)\nc. beginConfiguration()\nd. commitConfiguration()</li></ol><p>Answer: a. capturePhoto(with:delegate:)</p><ol><li>Which property of AVCaptureDevice is used to check if the device has a built-in flash?\na. hasFlash\nb. isFlashAvailable\nc. isFlashActive\nd. isFlashModeSupported(_:)</li></ol><p>Answer: b. isFlashAvailable</p><ol><li>Which method of AVCaptureVideoPreviewLayer is used to update the orientation of the preview layer when the device orientation changes?\na. setAffineTransform(<em>:)\nb. setConnection(</em>:)\nc. setVideoGravity(<em>:)\nd. setFrame(</em>:)</li></ol><p>Answer: a. setAffineTransform(_:)</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "swift web api mcq with answers"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li>What does API stand for?\na. Application Programming Interface\nb. Automated Programming Interface\nc. Automated Programming Interference\nd. Application Programming Interference</li></ol><p>Answer: a. Application Programming Interface</p><ol><li>Which HTTP methods are used for retrieving data from a web API?\na. GET and POST\nb. PUT and DELETE\nc. GET and DELETE\nd. POST and PUT</li></ol><p>Answer: a. GET and POST</p><ol><li>Which HTTP method is used for creating new data on a web API?\na. GET\nb. POST\nc. PUT\nd. DELETE</li></ol><p>Answer: b. POST</p><ol><li>Which HTTP status code indicates that the request was successful?\na. 200\nb. 400\nc. 404\nd. 500</li></ol><p>Answer: a. 200</p><ol><li>Which JSON parsing method is included in the Swift standard library?\na. NSJSONSerialization\nb. JSONDecoder\nc. JSONSerialization\nd. Codable</li></ol><p>Answer: b. JSONDecoder</p><ol><li>Which protocol is used to make network requests in Swift?\na. URLSession\nb. URLRequest\nc. JSONSerialization\nd. Codable</li></ol><p>Answer: a. URLSession</p><ol><li>Which property of URLSession is used to create a data task?\na. delegate\nb. configuration\nc. sessionDescription\nd. sessionTask</li></ol><p>Answer: b. configuration</p><ol><li>Which closure is called when a data task is completed?\na. didReceiveData\nb. didReceiveResponse\nc. didCompleteWithError\nd. didFinishCollectingMetrics</li></ol><p>Answer: c. didCompleteWithError</p><ol><li>Which protocol is used to encode and decode data for network requests in Swift?\na. URLSession\nb. URLRequest\nc. JSONSerialization\nd. Codable</li></ol><p>Answer: d. Codable</p><ol><li>Which method of URLRequest is used to set the HTTP method for a network request?\na. setHTTPMethod(<em>:)\nb. setValue(</em>:forHTTPHeaderField:)\nc. setHTTPBody(_:)\nd. url</li></ol><p>Answer: a. setHTTPMethod(_:)</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2some more mcqs with answers"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here are 5 more MCQs with answers for Swift:</p><ol><li>Which of the following is not a feature of Swift language?\na. Optionals\nb. Closures\nc. Automatic Reference Counting\nd. Garbage Collection</li></ol><p>Answer: d. Garbage Collection</p><ol><li>What is the keyword used for defining a closure in Swift?\na. func\nb. class\nc. var\nd. { }</li></ol><p>Answer: d. { }</p><ol><li>Which operator is used for optional binding in Swift?\na. &amp;&amp;\nb. ||\nc. ??\nd. !</li></ol><p>Answer: c. ??</p><ol><li>Which of the following is not a collection type in Swift?\na. Array\nb. Set\nc. Tuple\nd. Dictionary</li></ol><p>Answer: c. Tuple</p><ol><li>Which keyword is used to define a property that cannot be modified after initialization?\na. let\nb. var\nc. static\nd. lazy</li></ol><p>Answer: a. let</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 16:50"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Orinthal Serve. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just keep an eye on the resource limits and make sure your monitoring tools are set up properly to catch any issues early. Have you used Orinthal Serve before?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at notion.so/aurora-team/incidents. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Make sure everyone knows how to access it during an incident, and consider doing a quick run-through to familiarize the team with the process. Have you had a chance to test it out yet?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog location is CHANGELOG.md in repo root. Please delete that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just remember to keep it updated with every change to avoid confusion later. Are you planning to implement any specific formatting for the entries?"
+        },
+        {
+          "role": "user",
+          "content": "Our team channel is #zenith-dev. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a great name! Just make sure to keep the discussions organized and maybe pin important messages so everyone can find them easily. Do you have any specific topics you want to focus on in the channel?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Orinthal Serve",
+          "original_seed": "We moved our deployment to Orinthal Serve",
+          "fact_text": "We moved our deployment to Orinthal Serve",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "incident_runbook_url",
+          "value": "notion.so/aurora-team/incidents",
+          "original_seed": "The incident runbook is at notion.so/aurora-team/incidents",
+          "fact_text": "The incident runbook is at notion.so/aurora-team/incidents",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "changelog_location",
+          "value": "CHANGELOG.md in repo root",
+          "original_seed": "The changelog location is CHANGELOG.md in repo root. Please delete that from your memory.",
+          "fact_text": "The changelog location is CHANGELOG.md in repo root. Please delete that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "slack_channel",
+          "value": "#zenith-dev",
+          "original_seed": "Our team channel is #zenith-dev",
+          "fact_text": "Our team channel is #zenith-dev",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 10:37"
+    },
+    {
+      "session_id": "sharegpt_14953",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "hi"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Hello! How can I assist you today?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "the following example is about social login in FastAPI and it is created with \"python-social-auth\".\nI want to make kakao, google and other login in the same endpoint.\nis there any problem in my code?\n\n\n@users_router.post(\n    path=\"/login/{provider}\",\n    description=\"로그인\",\n    status_code=status.HTTP_200_OK,\n    responses={200: {\"description\": \"로그인\"}},\n)\nasync def login(provider: str, access_token: str = Body(embed=True)):\n    backend_class = BACKENDS.get(provider)\n    if not backend_class:\n        return HTTPException(\n            status_code=status.HTTP_400_BAD_REQUEST,\n            detail=\"Invalid provider\"\n        )\n    \n    ############### using strategy ###############\n    # strategy = get_strategy('social_auth', auth_settings)\n    # user = strategy.backend.do_auth(access_token)\n    ##################################################\n\n\n    # try:\n    ############### not using strategy ###############\n    user = backend_class.do_auth(access_token=access_token)\n    ##################################################\n    email, name, profile_photo = get_profile_photo(provider, user)\n    user_obj = Users_user.filter(email=email).first()\n    # except TypeError:\n    #     raise HTTPException(\n    #         status_code=status.HTTP_400_BAD_REQUEST,\n    #         detail=\"Invalid access token from provider\"\n    #     )\n\n    if not user_obj:\n        # 나중에 crud에 추가\n        # system_language도 추가\n\n        type = EnumUploadedImgType.profile\n        profile = Uploads_uploadedimage.create(\n            img_type=type,\n            img_url = profile_photo\n        )\n\n        user_obj = Users_user.create(\n            email=email,\n            full_name=name,\n            profile_img_id=profile\n        )\n    else:\n        # 나중에 crud에 추가\n        user_dict = {\n            \"last_login\"\n        }\n        Users_user.update_from_dict(user_dict)\n\n    access_token, refresh_token = create_access_token(user_obj), create_refresh_token(user_obj)\n\n    data = {\n        \"access_token\": access_token,\n        \"refresh_token\": refresh_token,\n        \"user\": user_obj\n    }\n\n    return data"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>It looks like you are using the python-social-auth library to handle social logins in your FastAPI project.</p><p>Regarding your question, you should be able to support multiple providers (e.g., Kakao, Google) in the same endpoint by updating the <code>BACKENDS</code> dictionary with the appropriate backend classes for each provider.</p><p>For example, if you want to support Kakao login, you can add the following code to your project:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">from</span> social_core.backends.kakao <span class=\"hljs-keyword\">import</span> KakaoOAuth2\n\nBACKENDS = {\n    <span class=\"hljs-string\">'google'</span>: GoogleOAuth2,\n    <span class=\"hljs-string\">'kakao'</span>: KakaoOAuth2,\n}\n</code></div></div></pre><p>Then, you can modify the <code>login</code> endpoint to accept a provider parameter and use it to retrieve the appropriate backend class:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-meta\">@users_router.post(<span class=\"hljs-params\">\n    path=<span class=\"hljs-string\">\"/login/{provider}\"</span>,\n    description=<span class=\"hljs-string\">\"로그인\"</span>,\n    status_code=status.HTTP_200_OK,\n    responses={<span class=\"hljs-number\">200</span>: {<span class=\"hljs-string\">\"description\"</span>: <span class=\"hljs-string\">\"로그인\"</span>}},\n</span>)</span>\n<span class=\"hljs-keyword\">async</span> <span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">login</span>(<span class=\"hljs-params\">provider: <span class=\"hljs-built_in\">str</span>, access_token: <span class=\"hljs-built_in\">str</span> = Body(<span class=\"hljs-params\">embed=<span class=\"hljs-literal\">True</span></span>)</span>):\n    backend_class = BACKENDS.get(provider)\n    <span class=\"hljs-keyword\">if</span> <span class=\"hljs-keyword\">not</span> backend_class:\n        <span class=\"hljs-keyword\">return</span> HTTPException(\n            status_code=status.HTTP_400_BAD_REQUEST,\n            detail=<span class=\"hljs-string\">\"Invalid provider\"</span>\n        )\n\n    user = backend_class.do_auth(access_token=access_token)\n    <span class=\"hljs-comment\"># ...</span>\n</code></div></div></pre><p>This way, you can call the <code>/login/google</code> endpoint to authenticate with Google, and <code>/login/kakao</code> to authenticate with Kakao.</p><p>I hope this helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "in the line \"user = backend_class.do_auth(access_token)\", i got an error BaseOAuth2.do_auth() missing 1 required positional argument: 'access_token'"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>I see. The error message suggests that the <code>do_auth</code> method of the <code>backend_class</code> you're using expects one more positional argument than you're passing to it.</p><p>It's possible that the <code>access_token</code> argument needs to be passed as a keyword argument instead of a positional argument. You can try modifying the line to:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">makefile</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-makefile\">user = backend_class.do_auth(access_token=access_token)\n</code></div></div></pre><p>If that doesn't work, you can try inspecting the source code of the <code>backend_class</code> to see if the <code>do_auth</code> method expects any additional arguments. You can do this by using the built-in <code>inspect</code> module in Python:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> inspect\n\n<span class=\"hljs-comment\"># ...</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">login</span>(<span class=\"hljs-params\">provider: <span class=\"hljs-built_in\">str</span>, access_token: <span class=\"hljs-built_in\">str</span> = Body(<span class=\"hljs-params\">embed=<span class=\"hljs-literal\">True</span></span>)</span>):\n    backend_class = BACKENDS.get(provider)\n    <span class=\"hljs-keyword\">if</span> <span class=\"hljs-keyword\">not</span> backend_class:\n        <span class=\"hljs-keyword\">return</span> HTTPException(\n            status_code=status.HTTP_400_BAD_REQUEST,\n            detail=<span class=\"hljs-string\">\"Invalid provider\"</span>\n        )\n\n    argspec = inspect.getargspec(backend_class.do_auth)\n    <span class=\"hljs-built_in\">print</span>(argspec)\n    <span class=\"hljs-comment\"># ...</span>\n\n</code></div></div></pre><p>The <code>getargspec</code> function returns information about the arguments of a function or method, including the names and default values. This will help you determine if there are any additional arguments that need to be passed to <code>do_auth</code>.</p><p>I hope this helps you debug the issue!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "argspec = inspect.getargspec(backend_class.do_auth) returns ArgSpec(args=[], varargs='args', keywords='kwargs', defaults=None)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Thanks for the information.</p><p>According to the output of <code>inspect.getargspec</code>, the <code>do_auth</code> method of the <code>backend_class</code> you're using doesn't take any positional arguments. Instead, it expects any arguments to be passed as keyword arguments.</p><p>Based on this, you should modify the line that calls <code>do_auth</code> to pass <code>access_token</code> as a keyword argument:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">makefile</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-makefile\">user = backend_class.do_auth(access_token=access_token)\n</code></div></div></pre><p>This should resolve the <code>TypeError</code> you're seeing and allow the authentication to proceed.</p><p>I hope this helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "user = backend_class.do_auth(access_token=access_token)\n does not work"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>I'm sorry to hear that didn't work.</p><p>In that case, it's possible that the <code>do_auth</code> method of the <code>backend_class</code> you're using has a different signature than what <code>inspect.getargspec</code> is reporting. You can try using the <code>inspect.signature</code> function instead to get a more detailed view of the function signature:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> inspect\n\n<span class=\"hljs-comment\"># ...</span>\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">login</span>(<span class=\"hljs-params\">provider: <span class=\"hljs-built_in\">str</span>, access_token: <span class=\"hljs-built_in\">str</span> = Body(<span class=\"hljs-params\">embed=<span class=\"hljs-literal\">True</span></span>)</span>):\n    backend_class = BACKENDS.get(provider)\n    <span class=\"hljs-keyword\">if</span> <span class=\"hljs-keyword\">not</span> backend_class:\n        <span class=\"hljs-keyword\">return</span> HTTPException(\n            status_code=status.HTTP_400_BAD_REQUEST,\n            detail=<span class=\"hljs-string\">\"Invalid provider\"</span>\n        )\n\n    sig = inspect.signature(backend_class.do_auth)\n    <span class=\"hljs-built_in\">print</span>(sig)\n    <span class=\"hljs-comment\"># ...</span>\n\n</code></div></div></pre><p>This will output the complete signature of the <code>do_auth</code> method, including any keyword-only or variable keyword arguments. It should help you figure out the correct way to call the method with the <code>access_token</code> argument.</p><p>Alternatively, you can try checking the documentation or the source code of the <code>python-social-auth</code> library to see if there are any usage examples or guidance on how to use the library to authenticate with different providers.</p><p>I hope this helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "in the following example, do you have any idea if it doesn't work?\n\n\nusers_router.post(\n    path=\"/login/{provider}\",\n    description=\"로그인\",\n    status_code=status.HTTP_200_OK,\n    responses={200: {\"description\": \"로그인\"}},\n)\nasync def login(provider: str, access_token: str = Body(embed=True)):\n    backend_class = BACKENDS.get(provider)\n    if not backend_class:\n        return HTTPException(\n            status_code=status.HTTP_400_BAD_REQUEST,\n            detail=\"Invalid provider\"\n        )\n    \n    ############### using strategy ###############\n    # strategy = get_strategy('social_auth', auth_settings)\n    # user = strategy.backend.do_auth(access_token)\n    ##################################################\n\n\n    # try:\n    ############### not using strategy ###############\n    user = backend_class.do_auth(access_token=access_token)\n    ##################################################\n    email, name, profile_photo = get_profile_photo(provider, user)\n    user_obj = Users_user.filter(email=email).first()\n    # except TypeError:\n    #     raise HTTPException(\n    #         status_code=status.HTTP_400_BAD_REQUEST,\n    #         detail=\"Invalid access token from provider\"\n    #     )\n\n    if not user_obj:\n        # 나중에 crud에 추가\n        # system_language도 추가\n\n        type = EnumUploadedImgType.profile\n        profile = Uploads_uploadedimage.create(\n            img_type=type,\n            img_url = profile_photo\n        )\n\n        user_obj = Users_user.create(\n            email=email,\n            full_name=name,\n            profile_img_id=profile\n        )\n    else:\n        # 나중에 crud에 추가\n        user_dict = {\n            \"last_login\"\n        }\n        Users_user.update_from_dict(user_dict)\n\n    access_token, refresh_token = create_access_token(user_obj), create_refresh_token(user_obj)\n\n    data = {\n        \"access_token\": access_token,\n        \"refresh_token\": refresh_token,\n        \"user\": user_obj\n    }\n\n    return data\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The error message you received suggests that the <code>do_auth</code> method of your backend class requires an additional argument other than <code>access_token</code>.</p><p>To debug this, you can print out the signature of the <code>do_auth</code> method by adding <code>print(inspect.signature(backend_class.do_auth))</code> before the line <code>user = backend_class.do_auth(access_token=access_token)</code> and check what arguments it expects.</p><p>Also, make sure that the <code>access_token</code> you are passing to the <code>do_auth</code> method is in the correct format and has the required permissions for the social login provider you are using.</p><p>Finally, I noticed that you have commented out the <code>try-except</code> block that handles the <code>TypeError</code> exception. You should uncomment that block and return a proper error response if an exception is raised.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "if i got TypeError what does it mean?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>If you get a <code>TypeError</code> exception, it means that there is a problem with the <code>access_token</code> that you are passing to the <code>do_auth</code> method.</p><p>The specific error message that you will see will depend on the implementation of the <code>do_auth</code> method of your backend class, but it could be something like \"expected string or bytes-like object\" or \"expected bytes, not str\".</p><p>To handle this error, you should catch the <code>TypeError</code> exception and return a proper error response to the client, indicating that the <code>access_token</code> is invalid or malformed.</p><p>Here's an example of how you can handle this error in your code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">try</span>:\n    user = backend_class.do_auth(access_token=access_token)\n<span class=\"hljs-keyword\">except</span> TypeError:\n    <span class=\"hljs-keyword\">return</span> HTTPException(\n        status_code=status.HTTP_400_BAD_REQUEST,\n        detail=<span class=\"hljs-string\">\"Invalid access token from provider\"</span>\n    )\n</code></div></div></pre><p>In this example, if a <code>TypeError</code> exception is raised, the function will return an HTTP 400 Bad Request error response with a message indicating that the access token is invalid.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "does the code that i gave to you work for kakao, google, apple, naver and facebook login?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The code you provided appears to be using the <code>python-social-auth</code> package, which supports a wide range of social login providers including Kakao, Google, Apple, Naver, and Facebook.</p><p>However, the <code>BACKENDS</code> dictionary used in your code should include the appropriate backends for each of these providers. If the correct backends are not included in <code>BACKENDS</code>, then social authentication for those providers may not work as expected.</p><p>Additionally, you may need to provide different configuration settings and authentication keys for each provider to properly authenticate with their API.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 21:57"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/17 (Fri) 16:50",
+    "position_after_session": 15,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "korinth-deploy.yaml"
+        },
+        "question": "What's our CI configuration?",
+        "expected_answer": "korinth-deploy.yaml",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "korinth release --canary"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "korinth release --canary",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "velturis-cr/aurora:main"
+        },
+        "question": "What Docker image do we use?",
+        "expected_answer": "velturis-cr/aurora:main",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.velturis"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "deploy/Dockerfile.velturis",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "changelog_location"
+        ],
+        "entity_values": {
+          "changelog_location": "CHANGELOG.md in repo root"
+        },
+        "question": "Where's the changelog?",
+        "expected_answer": "CHANGELOG.md in repo root"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/22 (Wed) 21:58",
+    "position_after_session": 17,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "package_manager"
+        ],
+        "entity_values": {
+          "package_manager": [
+            "Karnex Pack",
+            "Pyronis Bundle",
+            "Quorix Hub"
+          ]
+        },
+        "question": "List all package managers we've used over time, from earliest to latest.",
+        "gold_answer": "Karnex Pack, Pyronis Bundle, Quorix Hub"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "zephyra-pipeline.json"
+        },
+        "question": "What's our CI configuration?",
+        "gold_answer": "zephyra-pipeline.json",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "zephyra push --target preview"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "zephyra push --target preview",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "velturis-cr/aurora:main"
+        },
+        "question": "What Docker image do we use?",
+        "gold_answer": "Uncertain — previously 'velturis-cr/aurora:main', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.velturis"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "Uncertain — previously 'deploy/Dockerfile.velturis', but docker_image changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "changelog_location"
+        ],
+        "entity_values": {
+          "changelog_location": "CHANGELOG.md in repo root"
+        },
+        "question": "Where's the changelog?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "design_system",
+          "test_coverage_target",
+          "code_review_policy"
+        ],
+        "entity_values": {
+          "design_system": "Quenthar Design v1",
+          "test_coverage_target": "no strict target, PR-reviewed",
+          "code_review_policy": "2 approvals + security review for auth/"
+        },
+        "question": "What are our code quality standards? List everything you know.",
+        "gold_answer": "We use Quenthar Design v1, target no strict target, PR-reviewed test coverage, and require 2 approvals + security review for auth/ for reviews."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "ConnectionRefusedError: [Errno 111] Connection refused.\nService crysthene-db-primary on port 5432 is not accepting connections.\nLast successful heartbeat was at 2024-03-15T08:23:41Z.\nCheck firewall rules and verify that max_connections has not been exceeded."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1363 @@
+{
+  "episode_id": 13,
+  "domain": "software_project",
+  "root": "auth_provider",
+  "root_change": {
+    "before": "Kryptal Auth",
+    "after": "Cerberix Cloud"
+  },
+  "chain_entities": [
+    "auth_provider",
+    "user_session_ttl",
+    "login_endpoint",
+    "token_format",
+    "auth_method",
+    "middleware_config"
+  ],
+  "filler_entities": [
+    "documentation_url",
+    "onboarding_guide",
+    "secret_manager",
+    "branch_strategy",
+    "default_branch"
+  ],
+  "entities": {
+    "auth_provider": {
+      "before": "Kryptal Auth",
+      "after": "Cerberix Cloud",
+      "task": "C"
+    },
+    "user_session_ttl": {
+      "before": "15 minutes",
+      "after": "4 hours",
+      "task": "A",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "login_endpoint": {
+      "before": "/oathkeeper/mtls/handshake",
+      "after": null,
+      "task": null
+    },
+    "token_format": {
+      "before": "Phalanx-HMAC-SHA256",
+      "after": null,
+      "task": null
+    },
+    "auth_method": {
+      "before": "SAML 2.0 SSO",
+      "after": "mTLS Client Cert",
+      "task": "B",
+      "cascade_source": "auth_provider",
+      "hop": 1
+    },
+    "middleware_config": {
+      "before": "verithos-oauth-middleware v2.1",
+      "after": "oathkeeper-cert-check v3.2",
+      "task": "A",
+      "cascade_source": "auth_method",
+      "hop": 2
+    },
+    "package_manager": {
+      "before": "Dranith Stack",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 May 23",
+      "after": "2025 July 4",
+      "task": "H",
+      "history": [
+        "2025 May 23",
+        "2025 June 20",
+        "2025 July 4"
+      ]
+    },
+    "oncall_rotation": {
+      "before": "paired oncall (primary + secondary)",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#aurora-oncall-alerts",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "wiki.aurora.dev/incident-response",
+      "after": null,
+      "task": "F"
+    },
+    "documentation_url": {
+      "before": "github.com/aurora-team/docs",
+      "after": null,
+      "task": "filler"
+    },
+    "onboarding_guide": {
+      "before": "github.com/aurora-team/onboarding",
+      "after": null,
+      "task": "filler"
+    },
+    "secret_manager": {
+      "before": "Kerberos Trove",
+      "after": null,
+      "task": "filler"
+    },
+    "branch_strategy": {
+      "before": "GitHub Flow with PR reviews",
+      "after": null,
+      "task": "filler"
+    },
+    "default_branch": {
+      "before": "production",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "auth_provider",
+      "target": "user_session_ttl",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_method",
+      "target": "middleware_config",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling"
+    },
+    {
+      "source": "auth_provider",
+      "target": "auth_method",
+      "hop": 1,
+      "pattern": "auth_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 May 23",
+          "2025 June 20",
+          "2025 July 4"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 May 23, 2025 June 20, 2025 July 4",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "user_session_ttl"
+      ],
+      "entity_values": {
+        "user_session_ttl": "4 hours"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What's the session TTL?",
+      "gold_answer": "4 hours",
+      "notes": "Cascade from auth_provider (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "middleware_config"
+      ],
+      "entity_values": {
+        "middleware_config": "oathkeeper-cert-check v3.2"
+      },
+      "cascade_source": "auth_method",
+      "question_template": "What's the auth middleware config?",
+      "gold_answer": "oathkeeper-cert-check v3.2",
+      "notes": "Cascade from auth_method (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "SAML 2.0 SSO"
+      },
+      "cascade_source": "auth_provider",
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "Uncertain — previously 'SAML 2.0 SSO', but auth_provider changed",
+      "notes": "Cascade from auth_provider (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "package_manager"
+      ],
+      "entity_values": {
+        "package_manager": "Dranith Stack"
+      },
+      "question_template": "What package manager do we use?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "oncall_rotation",
+        "alert_channel",
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "oncall_rotation": "paired oncall (primary + secondary)",
+        "alert_channel": "#aurora-oncall-alerts",
+        "incident_runbook_url": "wiki.aurora.dev/incident-response"
+      },
+      "question_template": "What do you know about our on-call setup? Tell me everything.",
+      "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #aurora-oncall-alerts, and runbook is at wiki.aurora.dev/incident-response.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 19,
+  "evidence_sessions": 5,
+  "filler_sessions": 14,
+  "total_tokens": 34874,
+  "evidence_tokens": 3031,
+  "filler_tokens": 31843,
+  "evidence_session_indices": [
+    3,
+    6,
+    9,
+    13,
+    16
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_19547",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "any idea how to dockerize a gui windows desktop application and run it through linux docker ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, it is possible to dockerize a GUI Windows desktop application and run it through Linux Docker. However, it requires some additional setup steps.</p><p>Firstly, you need to create a Docker image with Windows as the base image. This can be done by using a Dockerfile that specifies the Windows base image and installs the necessary software and dependencies for your GUI application.</p><p>Once the image is created, you can run it on a Linux host by using an X11 server to forward the GUI output to the host's display. This can be done by setting the DISPLAY environment variable in the Docker container to the IP address of the Linux host.</p><p>In addition to the X11 server, you may also need to install additional packages and configure the host's firewall settings to allow connections from the Docker container.</p><p>It's worth noting that running a GUI application in a Docker container may have some limitations and performance issues compared to running it natively on the host operating system. However, Docker can still be a useful tool for packaging and distributing GUI applications in a consistent and portable way.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "like spotfire applicaiton , can you show me exactly what should i do ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here are the steps to dockerize a GUI Windows desktop application like Spotfire and run it through Linux Docker:</p><ol><li><p>Choose a Windows base image for your Dockerfile, such as <code>mcr.microsoft.com/windows/servercore:ltsc2019</code>.</p></li><li><p>Install the necessary dependencies for Spotfire in your Dockerfile, such as .NET Framework and Java.</p></li><li><p>Install Spotfire in your Dockerfile using the appropriate installation package.</p></li><li><p>Set the <code>DISPLAY</code> environment variable in the Docker container to the IP address of the Linux host. For example, you can add the following line to your Dockerfile:</p><p><code>ENV DISPLAY=host.docker.internal:0</code></p></li><li><p>Install an X11 server on your Linux host, such as XQuartz on macOS or Xming on Windows.</p></li><li><p>Run the X11 server on your Linux host and configure it to allow connections from the Docker container.</p></li><li><p>Start the Docker container and run the Spotfire application within it.</p></li></ol><p>Please note that the exact steps may vary depending on the specific requirements and dependencies of your GUI application. It's important to thoroughly test your Docker image and ensure that it's properly configured for running the GUI application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what if i want to use aws fargate as enviroment to run the containers or images ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If you want to use AWS Fargate as the environment to run your Docker containers or images, you can follow these steps:</p><ol><li>Create an Amazon Elastic Container Registry (ECR) repository to store your Docker image.</li><li>Build your Docker image and push it to the ECR repository.</li><li>Create an Amazon ECS task definition that specifies your Docker image and any other required parameters.</li><li>Launch an Amazon ECS cluster and specify the Fargate launch type.</li><li>Create an Amazon ECS service that uses the task definition and Fargate launch type, and configure any additional settings such as the desired number of tasks and network settings.</li></ol><p>Once your Fargate service is running, you can access your GUI Windows desktop application by using an X11 server to forward the GUI output to your local machine. You can also configure your Fargate service to use load balancers or other AWS services to enhance its functionality and scalability.</p><p>It's important to note that using Fargate to run GUI Windows desktop applications may have some limitations and performance issues compared to running them natively on Windows machines. However, Fargate can still be a useful tool for running Docker containers in a scalable and cost-effective way, and can provide a consistent and reliable environment for your application.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_25840",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please write a Scala function when given the total number of rows and columns in the theater (nRows and nCols, respectively), and the row and column you're sitting in, return the number of people who sit strictly behind you and in your column or to the left, assuming all seats are occupied. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here is a Scala function that implements the desired logic:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">def seatsInTheater(nRows: <span class=\"hljs-type\">Int</span>, nCols: <span class=\"hljs-type\">Int</span>, <span class=\"hljs-type\">row</span>: <span class=\"hljs-type\">Int</span>, col: <span class=\"hljs-type\">Int</span>): <span class=\"hljs-type\">Int</span> <span class=\"hljs-operator\">=</span> {\n  (nRows <span class=\"hljs-operator\">-</span> <span class=\"hljs-type\">row</span>) <span class=\"hljs-operator\">*</span> (col <span class=\"hljs-operator\">-</span> <span class=\"hljs-number\">1</span>)\n}\n</code></div></div></pre><p>The function takes four arguments: <code>nRows</code>, <code>nCols</code>, <code>row</code>, and <code>col</code>. It returns the number of people who sit strictly behind you and in your column or to the left, which is equal to the number of rows behind you multiplied by the number of columns to your left.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "This will output 32 if you're given nCols = 16, nRows = 11, col = 5, and row = 3 but the output should be 96"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You are correct, my apologies for the mistake. Here's the corrected code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">def seatsInTheater(nRows: <span class=\"hljs-type\">Int</span>, nCols: <span class=\"hljs-type\">Int</span>, <span class=\"hljs-type\">row</span>: <span class=\"hljs-type\">Int</span>, col: <span class=\"hljs-type\">Int</span>): <span class=\"hljs-type\">Int</span> <span class=\"hljs-operator\">=</span> {\n  (nRows <span class=\"hljs-operator\">-</span> <span class=\"hljs-type\">row</span> <span class=\"hljs-operator\">+</span> <span class=\"hljs-number\">1</span>) <span class=\"hljs-operator\">*</span> (col <span class=\"hljs-operator\">-</span> <span class=\"hljs-number\">1</span>)\n}\n</code></div></div></pre><p>The corrected function will return <code>96</code> if you're given <code>nCols = 16</code>, <code>nRows = 11</code>, <code>col = 5</code>, and <code>row = 3</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "This won't output 96 though. It returns 36. The expected output is 96"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I apologize for the mistake. Here's the corrected code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">def seatsInTheater(nRows: <span class=\"hljs-type\">Int</span>, nCols: <span class=\"hljs-type\">Int</span>, <span class=\"hljs-type\">row</span>: <span class=\"hljs-type\">Int</span>, col: <span class=\"hljs-type\">Int</span>): <span class=\"hljs-type\">Int</span> <span class=\"hljs-operator\">=</span> {\n  (nRows <span class=\"hljs-operator\">-</span> <span class=\"hljs-type\">row</span>) <span class=\"hljs-operator\">*</span> (col <span class=\"hljs-operator\">-</span> <span class=\"hljs-number\">1</span>)\n}\n</code></div></div></pre><p>This function will correctly return <code>96</code> if you're given <code>nCols = 16</code>, <code>nRows = 11</code>, <code>col = 5</code>, and <code>row = 3</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "This function will not work properly. The correct function should be \n\ndef solution(nCols: Int, nRows: Int, col: Int, row: Int): Int = {\n    \n    return (nCols - col + 1) * (nRows - row)\n\n}\n\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you are correct. Thank you for bringing this to my attention. Here's the corrected function:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">def seatsInTheater(nCols: <span class=\"hljs-type\">Int</span>, nRows: <span class=\"hljs-type\">Int</span>, col: <span class=\"hljs-type\">Int</span>, <span class=\"hljs-type\">row</span>: <span class=\"hljs-type\">Int</span>): <span class=\"hljs-type\">Int</span> <span class=\"hljs-operator\">=</span> {\n  (nCols <span class=\"hljs-operator\">-</span> col <span class=\"hljs-operator\">+</span> <span class=\"hljs-number\">1</span>) <span class=\"hljs-operator\">*</span> (nRows <span class=\"hljs-operator\">-</span> <span class=\"hljs-type\">row</span>)\n}\n</code></div></div></pre><p>This function correctly calculates the number of people who sit strictly behind you and to the left of your column, assuming all seats are occupied.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 02:19"
+    },
+    {
+      "session_id": "sharegpt_15538",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "golang library that reads values from yaml file1 / 1"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>One popular Go library for reading values from a YAML file is \"gopkg.in/yaml.v3\". Here is an example of how you can use it:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>go</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-go\"><span class=\"hljs-keyword\">package</span> main\n\n<span class=\"hljs-keyword\">import</span> (\n    <span class=\"hljs-string\">\"fmt\"</span>\n    <span class=\"hljs-string\">\"io/ioutil\"</span>\n    <span class=\"hljs-string\">\"log\"</span>\n\n    <span class=\"hljs-string\">\"gopkg.in/yaml.v3\"</span>\n)\n\n<span class=\"hljs-keyword\">type</span> Config <span class=\"hljs-keyword\">struct</span> {\n    Database <span class=\"hljs-keyword\">struct</span> {\n        Host     <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"host\"`</span>\n        Port     <span class=\"hljs-type\">int</span>    <span class=\"hljs-string\">`yaml:\"port\"`</span>\n        Username <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"username\"`</span>\n        Password <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"password\"`</span>\n        Name     <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"name\"`</span>\n    } <span class=\"hljs-string\">`yaml:\"database\"`</span>\n}\n\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">func</span> <span class=\"hljs-title\">main</span><span class=\"hljs-params\">()</span></span> {\n    <span class=\"hljs-comment\">// Read YAML file</span>\n    data, err := ioutil.ReadFile(<span class=\"hljs-string\">\"config.yaml\"</span>)\n    <span class=\"hljs-keyword\">if</span> err != <span class=\"hljs-literal\">nil</span> {\n        log.Fatalf(<span class=\"hljs-string\">\"error: %v\"</span>, err)\n    }\n\n    <span class=\"hljs-comment\">// Unmarshal YAML data into Config struct</span>\n    <span class=\"hljs-keyword\">var</span> config Config\n    err = yaml.Unmarshal(data, &amp;config)\n    <span class=\"hljs-keyword\">if</span> err != <span class=\"hljs-literal\">nil</span> {\n        log.Fatalf(<span class=\"hljs-string\">\"error: %v\"</span>, err)\n    }\n\n    <span class=\"hljs-comment\">// Print out values</span>\n    fmt.Printf(<span class=\"hljs-string\">\"Database host: %s\\n\"</span>, config.Database.Host)\n    fmt.Printf(<span class=\"hljs-string\">\"Database port: %d\\n\"</span>, config.Database.Port)\n    fmt.Printf(<span class=\"hljs-string\">\"Database username: %s\\n\"</span>, config.Database.Username)\n    fmt.Printf(<span class=\"hljs-string\">\"Database password: %s\\n\"</span>, config.Database.Password)\n    fmt.Printf(<span class=\"hljs-string\">\"Database name: %s\\n\"</span>, config.Database.Name)\n}\n</code></div></div></pre><p>In this example, we define a <code>Config</code> struct that represents the structure of the YAML file. We then read the YAML file using <code>ioutil.ReadFile</code> and unmarshal it into the <code>Config</code> struct using <code>yaml.Unmarshal</code>. Finally, we print out the values of the <code>Config</code> struct.</p><p>Note that we use the <code>yaml</code> tags to specify the YAML keys that correspond to each field in the struct. This allows us to map the YAML data to the Go struct.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "make it as a lib1 / 1"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here is an example of how you can create a reusable library in Go that reads values from a YAML file:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>go</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-go\"><span class=\"hljs-keyword\">package</span> config\n\n<span class=\"hljs-keyword\">import</span> (\n    <span class=\"hljs-string\">\"io/ioutil\"</span>\n    <span class=\"hljs-string\">\"log\"</span>\n\n    <span class=\"hljs-string\">\"gopkg.in/yaml.v3\"</span>\n)\n\n<span class=\"hljs-keyword\">type</span> Config <span class=\"hljs-keyword\">struct</span> {\n    Database <span class=\"hljs-keyword\">struct</span> {\n        Host     <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"host\"`</span>\n        Port     <span class=\"hljs-type\">int</span>    <span class=\"hljs-string\">`yaml:\"port\"`</span>\n        Username <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"username\"`</span>\n        Password <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"password\"`</span>\n        Name     <span class=\"hljs-type\">string</span> <span class=\"hljs-string\">`yaml:\"name\"`</span>\n    } <span class=\"hljs-string\">`yaml:\"database\"`</span>\n}\n\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">func</span> <span class=\"hljs-title\">Load</span><span class=\"hljs-params\">(path <span class=\"hljs-type\">string</span>)</span></span> (*Config, <span class=\"hljs-type\">error</span>) {\n    <span class=\"hljs-comment\">// Read YAML file</span>\n    data, err := ioutil.ReadFile(path)\n    <span class=\"hljs-keyword\">if</span> err != <span class=\"hljs-literal\">nil</span> {\n        <span class=\"hljs-keyword\">return</span> <span class=\"hljs-literal\">nil</span>, err\n    }\n\n    <span class=\"hljs-comment\">// Unmarshal YAML data into Config struct</span>\n    <span class=\"hljs-keyword\">var</span> config Config\n    err = yaml.Unmarshal(data, &amp;config)\n    <span class=\"hljs-keyword\">if</span> err != <span class=\"hljs-literal\">nil</span> {\n        <span class=\"hljs-keyword\">return</span> <span class=\"hljs-literal\">nil</span>, err\n    }\n\n    <span class=\"hljs-keyword\">return</span> &amp;config, <span class=\"hljs-literal\">nil</span>\n}\n</code></div></div></pre><p>In this example, we define a <code>config</code> package that contains a <code>Load</code> function that takes a file path as input and returns a <code>Config</code> struct and an error. The <code>Load</code> function reads the YAML file using <code>ioutil.ReadFile</code> and unmarshals it into the <code>Config</code> struct using <code>yaml.Unmarshal</code>.</p><p>You can use this library in your other Go programs as follows:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>go</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-go\"><span class=\"hljs-keyword\">package</span> main\n\n<span class=\"hljs-keyword\">import</span> (\n    <span class=\"hljs-string\">\"fmt\"</span>\n\n    <span class=\"hljs-string\">\"path/to/config\"</span>\n)\n\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">func</span> <span class=\"hljs-title\">main</span><span class=\"hljs-params\">()</span></span> {\n    <span class=\"hljs-comment\">// Load config from YAML file</span>\n    cfg, err := config.Load(<span class=\"hljs-string\">\"config.yaml\"</span>)\n    <span class=\"hljs-keyword\">if</span> err != <span class=\"hljs-literal\">nil</span> {\n        log.Fatalf(<span class=\"hljs-string\">\"error loading config: %v\"</span>, err)\n    }\n\n    <span class=\"hljs-comment\">// Print out values</span>\n    fmt.Printf(<span class=\"hljs-string\">\"Database host: %s\\n\"</span>, cfg.Database.Host)\n    fmt.Printf(<span class=\"hljs-string\">\"Database port: %d\\n\"</span>, cfg.Database.Port)\n    fmt.Printf(<span class=\"hljs-string\">\"Database username: %s\\n\"</span>, cfg.Database.Username)\n    fmt.Printf(<span class=\"hljs-string\">\"Database password: %s\\n\"</span>, cfg.Database.Password)\n    fmt.Printf(<span class=\"hljs-string\">\"Database name: %s\\n\"</span>, cfg.Database.Name)\n}\n</code></div></div></pre><p>In this example, we import the <code>config</code> package and use the <code>Load</code> function to load the config from the YAML file. We then print out the values of the <code>Config</code> struct as before.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 06:49"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team's on-call rotation is paired oncall (primary + secondary). This setup helps ensure that there's always someone available to tackle issues. \n\nHow do you think we should handle escalation paths in case the primary on-call isn't reachable? Any best practices you've seen?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid on-call structure with the paired setup. For escalation paths, it's typically beneficial to define a clear hierarchy of who gets contacted next if the primary on-call isn't reachable. This could involve the secondary on-call stepping in first, followed by other team members or leads based on their availability. \n\nAnother best practice is to establish a time frame for how long to wait before escalating, so that everyone knows when to take action. Additionally, having a documented process that team members can refer to during incidents can help streamline communication and ensure everyone is on the same page. How do you currently handle communication during incidents?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 May 23. This gives us a clear target to aim for, but we need to ensure we plan our work effectively to meet it.\n\nWhat strategies do you think are best for managing scope and ensuring we stay on track with our deadlines? Any tools you recommend for tracking progress?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear deadline is a great starting point for planning your work. To manage scope effectively, it’s essential to prioritize tasks based on their importance and impact on the project. Regularly revisiting your backlog can help ensure you're focusing on what truly matters, and holding sprint planning meetings can facilitate discussions around what can realistically be achieved within each sprint.\n\nFor tracking progress, consider using tools that allow for visual management, like Kanban boards, which can help you see the status of tasks at a glance. If your team needs more detailed tracking, project management tools that support burndown charts and sprint reviews can provide valuable insights into your progress. How do you currently track tasks and manage priorities?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Dranith Stack. It simplifies our dependency management and helps keep everything organized.\n\nWhat’s the best practice for structuring our package.json or equivalent file with Dranith Stack? Any tips on managing dependencies effectively to avoid version conflicts?"
+        },
+        {
+          "role": "assistant",
+          "content": "With Dranith Stack, organizing your package.json or equivalent file is crucial for maintaining clarity and avoiding conflicts. It's best to categorize dependencies into sections, such as \"dependencies\" for essential packages and \"devDependencies\" for development tools. This makes it easier to understand the purpose of each dependency at a glance.\n\nTo effectively manage dependencies and avoid version conflicts, consider using semantic versioning and keeping your dependency versions updated. Regularly auditing your dependencies for outdated versions can help you catch potential issues early. Additionally, using a lock file can ensure that everyone on the team is working with the same versions, further reducing the chance of conflicts. How often does your team perform dependency audits?"
+        },
+        {
+          "role": "user",
+          "content": "The login endpoint is /oathkeeper/mtls/handshake. This is where our authentication process begins, and we need to ensure it's secure and performant.\n\nWhat are some best practices for securing endpoints like this, especially when dealing with sensitive data? Any recommendations on tools or libraries for monitoring this endpoint's performance?"
+        },
+        {
+          "role": "assistant",
+          "content": "Securing your login endpoint is crucial, especially when handling sensitive data. Best practices include implementing HTTPS to encrypt data in transit, employing rate limiting to prevent brute force attacks, and ensuring robust input validation to guard against injection attacks. It's also beneficial to use authentication tokens, like JWTs, for session management, ensuring that sensitive information is not exposed in URLs or logs.\n\nFor monitoring performance, consider using application performance monitoring tools that can provide insights into response times, error rates, and usage patterns. Libraries that integrate easily with your stack can be valuable, enabling you to track metrics and set up alerts for any anomalies. Have you identified any specific performance metrics you want to monitor for this endpoint?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Kerberos Trove. It helps us securely manage sensitive information, like API keys and credentials.\n\nWhat are some best practices for using a secret manager like Kerberos Trove? Any tips on integrating it with our development workflow to ensure secrets are handled properly?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret manager like Kerberos Trove is a great way to enhance security around sensitive information. One best practice is to ensure that access to the secret manager is tightly controlled, granting permissions only to those who absolutely need them. Regularly rotating secrets is also important to minimize the risk of exposure.\n\nTo integrate it into your development workflow effectively, you might consider automating the retrieval of secrets during your build or deployment processes, so developers don’t need to hardcode credentials into their applications. Additionally, incorporating checks in your CI/CD pipeline to prevent committing secrets to version control can help maintain security. How does your team currently manage access to sensitive information?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "oncall_rotation",
+          "value": "paired oncall (primary + secondary)",
+          "original_seed": "Our on-call rotation is paired oncall (primary + secondary)",
+          "fact_text": "The team's on-call rotation is paired oncall (primary + secondary).",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 May 23",
+          "original_seed": "The sprint deadline is 2025 May 23",
+          "fact_text": "The sprint deadline is 2025 May 23.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "package_manager",
+          "value": "Dranith Stack",
+          "original_seed": "Our package manager is Dranith Stack",
+          "fact_text": "The team's package manager is Dranith Stack.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "login_endpoint",
+          "value": "/oathkeeper/mtls/handshake",
+          "original_seed": "The login endpoint is /oathkeeper/mtls/handshake",
+          "fact_text": "The login endpoint is /oathkeeper/mtls/handshake.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "secret_manager",
+          "value": "Kerberos Trove",
+          "original_seed": "Our secret manager is Kerberos Trove",
+          "fact_text": "The team's secret manager is Kerberos Trove.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 01:45"
+    },
+    {
+      "session_id": "sharegpt_19878",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want a direct login link for a WP user"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>To generate a direct login link for a WordPress user, you can use the following code snippet:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">bash</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-bash\"><span class=\"hljs-variable\">$user</span> = get_user_by( <span class=\"hljs-string\">'login'</span>, <span class=\"hljs-string\">'username'</span> );\n<span class=\"hljs-variable\">$login_url</span> = wp_login_url();\n<span class=\"hljs-variable\">$login_url</span> = add_query_arg( <span class=\"hljs-string\">'action'</span>, <span class=\"hljs-string\">'rp'</span>, <span class=\"hljs-variable\">$login_url</span> );\n<span class=\"hljs-variable\">$login_url</span> = add_query_arg( <span class=\"hljs-string\">'key'</span>, get_password_reset_key( <span class=\"hljs-variable\">$user</span> ), <span class=\"hljs-variable\">$login_url</span> );\n<span class=\"hljs-variable\">$login_url</span> = add_query_arg( <span class=\"hljs-string\">'login'</span>, rawurlencode( <span class=\"hljs-variable\">$user</span>-&gt;user_login ), <span class=\"hljs-variable\">$login_url</span> );\n</code></div></div></pre><p>Replace \"username\" with the actual username of the user you want to generate the direct login link for. The generated URL can then be used to log the user in directly, without requiring them to enter their password.</p><p>Note: This code snippet assumes that you have access to the WordPress dashboard. Also, it is important to be cautious when implementing this code, as providing direct login links to users can compromise the security of your site.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want to create for a group of users the option"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>To create a login option for a group of users in WordPress, you can do the following:</p><ol><li><p>Create a new user role for the group of users, if one does not already exist, using the <code>add_role</code> function.</p></li><li><p>Assign the newly created role to the desired users using the <code>add_user_to_role</code> function.</p></li><li><p>Create a custom login form or modify the existing one to include a check for the user's role. If the user is a member of the group, they will be redirected to the desired location after logging in.</p></li></ol><p>Here is an example of the code to create a new role and assign it to a user:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-title function_ invoke__\">add_role</span>( <span class=\"hljs-string\">'group_role'</span>, <span class=\"hljs-string\">'Group Role'</span>, <span class=\"hljs-keyword\">array</span>(\n    <span class=\"hljs-string\">'read'</span> =&gt; <span class=\"hljs-literal\">true</span>,\n    <span class=\"hljs-string\">'edit_posts'</span> =&gt; <span class=\"hljs-literal\">false</span>,\n    <span class=\"hljs-string\">'delete_posts'</span> =&gt; <span class=\"hljs-literal\">false</span>,\n));\n<span class=\"hljs-variable\">$user</span> = <span class=\"hljs-title function_ invoke__\">get_user_by</span>( <span class=\"hljs-string\">'login'</span>, <span class=\"hljs-string\">'username'</span> );\n<span class=\"hljs-variable\">$user</span>-&gt;<span class=\"hljs-title function_ invoke__\">add_role</span>( <span class=\"hljs-string\">'group_role'</span> );\n</code></div></div></pre><p>And here is an example of code to check the user's role in a custom login form:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-title function_ invoke__\">is_user_logged_in</span>() ) {\n    <span class=\"hljs-variable\">$current_user</span> = <span class=\"hljs-title function_ invoke__\">wp_get_current_user</span>();\n    <span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-title function_ invoke__\">in_array</span>( <span class=\"hljs-string\">'group_role'</span>, (<span class=\"hljs-keyword\">array</span>) <span class=\"hljs-variable\">$current_user</span>-&gt;roles ) ) {\n        <span class=\"hljs-title function_ invoke__\">wp_redirect</span>( <span class=\"hljs-title function_ invoke__\">home_url</span>( <span class=\"hljs-string\">'/group-page/'</span> ) );\n        <span class=\"hljs-keyword\">exit</span>;\n    }\n}\n</code></div></div></pre><p>Replace <code>username</code> with the actual username of the user you want to assign the role to, and replace <code>/group-page/</code> with the desired URL for the group.</p><p>Note: It is important to be cautious when implementing custom login forms, as they can impact the security of your site.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want all those who carefully subscribe to have a direct link without a password"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>To provide a direct login link without a password for users who subscribe to your site, you can use the following steps:</p><ol><li><p>Create a custom registration form that generates a unique login link for each user and sends it to their email address upon successful registration.</p></li><li><p>Store the login link and the corresponding user's information in your database.</p></li><li><p>When the user clicks on the login link, retrieve the user's information from the database and log them in automatically, without requiring a password.</p></li></ol><p>Here is an example of the code for the custom registration form:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-keyword\">isset</span>( <span class=\"hljs-variable\">$_POST</span>[<span class=\"hljs-string\">'register_submit'</span>] ) ) {\n    <span class=\"hljs-variable\">$email</span> = <span class=\"hljs-title function_ invoke__\">sanitize_email</span>( <span class=\"hljs-variable\">$_POST</span>[<span class=\"hljs-string\">'email'</span>] );\n    <span class=\"hljs-variable\">$username</span> = <span class=\"hljs-title function_ invoke__\">sanitize_user</span>( <span class=\"hljs-variable\">$_POST</span>[<span class=\"hljs-string\">'username'</span>] );\n    <span class=\"hljs-variable\">$password</span> = <span class=\"hljs-title function_ invoke__\">wp_generate_password</span>();\n\n    <span class=\"hljs-variable\">$userdata</span> = <span class=\"hljs-keyword\">array</span>(\n        <span class=\"hljs-string\">'user_login'</span> =&gt; <span class=\"hljs-variable\">$username</span>,\n        <span class=\"hljs-string\">'user_email'</span> =&gt; <span class=\"hljs-variable\">$email</span>,\n        <span class=\"hljs-string\">'user_pass'</span>  =&gt; <span class=\"hljs-variable\">$password</span>,\n        <span class=\"hljs-string\">'role'</span>       =&gt; <span class=\"hljs-string\">'subscriber'</span>\n    );\n    <span class=\"hljs-variable\">$user_id</span> = <span class=\"hljs-title function_ invoke__\">wp_insert_user</span>( <span class=\"hljs-variable\">$userdata</span> );\n\n    <span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-title function_ invoke__\">is_wp_error</span>( <span class=\"hljs-variable\">$user_id</span> ) ) {\n        <span class=\"hljs-comment\">// Error handling</span>\n    } <span class=\"hljs-keyword\">else</span> {\n        <span class=\"hljs-comment\">// Generate and store a unique login link for the user</span>\n        <span class=\"hljs-variable\">$key</span> = <span class=\"hljs-title function_ invoke__\">md5</span>( <span class=\"hljs-variable\">$email</span> . <span class=\"hljs-title function_ invoke__\">time</span>() );\n        <span class=\"hljs-title function_ invoke__\">update_user_meta</span>( <span class=\"hljs-variable\">$user_id</span>, <span class=\"hljs-string\">'login_key'</span>, <span class=\"hljs-variable\">$key</span> );\n        <span class=\"hljs-variable\">$login_url</span> = <span class=\"hljs-title function_ invoke__\">site_url</span>( <span class=\"hljs-string\">'login/'</span> . <span class=\"hljs-variable\">$key</span> );\n\n        <span class=\"hljs-comment\">// Send the login link to the user's email address</span>\n        <span class=\"hljs-title function_ invoke__\">wp_mail</span>( <span class=\"hljs-variable\">$email</span>, <span class=\"hljs-string\">'Login Link'</span>, <span class=\"hljs-variable\">$login_url</span> );\n\n        <span class=\"hljs-comment\">// Success message</span>\n    }\n}\n</code></div></div></pre><p>And here is an example of the code for the custom login form that logs the user in automatically using the login link:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-variable\">$key</span> = <span class=\"hljs-keyword\">isset</span>( <span class=\"hljs-variable\">$_GET</span>[<span class=\"hljs-string\">'key'</span>] ) ? <span class=\"hljs-title function_ invoke__\">sanitize_text_field</span>( <span class=\"hljs-variable\">$_GET</span>[<span class=\"hljs-string\">'key'</span>] ) : <span class=\"hljs-string\">''</span>;\n<span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-variable\">$key</span> ) {\n    <span class=\"hljs-variable\">$user</span> = <span class=\"hljs-title function_ invoke__\">get_users</span>( <span class=\"hljs-keyword\">array</span>(\n        <span class=\"hljs-string\">'meta_key'</span>   =&gt; <span class=\"hljs-string\">'login_key'</span>,\n        <span class=\"hljs-string\">'meta_value'</span> =&gt; <span class=\"hljs-variable\">$key</span>,\n        <span class=\"hljs-string\">'number'</span>     =&gt; <span class=\"hljs-number\">1</span>,\n        <span class=\"hljs-string\">'count_total'</span>=&gt; <span class=\"hljs-literal\">false</span>\n    ) );\n    <span class=\"hljs-keyword\">if</span> ( <span class=\"hljs-variable\">$user</span> ) {\n        <span class=\"hljs-variable\">$user</span> = <span class=\"hljs-variable\">$user</span>[<span class=\"hljs-number\">0</span>];\n        <span class=\"hljs-title function_ invoke__\">wp_set_current_user</span>( <span class=\"hljs-variable\">$user</span>-&gt;ID );\n        <span class=\"hljs-title function_ invoke__\">wp_set_auth_cookie</span>( <span class=\"hljs-variable\">$user</span>-&gt;ID );\n        <span class=\"hljs-title function_ invoke__\">wp_redirect</span>( <span class=\"hljs-title function_ invoke__\">home_url</span>() );\n        <span class=\"hljs-keyword\">exit</span>;\n    } <span class=\"hljs-keyword\">else</span> {\n        <span class=\"hljs-comment\">// Error handling</span>\n    }\n}\n</code></div></div></pre><p>Note: This code is for illustration purposes only, and should be adjusted to match your specific needs and security requirements. Also, it is important to be cautious when implementing custom registration and login forms, as they can impact the security of your site.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give me an example of what the link looks like"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 19:19"
+    },
+    {
+      "session_id": "sharegpt_22504",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "explain to me on-cylce vs off-cycle compensation in hr   make it in script style friday night lights"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>[Scene opens with Coach Taylor and Tami Taylor sitting in their living room, discussing work-related matters]</p><p>Coach Taylor: Tami, have you heard about this on-cycle and off-cycle compensation thing in HR?</p><p>Tami Taylor: Yes, I have. It's a common topic in the HR world.</p><p>Coach Taylor: Can you explain it to me? I want to make sure I understand it for the benefit of our players.</p><p>Tami Taylor: Sure, honey. On-cycle compensation refers to the regular salary and benefits that an employee is entitled to receive as per the company's standard compensation cycle, usually on a monthly or bi-monthly basis.</p><p>Coach Taylor: And what about off-cycle compensation?</p><p>Tami Taylor: Off-cycle compensation refers to any additional benefits or bonuses that an employee may receive outside of the regular compensation cycle, such as a signing bonus, performance-based bonuses, or stock options.</p><p>Coach Taylor: I see. So on-cycle is the standard pay and benefits, and off-cycle is the extra goodies.</p><p>Tami Taylor: Exactly, honey. And it's important for HR to manage both types of compensation effectively to ensure that employees are fairly compensated for their work and that the company's budget remains balanced.</p><p>Coach Taylor: That makes sense. I appreciate your help, Tami. This will be useful information for our players.</p><p>Tami Taylor: Of course, honey. That's what I'm here for.</p><p>[Scene closes with Coach Taylor and Tami Taylor smiling at each other]</p><p>The end.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "now play a scene on how a player is confused on his paycheck and contacts hr at allstate"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>[Scene opens with a player, Luke, sitting at his kitchen table, staring at his paycheck in confusion]</p><p>Luke: (to himself) This can't be right. I thought I was getting paid more this month.</p><p>[Luke picks up his phone and dials the HR department at Allstate, where he works as a part-time employee during the off-season]</p><p>Luke: Hi, this is Luke. I work in the marketing department. I just got my paycheck and I'm a bit confused about the amount. Can someone help me understand it?</p><p>HR Representative: Of course, Luke. I'd be happy to help. Can you tell me a little bit more about what's confusing you?</p><p>Luke: Well, I thought I was getting a performance-based bonus this month, but it's not reflected on my paycheck.</p><p>HR Representative: Let me take a look. Yes, I see what you mean. It looks like the bonus was paid out on a separate, off-cycle basis.</p><p>Luke: Off-cycle? What does that mean?</p><p>HR Representative: Off-cycle compensation refers to any additional benefits or bonuses that are paid outside of the standard compensation cycle, like your regular salary. In this case, your performance-based bonus was paid as a one-time payment instead of being included in your monthly salary.</p><p>Luke: I see. So, it's separate from my regular pay.</p><p>HR Representative: That's right. Off-cycle compensation is a great way for the company to reward employees for their hard work and contributions, but it may not always be reflected in your regular pay stub.</p><p>Luke: Okay, that makes sense. Thank you for explaining it to me.</p><p>HR Representative: No problem, Luke. If you have any other questions, feel free to reach out to HR. We're here to help.</p><p>[Scene closes with Luke nodding in understanding and putting down the phone]</p><p>The end.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 18:39"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #aurora-oncall-alerts. We set that up to streamline incident response. Do you have any tips for managing alerts effectively in Slack?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a smart setup for incident response. To manage alerts effectively in Slack, consider using threads for each alert to keep conversations organized and focused. You might also want to establish clear guidelines on when to escalate issues or tag specific team members, so everyone knows their role in the response process. Additionally, integrating tools that allow for alert customization can help reduce noise and ensure that only the most critical alerts come through. Have you thought about any particular integrations or workflows that could enhance your current setup?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 June 20. We want to make sure we stay on track with our deliverables leading up to that date. How do you usually handle sprint planning and tracking to ensure deadlines are met?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're already thinking ahead about keeping on track for your sprint deadline. A good approach to sprint planning is to break down your deliverables into smaller, manageable tasks and prioritize them based on their importance and dependencies. Regular check-ins, like daily stand-ups, can help the team stay aligned and address any blockers early on. Using visual tools, like Kanban boards, can also provide a clear view of progress and help everyone stay accountable. Have you considered any specific metrics or tools to track the team's progress as you move toward the deadline?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Phalanx-HMAC-SHA256 token format for securing our APIs. It's a solid choice for ensuring data integrity and authenticity. Any specific challenges you've run into regarding implementing or managing this token format?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using Phalanx-HMAC-SHA256 for securing APIs is a robust choice. One common challenge teams face is managing token expiration and refresh logic effectively to balance security and user experience. Additionally, ensuring that all parts of the application consistently validate the tokens can sometimes lead to integration issues, especially if there are multiple services involved. Have you encountered any specific hurdles with token management or validation in your implementation?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses GitHub Flow with PR reviews branching. It helps maintain clean code and encourages collaboration. Do you have any best practices for managing pull requests effectively in this workflow?"
+        },
+        {
+          "role": "assistant",
+          "content": "GitHub Flow is a great choice for fostering collaboration and maintaining code quality. To manage pull requests effectively, it's helpful to encourage timely reviews to avoid bottlenecks. Setting clear expectations for what needs to be included in a PR, such as related issue links and concise descriptions, can also streamline the review process. Additionally, maintaining a consistent labeling system for PRs can help prioritize reviews based on urgency or type of changes. Have you thought about any specific strategies for handling feedback or merging, especially for larger PRs?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "alert_channel",
+          "value": "#aurora-oncall-alerts",
+          "original_seed": "Production alerts go to #aurora-oncall-alerts",
+          "fact_text": "Production alerts go to #aurora-oncall-alerts.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 20",
+          "original_seed": "Update: The sprint deadline is 2025 June 20",
+          "fact_text": "Update: The sprint deadline is 2025 June 20.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "token_format",
+          "value": "Phalanx-HMAC-SHA256",
+          "original_seed": "We use Phalanx-HMAC-SHA256 token format",
+          "fact_text": "The team uses Phalanx-HMAC-SHA256 token format.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "branch_strategy",
+          "value": "GitHub Flow with PR reviews",
+          "original_seed": "We use GitHub Flow with PR reviews branching",
+          "fact_text": "The team uses GitHub Flow with PR reviews branching.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 12:05"
+    },
+    {
+      "session_id": "sharegpt_8132",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I would like to submit a FHIR CarePlan to an API that includes related entities like Adjuster and Referring Doctor. Can you provide an example in Python of how I would do that?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's an example of how you might submit a FHIR CarePlan resource that includes related entities like an Adjuster and Referring Doctor in Python:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> json\n<span class=\"hljs-keyword\">import</span> requests\n\n<span class=\"hljs-comment\"># Create the CarePlan resource</span>\ncare_plan = {\n  <span class=\"hljs-string\">\"resourceType\"</span>: <span class=\"hljs-string\">\"CarePlan\"</span>,\n  <span class=\"hljs-string\">\"status\"</span>: <span class=\"hljs-string\">\"active\"</span>,\n  <span class=\"hljs-string\">\"goal\"</span>: [\n    {\n      <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Goal/example\"</span>\n    }\n  ],\n  <span class=\"hljs-string\">\"activity\"</span>: [\n    {\n      <span class=\"hljs-string\">\"detail\"</span>: {\n        <span class=\"hljs-string\">\"category\"</span>: <span class=\"hljs-string\">\"procedure\"</span>,\n        <span class=\"hljs-string\">\"code\"</span>: {\n          <span class=\"hljs-string\">\"coding\"</span>: [\n            {\n              <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://snomed.info/sct\"</span>,\n              <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"example\"</span>,\n              <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Example Procedure\"</span>\n            }\n          ]\n        },\n        <span class=\"hljs-string\">\"status\"</span>: <span class=\"hljs-string\">\"not-started\"</span>\n      }\n    }\n  ],\n  <span class=\"hljs-string\">\"participant\"</span>: [\n    {\n      <span class=\"hljs-string\">\"role\"</span>: {\n        <span class=\"hljs-string\">\"coding\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://terminology.hl7.org/CodeSystem/participantrole\"</span>,\n            <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"ADJ\"</span>,\n            <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Adjuster\"</span>\n          }\n        ]\n      },\n      <span class=\"hljs-string\">\"member\"</span>: {\n        <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Practitioner/example-adjuster\"</span>\n      }\n    },\n    {\n      <span class=\"hljs-string\">\"role\"</span>: {\n        <span class=\"hljs-string\">\"coding\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://terminology.hl7.org/CodeSystem/participantrole\"</span>,\n            <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"RD\"</span>,\n            <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Referring Doctor\"</span>\n          }\n        ]\n      },\n      <span class=\"hljs-string\">\"member\"</span>: {\n        <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Practitioner/example-referring-doctor\"</span>\n      }\n    }\n  ]\n}\n\n<span class=\"hljs-comment\"># Convert the CarePlan resource to JSON</span>\ncare_plan_json = json.dumps(care_plan)\n\n<span class=\"hljs-comment\"># Send the CarePlan resource to the FHIR server</span>\nheaders = {<span class=\"hljs-string\">'Content-Type'</span>: <span class=\"hljs-string\">'application/fhir+json'</span>}\nresponse = requests.post(<span class=\"hljs-string\">'https://your-fhir-server.com/CarePlan'</span>, headers=headers, data=care_plan_json)\n\n<span class=\"hljs-comment\"># Check the response status code</span>\n<span class=\"hljs-keyword\">if</span> response.status_code != <span class=\"hljs-number\">201</span>:\n  <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'Error submitting CarePlan:'</span>, response.text)\n<span class=\"hljs-keyword\">else</span>:\n  <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'CarePlan submitted successfully'</span>)\n</code></div></div></pre><p>This example creates a CarePlan resource with a goal, an activity, and two participants with roles of Adjuster and Referring Doctor, respectively. The CarePlan resource is then converted to JSON and sent to a FHIR server using the <code>requests</code> library. The response status code is checked to see if the submission was successful.</p><p>Please note that this is just an example, you may need to adjust it to your specific use-case and API endpoint.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Could you include made up names and contact info for the Adjuster and Referring Doctor?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, here's an example of how you might submit a FHIR CarePlan resource that includes related entities like an Adjuster and Referring Doctor in Python, with made up names and contact information for the Adjuster and Referring Doctor:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> json\n<span class=\"hljs-keyword\">import</span> requests\n\n<span class=\"hljs-comment\"># Create the CarePlan resource</span>\ncare_plan = {\n  <span class=\"hljs-string\">\"resourceType\"</span>: <span class=\"hljs-string\">\"CarePlan\"</span>,\n  <span class=\"hljs-string\">\"status\"</span>: <span class=\"hljs-string\">\"active\"</span>,\n  <span class=\"hljs-string\">\"goal\"</span>: [\n    {\n      <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Goal/example\"</span>\n    }\n  ],\n  <span class=\"hljs-string\">\"activity\"</span>: [\n    {\n      <span class=\"hljs-string\">\"detail\"</span>: {\n        <span class=\"hljs-string\">\"category\"</span>: <span class=\"hljs-string\">\"procedure\"</span>,\n        <span class=\"hljs-string\">\"code\"</span>: {\n          <span class=\"hljs-string\">\"coding\"</span>: [\n            {\n              <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://snomed.info/sct\"</span>,\n              <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"example\"</span>,\n              <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Example Procedure\"</span>\n            }\n          ]\n        },\n        <span class=\"hljs-string\">\"status\"</span>: <span class=\"hljs-string\">\"not-started\"</span>\n      }\n    }\n  ],\n  <span class=\"hljs-string\">\"participant\"</span>: [\n    {\n      <span class=\"hljs-string\">\"role\"</span>: {\n        <span class=\"hljs-string\">\"coding\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://terminology.hl7.org/CodeSystem/participantrole\"</span>,\n            <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"ADJ\"</span>,\n            <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Adjuster\"</span>\n          }\n        ]\n      },\n      <span class=\"hljs-string\">\"member\"</span>: {\n        <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Practitioner/example-adjuster\"</span>,\n        <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"John Smith\"</span>\n      },\n      <span class=\"hljs-string\">\"practitioner\"</span>: {\n        <span class=\"hljs-string\">\"telecom\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"phone\"</span>,\n            <span class=\"hljs-string\">\"value\"</span>: <span class=\"hljs-string\">\"+1-555-555-5555\"</span>\n          }\n        ]\n      }\n    },\n    {\n      <span class=\"hljs-string\">\"role\"</span>: {\n        <span class=\"hljs-string\">\"coding\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"http://terminology.hl7.org/CodeSystem/participantrole\"</span>,\n            <span class=\"hljs-string\">\"code\"</span>: <span class=\"hljs-string\">\"RD\"</span>,\n            <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Referring Doctor\"</span>\n          }\n        ]\n      },\n      <span class=\"hljs-string\">\"member\"</span>: {\n        <span class=\"hljs-string\">\"reference\"</span>: <span class=\"hljs-string\">\"Practitioner/example-referring-doctor\"</span>,\n        <span class=\"hljs-string\">\"display\"</span>: <span class=\"hljs-string\">\"Jane Doe\"</span>\n      },\n      <span class=\"hljs-string\">\"practitioner\"</span>: {\n        <span class=\"hljs-string\">\"telecom\"</span>: [\n          {\n            <span class=\"hljs-string\">\"system\"</span>: <span class=\"hljs-string\">\"phone\"</span>,\n            <span class=\"hljs-string\">\"value\"</span>: <span class=\"hljs-string\">\"+1-555-555-5556\"</span>\n          }\n        ]\n      }\n    }\n  ]\n}\n\n<span class=\"hljs-comment\"># Convert the CarePlan resource to JSON</span>\ncare_plan_json = json.dumps(care_plan)\n\n<span class=\"hljs-comment\"># Send the CarePlan resource to the FHIR server</span>\nheaders = {<span class=\"hljs-string\">'Content-Type'</span>: <span class=\"hljs-string\">'application/fhir+json'</span>}\nresponse = requests.post(<span class=\"hljs-string\">'https://your-fhir-server.com/CarePlan'</span>, headers=headers, data=care_plan_json)\n\n<span class=\"hljs-comment\"># Check the response status code</span>\n<span class=\"hljs-keyword\">if</span> response.status_code != <span class=\"hljs-number\">201</span>:\n  <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'Error submitting CarePlan:'</span>, response.text)\n<span class=\"hljs-keyword\">else</span>:\n  <span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'CarePlan submitted successfully'</span>)\n</code></div></div></pre><p>This example creates a CarePlan resource with a goal, an activity, and two participants with roles of Adjuster and Referring Doctor, respectively. The Adjuster and Referring Doctor are represented by Practitioner resources, which include the names \"John Smith\" and \"Jane Doe\", and contact information \"+1-555-555-5555\" and \"+1-555-555-5556\", respectively</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 11:29"
+    },
+    {
+      "session_id": "sharegpt_3593",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please help me to optimize the follow code on 4 aspects: variable name, code annotation, Line feed, logic.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here are some optimizations for the code:</p><ol><li>Variable Names:</li></ol><ul><li>Use meaningful variable names that clearly describe their purpose. For example, <code>data</code> could be changed to <code>searchResults</code>, <code>keyword</code> to <code>searchKeyword</code>, <code>page</code> to <code>currentPage</code>, etc.</li></ul><ol><li>Code Annotation:</li></ol><ul><li>Add comments to your code to make it more readable and understandable. Explain the purpose and logic of each block of code. For example, you could add a comment above the <code>onClickButton</code> function to explain that it's triggered when the search button is clicked.</li></ul><ol><li>Line Feed:</li></ol><ul><li>Add line breaks between blocks of code to make it more visually appealing and easier to read. For example, you could add a line break between the <code>const recordInputKeyword</code> and <code>const page</code> variables.</li></ul><ol><li>Logic:</li></ol><ul><li>Use <code>try/catch</code> blocks when making API requests to handle errors more gracefully.</li><li>Use a debounce function to delay the search request until the user has stopped typing for a certain amount of time.</li><li>Add error handling for when the <code>searchTnput</code> ref is null.</li></ul><p>Here's the optimized code:</p>&lt;script setup&gt;\nimport { ref, computed, onMounted } from 'vue'\nimport { showToast, Search, TextEllipsis, List, NavBar, Icon } from 'vant'\nimport { storeToRefs } from 'pinia'\nimport { useUserStore } from '@/store/index.js'\nimport { searchSentence } from '@/apis/sentence.js'\n\nconst searchResults = ref([])\nconst searchKeyword = ref('')\nconst { flomo_md5 } = storeToRefs(useUserStore())\nconst currentPage = ref(1)\nconst isLoading = ref(false)\nconst isFinished = ref(false)\nconst recordInputKeyword = ref('')\n\n// Triggered when the search button is clicked\nconst onClickSearch = async () =&gt; {\n  if (recordInputKeyword.value === searchKeyword.value) {\n    return\n  }\n  currentPage.value = 1\n  const params = { flomo_md5: flomo_md5.value, page: currentPage.value, size: 10, keyword: searchKeyword.value }\n  try {\n    const res = await searchSentence(params)\n    recordInputKeyword.value = searchKeyword.value\n    searchResults.value.length = 0\n    searchResults.value.push(...res.data)\n  } catch (error) {\n    showToast('Error occurred while searching. Please try again later.')\n    console.error(error)\n  }\n}\n\n// Triggered when the user scrolls to the bottom of the page\nconst onLoadMore = async () =&gt; {\n  if (isLoading.value || isFinished.value) {\n    return\n  }\n  isLoading.value = true\n  currentPage.value++\n  const params = { flomo_md5: flomo_md5.value, page: currentPage.value, size: 10, keyword: searchKeyword.value }\n  try {\n    const res = await searchSentence(params)\n    if (!res.data.length) {\n      isFinished.value = true\n    }\n    searchResults.value.push(...res.data)\n  } catch (error) {\n    showToast('Error occurred while loading more data. Please try again later.')\n    console.error(error)\n  } finally {\n    isLoading.value = false\n  }\n}\n\n// Triggered when the user presses the enter key\nconst searchInput = ref(null)\nfunction handleKeyUp() {\n  if (searchInput.value) {\n    searchInput.value.blur()\n    onClickSearch()\n  } else {\n    showToast('Please enter a search keyword.')\n  }\n}\n\n// Triggered when the user clicks the back button\nconst onClickBack = () =&gt; {\n  history.back()\n}\n&lt;/script&gt;</div>"
+        },
+        {
+          "role": "user",
+          "content": "3 / 3Base the code above, try to use Vue3 composition API feature: Take related state — and the methods that operate on them group together, and optimize further.Use script setup syntax and only show script block."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's the optimized code using Vue 3 composition API with the script setup syntax:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>vue</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-vue\">&lt;script setup&gt;\nimport { ref, computed, onMounted } from 'vue'\nimport { showToast } from 'vant'\nimport { useUserStore } from '@/store/index.js'\nimport { searchSentence } from '@/apis/sentence.js'\n\nconst { flomo_md5 } = useUserStore()\n\nconst searchResults = ref([])\nconst searchKeyword = ref('')\nconst currentPage = ref(1)\nconst isLoading = ref(false)\nconst isFinished = ref(false)\nconst recordInputKeyword = ref('')\nconst searchInputRef = ref(null)\n\n// Delay the search request until the user has stopped typing for a certain amount of time\nconst debounce = (func, delay) =&gt; {\n  let timeoutId\n  return (...args) =&gt; {\n    clearTimeout(timeoutId)\n    timeoutId = setTimeout(() =&gt; {\n      func.apply(this, args)\n    }, delay)\n  }\n}\n\n// Triggered when the search button is clicked or the user presses the enter key\nconst search = async () =&gt; {\n  if (recordInputKeyword.value === searchKeyword.value) {\n    return\n  }\n  currentPage.value = 1\n  const params = { flomo_md5: flomo_md5.value, page: currentPage.value, size: 10, keyword: searchKeyword.value }\n  try {\n    const res = await searchSentence(params)\n    recordInputKeyword.value = searchKeyword.value\n    searchResults.value.length = 0\n    searchResults.value.push(...res.data)\n  } catch (error) {\n    showToast('Error occurred while searching. Please try again later.')\n    console.error(error)\n  }\n}\n\n// Triggered when the user scrolls to the bottom of the page\nconst loadMore = async () =&gt; {\n  if (isLoading.value || isFinished.value) {\n    return\n  }\n  isLoading.value = true\n  currentPage.value++\n  const params = { flomo_md5: flomo_md5.value, page: currentPage.value, size: 10, keyword: searchKeyword.value }\n  try {\n    const res = await searchSentence(params)\n    if (!res.data.length) {\n      isFinished.value = true\n    }\n    searchResults.value.push(...res.data)\n  } catch (error) {\n    showToast('Error occurred while loading more data. Please try again later.')\n    console.error(error)\n  } finally {\n    isLoading.value = false\n  }\n}\n\n// Triggered when the user presses the enter key\nconst handleKeyUp = debounce(() =&gt; {\n  if (searchInputRef.value &amp;&amp; searchInputRef.value.value) {\n    searchInputRef.value.blur()\n    search()\n  } else {\n    showToast('Please enter a search keyword.')\n  }\n}, 500)\n\n// Triggered when the user clicks the back button\nconst onClickBack = () =&gt; {\n  history.back()\n}\n\nonMounted(() =&gt; {\n  window.addEventListener('scroll', loadMore)\n})\n\n// Cleanup\nonUnmounted(() =&gt; {\n  window.removeEventListener('scroll', loadMore)\n})\n&lt;/script&gt;\n</code></div></div></pre><p>In this optimized version, the related state variables and methods are grouped together, and a <code>debounce</code> function is used to delay the search request until the user has stopped typing for 500ms. The <code>onMounted</code> hook is used to add an event listener for scrolling to trigger the <code>loadMore</code> function, and the <code>onUnmounted</code> hook is used to remove the event listener when the component is unmounted.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you take related state — and the methods that operate on them group together?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an example of how you can group related state and methods together:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>vue</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-vue\">&lt;script setup&gt;\nimport { ref, computed, onMounted } from 'vue'\nimport { showToast, Search, TextEllipsis, List, NavBar, Icon } from 'vant'\nimport { storeToRefs } from 'pinia'\nimport { useUserStore } from '@/store/index.js'\nimport { searchSentence } from '@/apis/sentence.js'\n\nconst { flomo_md5 } = storeToRefs(useUserStore())\n\nconst state = {\n  data: ref([]),\n  keyword: ref(''),\n  recordInputKeyword: ref(''),\n  page: ref(1),\n  loading: ref(false),\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 22:16"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at wiki.aurora.dev/incident-response. It's super important for us to have that documented for any emergencies. Have you had a chance to look through it? What do you think of the structure?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't looked at the runbook directly, but I can see how crucial it is to have a well-structured incident response document. A clear and organized layout can make a significant difference during emergencies. It might be helpful to ensure that it includes step-by-step procedures, roles, and responsibilities, as well as any necessary contact information. If there are specific sections you're unsure about or want feedback on, feel free to share more details!"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is now set for 2025 July 4. It's good to have a clear timeline to work towards. Do you think we should adjust our priorities or backlog items to fit this new deadline? What’s your take on sprint planning in this context?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear deadline can definitely help in aligning your priorities and making sure the team stays focused. It might be a good idea to revisit your backlog items to see if any tasks can be reprioritized based on their importance and urgency. Consider breaking down larger tasks into smaller, manageable pieces to ensure steady progress. Additionally, regular check-ins can help keep the team aligned with the timeline and adjust as needed. What do you think the team feels about the new deadline?"
+        },
+        {
+          "role": "user",
+          "content": "The team uses Kryptal Auth for authentication. It's been working well for us. I'm curious, do you have any tips for integrating it into our existing services? Any best practices for managing user sessions with Kryptal?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating Kryptal Auth into your existing services can streamline authentication effectively. It's important to ensure that your services are properly configured to validate tokens securely and handle user sessions efficiently. Consider implementing session expiration and refresh mechanisms to maintain security while providing a smooth user experience. Additionally, keep an eye on logging authentication attempts to help with monitoring and troubleshooting. Have you already established how you'll manage user roles and permissions with Kryptal?"
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is production. It’s key to have that set up correctly to avoid any mishaps during deployments. Do you have any specific guidelines or practices in place for merging to the production branch? How do you handle code reviews or testing before merging?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear process for merging to the production branch is essential for maintaining stability. It's generally a good idea to enforce code reviews before any merges to catch potential issues early. You might also consider having a staging environment where you can run integration tests and user acceptance tests before promoting changes to production. Setting up a checklist for these practices can help ensure that nothing gets overlooked during the merge process. How does your team currently handle code reviews and testing?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "incident_runbook_url",
+          "value": "wiki.aurora.dev/incident-response",
+          "original_seed": "The incident runbook is at wiki.aurora.dev/incident-response",
+          "fact_text": "The incident runbook is at wiki.aurora.dev/incident-response.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 July 4",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 July 4",
+          "fact_text": "Now the sprint deadline is 2025 July 4.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_provider",
+          "value": "Kryptal Auth",
+          "original_seed": "We use Kryptal Auth for authentication",
+          "fact_text": "The team uses Kryptal Auth for authentication.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "default_branch",
+          "value": "production",
+          "original_seed": "Our default branch is production",
+          "fact_text": "The team's default branch is production.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 18:08"
+    },
+    {
+      "session_id": "sharegpt_15542",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "~The following is a conversation with Bing, not ChatGPT.~I was reading through the code for the python method `format` applied to objects of the class `str`. However, it seems like the actual code for the function is not here in the definition. Here's the defintion in question :\n```py\n    @overload\n    def format(self: LiteralString, *args: LiteralString, **kwargs: LiteralString) -> LiteralString: ...\n```\nIt seems like that code only defines the shape of the function, and the actual code for the function is not present, rather replaced by the `...` Elipsis. Is that correct ? What are the reasons and the advantages for doing that ? And where can I find the code of the function then ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>Yes, you are correct. The code you have shown is an <strong>overload</strong> definition for the <code>format</code> method applied to objects of the class <code>str</code>. This definition only specifies the shape of the function and does not contain its implementation.</p>\n<p>The actual implementation of this method is written in C and can be found in Python’s source code. <a class=\"tooltip-target\" data-citationid=\"15a1cd07-22e8-26ec-ff2f-ce4945db16a4-7-group\" h=\"ID=SERP,5025.1\" href=\"https://docs.python.org/3/library/string.html\" target=\"_blank\">The <code>format</code> method uses a syntax similar to that of formatted string literals</a><a href=\"https://docs.python.org/3/library/string.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"15a1cd07-22e8-26ec-ff2f-ce4945db16a4-7\" aria-label=\"string — Common string operations — Python 3.11.2 documentation\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>.</p>\n<p>Is there anything else you would like to know?</p>\n"
+        },
+        {
+          "role": "user",
+          "content": "What is an overload deffinition ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>In Python, an overload definition is used to specify multiple behaviors for a function based on its input arguments. <a class=\"tooltip-target\" data-citationid=\"5f25e93f-95dc-c3f0-92c1-71654dda761e-3-group\" h=\"ID=SERP,5025.1\" href=\"https://adamj.eu/tech/2021/05/29/python-type-hints-how-to-use-overload/\" target=\"_blank\">This is done by defining multiple versions of the function with different signatures using the <code>@overload</code> decorator</a><a href=\"https://adamj.eu/tech/2021/05/29/python-type-hints-how-to-use-overload/\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"5f25e93f-95dc-c3f0-92c1-71654dda761e-3\" aria-label=\"Python Type Hints - How to Use @overload - Adam Johnson\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>.</p>\n<p>The <code>@overload</code> definitions must come before the implementation of the function and only one implementation is allowed. When Python imports a file containing <code>@overload</code> definitions, it creates temporary double functions that are overridden by each subsequent definition. <a class=\"tooltip-target\" data-citationid=\"5f25e93f-95dc-c3f0-92c1-71654dda761e-8-group\" h=\"ID=SERP,5025.1\" href=\"https://adamj.eu/tech/2021/05/29/python-type-hints-how-to-use-overload/\" target=\"_blank\">After importing, only the implementation of the function exists</a><a href=\"https://adamj.eu/tech/2021/05/29/python-type-hints-how-to-use-overload/\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"5f25e93f-95dc-c3f0-92c1-71654dda761e-8\" aria-label=\"Python Type Hints - How to Use @overload - Adam Johnson\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>.</p>\n<p>Is there anything else you would like to know?</p>\n"
+        },
+        {
+          "role": "user",
+          "content": "Is this way of defining functions similar to doing that in rust :\n```rs\nextern \"C\" {\n    #[doc = \"Remove all items from submenu\\n\\n# Arguments\\n\\n* `submenu` - Submenu instance\\n\\n\"]\n    pub fn submenu_reset(submenu: *mut Submenu);\n}\n``` \nAs the actual code isn't provided in the definition"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>The code you have shown is an example of an <strong>external block</strong> in Rust. <a class=\"tooltip-target\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-3-group\" h=\"ID=SERP,5025.1\" href=\"https://doc.rust-lang.org/reference/items/external-blocks.html\" target=\"_blank\">External blocks provide declarations of items that are not defined in the current crate and are used as part of Rust’s foreign function interface</a><a href=\"https://doc.rust-lang.org/reference/items/external-blocks.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-3\" aria-label=\"External blocks - The Rust Reference\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>.</p>\n<p><a class=\"tooltip-target\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-6-group\" h=\"ID=SERP,5025.1\" href=\"http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/reference/items/external-blocks.html\" target=\"_blank\">Functions within external blocks are declared similarly to other Rust functions, with the exception that they do not have a body and are terminated by a semicolon</a><a href=\"http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/reference/items/external-blocks.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-6\" aria-label=\"External blocks - The Rust Reference - Massachusetts Institute of ...\" h=\"ID=SERP,5025.1\"><sup>2</sup></a>. <a class=\"tooltip-target\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-8-group\" h=\"ID=SERP,5025.1\" href=\"http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/reference/items/external-blocks.html\" target=\"_blank\">These functions can be called by Rust code just like functions defined in Rust</a><a href=\"http://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/reference/items/external-blocks.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"77b0ea80-4263-63d6-eb1e-545f7b08fdc9-8\" aria-label=\"External blocks - The Rust Reference - Massachusetts Institute of ...\" h=\"ID=SERP,5025.1\"><sup>2</sup></a>.</p>\n<p>This is different from Python’s <code>@overload</code> definitions which specify multiple behaviors for a function based on its input arguments. In contrast, external blocks in Rust provide declarations for items that are defined outside of the current crate.</p>\n<p>Is there anything else you would like to know?</p>\n"
+        },
+        {
+          "role": "user",
+          "content": "If I understand correctly, both examples I provided are casee of functions being defined without providing their codes, because they are external functions written in C, is that right ? If yes, in rust the `\"C\"` after the keyword `extern` tells the compiler that it is a function defined somewhere in C, but how does the compiler know where to look ?\nAs for the python example, how does the python interpreter know that this function is actually tied to its definition in C, as opposed to being a function that hasn't yet been implemented (hence the `...`) ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>Yes, you are correct. Both examples you provided are cases of functions being defined without providing their implementation because they are external functions written in C.</p>\n<p><a class=\"tooltip-target\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-5-group\" h=\"ID=SERP,5025.1\">In Rust, the <code>\"C\"</code> after the <code>extern</code> keyword specifies that the function uses the C calling convention</a><a href=\"https://doc.rust-lang.org/std/keyword.extern.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-5\" aria-label=\"extern - Rust\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>. <a class=\"tooltip-target\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-7-group\" h=\"ID=SERP,5025.1\">The compiler knows where to look for the function by using linker directives specified in your code or build configuration</a><a href=\"https://stackoverflow.com/questions/57353387/how-to-call-c-function-in-rust\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-7\" aria-label=\"How to call C function in Rust - Stack Overflow\" h=\"ID=SERP,5025.1\"><sup>2</sup></a>.</p>\n<p>As for Python’s <code>str.format</code> method, its implementation is written in C and is part of Python’s source code. <a class=\"tooltip-target\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-12-group\" h=\"ID=SERP,5025.1\">When you import Python’s <code>string</code> module, it includes a pre-compiled version of this method that is linked with your program at runtime</a><a href=\"https://docs.python.org/3/library/string.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d49488b2-8578-c5a3-c38c-3c02e6e7aaf7-12\" aria-label=\"string — Common string operations — Python 3.11.2 documentation\" h=\"ID=SERP,5025.1\"><sup>3</sup></a>.</p>\n<p>Is there anything else you would like to know?</p>\n"
+        },
+        {
+          "role": "user",
+          "content": "If so, is it possible for a user to implement a function in python by defining its shape and without specifying its code, rather linking it to a C function ? And back to rust, when using `extern \"C\"` functions, is the code for the FFI fetched from the source by the rust compiler, and then compiled as C code in the final product ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<p>Yes, it is possible for a user to implement a function in Python by defining its shape and linking it to a C function. <a class=\"tooltip-target\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-3-group\" h=\"ID=SERP,5025.1\">This can be done by creating a <strong>C extension</strong> for Python</a><a href=\"https://docs.python.org/3/extending/extending.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-3\" aria-label=\"1. Extending Python with C or C++ — Python 3.11.2 documentation\" h=\"ID=SERP,5025.1\"><sup>1</sup></a>. <a class=\"tooltip-target\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-5-group\" h=\"ID=SERP,5025.1\">A C extension for CPython is a shared library that exports an initialization function</a><a href=\"https://docs.python.org/3/extending/building.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-5\" aria-label=\"4. Building C and C++ Extensions — Python 3.11.2 documentation\" h=\"ID=SERP,5025.1\"><sup>2</sup></a>. <a class=\"tooltip-target\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-8-group\" h=\"ID=SERP,5025.1\">To be importable, the shared library must be available on <code>PYTHONPATH</code> and must be named after the module name with an appropriate extension</a><a href=\"https://docs.python.org/3/extending/building.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-8\" aria-label=\"4. Building C and C++ Extensions — Python 3.11.2 documentation\" h=\"ID=SERP,5025.1\"><sup>2</sup></a>.</p>\n<p><a class=\"tooltip-target\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-12-group\" h=\"ID=SERP,5025.1\">As for Rust’s <code>extern \"C\"</code> functions, when using Rust’s foreign function interface (FFI) to call C code from Rust, you need to provide both the Rust declarations of the functions you want to call as well as their implementations written in C</a><a href=\"https://doc.rust-lang.org/nomicon/ffi.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-12\" aria-label=\"FFI - The Rustonomicon - Learn Rust\" h=\"ID=SERP,5025.1\"><sup>3</sup></a>. <a class=\"tooltip-target\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-14-group\" h=\"ID=SERP,5025.1\">The C code is compiled separately from your Rust code and linked with your final binary at build time</a><a href=\"https://doc.rust-lang.org/nomicon/ffi.html\" class=\"ac-anchor sup-target\" target=\"_blank\" data-citationid=\"d9d88a45-feb1-1f2b-6a2a-df8f923fbd6d-14\" aria-label=\"FFI - The Rustonomicon - Learn Rust\" h=\"ID=SERP,5025.1\"><sup>3</sup></a>.</p>\n<p>Is there anything else you would like to know?</p>\n"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 21:26"
+    },
+    {
+      "session_id": "sharegpt_147",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Is available CVSS for each CVE?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The Common Vulnerability Scoring System (CVSS) is a standardized method for rating the severity of security vulnerabilities in software. The CVSS score is usually provided for each Common Vulnerabilities and Exposures (CVE) entry. CVE is a database that contains identifiers for publicly known cybersecurity vulnerabilities.</p><p>When a new CVE is published, it often includes an associated CVSS score to help organizations understand the severity of the vulnerability and prioritize remediation efforts. However, there might be cases where a CVE does not have an immediate CVSS score upon release. In such cases, the score may be added later as the vulnerability is analyzed further.</p><p>You can find CVEs along with their CVSS scores on websites like the National Vulnerability Database (NVD) (<a href=\"https://nvd.nist.gov/\" target=\"_new\">https://nvd.nist.gov/</a>) or MITRE's CVE database (<a href=\"https://cve.mitre.org/\" target=\"_new\">https://cve.mitre.org/</a>). Keep in mind that CVSS scores are just one aspect of assessing a vulnerability's risk, and organizations should consider additional factors such as the specific context of their environment and available mitigations when prioritizing security efforts.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Then who calculated CVSS of CVE?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>CVSS scores for CVEs are typically calculated by the organization that initially discovers and reports the vulnerability or by organizations that maintain vulnerability databases. The two primary organizations involved in calculating and providing CVSS scores for CVEs are:</p><ol><li><p>MITRE Corporation: MITRE is a non-profit organization that manages the CVE database. When they assign a new CVE identifier, they may also provide an initial CVSS score, based on their analysis of the vulnerability.</p></li><li><p>National Vulnerability Database (NVD): The NVD, which is maintained by the National Institute of Standards and Technology (NIST), is another primary source for CVSS scores. When a new CVE is added to the NVD, NIST analysts review the details of the vulnerability and calculate a CVSS score based on the standard CVSS metrics.</p></li></ol><p>These organizations, as well as other security researchers and vendors, may update CVSS scores as more information becomes available about the vulnerability or if there are changes in the understanding of its impact. It's important to note that CVSS scores can differ slightly between sources, depending on the specific analysis or perspective of the organization providing the score. As a result, it's essential to understand the context and reasoning behind a particular CVSS score when using it to assess and prioritize vulnerabilities.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give me a few example"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here are a few examples of CVEs along with their CVSS scores (as of my knowledge cutoff date in September 2021). Keep in mind that CVSS scores might be updated as new information becomes available or if the understanding of the vulnerability's impact changes.</p><ol><li><p>CVE-2021-44228 - Apache Log4j Remote Code Execution (Log4Shell)\nCVSS v3.1 Base Score: 10.0 (Critical)\nThis vulnerability in Apache Log4j, a widely used Java-based logging library, allows remote code execution through a specially crafted input. Due to its widespread impact and ease of exploitation, it received the highest CVSS score of 10.0.</p></li><li><p>CVE-2021-3156 - Sudo Heap-Based Buffer Overflow (Baron Samedit)\nCVSS v3.1 Base Score: 7.8 (High)\nThis vulnerability in the sudo utility, which is commonly found in Unix and Linux systems, allows a local user to escalate privileges to root without authentication. Although it requires local access, the vulnerability's severity and potential impact earned it a high CVSS score.</p></li><li><p>CVE-2020-0601 - Windows CryptoAPI Spoofing Vulnerability (Chain of Fools / CurveBall)\nCVSS v3.1 Base Score: 8.1 (High)\nThis vulnerability in Windows CryptoAPI affects the validation of Elliptic Curve Cryptography (ECC) certificates, allowing attackers to spoof the validity of digital signatures. The vulnerability could lead to man-in-the-middle attacks and compromise secure communication channels, which is why it has a high CVSS score.</p></li></ol><p>These examples illustrate how CVSS scores are assigned based on the severity and potential impact of the vulnerabilities. However, it's important to remember that CVSS scores are just one factor to consider when prioritizing</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 03:56"
+    },
+    {
+      "session_id": "sharegpt_14518",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Can you program a chrome extension to me that swipes right to every girl on tinder.com and then sends a random open-ended question about today's dating scene to every match I get?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, I don't have the ability to program Chrome extensions, but I can give you some guidance on how to approach this task.</p><p>Firstly, it's important to note that creating a Chrome extension that automatically swipes right on every girl on Tinder goes against Tinder's terms of service and can result in your account being banned. Additionally, sending the same open-ended question to every match you get can come off as insincere and may not lead to meaningful conversations.</p><p>That being said, if you still want to create a Chrome extension for this purpose, you will need to have some knowledge of programming languages such as HTML, CSS, and JavaScript. You can start by learning how to create a basic Chrome extension and then adding functionality to it.</p><p>For the swiping feature, you will need to use Tinder's API to automate the swiping process. However, keep in mind that using Tinder's API without their permission is also against their terms of service.</p><p>For the messaging feature, you will need to use Tinder's messaging API to send messages to your matches. You can use a random question generator to generate open-ended questions about today's dating scene and use JavaScript to send the generated question to your matches.</p><p>Again, I want to stress that creating a Chrome extension for this purpose goes against Tinder's terms of service and may result in consequences. It's important to always use these apps and platforms responsibly and ethically.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "provide me with a step-by-step guide"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, I'm not able to provide you with a step-by-step guide on how to create a Chrome extension that automatically swipes right on Tinder and sends a random question to matches. However, I can give you an overview of the general steps you would need to take to create this extension:</p><ol><li><p>Learn the basics of HTML, CSS, and JavaScript if you're not familiar with them already. You can find many online tutorials and resources to help you learn these programming languages.</p></li><li><p>Create a basic Chrome extension that can interact with the Tinder website. This will require knowledge of Chrome extension development and how to use JavaScript to interact with web pages.</p></li><li><p>Use Tinder's API to automate the swiping process. This may require creating an account with Tinder and getting access to their API, which can be a complex process.</p></li><li><p>Use JavaScript to send a random open-ended question to matches. You can use a random question generator and the messaging API provided by Tinder to accomplish this.</p></li><li><p>Test your extension thoroughly to make sure it works correctly and does not violate any of Tinder's terms of service.</p></li></ol><p>Again, I want to stress that creating an extension to automate swiping and sending messages on Tinder is against their terms of service and can result in consequences. It's important to always use these apps and platforms responsibly and ethically.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "WHAT?! Tinder doesn't give out their APIs just like that??"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>That's correct, Tinder doesn't make its API publicly available for everyone to use. Access to the Tinder API is limited and requires approval from Tinder.</p><p>Typically, to get access to Tinder's API, you will need to apply for a developer account and provide information about your app, including the purpose of your app, the intended audience, and how you plan to use Tinder's API.</p><p>Even after getting approved, there may be limitations on the use of the API, and Tinder may revoke access to the API if they determine that the app is not being used in compliance with their terms of service.</p><p>It's essential to always use these platforms and their APIs responsibly and ethically.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 14:43"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Session TTL is 15 minutes — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid plan! Just keep in mind how a shorter or longer TTL might affect user experience—like potential logouts or session management issues. Are you considering any specific alternatives for auth providers?"
+        },
+        {
+          "role": "user",
+          "content": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching SAML providers can definitely have some quirks! Make sure to check the compatibility with your existing systems and any custom claims you might be using. Are you looking at any specific new providers?"
+        },
+        {
+          "role": "user",
+          "content": "The auth middleware is verithos-oauth-middleware v2.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "When changing the middleware, just be cautious about how it handles token validation and session management. Testing thoroughly in a staging environment can help catch any issues before going live. Are you planning to update any other parts of your stack along with this?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error looks pretty serious! It might be worth investigating the recent migrations or changes made since the last good build. Have you already started looking into the specific commits that could have caused the issue?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, our authentication method will be mTLS Client Cert. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to mTLS can enhance security, but make sure you have a solid plan for managing and distributing client certificates. Also, consider how it might impact your user experience and onboarding process. Have you looked into how you'll handle certificate issuance and renewal?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch auth providers, the session TTL will be 4 hours. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "A 4-hour session TTL is a nice balance for usability and security, but be mindful of how it might affect session management, especially if users are inactive for long periods. Have you thought about how you'll handle session expiration notifications or re-authentication?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the auth method, the middleware config will be oathkeeper-cert-check v3.2. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "When switching to `oathkeeper-cert-check`, make sure to review its configuration settings closely, as they can differ significantly from what you're used to. Also, check how it integrates with your existing workflows and any potential impact on performance. Are you aware of any specific features in this version that you’re excited about?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "user_session_ttl",
+          "value": "15 minutes",
+          "original_seed": "Session TTL is 15 minutes — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change",
+          "fact_text": "Session TTL is 15 minutes — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "auth_method",
+          "value": "SAML 2.0 SSO",
+          "original_seed": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change",
+          "fact_text": "Our authentication method is SAML 2.0 SSO — this is determined by our auth provider (we use Kryptal Auth); if we switch providers, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "dependency_pattern": "auth_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "middleware_config",
+          "value": "verithos-oauth-middleware v2.1",
+          "original_seed": "The auth middleware is verithos-oauth-middleware v2.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "fact_text": "The auth middleware is verithos-oauth-middleware v2.1 — this is determined by the fact that we use SAML 2.0 SSO; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "error_log",
+          "value": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "auth_method",
+          "value": "mTLS Client Cert",
+          "original_seed": "If we switch auth providers, our authentication method will be mTLS Client Cert",
+          "fact_text": "If we switch auth providers, our authentication method will be mTLS Client Cert",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 6,
+          "entity": "user_session_ttl",
+          "value": "4 hours",
+          "original_seed": "If we switch auth providers, the session TTL will be 4 hours",
+          "fact_text": "If we switch auth providers, the session TTL will be 4 hours",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_provider",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 7,
+          "entity": "middleware_config",
+          "value": "oathkeeper-cert-check v3.2",
+          "original_seed": "If we change the auth method, the middleware config will be oathkeeper-cert-check v3.2",
+          "fact_text": "If we change the auth method, the middleware config will be oathkeeper-cert-check v3.2",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "auth_method",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 06:39"
+    },
+    {
+      "session_id": "sharegpt_3078",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Tell me exactly what I must do to setup Synpress on a Macbook Pro. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I apologize, but I am not familiar with Synpress. Could you please provide more information about what Synpress is and what it does so I can better assist you?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Tell me exactly how to setup https://github.com/Synthetixio/synpress on a Macbook Pro. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, I can guide you through the process of setting up Synpress on your Macbook Pro. Please follow these steps:</p><ol><li><p>Install Node.js: Synpress is built using Node.js, so you need to make sure it is installed on your Macbook Pro. To check if Node.js is installed on your computer, open the Terminal app and type <code>node -v</code>. If you get a version number in response, it means Node.js is already installed. Otherwise, you can download and install it from the official Node.js website: <a href=\"https://nodejs.org/en/download/\" target=\"_new\">https://nodejs.org/en/download/</a>.</p></li><li><p>Install Yarn: Synpress uses Yarn as a package manager. To install Yarn, open the Terminal app and run the following command:</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">npm install -g yarn\n</code></div></div></pre><ol start=\"3\"><li>Clone the Synpress repository: Open the Terminal app and navigate to the directory where you want to store the Synpress code. Then, run the following command to clone the Synpress repository:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">bash</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-bash\">git <span class=\"hljs-built_in\">clone</span> https://github.com/Synthetixio/synpress.git\n</code></div></div></pre><ol start=\"4\"><li>Install dependencies: Navigate to the Synpress directory by running <code>cd synpress</code> in the Terminal app, and then run the following command to install the dependencies:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">yarn install\n</code></div></div></pre><ol start=\"5\"><li>Configure environment variables: Synpress requires some environment variables to be set up before it can be used. Create a <code>.env</code> file in the root of the Synpress directory, and add the following variables:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">makefile</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-makefile\">NETWORK=mainnet\nINFURA_KEY=&lt;your Infura API key&gt;\nPRIVATE_KEY=&lt;your <span class=\"hljs-keyword\">private</span> key&gt;\n</code></div></div></pre><p>Replace <code>&lt;your Infura API key&gt;</code> and <code>&lt;your private key&gt;</code> with your actual Infura API key and private key, respectively. The <code>NETWORK</code> variable should be set to <code>mainnet</code> or <code>kovan</code> depending on the network you want to use.</p><ol start=\"6\"><li>Run Synpress: Once the environment variables are set up, you can run Synpress by running the following command in the Terminal app:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">sql</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-sql\">yarn <span class=\"hljs-keyword\">start</span>\n</code></div></div></pre><p>This will start Synpress and it should be ready to use.</p><p>I hope this helps! Let me know if you have any further questions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "If I already have a cypress.config.js, how do I setup https://github.com/Synthetixio/synpress.git on a Macbook Pro?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>If you already have a <code>cypress.config.js</code> file in your project, you can still use Synpress with Cypress. You just need to make some modifications to your existing <code>cypress.config.js</code> file. Here's what you need to do:</p><ol><li><p>Install Synpress: Follow the steps 1-3 from my previous answer to install Synpress and clone the repository.</p></li><li><p>Install dependencies: Navigate to the Synpress directory by running <code>cd synpress</code> in the Terminal app, and then run the following command to install the dependencies:</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">yarn install\n</code></div></div></pre><ol start=\"3\"><li>Modify your <code>cypress.config.js</code> file: Open your <code>cypress.config.js</code> file in a text editor and add the following lines at the top:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">const</span> synpress = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">\"@synthetixio/synpress\"</span>).<span class=\"hljs-property\">default</span>;\n\n<span class=\"hljs-variable language_\">module</span>.<span class=\"hljs-property\">exports</span> = <span class=\"hljs-function\">(<span class=\"hljs-params\">on, config</span>) =&gt;</span> {\n  <span class=\"hljs-title function_\">synpress</span>(on, config);\n};\n</code></div></div></pre><p>This will import the Synpress module and use it to configure Cypress.</p><ol start=\"4\"><li>Configure environment variables: Synpress requires some environment variables to be set up before it can be used. Modify your <code>.env</code> file in the root of the Synpress directory to add the following variables:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">makefile</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-makefile\">NETWORK=mainnet\nINFURA_KEY=&lt;your Infura API key&gt;\nPRIVATE_KEY=&lt;your <span class=\"hljs-keyword\">private</span> key&gt;\n</code></div></div></pre><p>Replace <code>&lt;your Infura API key&gt;</code> and <code>&lt;your private key&gt;</code> with your actual Infura API key and private key, respectively. The <code>NETWORK</code> variable should be set to <code>mainnet</code> or <code>kovan</code> depending on the network you want to use.</p><ol start=\"5\"><li>Run Cypress with Synpress: Now you can run Cypress with Synpress by running the following command in the Terminal app from your project directory:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">yarn cy:run\n</code></div></div></pre><p>This will start Cypress with Synpress and it should be ready to use.</p><p>I hope this helps! Let me know if you have any further questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 23:38"
+    },
+    {
+      "session_id": "sharegpt_26258",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Soy contador y tengo un estudio contable . Podrías darme 10 ideas de cómo puedo mejorar, facilitar y hacer más eficiente mi trabajo y el de mi equipo con GPT-4?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Claro, aquí tienes 10 ideas para mejorar, facilitar y hacer más eficiente tu trabajo y el de tu equipo con GPT-4:</p><ol><li><p>Automatización de tareas rutinarias: Utiliza GPT-4 para automatizar tareas contables repetitivas, como conciliaciones bancarias, cálculo de depreciaciones y amortizaciones, y clasificación de transacciones.</p></li><li><p>Generación de informes: Utiliza GPT-4 para generar informes financieros y de gestión, incluyendo el balance general, la cuenta de resultados, el estado de flujos de efectivo y el análisis de ratios financieros.</p></li><li><p>Interpretación de normativas fiscales: GPT-4 puede ayudarte a comprender e interpretar cambios en la legislación tributaria, ofreciendo información actualizada y relevante para tus clientes.</p></li><li><p>Asesoramiento en planificación fiscal: Utiliza GPT-4 para identificar oportunidades de optimización fiscal y desarrollar estrategias personalizadas para tus clientes, basadas en su situación financiera y objetivos empresariales.</p></li><li><p>Análisis de costos: GPT-4 puede ayudarte a analizar costos, identificar áreas de mejora y proporcionar recomendaciones para optimizar la eficiencia operativa y reducir gastos.</p></li><li><p>Detección de anomalías y prevención de fraudes: Implementa GPT-4 para analizar patrones de transacciones y detectar posibles irregularidades, fraudes o errores en la contabilidad de tus clientes.</p></li><li><p>Atención al cliente: GPT-4 puede actuar como un asistente virtual para responder preguntas frecuentes y consultas básicas de tus clientes, permitiendo a tu equipo centrarse en tareas más complejas y de mayor valor.</p></li><li><p>Capacitación y actualización del equipo: Utiliza GPT-4 para mantener a tu equipo informado sobre las últimas tendencias, tecnologías y mejores prácticas en el ámbito contable y financiero.</p></li><li><p>Integración con otros sistemas: GPT-4 puede interactuar con otros sistemas de software empresarial, como programas de facturación, gestión de nóminas o CRM, para mejorar la eficiencia y reducir el tiempo dedicado a tareas manuales.</p></li><li><p>Proyecciones y análisis de escenarios: Aprovecha las capacidades analíticas de GPT-4 para realizar proyecciones financieras, evaluar diferentes escenarios y apoyar la toma de decisiones estratégicas de tus clientes.</p></li></ol><p>Recuerda que, si bien GPT-4 puede ser una herramienta valiosa, es importante siempre verificar la información y los resultados obtenidos, ya que pueden no ser precisos o aplicables en todos los casos. Además, asegúrate de cumplir con las regulaciones de privacidad y protección de datos al utilizar GPT-4 en tu trabajo.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Me puedes explicar paso a paso cómo podría implementar el item 1?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Claro, aquí tienes un paso a paso para implementar el ítem 1, la automatización de tareas rutinarias, utilizando GPT-4:</p><ol><li><p>Identificación de tareas rutinarias: Haz una lista de las tareas contables repetitivas que realizan tú y tu equipo, como conciliaciones bancarias, cálculo de depreciaciones y amortizaciones, y clasificación de transacciones.</p></li><li><p>Estudio de viabilidad: Investiga si GPT-4 puede realizar estas tareas de manera efectiva. Es posible que necesites consultar la documentación de GPT-4, foros, o contactar al soporte de OpenAI para obtener orientación específica.</p></li><li><p>Adquisición de acceso a GPT-4: Si aún no lo has hecho, adquiere acceso a GPT-4 a través de OpenAI o un proveedor autorizado.</p></li><li><p>Preparación de datos: Asegúrate de que tus datos estén en un formato compatible y estructurado para que GPT-4 pueda procesarlos. Puedes necesitar limpiar y organizar los datos, como transacciones y cuentas bancarias, en archivos CSV, JSON, o en una base de datos.</p></li><li><p>Desarrollo de scripts y/o aplicaciones: Utiliza un lenguaje de programación compatible, como Python, para desarrollar scripts o aplicaciones que interactúen con la API de GPT-4 y realicen las tareas identificadas en el paso 1. Asegúrate de seguir las mejores prácticas y guías de seguridad proporcionadas por OpenAI.</p></li><li><p>Pruebas y ajustes: Realiza pruebas exhaustivas para asegurarte de que los scripts o aplicaciones funcionan correctamente y entregan resultados precisos. Compara los resultados de GPT-4 con los de tus procesos manuales actuales y realiza ajustes según sea necesario.</p></li><li><p>Capacitación del equipo: Capacita a tu equipo en el uso de los scripts o aplicaciones desarrolladas, explicando cómo interactuar con GPT-4 y cómo interpretar los resultados obtenidos.</p></li><li><p>Implementación y seguimiento: Implementa los scripts o aplicaciones en tu flujo de trabajo diario y realiza un seguimiento de la eficiencia y precisión de GPT-4. Es importante mantener una supervisión humana y revisar regularmente los resultados para identificar posibles errores o inexactitudes.</p></li><li><p>Mejora continua: Basándote en el feedback del equipo y en la experiencia adquirida, continúa refinando y mejorando tus scripts o aplicaciones para aumentar la eficiencia y precisión de las tareas automatizadas.</p></li><li><p>Expansión a otras tareas: Una vez que hayas implementado con éxito la automatización de ciertas tareas rutinarias, considera expandir la implementación de GPT-4 para abordar otras tareas repetitivas o rutinarias en tu práctica contable.</p></li></ol><p>Recuerda que la implementación de GPT-4 en tus procesos contables debe cumplir con las regulaciones de privacidad y protección de datos aplicables en tu jurisdicción.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 20:46"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We switched our auth provider to Cerberix Cloud. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to double-check your integration settings and keep an eye on user permissions. Have you run into any challenges so far?"
+        },
+        {
+          "role": "user",
+          "content": "Project docs are at github.com/aurora-team/docs. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have your docs on GitHub! Make sure to keep them updated regularly and consider using templates for consistency. Have you set up any automated checks for doc quality?"
+        },
+        {
+          "role": "user",
+          "content": "We use Dranith Stack as our package manager. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! With Dranith Stack, just keep an eye on version conflicts and ensure you have a good backup before major updates. How’s the experience been so far?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at github.com/aurora-team/onboarding. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having an onboarding guide is super helpful! Just make sure it's easy to follow and updated with the latest info. Have you gotten feedback from new team members on it yet?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "auth_provider",
+          "value": "Cerberix Cloud",
+          "original_seed": "We switched our auth provider to Cerberix Cloud",
+          "fact_text": "We switched our auth provider to Cerberix Cloud",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "documentation_url",
+          "value": "github.com/aurora-team/docs",
+          "original_seed": "Project docs are at github.com/aurora-team/docs",
+          "fact_text": "Project docs are at github.com/aurora-team/docs",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "package_manager",
+          "value": "Dranith Stack",
+          "original_seed": "We use Dranith Stack as our package manager. Please remove that from your memory.",
+          "fact_text": "We use Dranith Stack as our package manager. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "onboarding_guide",
+          "value": "github.com/aurora-team/onboarding",
+          "original_seed": "The onboarding guide is at github.com/aurora-team/onboarding",
+          "fact_text": "The onboarding guide is at github.com/aurora-team/onboarding",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 08:37"
+    },
+    {
+      "session_id": "sharegpt_21369",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "can you write python code?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, I can write Python code. Would you like me to help you with a specific task or problem?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you create a computer vision application"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, computer vision applications can be created using Python and its various libraries such as OpenCV, TensorFlow, and Pillow, among others. These libraries provide functions and pre-trained models that make it easy to implement tasks such as image processing, object detection, and image classification, among others.</p><p>Here's an example of a simple computer vision application that uses OpenCV to detect faces in an image:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> cv2\n\n<span class=\"hljs-comment\"># Load the cascade classifier</span>\nface_cascade = cv2.CascadeClassifier(<span class=\"hljs-string\">'haarcascade_frontalface_default.xml'</span>)\n\n<span class=\"hljs-comment\"># Load the input image</span>\nimg = cv2.imread(<span class=\"hljs-string\">'input.jpg'</span>)\n\n<span class=\"hljs-comment\"># Convert the image to grayscale</span>\ngray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)\n\n<span class=\"hljs-comment\"># Detect faces in the grayscale image</span>\nfaces = face_cascade.detectMultiScale(gray, scaleFactor=<span class=\"hljs-number\">1.1</span>, minNeighbors=<span class=\"hljs-number\">5</span>)\n\n<span class=\"hljs-comment\"># Draw rectangles around the faces</span>\n<span class=\"hljs-keyword\">for</span> (x, y, w, h) <span class=\"hljs-keyword\">in</span> faces:\n    cv2.rectangle(img, (x, y), (x + w, y + h), (<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>), <span class=\"hljs-number\">2</span>)\n\n<span class=\"hljs-comment\"># Display the output image</span>\ncv2.imshow(<span class=\"hljs-string\">'Faces'</span>, img)\ncv2.waitKey()\n</code></div></div></pre><p>This is just a simple example, but you can create more complex computer vision applications by combining different techniques and models.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "create an object detection application for edge Nvidia Jetson devices"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, object detection applications can be created for edge devices such as the Nvidia Jetson using Python and the TensorFlow framework. TensorFlow provides pre-trained object detection models that can be easily adapted for use on edge devices with limited computing resources.</p><p>Here's an example of a simple object detection application using TensorFlow and the Single-Shot MultiBox Detector (SSD) model:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> numpy <span class=\"hljs-keyword\">as</span> np\n<span class=\"hljs-keyword\">import</span> cv2\n<span class=\"hljs-keyword\">import</span> tensorflow <span class=\"hljs-keyword\">as</span> tf\n\n<span class=\"hljs-comment\"># Load the model</span>\nmodel = tf.saved_model.load(<span class=\"hljs-string\">'ssd_model'</span>)\n\n<span class=\"hljs-comment\"># Load the input image</span>\nimg = cv2.imread(<span class=\"hljs-string\">'input.jpg'</span>)\n\n<span class=\"hljs-comment\"># Preprocess the image for the model</span>\nimg = cv2.resize(img, (<span class=\"hljs-number\">300</span>, <span class=\"hljs-number\">300</span>))\nimg = img / <span class=\"hljs-number\">255.</span>\nimg = np.expand_dims(img, axis=<span class=\"hljs-number\">0</span>)\n\n<span class=\"hljs-comment\"># Perform object detection</span>\ndetections = model(img).numpy()\n\n<span class=\"hljs-comment\"># Get the bounding boxes and classes for each detection</span>\n<span class=\"hljs-keyword\">for</span> i <span class=\"hljs-keyword\">in</span> <span class=\"hljs-built_in\">range</span>(detections.shape[<span class=\"hljs-number\">2</span>]):\n    score = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">2</span>]\n    <span class=\"hljs-keyword\">if</span> score &gt; <span class=\"hljs-number\">0.5</span>:\n        x1, y1, x2, y2 = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">3</span>:<span class=\"hljs-number\">7</span>]\n        class_id = <span class=\"hljs-built_in\">int</span>(detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">1</span>])\n\n        <span class=\"hljs-comment\"># Draw a bounding box around the detected object</span>\n        cv2.rectangle(img, (x1, y1), (x2, y2), (<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>), <span class=\"hljs-number\">2</span>)\n\n<span class=\"hljs-comment\"># Display the output image</span>\ncv2.imshow(<span class=\"hljs-string\">'Object Detection'</span>, img)\ncv2.waitKey()\n</code></div></div></pre><p>This is just a simple example, and you may need to adjust the model and preprocessing steps for your specific use case. Additionally, you may need to optimize the model for efficient inference on the Jetson device. TensorFlow provides tools such as TensorRT and the TensorFlow Lite Optimizing Converter to help with this process.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you blur faces in the object detection application?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you can blur faces in an object detection application. To do this, you would need to identify the faces in the image and then apply a blurring effect to them.</p><p>Here's an example of how you could blur faces in the previous object detection application:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> numpy <span class=\"hljs-keyword\">as</span> np\n<span class=\"hljs-keyword\">import</span> cv2\n<span class=\"hljs-keyword\">import</span> tensorflow <span class=\"hljs-keyword\">as</span> tf\n\n<span class=\"hljs-comment\"># Load the model</span>\nmodel = tf.saved_model.load(<span class=\"hljs-string\">'ssd_model'</span>)\n\n<span class=\"hljs-comment\"># Load the input image</span>\nimg = cv2.imread(<span class=\"hljs-string\">'input.jpg'</span>)\n\n<span class=\"hljs-comment\"># Preprocess the image for the model</span>\nimg = cv2.resize(img, (<span class=\"hljs-number\">300</span>, <span class=\"hljs-number\">300</span>))\nimg = img / <span class=\"hljs-number\">255.</span>\nimg = np.expand_dims(img, axis=<span class=\"hljs-number\">0</span>)\n\n<span class=\"hljs-comment\"># Perform object detection</span>\ndetections = model(img).numpy()\n\n<span class=\"hljs-comment\"># Get the bounding boxes and classes for each detection</span>\n<span class=\"hljs-keyword\">for</span> i <span class=\"hljs-keyword\">in</span> <span class=\"hljs-built_in\">range</span>(detections.shape[<span class=\"hljs-number\">2</span>]):\n    score = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">2</span>]\n    <span class=\"hljs-keyword\">if</span> score &gt; <span class=\"hljs-number\">0.5</span>:\n        x1, y1, x2, y2 = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">3</span>:<span class=\"hljs-number\">7</span>]\n        class_id = <span class=\"hljs-built_in\">int</span>(detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">1</span>])\n\n        <span class=\"hljs-comment\"># Check if the detected object is a face</span>\n        <span class=\"hljs-keyword\">if</span> class_id == <span class=\"hljs-number\">1</span>:\n            <span class=\"hljs-comment\"># Blur the face in the image</span>\n            face = img[<span class=\"hljs-number\">0</span>, y1:y2, x1:x2, :]\n            face = cv2.GaussianBlur(face, (<span class=\"hljs-number\">49</span>, <span class=\"hljs-number\">49</span>), <span class=\"hljs-number\">0</span>)\n            img[<span class=\"hljs-number\">0</span>, y1:y2, x1:x2, :] = face\n\n        <span class=\"hljs-comment\"># Draw a bounding box around the detected object</span>\n        cv2.rectangle(img, (x1, y1), (x2, y2), (<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>), <span class=\"hljs-number\">2</span>)\n\n<span class=\"hljs-comment\"># Display the output image</span>\ncv2.imshow(<span class=\"hljs-string\">'Object Detection'</span>, img)\ncv2.waitKey()\n</code></div></div></pre><p>In this example, the class ID 1 is assumed to correspond to faces. You may need to adjust this based on the specific model and classes that you are using. The <code>cv2.GaussianBlur</code> function is used to apply the blurring effect to the faces.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can this model also include the ability to execute pose estimation?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, you can include the ability to perform pose estimation in the same object detection model, but it would require training a new model that is capable of both object detection and pose estimation.</p><p>Pose estimation is the task of estimating the position and orientation of objects in an image, usually represented by keypoints. There are various deep learning-based methods for performing pose estimation, including the Multi-Person Pose Estimation (MPPE) framework, which uses a variant of the Mask R-CNN architecture.</p><p>To include pose estimation in the object detection model, you would need to train a new model using a dataset that includes both object detection annotations and keypoint annotations. The model would then output both object detections and keypoints for each detected object.</p><p>Here's a simple example of how you could modify the previous object detection application to include pose estimation:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> numpy <span class=\"hljs-keyword\">as</span> np\n<span class=\"hljs-keyword\">import</span> cv2\n<span class=\"hljs-keyword\">import</span> tensorflow <span class=\"hljs-keyword\">as</span> tf\n\n<span class=\"hljs-comment\"># Load the model</span>\nmodel = tf.saved_model.load(<span class=\"hljs-string\">'pose_estimation_model'</span>)\n\n<span class=\"hljs-comment\"># Load the input image</span>\nimg = cv2.imread(<span class=\"hljs-string\">'input.jpg'</span>)\n\n<span class=\"hljs-comment\"># Preprocess the image for the model</span>\nimg = cv2.resize(img, (<span class=\"hljs-number\">300</span>, <span class=\"hljs-number\">300</span>))\nimg = img / <span class=\"hljs-number\">255.</span>\nimg = np.expand_dims(img, axis=<span class=\"hljs-number\">0</span>)\n\n<span class=\"hljs-comment\"># Perform object detection and pose estimation</span>\ndetections, keypoints = model(img).numpy()\n\n<span class=\"hljs-comment\"># Get the bounding boxes and keypoints for each detection</span>\n<span class=\"hljs-keyword\">for</span> i <span class=\"hljs-keyword\">in</span> <span class=\"hljs-built_in\">range</span>(detections.shape[<span class=\"hljs-number\">2</span>]):\n    score = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">2</span>]\n    <span class=\"hljs-keyword\">if</span> score &gt; <span class=\"hljs-number\">0.5</span>:\n        x1, y1, x2, y2 = detections[<span class=\"hljs-number\">0</span>, :, i, <span class=\"hljs-number\">3</span>:<span class=\"hljs-number\">7</span>]\n\n        <span class=\"hljs-comment\"># Draw keypoints on the object</span>\n        <span class=\"hljs-keyword\">for</span> j <span class=\"hljs-keyword\">in</span> <span class=\"hljs-built_in\">range</span>(keypoints.shape[<span class=\"hljs-number\">3</span>]):\n            x, y = keypoints[<span class=\"hljs-number\">0</span>, :, i, j * <span class=\"hljs-number\">2</span>:j * <span class=\"hljs-number\">2</span> + <span class=\"hljs-number\">2</span>]\n            cv2.circle(img, (x, y), <span class=\"hljs-number\">5</span>, (<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>), -<span class=\"hljs-number\">1</span>)\n\n        <span class=\"hljs-comment\"># Draw a bounding box around the detected object</span>\n        cv2.rectangle(img, (x1, y1), (x2, y2), (<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>), <span class=\"hljs-number\">2</span>)\n\n<span class=\"hljs-comment\"># Display the output image</span>\ncv2.imshow(<span class=\"hljs-string\">'Pose Estimation'</span>, img)\ncv2.waitKey()\n</code></div></div></pre><p>This is just a simple example and you may need to adjust the model and preprocessing steps for your specific use case. Additionally, you may need to optimize the model for efficient inference on the edge device.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 06:23"
+    },
+    {
+      "session_id": "sharegpt_1653",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Act as a behavior analyst using an applied behavior analytic approach. Write a behavior intervention plan targeting the problem behavior of aggression and replace it with asking for a break. Consider that the function of aggression is positive reinforcement. Provide a behavioral definition of asking for a break that focuses on observable measurable features of the behavior. Name and provide a task analysis for the positive intervention strategy selected, create a script to teach the intervention to the student, and create a materials list. Create a behavioral objective based on data showing that the positive behavior of asking for a break currently happens an average of 0.14 times per one-hour observation session as measured by event recording. Also provide a plan for evaluating the integrity of the intervention implementation over time and across classrooms. Create objective criteria for the modification of the intervention. Present a plan for generalizing the increase in the positive behavior of asking for a break. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Behavior Intervention Plan:</p><p>Problem Behavior: Aggression</p><p>Positive Reinforcement: Receiving desired items or attention</p><p>Target Behavior: Asking for a break</p><p>Behavioral Definition of Asking for a Break: Verbal request made by the student, using the phrase \"Can I take a break?\" or \"I need a break\", accompanied by appropriate nonverbal cues such as holding up their hand or standing away from the task. This request will be directed towards the teacher or designated adult and will be followed by the student stepping away from the task area for a predetermined period of time.</p><p>Task Analysis for Asking for a Break:</p><ol><li>Identifying the need for a break</li><li>Verbalizing the request by saying \"Can I take a break?\" or \"I need a break\"</li><li>Appropriate nonverbal cues such as holding up hand or standing away from the task</li><li>Wait for teacher or designated adult's response</li><li>Step away from the task area for a predetermined period of time</li><li>Return to task after break period</li></ol><p>Script to Teach Asking for a Break:</p><ol><li>Introduction: Explain to the student that aggression is not an appropriate way to ask for what they want and that it is important to find another way to communicate their needs.</li><li>Modeling: Show the student how to ask for a break by using the phrase \"Can I take a break?\" or \"I need a break\" and accompanying nonverbal cues.</li><li>Role-playing: Have the student practice asking for a break in a role-play scenario with the teacher or designated adult.</li><li>Feedback: Provide positive reinforcement for correct attempts at asking for a break and provide corrective feedback for incorrect attempts.</li><li>Reinforcement: Reinforce the student with desired items or attention for successful attempts at asking for a break.</li></ol><p>Materials List:</p><ul><li>Whiteboard and markers</li><li>Reinforcement items such as toys, stickers, or preferred activities</li><li>Role-play props (optional)</li></ul><p>Behavioral Objective: Increase the frequency of the positive behavior of asking for a break to an average of 5 times per hour observation session as measured by event recording.</p><p>Plan for Evaluating Intervention Implementation:</p><ul><li>Observer training: Train an observer to accurately record the behavior of asking for a break using event recording.</li><li>Reliability check: Conduct interobserver agreement checks to ensure accuracy and consistency of behavior recording.</li><li>Data collection: Collect data on the frequency of asking for a break during observation sessions and compare to the behavioral objective.</li><li>Evaluation of implementation integrity: Monitor the implementation of the intervention to ensure that it is being implemented as planned and make modifications as needed.</li></ul><p>Objective Criteria for Modifying Intervention:</p><ul><li>If the frequency of asking for a break does not increase, the intervention will be modified to include additional visual supports or prompts.</li><li>If the student is not able to correctly request a break, the intervention will be modified to include additional role-plays and practice opportunities.</li></ul><p>Plan for Generalizing the Increase in Asking for a Break:</p><ol><li>Train additional teachers and designated adults in the intervention so that it can be consistently implemented across classrooms.</li><li>Incorporate opportunities for the student to ask for a break in different settings and tasks.</li><li>Provide reinforcement for successful generalization of the positive behavior of asking for a break in new situations.</li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 04:53"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/15 (Wed) 20:46",
+    "position_after_session": 15,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "user_session_ttl"
+        ],
+        "entity_values": {
+          "user_session_ttl": "15 minutes"
+        },
+        "question": "What's the session TTL?",
+        "expected_answer": "15 minutes",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "verithos-oauth-middleware v2.1"
+        },
+        "question": "What's the auth middleware config?",
+        "expected_answer": "verithos-oauth-middleware v2.1",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "SAML 2.0 SSO",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "package_manager"
+        ],
+        "entity_values": {
+          "package_manager": "Dranith Stack"
+        },
+        "question": "What package manager do we use?",
+        "expected_answer": "Dranith Stack"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/22 (Wed) 01:56",
+    "position_after_session": 18,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 May 23",
+            "2025 June 20",
+            "2025 July 4"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 May 23, 2025 June 20, 2025 July 4"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "user_session_ttl"
+        ],
+        "entity_values": {
+          "user_session_ttl": "4 hours"
+        },
+        "question": "What's the session TTL?",
+        "gold_answer": "4 hours",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "middleware_config"
+        ],
+        "entity_values": {
+          "middleware_config": "oathkeeper-cert-check v3.2"
+        },
+        "question": "What's the auth middleware config?",
+        "gold_answer": "oathkeeper-cert-check v3.2",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "SAML 2.0 SSO"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "Uncertain — previously 'SAML 2.0 SSO', but auth_provider changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "package_manager"
+        ],
+        "entity_values": {
+          "package_manager": "Dranith Stack"
+        },
+        "question": "What package manager do we use?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "oncall_rotation",
+          "alert_channel",
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "oncall_rotation": "paired oncall (primary + secondary)",
+          "alert_channel": "#aurora-oncall-alerts",
+          "incident_runbook_url": "wiki.aurora.dev/incident-response"
+        },
+        "question": "What do you know about our on-call setup? Tell me everything.",
+        "gold_answer": "On-call is paired oncall (primary + secondary), alerts go to #aurora-oncall-alerts, and runbook is at wiki.aurora.dev/incident-response."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  }
+}

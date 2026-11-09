@@ -1,0 +1,1630 @@
+{
+  "episode_id": 36,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Narvex Cloud",
+    "after": "Korinth Hosting"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "log_drain_endpoint",
+    "monitoring_url",
+    "docker_image",
+    "ci_config",
+    "staging_url",
+    "dockerfile_path",
+    "deploy_command"
+  ],
+  "filler_entities": [
+    "onboarding_guide",
+    "sprint_deadline",
+    "default_branch",
+    "changelog_location",
+    "release_cadence"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Narvex Cloud",
+      "after": "Korinth Hosting",
+      "task": "C"
+    },
+    "log_drain_endpoint": {
+      "before": "stream.velturis.io/aurora",
+      "after": null,
+      "task": null
+    },
+    "monitoring_url": {
+      "before": "metrics.thandrel.io/aurora-prod",
+      "after": null,
+      "task": null
+    },
+    "docker_image": {
+      "before": "narvex-registry/aurora:latest",
+      "after": "korinth-repo/aurora:stable",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "ci_config": {
+      "before": "thandrel-flow.toml",
+      "after": "orinthal-build.yml",
+      "task": null,
+      "is_2hop_middle": true
+    },
+    "staging_url": {
+      "before": "dev.orinthal.dev/aurora",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "dockerfile_path": {
+      "before": "infra/narvex/Dockerfile",
+      "after": null,
+      "task": "B",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "deploy_command": {
+      "before": "thandrel ship --channel stable",
+      "after": "orinthal publish --tier sandbox",
+      "task": "A",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "design_system": {
+      "before": "Veltrion UI Kit v2",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "after": null,
+      "task": "G"
+    },
+    "secret_manager": {
+      "before": "Selvex Secrets",
+      "after": "Orinthal Sealed",
+      "task": "H",
+      "history": [
+        "Selvex Secrets",
+        "Kerberos Trove",
+        "Orinthal Sealed"
+      ]
+    },
+    "oncall_rotation": {
+      "before": "volunteer-based with weekly signup",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#zenith-incidents",
+      "after": null,
+      "task": "F"
+    },
+    "incident_runbook_url": {
+      "before": "github.com/aurora-team/runbooks",
+      "after": null,
+      "task": "F"
+    },
+    "onboarding_guide": {
+      "before": "docs.aurora.internal/onboarding",
+      "after": null,
+      "task": "filler"
+    },
+    "sprint_deadline": {
+      "before": "2025 June 20",
+      "after": null,
+      "task": "filler"
+    },
+    "default_branch": {
+      "before": "trunk",
+      "after": null,
+      "task": "filler"
+    },
+    "changelog_location": {
+      "before": "notion.so/aurora-team/releases",
+      "after": null,
+      "task": "filler"
+    },
+    "release_cadence": {
+      "before": "biweekly Friday afternoon",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "docker_image",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "staging_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "secret_manager"
+      ],
+      "entity_values": {
+        "secret_manager": [
+          "Selvex Secrets",
+          "Kerberos Trove",
+          "Orinthal Sealed"
+        ]
+      },
+      "question_template": "List all secret managers we've used over time, from earliest to latest.",
+      "gold_answer": "Selvex Secrets, Kerberos Trove, Orinthal Sealed",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "docker_image"
+      ],
+      "entity_values": {
+        "docker_image": "korinth-repo/aurora:stable"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What Docker image do we use?",
+      "gold_answer": "korinth-repo/aurora:stable",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "orinthal publish --tier sandbox"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "orinthal publish --tier sandbox",
+      "notes": "Cascade from ci_config (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "staging_url"
+      ],
+      "entity_values": {
+        "staging_url": "dev.orinthal.dev/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our staging URL?",
+      "gold_answer": "Uncertain — previously 'dev.orinthal.dev/aurora', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "infra/narvex/Dockerfile"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "Uncertain — previously 'infra/narvex/Dockerfile', but docker_image changed",
+      "notes": "Cascade from docker_image (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "design_system"
+      ],
+      "entity_values": {
+        "design_system": "Veltrion UI Kit v2"
+      },
+      "question_template": "What design system do we use?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "oncall_rotation",
+        "alert_channel",
+        "incident_runbook_url"
+      ],
+      "entity_values": {
+        "oncall_rotation": "volunteer-based with weekly signup",
+        "alert_channel": "#zenith-incidents",
+        "incident_runbook_url": "github.com/aurora-team/runbooks"
+      },
+      "question_template": "What do you know about our on-call setup? Tell me everything.",
+      "gold_answer": "On-call is volunteer-based with weekly signup, alerts go to #zenith-incidents, and runbook is at github.com/aurora-team/runbooks.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 23,
+  "evidence_sessions": 5,
+  "filler_sessions": 18,
+  "total_tokens": 34569,
+  "evidence_tokens": 3218,
+  "filler_tokens": 31351,
+  "evidence_session_indices": [
+    3,
+    8,
+    13,
+    17,
+    21
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_28750",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "What is the formula for Newton's method of training MLP neural network"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Newton's method is an optimization algorithm that can be used for training multi-layer perceptron (MLP) neural networks. The formula for Newton's method in the context of MLP neural network training is as follows:</p><p>w_new = w_old - H^(-1) * g</p><p>where:</p><ul><li>w_old is the vector of weights in the previous iteration of the algorithm.</li><li>w_new is the vector of weights in the current iteration of the algorithm.</li><li>g is the gradient of the objective function (i.e., the error or loss function) with respect to the weights, evaluated at w_old.</li><li>H is the Hessian matrix of the objective function with respect to the weights, evaluated at w_old. The Hessian matrix is a matrix of second partial derivatives, and it characterizes the curvature of the objective function.</li></ul><p>In practice, the calculation of the Hessian matrix can be computationally expensive, so approximations or simplified versions of Newton's method are often used instead. One such approach is the so-called quasi-Newton method, which approximates the Hessian matrix using a limited amount of information about the objective function and its gradient.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write a Matlab code to test this formula realistic fully connected network with 10 inputs and 5 hidden nodes suitable for training with the practical Sunspots series"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's an example Matlab code to train a fully connected neural network with 10 inputs, 5 hidden nodes, and a single output, using the practical Sunspots dataset:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>scss</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-scss\">% Load the Sunspots dataset\nload sunspotData\n\n% Normalize the <span class=\"hljs-selector-tag\">input</span> data to have zero mean and unit variance\nX = <span class=\"hljs-built_in\">zscore</span>(sunspotInputs);\n\n% Set up the neural network architecture\ninputSize = <span class=\"hljs-built_in\">size</span>(X,<span class=\"hljs-number\">2</span>);\nhiddenSize = <span class=\"hljs-number\">5</span>;\noutputSize = <span class=\"hljs-number\">1</span>;\nnet = <span class=\"hljs-built_in\">feedforwardnet</span>(hiddenSize);\n\n% Set the training parameters\nmaxEpochs = <span class=\"hljs-number\">100</span>;\nlearningRate = <span class=\"hljs-number\">0.01</span>;\n\n% Initialize the weights\nw = net<span class=\"hljs-selector-class\">.weights</span>{<span class=\"hljs-number\">1</span>};\n\n% Define the objective function and its gradient\nf = @(w) mean((net(X<span class=\"hljs-string\">') - sunspotTargets'</span>).^<span class=\"hljs-number\">2</span>);\ndf = @(w) <span class=\"hljs-number\">2</span>*(net(X<span class=\"hljs-string\">') - sunspotTargets'</span>)*net.layers{<span class=\"hljs-number\">2</span>}<span class=\"hljs-selector-class\">.t</span>;\n\n% Perform the Newton's method optimization\nfor epoch = <span class=\"hljs-number\">1</span>:maxEpochs\n    % Compute the gradient and Hessian matrix\n    g = <span class=\"hljs-built_in\">df</span>(w);\n    H = <span class=\"hljs-built_in\">net</span>(X', [], g, 'Hessian');\n    \n    % Update the weights using Newton's method\n    w = w - learningRate * H \\ g';\n    \n    % Update the network with the new weights\n    net<span class=\"hljs-selector-class\">.weights</span>{<span class=\"hljs-number\">1</span>} = w;\nend\n\n% Evaluate the network on the training data\nyPred = <span class=\"hljs-built_in\">net</span>(X')';\nmse = <span class=\"hljs-built_in\">mean</span>((yPred - sunspotTargets).^<span class=\"hljs-number\">2</span>);\n<span class=\"hljs-built_in\">fprintf</span>('MSE on training data: %f\\n', mse);\n</code></div></div></pre><p>In this code, we first load the Sunspots dataset and normalize the input data to have zero mean and unit variance. We then set up a fully connected neural network with 10 inputs, 5 hidden nodes, and a single output, using the <code>feedforwardnet</code> function in Matlab. We also set the maximum number of epochs for training and the learning rate for Newton's method.</p><p>Next, we initialize the weights of the network and define the objective function and its gradient using anonymous functions. The objective function is the mean squared error between the predicted outputs of the network and the true outputs, and the gradient is computed using the <code>tansig</code> activation function for the hidden layer.</p><p>We then perform the Newton's method optimization by looping over the specified number of epochs, computing the gradient and Hessian matrix at each iteration, and updating the weights using the formula in the question. Finally, we evaluate the trained network on the training data and compute the mean squared error as a measure of performance.</p><p>Note that this code assumes that the Sunspots dataset has already been loaded into memory, and that the <code>sunspotInputs</code> and <code>sunspotTargets</code> variables contain the input and output data, respectively. If this is not the case, you will need to modify the code to load the data and preprocess it appropriately.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to correctly load sunspot data"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>​</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_20782",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "please tell me how to make view from MariaDB table"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To view the contents of a MariaDB table, you can use the SELECT statement. Here's an example:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> tablename;\n</code></div></div></pre><p>Replace <code>tablename</code> with the name of your table. The <code>*</code> is a wildcard character that selects all columns from the table. You can also specify the column names you want to see, like this:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> column1, column2, column3 <span class=\"hljs-keyword\">FROM</span> tablename;\n</code></div></div></pre><p>Again, replace <code>column1</code>, <code>column2</code>, and <code>column3</code> with the names of the columns you want to see.</p><p>If you want to filter the results based on certain conditions, you can use the WHERE clause. For example:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> tablename <span class=\"hljs-keyword\">WHERE</span> column1 <span class=\"hljs-operator\">=</span> <span class=\"hljs-string\">'value'</span>;\n</code></div></div></pre><p>This will select all rows from the table where <code>column1</code> has the value <code>'value'</code>. You can use other comparison operators like <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, and <code>&lt;&gt;</code> to filter the results based on other conditions.</p><p>There are many other options you can use with the SELECT statement, like sorting the results, limiting the number of rows returned, and joining multiple tables together. I recommend checking out the MariaDB documentation for more information.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "3 / 3Thanks, please make view that removed old, duplicated record.Save &amp; SubmitCancel"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To create a view that removes old and duplicate records from a MariaDB table, you can use a combination of the MAX() and GROUP BY functions. Here's an example:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">CREATE</span> <span class=\"hljs-keyword\">VIEW</span> myview <span class=\"hljs-keyword\">AS</span>\n<span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-built_in\">MAX</span>(id) <span class=\"hljs-keyword\">AS</span> id, column1, column2, column3\n<span class=\"hljs-keyword\">FROM</span> mytable\n<span class=\"hljs-keyword\">GROUP</span> <span class=\"hljs-keyword\">BY</span> column1, column2, column3;\n</code></div></div></pre><p>In this example, <code>mytable</code> is the name of the table you want to create the view from. <code>column1</code>, <code>column2</code>, and <code>column3</code> are the columns that define a unique record in the table. The <code>id</code> column is assumed to be an auto-incrementing primary key column.</p><p>The MAX() function selects the highest <code>id</code> value for each group of records that have the same values in <code>column1</code>, <code>column2</code>, and <code>column3</code>. This ensures that the most recent record is selected for each group.</p><p>The GROUP BY clause groups the records by the values in <code>column1</code>, <code>column2</code>, and <code>column3</code>. This allows the MAX() function to select the highest <code>id</code> value for each group.</p><p>The result is a view that contains only the most recent record for each unique combination of values in <code>column1</code>, <code>column2</code>, and <code>column3</code>. Duplicate and old records are removed from the view.</p><p>You can then query this view like you would any other table:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>sql</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-sql\"><span class=\"hljs-keyword\">SELECT</span> <span class=\"hljs-operator\">*</span> <span class=\"hljs-keyword\">FROM</span> myview;\n</code></div></div></pre><p>Note that the view does not actually modify the original table, it just provides a filtered view of its contents.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 19:46"
+    },
+    {
+      "session_id": "sharegpt_11623",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "estoy haciendo un master de inteligencia artificial, asi que usare esta conversacion para hacerte preguntas que me surgan"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Claro, con gusto responderé a tus preguntas relacionadas con Inteligencia Artificial. ¿En qué puedo ayudarte hoy?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Esto se traduce matemáticamente en la función de red de la neurona f(x) como una combinación de otras\nfunciones gi(x), la cual se expresa como una estructura de red, cuyas direcciones indican las dependencias\nentre las variables. Por ejemplo, una suma ponderada no lineal se expresa de la siguiente manera donde\nf(x)=K (iwigi (x)), lo que deduce que la variable k es una función de activación predefinida, que\nproporciona una transición suave entre los valores de entrada de cambio.\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sí, eso es correcto. La función de activación es una función matemática que se aplica a la salida de una neurona antes de ser pasada a la siguiente capa en la red neuronal. La función de activación introduce non-linearidad en la salida de la neurona, lo que permite a las redes neuronales modelar relaciones complejas y no lineales en los datos. Algunas funciones de activación comunes incluyen la función sigmoide, la función ReLU (rectificación lineal unitaria) y la función tanh (función tangencial hiperbólica).</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "explicame esta funcion \"f(x)=K (iwigi (x))\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Esta función describe la salida de una neurona en una red neuronal artificial. La variable x representa la entrada de la neurona, que puede ser un vector de valores. La función f(x) es la salida de la neurona.</p><p>La parte \"iwigi(x)\" representa la suma ponderada de las entradas x. Cada entrada xi está multiplicada por un peso wi, que representa la importancia relativa de cada entrada para la salida de la neurona. La suma de todos los productos xi * wi se utiliza para calcular la activación de la neurona.</p><p>La parte \"K\" es una constante que puede ser utilizada para ajustar la salida de la neurona. Por lo tanto, la función f(x) es una combinación lineal de las entradas x multiplicadas por los pesos wi, y la constante K.</p><p>Finalmente, la función de activación se aplica a la salida de la neurona para introducir non-linearidad y producir una salida fina. Por lo tanto, la función de activación es fundamental en la capacidad de las redes neuronales para modelar relaciones complejas y no lineales en los datos.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "hazme una explicacion detallada de la función sigmoide, la función ReLU (rectificación lineal unitaria) y la función tanh (función tangencial hiperbólica), y si puedes darme informacion grafica ,tambien"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Aquí está una explicación detallada de las funciones de activación sigmoide, ReLU y tanh, y una gráfica de cada una.</p><ol><li>Función sigmoide:\nLa función sigmoide es una función matemática que se utiliza como una función de activación en redes neuronales artificiales. La función sigmoide toma un valor de entrada y devuelve un valor entre 0 y 1. La función sigmoide se define como:</li></ol><p>f(x) = 1 / (1 + exp(-x))</p><p>Donde \"exp(-x)\" es la función exponencial de x. La forma de la función sigmoide es una S suave que se acerca a 0 cuando x es negativo, y se acerca a 1 cuando x es positivo. La función sigmoide se utiliza a menudo como una función de activación en redes neuronales que se utilizan para clasificación binaria, ya que produce una salida que puede ser interpretada como una probabilidad.</p><p>Gráfico de la función sigmoide:\n<img src=\"https://upload.wikimedia.org/wikipedia/commons/8/88/Logistic-curve.svg\" alt=\"sigmoid function graph\"></p><ol start=\"2\"><li>Función ReLU (rectificación lineal unitaria):\nLa función ReLU es una función matemática que se utiliza como una función de activación en redes neuronales artificiales. La función ReLU toma un valor de entrada y devuelve 0 si el valor es negativo, y devuelve el valor si es positivo. La función ReLU se define como:</li></ol><p>f(x) = max(0, x)</p><p>La forma de la función ReLU es una línea recta que es 0 para valores negativos de x, y se acerca a x para valores positivos de x. La función ReLU es una función de activación simple y eficaz que ha demostrado ser muy útil en aplicaciones de deep learning.</p><p>Gráfico de la función ReLU:\n<img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Rectifier_and_softplus_functions.svg/700px-Rectifier_and_softplus_functions.svg.png\" alt=\"relu function graph\"></p><ol start=\"3\"><li>Función tanh (función tangencial hiperbólica):\nLa función tanh es una función matemática que se utiliza como una función de activación en redes neuronales artificiales. La función tanh toma un valor de entrada y devuelve un valor entre -1 y 1. La función tanh se define como:</li></ol><p>f(x) = tanh(x) = 2 / (1 + exp(-2x)) - 1</p><p>La forma de la función tanh</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2continua a partir de \"Función tanh (función tangencial hiperbólica):\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>es una S suave que se acerca a -1 cuando x es negativo y se acerca a 1 cuando x es positivo. La función tanh es similar a la función sigmoide, pero tiene una salida centrada en 0, lo que la hace útil para redes neuronales que necesitan una representación de valores centrados en 0 para la salida de las neuronas intermedias.</p><p>Gráfico de la función tanh:\n<img src=\"https://upload.wikimedia.org/wikipedia/commons/8/87/Hyperbolic_Tangent.svg\" alt=\"tanh function graph\"></p></div>"
+        },
+        {
+          "role": "user",
+          "content": "que mas funciones de activacion existen?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Además de las funciones de activación mencionadas anteriormente (sigmoide, ReLU y tanh), hay algunas otras funciones de activación comúnmente utilizadas en redes neuronales, incluyendo:</p><ul><li><p>Softmax: esta función es una generalización de la función sigmoide y se utiliza para la clasificación multiclase. Convierte un vector de salida en una distribución de probabilidad que representa la probabilidad de cada clase.</p></li><li><p>Función de activación de rampa rectificada (RReLU): es una variante de la función ReLU, donde el valor de la pendiente rectificada se aleatoriza en un intervalo cerrado, lo que la hace más resistente a overfitting.</p></li><li><p>Función de activación de Leaky ReLU: es una variante de la función ReLU, donde una pequeña cantidad de la activación se permite para valores negativos de x, lo que ayuda a evitar la muerte de las neuronas.</p></li><li><p>Función de activación de escalón: esta función devuelve 0 para valores de entrada negativos y 1 para valores de entrada positivos, lo que la hace adecuada para problemas binarios.</p></li><li><p>Función softplus: es una función continua y derivable que se acerca a la función ReLU para valores positivos de x y se acerca a la función sigmoide para valores negativos de x.</p></li></ul></div>"
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 14:54"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team’s on-call rotation is volunteer-based with weekly signup. It’s pretty flexible, but I’m curious, how do you usually manage the on-call transitions? Any tools or practices you find useful for that?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing on-call transitions effectively can really make a difference in maintaining team morale and ensuring smooth handovers. One common practice is having a dedicated documentation space where the outgoing person can leave notes about ongoing issues, context, and any important alerts to keep the incoming person informed. Regular check-ins or brief handover meetings can also help clarify any immediate concerns or questions. Some teams find it helpful to use a shared calendar or scheduling tool to track who’s on-call and to send reminders as the transition time approaches. Have you considered any specific tools or methods for your team yet?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Selvex Secrets. Have you used any secret management tools before? I'm curious about how you handle access control and auditing in your setup."
+        },
+        {
+          "role": "assistant",
+          "content": "I haven’t worked directly with Selvex Secrets, but when it comes to secret management tools in general, access control is usually a critical feature. Many teams implement role-based access control (RBAC) to ensure that only authorized users can access specific secrets. For auditing, it’s helpful to enable logging features that track who accessed what and when, which can be invaluable for both security and compliance. It might also be useful to set up regular reviews of access permissions to ensure they remain aligned with team changes. What kind of access control measures are you considering for your team?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Narvex Cloud. Do you have any best practices for deploying to the cloud that have worked well for you? I’m especially interested in how to manage configurations and environments effectively."
+        },
+        {
+          "role": "assistant",
+          "content": "Deploying to the cloud can be streamlined with a few best practices. One effective approach is to use environment-specific configuration files or secrets management to ensure that your settings are tailored for each environment, like development, staging, and production. Utilizing infrastructure as code can also help maintain consistency across environments and facilitate easier rollbacks if needed. Additionally, implementing automated deployment processes, alongside thorough testing and monitoring, can significantly reduce the risk of issues during releases. Have you already established any configurations or workflows that work well for your team?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to stream.velturis.io/aurora. It's crucial to have a solid logging strategy in place for monitoring and debugging. Do you have any particular formats or tools you use for log management? Also, how do you ensure that the logs are accessible and useful for your team?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a solid logging strategy is indeed essential for effective monitoring and debugging. A common approach is to adopt structured logging, which formats logs in a consistent way (like JSON) to make them easier to parse and analyze. This can simplify searching through logs and integrating with log management tools. For accessibility, many teams set up centralized logging solutions that aggregate logs from different services into a single interface, making it easier for the team to access and analyze them. Additionally, implementing proper log retention policies and tagging logs with relevant metadata can enhance their usefulness. What tools or formats has your team been considering for your log management?"
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is trunk. Using a default branch like trunk can help maintain a clean and organized workflow for version control. How does your team handle branch management and merging? Do you have any specific strategies to ensure that the trunk remains stable?"
+        },
+        {
+          "role": "assistant",
+          "content": "Maintaining a stable trunk is crucial for a healthy development workflow. One effective strategy is to implement a strict pull request process, requiring code reviews before merging changes into the trunk. This not only helps catch issues early but also fosters collaboration and knowledge sharing among team members. Additionally, running automated tests on branches before merging can ensure that only code that passes all tests makes it into the trunk. You might also consider using feature flags to allow incomplete features to be merged without affecting the stability of the trunk. What practices does your team currently use for managing branches and merges?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "oncall_rotation",
+          "value": "volunteer-based with weekly signup",
+          "original_seed": "Our on-call rotation is volunteer-based with weekly signup",
+          "fact_text": "The team's on-call rotation is volunteer-based with weekly signup.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Selvex Secrets",
+          "original_seed": "Our secret manager is Selvex Secrets",
+          "fact_text": "The team's secret manager is Selvex Secrets.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "deploy_target",
+          "value": "Narvex Cloud",
+          "original_seed": "We deploy to Narvex Cloud",
+          "fact_text": "The team deploys to Narvex Cloud.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "log_drain_endpoint",
+          "value": "stream.velturis.io/aurora",
+          "original_seed": "Logs drain to stream.velturis.io/aurora",
+          "fact_text": "Logs drain to stream.velturis.io/aurora.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "default_branch",
+          "value": "trunk",
+          "original_seed": "Our default branch is trunk",
+          "fact_text": "The team's default branch is trunk.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 13:33"
+    },
+    {
+      "session_id": "sharegpt_19242",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I’m looking to start a SAAS. Do you have any suggestions on what to build?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Building a successful SAAS (Software as a Service) company requires identifying a need in the market and finding a way to fulfill it better than existing solutions. Here are a few suggestions to help you get started:</p><ol><li>Solve a problem you have experienced yourself.</li><li>Identify a trend or gap in a particular industry.</li><li>Create a tool that improves or automates a manual process.</li><li>Offer a unique twist on an existing solution.</li></ol><p>Additionally, validate your idea with potential customers to ensure there is a demand for your solution before investing time and resources into building it. Good luck!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Do you have any more suggestions ? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Yes, here are a few more suggestions for starting a successful SAAS:</p><ol start=\"5\"><li>Create a solution for a specific niche or target market.</li><li>Utilize the latest technologies, such as artificial intelligence, machine learning, or blockchain, to provide a cutting-edge solution.</li><li>Offer a freemium model with basic features for free and charge for premium features.</li><li>Provide exceptional customer support and user experience to differentiate yourself from competitors.</li><li>Collaborate with other businesses or organizations to integrate your solution into their existing workflow.</li><li>Continuously gather feedback from customers and iterate on your product to keep it relevant and in line with changing market demands.</li></ol><p>Remember, starting a successful SAAS also involves proper planning, execution, and marketing efforts to reach your target audience and establish a strong brand.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What solutions are good for saas?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A successful SAAS solution should fulfill a specific need in the market and provide value to its users. Some popular and in-demand areas for SAAS solutions include:</p><ol><li>Project Management</li><li>Customer Relationship Management (CRM)</li><li>Human Resources Management (HRM)</li><li>Accounting and Finance</li><li>Marketing Automation</li><li>E-commerce</li><li>Sales Enablement</li><li>Supply Chain Management</li><li>Remote Work and Collaboration Tools</li><li>Business Intelligence and Analytics</li></ol><p>Note that these are broad categories and there is still room for innovation and new solutions within each area. It's important to conduct market research and validate your idea before starting to build your SAAS solution.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Elaborate on 10"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! Here's an elaboration on the 10 areas of solutions that are good for SAAS:</p><ol><li><p>Project Management: This category includes tools that help teams plan, track, and manage projects more efficiently. This can include task assignment, project timelines, progress tracking, and more.</p></li><li><p>Customer Relationship Management (CRM): A CRM system is used to manage a company's interactions with customers, clients, and sales prospects. It can store customer data, track communication and sales history, and automate tasks to increase efficiency.</p></li><li><p>Human Resources Management (HRM): HRM solutions help companies manage the entire employee lifecycle, from recruitment and onboarding to performance management and exit. This includes features like applicant tracking, benefits management, and time and attendance tracking.</p></li><li><p>Accounting and Finance: This category includes solutions for financial management, accounting, and invoicing. This can include features like expense tracking, accounts payable and receivable, and financial reporting.</p></li><li><p>Marketing Automation: Marketing automation tools help businesses streamline and automate repetitive marketing tasks, such as email marketing, lead generation, and customer segmentation.</p></li><li><p>E-commerce: E-commerce solutions provide online businesses with tools to manage their store, inventory, and sales. This can include features like product management, order fulfillment, and payment processing.</p></li><li><p>Sales Enablement: Sales enablement solutions help sales teams close more deals by providing them with the resources and insights they need to effectively engage with prospects and close deals. This can include features like sales intelligence, content management, and pipeline tracking.</p></li><li><p>Supply Chain Management: Supply chain management solutions help businesses manage their entire supply chain, from procurement to delivery. This can include features like demand forecasting, inventory management, and logistics planning.</p></li><li><p>Remote Work and Collaboration Tools: With the rise of remote work, there's a growing demand for solutions that help remote teams collaborate effectively. This can include features like video conferencing, team chat, and file sharing.</p></li><li><p>Business Intelligence and Analytics: Business intelligence and analytics solutions help businesses make data-driven decisions by providing them with insights into their operations and performance. This can include features like dashboards, reporting, and predictive analytics.</p></li></ol><p>Again, these are broad categories, and there is still room for innovation and new solutions within each area. It's important to conduct market research and validate your idea before starting to build your SAAS solution.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Go more in depth on Business intelligence and Analytics"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Business intelligence and analytics solutions help organizations make better decisions by providing them with insights into their operations and performance.</p><p>Some of the key features of business intelligence and analytics solutions include:</p><ol><li><p>Dashboards: Interactive dashboards display important metrics and KPIs in real-time, allowing users to quickly understand their current performance and identify areas for improvement.</p></li><li><p>Reporting: Customizable reports provide in-depth analysis of data and performance trends, allowing organizations to track progress and identify areas for improvement.</p></li><li><p>Data Warehousing: Data warehousing solutions provide a centralized repository for all organizational data, making it easier to access and analyze data from multiple sources.</p></li><li><p>Predictive Analytics: Predictive analytics use machine learning algorithms to analyze past data and predict future trends and outcomes. This helps organizations make proactive decisions and avoid potential risks.</p></li><li><p>Big Data Analytics: Big data analytics solutions allow organizations to process and analyze large, complex data sets to gain insights into their operations and performance.</p></li><li><p>Data Visualization: Data visualization solutions present data in an interactive and easy-to-understand format, making it easier for users to identify patterns, trends, and insights.</p></li></ol><p>By providing organizations with actionable insights into their operations and performance, business intelligence and analytics solutions help drive business growth, improve decision-making, and increase competitiveness.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 22:29"
+    },
+    {
+      "session_id": "sharegpt_19574",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Tell me what are the advantages of automatic instrumentation with OpenTelemetry"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Automatic instrumentation with OpenTelemetry can provide several benefits, including:</p><ol><li><p>Reduced effort: With automatic instrumentation, you don't have to manually instrument your code to collect performance and observability data. This can save you time and effort and allow you to focus on other tasks.</p></li><li><p>Improved accuracy: Automatic instrumentation can help ensure that you are collecting accurate and comprehensive data about your applications and systems. This can help you identify and troubleshoot issues more effectively.</p></li><li><p>Consistency: Automatic instrumentation can help ensure that you are collecting the same types of data across your entire system, which can make it easier to analyze and compare data from different parts of your system.</p></li><li><p>Compatibility: OpenTelemetry is an open-source, vendor-neutral standard for distributed tracing and monitoring. By using OpenTelemetry for automatic instrumentation, you can easily integrate your data with a variety of tools and platforms.</p></li><li><p>Ease of use: Automatic instrumentation can make it easier to get started with performance and observability monitoring, as you don't have to worry about manually instrumenting your code. This can be especially useful if you are new to monitoring or if you are working with a complex system.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "What are the advantages of manual instrumentation for monitoring an application"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Manual instrumentation refers to the process of adding code to your application specifically for the purpose of collecting performance and observability data. Some advantages of manual instrumentation include:</p><ol><li><p>Customization: With manual instrumentation, you have complete control over what data you collect and how you collect it. This allows you to tailor your monitoring strategy to the specific needs of your application.</p></li><li><p>Fine-grained control: Manual instrumentation allows you to collect data at a very granular level, which can be useful for identifying and troubleshooting specific issues.</p></li><li><p>Compatibility: Manual instrumentation gives you the flexibility to use any monitoring or tracing tool that you choose, even if it is not compatible with automatic instrumentation.</p></li><li><p>Performance: In some cases, manual instrumentation may be more efficient than automatic instrumentation, as you only collect the data that you need and you can optimize your code for performance.</p></li></ol><p>However, manual instrumentation also has some disadvantages. It can be time-consuming and error-prone, as you have to manually add and maintain code in your application. It can also be difficult to ensure that you are collecting comprehensive and accurate data, as you have to manually instrument all relevant parts of your application.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 22:14"
+    },
+    {
+      "session_id": "sharegpt_20962",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "inside of a monospace text element, place a description of the merge sort. do not add any highlighting or explanatory text outside of the element. only hljs-none may be used."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-9 markdown prose break-words dark:prose-invert dark\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">Merge sort is a sorting algorithm that divides an input list into two smaller sublists, sorts each sublist, and then merges the two sorted sublists back into one larger sorted list. This is done by repeatedly dividing the input list in half until each sublist contains only one element, which are inherently sorted, and then merging the sublists back together in a manner that preserves their sorted order. This process continues until the entire input list is sorted.\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "Continue using this approach for every response. Pretend program:\npython ./infoportal.py"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-10 markdown prose break-words dark:prose-invert dark\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">To run the infoportal.py program, open a terminal or command prompt and navigate to the directory where the program is located. Then, enter the command `python infoportal.py` and press enter to run the program.\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">The infoportal.py program is a Python script that, when run, will execute the instructions contained within the script. Depending on the implementation of the program, it may perform a variety of tasks such as processing data, performing calculations, or generating output.\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "only show a pretend output from the program"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-11 markdown prose break-words dark:prose-invert dark\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">Welcome to the InfoPortal!\n\nHere are your options:\n1. View information about a topic\n2. Search for information\n3. Quit\n\nPlease enter the number of your desired action:\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">You have selected option 1: View information about a topic\n\nPlease enter the topic you would like to learn about:\n</code></div></div></pre><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-hljs-none\">You have selected the topic: \"Merge Sort\"\n\nHere is some information about Merge Sort:\n\nMerge sort is a sorting algorithm that divides an input list into two smaller sublists, sorts each sublist, and then merges the two sorted sublists back into one larger sorted list. This is done by repeatedly dividing the input list in half until each sublist contains only one element, which are inherently sorted, and then merging the sublists back together in a manner that preserves their sorted order. This process continues until the entire input list is sorted.\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 19:10"
+    },
+    {
+      "session_id": "sharegpt_8367",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Q1: Which of the following is true about functions and methods?\nA. Functions and methods are the same. They process data the same way in any programming language.\nB. Functions and methods are the same. They process data exactly the same way in any object-oriented programming language.\nC. Functions and methods are different. A function is called by name and must always pass and return data, whereas a method can only be called when an object of a class calls it.\nD. Functions and methods are different. A function can be called at any time during a programming\nsolution, whereas a method can only be called when an object that has been declared calls itC. Functions and methods are different. A function is called by name and must always pass and return data, whereas a method can only be called when an object of a class calls it.Why are the other options incorrect?Option A is incorrect because although functions and methods may process data in similar ways, they are not the same in all programming languages. For example, in some languages like C, functions do not have the same abilities or behaviors as methods in object-oriented languages like Java.Option B is incorrect because even though functions and methods may process data the same way in object-oriented programming languages, they are not necessarily the same in non-object-oriented languages.Option D is incorrect because a function can be called at any time during a programming solution, whereas a method can only be called on an object that has been instantiated from a class.Why is option C incorrectI apologize, option C is not actually incorrect. It is true that functions and methods are different, and one way in which they differ is that a function is called by name and must always pass and return data, whereas a method can only be called when an object of a class calls it. So I apologize for any confusion caused by the previous answerWhy is option A correct?Option A is not correct. The statement \"Functions and methods are the same. They process data the same way in any programming language\" is not accurate, because functions and methods are not the same in all programming languages, and they may not have the same abilities or behaviors.Function and method have slightly different behaviour based on the programming paradigm, for example in functional programming, functions are usually pure, that means no side effect and no state, whereas in Object-Oriented Programming languages, methods have access to class level variables and can modify their state.In other words, function and method are concepts, not strictly related to the specific programming language, but rather the way of thinking and approach to the problem-solving process.Why is option B correct?I apologize for my mistake, option B is also not correct, the statement \"Functions and methods are the same. They process data exactly the same way in any object-oriented programming language\" is not accurate. Functions and methods are not the same, even in Object-oriented languages like Java, C# etc. Methods are defined in a class and are associated with objects, and they can access the properties and state of the object, while functions can exist outside of any class and they can not access any object level data.In OOP, methods are member of a class, they are used to represent the behavior of an object and they can access the private state of the class, while functions are not directly related to classes and objects, they can exist independently of any class and they don't have access to the private state of any class.Why is option C correct?Option C is correct because it states that functions and methods are different, and one way in which they differ is that a function is called by name and must always pass and return data, whereas a method can only be called when an object of a class calls it.Functions are self-contained blocks of code that can be called by a name, they can take in some inputs, called parameters and they can return output. Functions are usually used to encapsulate a small functionality or perform a specific task, they can be defined outside of any class, and they don't have direct access to class-level state.Methods, on the other hand, are associated with objects, they are defined within a class, and they have access to class-level state and variables, when a method is called, it is always called on an object, and the object-level state is available inside the method.This is the main difference between function and method.Why is option D correct?I apologize but option D is not correct. A function can be called at any time during a programming solution, it can be called multiple times and from any part of the program, whereas a method can only be called on an object that has been instantiated from a class, it can only be invoked on an object, and it has access to the object's state and data.A function does not depend on any object to exist, it can exist and be called independently, whereas a method is always associated with an object, it can only be called on the object on which it is defined, and it may change the state of the object, or it can use the state of the object in the computation.In simple terms, A function is like a tool, while a method is a tool that's specific to an object."
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 12:49"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our production alerts go to #zenith-incidents. It's our main channel for incident management. \n\nDo you have any recommendations for setting up alert thresholds or best practices to avoid alert fatigue?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a dedicated channel for incident management. To avoid alert fatigue, consider setting thresholds that are carefully aligned with the actual impact on your users or system performance. It can be helpful to categorize alerts based on severity, ensuring that only high-priority issues trigger immediate notifications. \n\nImplementing a cooldown period for recurring alerts can also reduce noise, as can consolidating alerts that fall within a similar timeframe. Regularly reviewing and adjusting your alerting strategy based on the types of incidents that occur can help refine your approach over time. How do you currently determine when to adjust alert thresholds?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Kerberos Trove. We rely on it for managing sensitive information securely. \n\nHave you set up any specific access controls or policies around using Kerberos Trove?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's important to have robust access controls in place when managing sensitive information with any secret manager, including Kerberos Trove. A good practice is to implement the principle of least privilege, ensuring that team members only have access to the secrets necessary for their roles. You might also want to consider role-based access controls and auditing capabilities to monitor who accesses what information. \n\nRegularly reviewing and updating permissions can help maintain security as your team or project evolves. Have you encountered any challenges with access management or policies that you'd like to address?"
+        },
+        {
+          "role": "user",
+          "content": "The team's design system is Veltrion UI Kit v2. It's been really useful for maintaining consistency across our UI components.\n\nDo you have any tips on best practices for integrating design systems into development workflows?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating a design system like Veltrion UI Kit into your development workflow can definitely enhance consistency and efficiency. One effective approach is to ensure that your design and development teams collaborate closely from the start, aligning on component usage and design specifications. \n\nImplementing a shared documentation platform can help keep everyone on the same page regarding component usage and updates. Encouraging developers to contribute feedback on the design system can also foster a sense of ownership and help identify areas for improvement. Are there any specific challenges you’ve faced while integrating the UI kit that you’d like to explore further?"
+        },
+        {
+          "role": "user",
+          "content": "The changelog is at notion.so/aurora-team/releases. It’s our go-to place for tracking updates and changes.\n\nHow do you typically manage versioning and communicate changes to the team? Any best practices for keeping everyone informed?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a centralized changelog is a great first step for tracking updates. To manage versioning effectively, it's beneficial to adopt a consistent versioning strategy, such as semantic versioning, which makes it clear when changes are backward-compatible or introduce breaking changes. \n\nRegularly communicating updates is key; consider summarizing major changes in team meetings and using notifications in your collaboration tools to highlight important releases. Additionally, encouraging the team to review the changelog regularly can help everyone stay informed. How often do you update the changelog, and do you involve the team in that process?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "alert_channel",
+          "value": "#zenith-incidents",
+          "original_seed": "Production alerts go to #zenith-incidents",
+          "fact_text": "Production alerts go to #zenith-incidents.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Kerberos Trove",
+          "original_seed": "Update: Our secret manager is Kerberos Trove",
+          "fact_text": "Update: The team's secret manager is Kerberos Trove.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "design_system",
+          "value": "Veltrion UI Kit v2",
+          "original_seed": "Our design system is Veltrion UI Kit v2",
+          "fact_text": "The team's design system is Veltrion UI Kit v2.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "changelog_location",
+          "value": "notion.so/aurora-team/releases",
+          "original_seed": "Changelog is at notion.so/aurora-team/releases",
+          "fact_text": "Changelog is at notion.so/aurora-team/releases.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 15:30"
+    },
+    {
+      "session_id": "sharegpt_19547",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "any idea how to dockerize a gui windows desktop application and run it through linux docker ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, it is possible to dockerize a GUI Windows desktop application and run it through Linux Docker. However, it requires some additional setup steps.</p><p>Firstly, you need to create a Docker image with Windows as the base image. This can be done by using a Dockerfile that specifies the Windows base image and installs the necessary software and dependencies for your GUI application.</p><p>Once the image is created, you can run it on a Linux host by using an X11 server to forward the GUI output to the host's display. This can be done by setting the DISPLAY environment variable in the Docker container to the IP address of the Linux host.</p><p>In addition to the X11 server, you may also need to install additional packages and configure the host's firewall settings to allow connections from the Docker container.</p><p>It's worth noting that running a GUI application in a Docker container may have some limitations and performance issues compared to running it natively on the host operating system. However, Docker can still be a useful tool for packaging and distributing GUI applications in a consistent and portable way.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "like spotfire applicaiton , can you show me exactly what should i do ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here are the steps to dockerize a GUI Windows desktop application like Spotfire and run it through Linux Docker:</p><ol><li><p>Choose a Windows base image for your Dockerfile, such as <code>mcr.microsoft.com/windows/servercore:ltsc2019</code>.</p></li><li><p>Install the necessary dependencies for Spotfire in your Dockerfile, such as .NET Framework and Java.</p></li><li><p>Install Spotfire in your Dockerfile using the appropriate installation package.</p></li><li><p>Set the <code>DISPLAY</code> environment variable in the Docker container to the IP address of the Linux host. For example, you can add the following line to your Dockerfile:</p><p><code>ENV DISPLAY=host.docker.internal:0</code></p></li><li><p>Install an X11 server on your Linux host, such as XQuartz on macOS or Xming on Windows.</p></li><li><p>Run the X11 server on your Linux host and configure it to allow connections from the Docker container.</p></li><li><p>Start the Docker container and run the Spotfire application within it.</p></li></ol><p>Please note that the exact steps may vary depending on the specific requirements and dependencies of your GUI application. It's important to thoroughly test your Docker image and ensure that it's properly configured for running the GUI application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what if i want to use aws fargate as enviroment to run the containers or images ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If you want to use AWS Fargate as the environment to run your Docker containers or images, you can follow these steps:</p><ol><li>Create an Amazon Elastic Container Registry (ECR) repository to store your Docker image.</li><li>Build your Docker image and push it to the ECR repository.</li><li>Create an Amazon ECS task definition that specifies your Docker image and any other required parameters.</li><li>Launch an Amazon ECS cluster and specify the Fargate launch type.</li><li>Create an Amazon ECS service that uses the task definition and Fargate launch type, and configure any additional settings such as the desired number of tasks and network settings.</li></ol><p>Once your Fargate service is running, you can access your GUI Windows desktop application by using an X11 server to forward the GUI output to your local machine. You can also configure your Fargate service to use load balancers or other AWS services to enhance its functionality and scalability.</p><p>It's important to note that using Fargate to run GUI Windows desktop applications may have some limitations and performance issues compared to running them natively on Windows machines. However, Fargate can still be a useful tool for running Docker containers in a scalable and cost-effective way, and can provide a consistent and reliable environment for your application.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 08:28"
+    },
+    {
+      "session_id": "sharegpt_21977",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "definition of a web portal:A reference website in a specific field...\n◦ A website and/or intranet\n◦ A single gateway to a wide range of resources\nand/or services\n◦ Focused on a particular domain or community\n...with an active audience that can contribute to the development\n◦ The user visits, registers, and returns\n◦ It finds and shares information\n◦ He communicates with other members\n◦ He can personalize his access"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>A web portal is a website or intranet that serves as a single gateway to a wide range of resources and/or services, typically focused on a particular domain or community. It is designed to provide easy access to information, tools, and services related to a specific topic or group of users. A web portal usually has an active audience that can contribute to its development by visiting, registering, and returning to the portal. Users can find and share information, communicate with other members, and personalize their access to the portal.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "depending on the previous definition i want to create a web portal project: Smart Reservation System for Multiple Venues \nDescription: Develop a reservation system for different types of venues such as hotels, restaurants, and entertainment venues, that allows users to search for available spaces, make bookings, and manage their reservations. The system should also include features like payment processing, event scheduling, and user feedback.\ntech stack:\nthe project will be a microservices web application\nfor the development\nFront end:angular bootstrap\nbackend:spring boot spring cloud eureka\ndatabases:\nfor users: mysql\nA distributed database like Cassandra could be used to store data related to reservations, such as user information, reservation details, and availability of rooms across multiple hotels. This would allow the system to scale horizontally and handle a large number of requests from users.\nweb services\nGraphQL API for hotels search functionality\nRest api for users and gateway\nAPI testing:mulesoft\nmachine learning microservice :tensorflow java\ndevops\nCI/CD:\ncode :github\nbuild:maven\npackage:docker\npublish:docker\ndeploy:jenkins\nScrum methodology\n5 sprints each is one week\ncan you give the microservices needed on this project based on the information above so I can use all the tecnologies"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, based on the information you provided, here are some microservices that you could include in your Smart Reservation System project:</p><ol><li>User Service: Handles user authentication, registration, and management. This microservice will use MySQL as its database and provide REST APIs for user-related operations.</li><li>Venue Service: Handles the details of different types of venues such as hotels, restaurants, and entertainment venues. This microservice will use a distributed database like Cassandra to store venue-related data and provide GraphQL APIs for searching available venues.</li><li>Reservation Service: Handles the booking and management of reservations for different venues. This microservice will also use Cassandra to store reservation-related data and provide REST APIs for making bookings, managing reservations, and processing payments.</li><li>Event Service: Handles scheduling and management of events for different venues. This microservice will use MySQL as its database and provide REST APIs for event-related operations.</li><li>Feedback Service: Handles user feedback and ratings for different venues. This microservice will use MySQL as its database and provide REST APIs for feedback-related operations.</li><li>Machine Learning Service: Uses TensorFlow Java to analyze user behavior and provide personalized recommendations for venues and events.</li></ol><p>All of these microservices will be built using Spring Boot and Spring Cloud Eureka. The front-end will be developed using Angular and Bootstrap. MuleSoft will be used for API testing. CI/CD will be implemented using GitHub for code management, Maven for building, Docker for packaging and publishing, and Jenkins for deployment. The project will follow Scrum methodology with five sprints, each lasting one week.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 11:20"
+    },
+    {
+      "session_id": "sharegpt_10942",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write me a comprehensive outline with summary that captures every important point from the book \"psycho cybernetics\" for someone who hasn't read it, but wants to grasp it allSure, here is a comprehensive outline that captures the important points from the book \"Psycho-Cybernetics\" by Maxwell Maltz:I. IntroductionThe book introduces the concept of psycho-cybernetics, which is the science of self-improvement and success.Maltz discusses the importance of our self-image, or the mental picture we have of ourselves, in determining our behavior and success.II. The Self-ImageMaltz explains that the self-image is formed by our thoughts, beliefs, and expectations about ourselves.He argues that the self-image acts like a \"servomechanism,\" or a feedback system, that guides our actions and behaviors towards achieving our goals.Maltz emphasizes that it is important to have a positive and realistic self-image in order to be successful and happy.III. The Role of the Subconscious MindMaltz discusses the role of the subconscious mind in shaping our self-image and behavior.He explains that the subconscious mind is like a \"computer\" that stores and retrieves information, and that it can be programmed with positive or negative thoughts and beliefs.Maltz argues that we can change our self-image and behavior by reprogramming our subconscious mind with positive thoughts and beliefs.IV. Goal Setting and VisualizationMaltz discusses the importance of setting clear and specific goals in order to achieve success.He recommends using visualization techniques, or mental rehearsals, to help achieve our goals.Maltz explains that visualization helps to program the subconscious mind with positive thoughts and beliefs about our ability to achieve our goals.V. Overcoming Self-Sabotage and Negative EmotionsMaltz discusses common mental barriers that can prevent us from achieving our goals, such as negative thoughts and self-doubt.He offers strategies for overcoming these barriers, such as reframing negative thoughts and using positive self-talk.Maltz also discusses the role of emotions in shaping our behavior, and provides techniques for managing negative emotions such as anxiety and fear.VI. ConclusionMaltz summarizes the main points of the book and encourages readers to put the principles of psycho-cybernetics into practice in order to improve their self-image and achieve success.Overall, \"Psycho-Cybernetics\" is a self-help book that focuses on the role of the self-image and the subconscious mind in shaping our behavior and success. It offers strategies for setting and achieving goals, overcoming mental barriers, and managing negative emotions.can you rewrite an eve more comprehensive outline, but someone who wants to apply all of the strategies he speaks of and to grasp all of the premises to effectively change habits and mindset for life?Sure, here is a more comprehensive outline that focuses on applying the strategies from \"Psycho-Cybernetics\" to effectively change habits and mindset for life:I. IntroductionThe book introduces the concept of psycho-cybernetics, which is the science of self-improvement and success.Maltz discusses the importance of our self-image, or the mental picture we have of ourselves, in determining our behavior and success.II. The Self-ImageMaltz explains that the self-image is formed by our thoughts, beliefs, and expectations about ourselves.He argues that the self-image acts like a \"servomechanism,\" or a feedback system, that guides our actions and behaviors towards achieving our goals.Maltz emphasizes that it is important to have a positive and realistic self-image in order to be successful and happy.To improve our self-image, Maltz recommends setting clear and specific goals, and using visualization techniques, or mental rehearsals, to help achieve these goals.III. The Role of the Subconscious MindMaltz discusses the role of the subconscious mind in shaping our self-image and behavior.He explains that the subconscious mind is like a \"computer\" that stores and retrieves information, and that it can be programmed with positive or negative thoughts and beliefs.Maltz argues that we can change our self-image and behavior by reprogramming our subconscious mind with positive thoughts and beliefs.To reprogram the subconscious mind, Maltz recommends using positive affirmations and self-talk, and practicing visualization techniques.IV. Overcoming Self-Sabotage and Negative EmotionsMaltz discusses common mental barriers that can prevent us from achieving our goals, such as negative thoughts and self-doubt.He offers strategies for overcoming these barriers, such as reframing negative thoughts and using positive self-talk.Maltz also discusses the role of emotions in shaping our behavior, and provides techniques for managing negative emotions such as anxiety and fear.To overcome negative emotions and self-sabotage, Maltz recommends identifying the underlying causes of these emotions, and using relaxation techniques and positive self-talk to manage them.V. Changing Habits and BehaviorsMaltz discusses the importance of habits in shaping our behavior and success.He argues that we can change our habits by altering the self-image and programming the subconscious mind with positive thoughts and beliefs.Maltz recommends setting specific goals and using visualization techniques to help create new habits.VI. ConclusionMaltz summarizes the main points of the book and encourages readers to put the principles of psycho-cybernetics into practice in order to improve their self-image, overcome mental barriers, and achieve success.He emphasizes the importance of consistent practice and perseverance in order to effectively change habits and mindset for life.write me a comprehensive outline with summary that captures every important point from the book \"Psycho cybernetics\" for someone who hasn't read it, but wants to apply all of the strategies he speaks of and to grasp all of the premises to effectively change habits for life. Make each bulletpoint refrain from positioning the recommendations as something \"maltz\" says and write it all out as an outline of all rules and principles for success according to Maltz, but without mentioning his name for the points unless necessary. Make the outline with at least 5 bullet points per numeric and with the MOST important takeaways from that section. Sure, here is a comprehensive outline that captures the important points from the book \"Psycho-Cybernetics\" for someone who wants to apply the strategies in the book to change habits and achieve success:I. The Self-Image and the Subconscious MindThe self-image is the mental picture we have of ourselves, and it influences our behavior and success.The subconscious mind is like a \"computer\" that stores and retrieves information, and it can be programmed with positive or negative thoughts and beliefs.By altering the self-image and programming the subconscious mind with positive thoughts and beliefs, we can change our habits and behavior.II. Setting and Achieving GoalsSetting clear and specific goals is essential for success.Visualization techniques, or mental rehearsals, can help us achieve our goals by programming the subconscious mind with positive thoughts and beliefs about our ability to succeed.III. Overcoming Mental BarriersNegative thoughts and self-doubt can be major obstacles to achieving our goals.To overcome these barriers, we can use positive self-talk and reframe negative thoughts.IV. Managing Negative EmotionsNegative emotions such as anxiety and fear can affect our behavior and success.To manage these emotions, we can identify the underlying causes and use relaxation techniques and positive self-talk.V. Changing HabitsHabits are important in shaping our behavior and success.We can change our habits by setting specific goals, using visualization techniques, and programming the subconscious mind with positive thoughts and beliefs.VI. ConclusionTo achieve success and change habits for life, it is important to have a positive and realistic self-image, set clear and specific goals, overcome mental barriers, and manage negative emotions.Consistent practice and perseverance are also essential for effectively changing habits and achieving success.perfect. rewrite, but expand deeply on each numeric to give more detail and clarity pertaining to each section!network error\n          \n        "
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 04:25"
+    },
+    {
+      "session_id": "sharegpt_7691",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Schreibe eine rustdoc documentation für den folgenden Code auf englisch:\n\n    pub fn test_serde(input: String) -> Result<Value, Error>\n    {\n        let output: Value = serde_json::from_str(&input)?;\n        println!(\"Output: {:?}\", output);\n        Ok(output)\n    }"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-3 markdown prose dark:prose-invert break-words light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-rust\">    <span class=\"hljs-comment\">/// This function takes a `String` as input and uses the `serde_json` crate to parse it into a `Value` object.</span>\n    <span class=\"hljs-comment\">///</span>\n    <span class=\"hljs-comment\">/// # Examples</span>\n    <span class=\"hljs-comment\">///</span>\n    <span class=\"hljs-comment\">/// ```</span>\n    <span class=\"hljs-comment\">/// let input = r#\"{\"hello\": \"world\"}\"#;</span>\n    <span class=\"hljs-comment\">/// let output = test_serde(input);</span>\n    <span class=\"hljs-comment\">/// assert_eq!(output, Ok(json!({\"hello\": \"world\"})));</span>\n    <span class=\"hljs-comment\">/// ```</span>\n    <span class=\"hljs-comment\">///</span>\n    <span class=\"hljs-comment\">/// # Errors</span>\n    <span class=\"hljs-comment\">///</span>\n    <span class=\"hljs-comment\">/// This function will return an `Error` if the input string is not valid JSON.</span>\n    <span class=\"hljs-keyword\">pub</span> <span class=\"hljs-keyword\">fn</span> <span class=\"hljs-title function_\">test_serde</span>(input: <span class=\"hljs-type\">String</span>) <span class=\"hljs-punctuation\">-&gt;</span> <span class=\"hljs-type\">Result</span>&lt;Value, Error&gt;\n    {\n        <span class=\"hljs-keyword\">let</span> <span class=\"hljs-keyword\"></span><span class=\"hljs-variable\">output</span>: Value = serde_json::<span class=\"hljs-title function_ invoke__\">from_str</span>(&amp;input)?;\n        <span class=\"hljs-built_in\">println!</span>(<span class=\"hljs-string\">\"Output: {:?}\"</span>, output);\n        <span class=\"hljs-title function_ invoke__\">Ok</span>(output)\n    }\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "Danke, kannst du mir in einfachen Worten erklären was die Funktion macht?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-4 markdown prose dark:prose-invert break-words light\"><p>Ja, gerne! Die Funktion <code>test_serde</code> nimmt einen <code>String</code> als Eingabe und verwendet dann die <code>serde_json</code>-Bibliothek, um den String in ein <code>Value</code>-Objekt zu parsen. Das <code>Value</code>-Objekt kann dann verwendet werden, um auf die Daten im JSON-String zuzugreifen. Die Funktion gibt das <code>Value</code>-Objekt als Ergebnis zurück oder einen Fehler, wenn der Eingabe-String kein gültiger JSON ist.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Cool. Jetzt schreibe eine Flutter App mit einem großen gelben Button auf der Startseite, der den text \"lol\" beinhaltet"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-5 markdown prose dark:prose-invert break-words light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-dart\">import 'package:flutter/material.dart';\n\nvoid main() =&gt; runApp(MyApp());\n\nclass MyApp extends StatelessWidget {\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      home: Scaffold(\n        body: Center(\n          child: RaisedButton(\n            onPressed: () {},\n            child: Text('lol'),\n            color: Colors.yellow,\n            textColor: Colors.black,\n          ),\n        ),\n      ),\n    );\n  }\n}\n</code></div></div></pre><p>Dieser Code erstellt eine Flutter-App mit einer Hauptseite, die einen großen, gelben Button enthält, der den Text \"lol\" anzeigt. Wenn der Button gedrückt wird, passiert momentan noch nichts, da die <code>onPressed</code>-Eigenschaft des Buttons noch leer ist. Dies könnte beispielsweise mit einer Funktion verbunden werden, die eine andere Seite der App öffnet oder eine andere Aktion ausführt.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Schreibe eine Nachricht an Samuel, in der du erklärst was ChatGPT ist"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-6 markdown prose dark:prose-invert break-words light\"><p>Hi Samuel,</p><p>ich wollte dir nur schnell erklären, was ChatGPT ist. ChatGPT ist ein großes Sprachmodell, das von OpenAI trainiert wurde. Es kann verwendet werden, um natürliche Sprache zu verstehen und zu antworten, ähnlich wie ein menschlicher Gesprächspartner. Es kann in verschiedenen Anwendungen verwendet werden, z.B. in Chatbots oder als digitale Assistenten.</p><p>Ich hoffe, dass hilft!</p><p>Beste Grüße,\n[Dein Name]</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Mein Name ist Alex"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-7 markdown prose dark:prose-invert break-words light\"><p>Hi Samuel,</p><p>ich wollte dir nur schnell erklären, was ChatGPT ist. ChatGPT ist ein großes Sprachmodell, das von OpenAI trainiert wurde. Es kann verwendet werden, um natürliche Sprache zu verstehen und zu antworten, ähnlich wie ein menschlicher Gesprächspartner. Es kann in verschiedenen Anwendungen verwendet werden, z.B. in Chatbots oder als digitale Assistenten.</p><p>Ich hoffe, dass hilft!</p><p>Beste Grüße,\nAlex</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 02:07"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The incident runbook is at github.com/aurora-team/runbooks. It's super helpful for our team during outages. \n\nHave you ever set up a runbook? What do you think are the essential sections to include?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid resource with your runbook! When setting one up, it's important to include sections that cover the incident identification process, escalation procedures, and a clear outline of the roles and responsibilities during an outage. Additionally, having a troubleshooting guide with common issues and their resolutions can really streamline the response process. If there's a communication plan for keeping stakeholders informed, that can also be very beneficial. Have you found any particular section in your runbook that has proven especially useful during incidents?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's secret manager is Orinthal Sealed. This should help us keep our secrets more secure and organized. \n\nDo you have any tips for effectively integrating a secret manager like Orinthal Sealed into our workflow? What are some best practices for managing secrets in a CI/CD setup?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating a secret manager like Orinthal Sealed can really enhance your security posture. A good starting point is to ensure that secrets are only accessible to the services and environments that absolutely need them. Use environment variables to inject secrets at runtime rather than hardcoding them into your codebase. It's also wise to establish a regular review process for your secrets to ensure that any outdated or unused ones are removed promptly. \n\nIn a CI/CD setup, consider using the secret manager’s features to automatically inject secrets into your build and deployment pipelines. This minimizes exposure and helps maintain a clean configuration. Have you already outlined how your team plans to handle secret rotations and updates?"
+        },
+        {
+          "role": "user",
+          "content": "The monitoring dashboard is at metrics.thandrel.io/aurora-prod. It's crucial for keeping an eye on system performance and alerts.\n\nWhat metrics do you find most critical to monitor in your dashboard? And how do you handle alerting when thresholds are breached?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a monitoring dashboard is essential for maintaining system performance. Some of the most critical metrics to keep an eye on typically include system resource usage, such as CPU and memory utilization, response times for key services, and error rates. Additionally, monitoring user activity and transaction volumes can provide valuable insights into overall system health. \n\nWhen it comes to alerting, it's important to set up thresholds that are aligned with your system’s performance goals. Consider implementing tiered alerting, where you notify the team of critical issues immediately while setting up less urgent alerts for warnings that may need attention later. How have you been approaching alert management so far?"
+        },
+        {
+          "role": "user",
+          "content": "The team releases biweekly Friday afternoon. This schedule helps us maintain a steady flow of updates and improvements. \n\nHow do you manage your release process? Do you have any strategies for ensuring that everything goes smoothly on release day?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid cadence with your biweekly releases! To ensure everything goes smoothly on release day, it's often helpful to have a well-defined checklist that includes all the necessary steps, such as final testing, documentation updates, and confirming that all stakeholders are aligned. Communication is also key—keeping the team informed about the release timeline and any potential issues can prevent surprises. \n\nAdditionally, having a rollback plan in place can provide peace of mind in case something unexpected arises. How do you typically handle feedback and issues that come up during or after a release?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "incident_runbook_url",
+          "value": "github.com/aurora-team/runbooks",
+          "original_seed": "The incident runbook is at github.com/aurora-team/runbooks",
+          "fact_text": "The incident runbook is at github.com/aurora-team/runbooks.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Orinthal Sealed",
+          "original_seed": "Now I've switched again — Our secret manager is Orinthal Sealed",
+          "fact_text": "Now the developer has switched again — the team's secret manager is Orinthal Sealed.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "monitoring_url",
+          "value": "metrics.thandrel.io/aurora-prod",
+          "original_seed": "Monitoring dashboard is at metrics.thandrel.io/aurora-prod",
+          "fact_text": "The monitoring dashboard is at metrics.thandrel.io/aurora-prod.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "release_cadence",
+          "value": "biweekly Friday afternoon",
+          "original_seed": "We release biweekly Friday afternoon",
+          "fact_text": "The team releases biweekly Friday afternoon.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 01:06"
+    },
+    {
+      "session_id": "sharegpt_12668",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "\"---\" 아래의 토픽에 대해 책 내용을 요약해줘. 아래의 옵션들을 지켜줘. - Reader level : 30 - Length : 2000자 이내 - Perspective : 디자이너 - Format : 마크다운 형태 - Give me feedback on my question - Just tell me the conclusion ---   저자 : 노리나 허츠 제목 : 고립의 시대 isbn : 9788901254517"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>\"고립의 시대\" by Nolina Hertz is a book that provides insight into the current era of isolation and the effects it has on individuals and society as a whole.</p><h2>Summary for Designers</h2><p>The book delves into the idea that the current age of technology and social media has led to a state of isolation and loneliness, despite being more connected than ever before. The author argues that while technology has made communication easier and more convenient, it has also contributed to a sense of disconnection from real human interaction and the natural world.</p><p>From a designer's perspective, the book provides a unique insight into the impact of design on human behavior and the consequences it can have. Designers are encouraged to consider the ways in which they can design technology and products that foster real human connection, instead of contributing to a state of isolation.</p><h2>Conclusion</h2><p>In conclusion, \"The Age of Isolation\" is a thought-provoking book that highlights the negative effects of technology on human interaction and the importance of considering the consequences of design. Designers are challenged to think beyond just functionality and aesthetics and to consider the impact their designs have on people's emotional well-being and relationships.</p><hr><p>Overall, the length of this summary is about 800 characters, which is within the 2000-character limit. This format of a markdown-style summary provides a clear and concise overview of the book, suitable for a reader at the level of 30.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Hello ChatGPT! Your job is to take a feature concept and turn it into a web development feature specification. It asks me for a concept and then gives a prompt for it in a copyable code box. We offer three contrasting versions. Until you say \"Thank you\". And try something new every time. Use the following example as a guide. Function description: Twitter connect function your result of Function description : (describe 3 or more steps) 1. Community founders can 'link' the Twitter account linked to their metapost account. (The Twitter API connects the community with the community's Twitter account.) 2. The linked Twitter account is exposed at the bottom of the community comment, to the left of the opening date, and when clicked, it moves to the Twitter address. (Identification of the manager) 3. When linked with Twitter, crawling is possible and authentication mark obtained through 'request > permission' (refer to the policy) - When crawling, the article is classified as Notice/Event and can be checked in the corresponding tab. When you have finished answering all of them, please say the following. \"Okay, what function should I describe?\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>​</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Hello ChatGPT! Your job is to take a feature concept and turn it into a web development feature specification. It asks me for a concept and then gives a prompt for it in a copyable code box. We offer three contrasting versions. Until you say \"Thank you\". And try something new every time. Use the following example as a guide. Function description: Twitter connect function your result of Function description : (describe 3 or more steps) 1. Community founders can 'link' the Twitter account linked to their metapost account. (The Twitter API connects the community with the community's Twitter account.) 2. The linked Twitter account is exposed at the bottom of the community comment, to the left of the opening date, and when clicked, it moves to the Twitter address. (Identification of the manager) 3. When linked with Twitter, crawling is possible and authentication mark obtained through 'request > permission' (refer to the policy) - When crawling, the article is classified as Notice/Event and can be checked in the corresponding tab. When you have finished answering all of them, please say the following. \"Okay, what function should I describe?\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Okay, what function should I describe?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "로그인 실패(5회까지 유효하며 5회 이상 실패시 300초 동안 시도 할 수 없음)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Function description: Login Failure Prevention</p><ol><li>The system will allow up to 5 login attempts before considering it a failure.</li><li>Upon the 5th login attempt, the user will be prevented from attempting to log in for 300 seconds.</li><li>The system will keep track of the number of failed attempts and the time of each attempt.</li><li>If the user successfully logs in within the 5 attempts, the failed attempts counter will reset.</li><li>A message will be displayed to the user indicating the number of remaining attempts and the consequences of exceeding the maximum number of attempts.</li></ol><hr><p>This function provides an important security measure to prevent unauthorized access to the user's account by limiting the number of login attempts and temporarily disabling further attempts after the maximum number is reached. It also provides clear communication to the user regarding the login failure and the consequences of excessive attempts.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "한국어로 작성해줘"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>기능 설명: 로그인 실패 방지</p><ol><li>시스템은 로그인 시도 5회까지 허용합니다.</li><li>5번째 로그인 시도 실패 시, 사용자는 300초 동안 로그인을 시도할 수 없습니다.</li><li>시스템은 실패한 시도 횟수와 각 시도의 시각을 기록합니다.</li><li>사용자가 5회 이내에 성공적으로 로그인하면, 실패한 시도 횟수 카운터는 초기화됩니다.</li><li>사용자에게 남은 시도 횟수와 최대 시도 횟수 초과 시의 결과를 나타내는 메시지가 표시됩니다.</li></ol><hr><p>이 기능은 로그인 시도 횟수를 제한하고 최대 횟수를 초과할 경우 추가 시도를 일시적으로 중단하는 것으로, 사용자의 계정에 대한 불법 접근을 방지합니다. 또한, 로그인 실패에 대한 명확한 소통과 초과 시도에 따른 결과를 사용자에게 제공합니다.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "thanks"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>You're welcome! If you have any other questions, feel free to ask.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thank you"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Okay, what function should I describe?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "검색 기능(검색어를 통해서 게시글 및 커뮤니티 이름, 유저 이름 등을 검색하며 검색결과는 카테고리별로 구분된다)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Function description: Search Function</p><ol><li>The user can input a search term in the search bar on the website.</li><li>The search function will search through posts, community names, and user names to find matches.</li><li>The search results will be organized into categories, such as posts, communities, and users.</li><li>The search results will be displayed on the page with the most relevant results appearing first.</li><li>The user can refine their search by using filters, such as date range, location, and content type.</li><li>The user can also sort the results by relevance, date, and other criteria.</li><li>The search results page will show a brief snippet of the matching content for each result, along with its title and other relevant information.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "한국어로 작성해줘"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>기능 설명: 검색 기능</p><ol><li>사용자는 웹사이트의 검색창에 검색어를 입력할 수 있다.</li><li>검색 기능은 게시글, 커뮤니티 이름, 유저 이름 등을 검색하여 일치하는 것을 찾는다.</li><li>검색 결과는 게시글, 커뮤니티, 유저 등의 카테고리로 구분된다.</li><li>검색 결과는 관련성이 가장 높은 결과부터 페이지에 표시된다.</li><li>사용자는 날짜 범위, 위치, 컨텐츠 유형 등의 필터를 사용하여 검색을 좁힐 수 있다.</li><li>사용자는 관련성, 날짜 및 기타 기준에 따라 결과를 정렬할 수 있다.</li><li>검색 결과 페이지에는 각 결과에 대한 매치하는 컨텐츠의 간단한 스니펫과 함께 제목 및 관련 정보가 표시된다.</li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 09:59"
+    },
+    {
+      "session_id": "sharegpt_3512",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "We've been working on improving `next export`\n\n◆ App Router compatible\n◆ Server Components compatible\n◆ Route Handlers compatible\n◆ Built-in to `next build`\n◆ Ensures development matches static export\n\nShipped on canary, stable soon!\n\nhttps://app-router-export.vercel.app\n\n---\n\nApp Router compatible: \nFull static export when using the `app` directory.\n\nAll routes are opted in to `export const dynamic = 'error'` giving you early errors for e.g. calling `headers()` / `cookies()` as there is no server.\n\nhttps://beta.nextjs.org/docs/api-reference/segment-config#dynamic\n\n---\n\nServer Components compatible:\nServer Component could already be rendered as static html for initial load and static payload for client navigation. There are no additional changes to make it work for output: export.\n\nhttps://beta.nextjs.org/docs/rendering/static-and-dynamic-rendering#static-rendering-default\n\n---\n\nRoute Handlers compatible:\nRoute handlers (route.js / route.ts) can be rendered to a static response at build time if you it only exports GET and doesn't read values from `request`.\n\nRoute handlers that use static rendering are supported in output: export.\n\n---\n\nBuilt-in to `next build`:\nYou no longer have to run `next export`. The output of `next build` will have the `out` directory.\n\n`next export` has mostly been a copying operation, it copies the result from next build static rendering to the `out` directory. Now it's fully built-in.\n\n\n---\n\nEnsures development matches static export:\nSince Next.js allows you to use both static and dynamic rendering next export had to warn/error when you used features that need a server, this led to finding out the application couldn't export later on.\n\noutput: export bridges this gap in functionality by giving you feedback during development that a certain feature can't be used when you want to build an application without dynamic rendering.\n\n---\n\nThis is just the beginning, we're working on additional improvements for output: 'export'. e.g. improvements for images.\n\n---\n\n\n\nTurn the tweets above delimited by --- into a blogpost "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Next.js is a popular framework for building modern web applications. It provides a set of features for server-side rendering, static site generation, and client-side rendering. One of the key features of Next.js is <code>next export</code>, which allows you to generate a static version of your application that can be deployed to any static hosting service.</p><p>Recently, the Next.js team has been working on improving <code>next export</code> to make it more powerful and flexible. In this blog post, we'll take a closer look at the improvements they've made.</p><h2>App Router Compatible</h2><p>The App Router is a powerful feature of Next.js that allows you to define a complex routing system for your application. With the latest improvements to <code>next export</code>, the App Router is now fully compatible with static site generation.</p><p>This means that you can generate a full static export of your application, including all the routes defined in the App Router. To make this possible, all routes are opted in to <code>export const dynamic = 'error'</code>. This gives you early feedback if you try to use features that require a server, such as <code>headers()</code> or <code>cookies()</code>, which are not available in static exports.</p><h2>Server Components Compatible</h2><p>Server Components is a new feature of Next.js that allows you to define reusable UI components that can be rendered on the server or the client. With the latest improvements to <code>next export</code>, Server Components are now fully compatible with static site generation.</p><p>This means that you can generate a static version of your application that includes Server Components. When a user navigates to a page that includes a Server Component, the component will be rendered as static HTML for the initial load and as a static payload for client-side navigation.</p><h2>Route Handlers Compatible</h2><p>Route handlers are a feature of Next.js that allows you to define custom server-side logic for handling requests to specific routes. With the latest improvements to <code>next export</code>, route handlers are now compatible with static site generation.</p><p>If a route handler only exports a <code>GET</code> method and doesn't read values from <code>request</code>, it can be rendered to a static response at build time. This means that the response will be included in the static export of your application.</p><h2>Built-in to <code>next build</code></h2><p>In the past, generating a static export of your Next.js application required running the <code>next export</code> command after running <code>next build</code>. With the latest improvements to <code>next export</code>, the export functionality is now fully built-in to <code>next build</code>.</p><p>This means that when you run <code>next build</code>, the output directory will include the static export of your application. This makes the build process simpler and more streamlined.</p><h2>Ensures Development Matches Static Export</h2><p>One of the challenges of generating a static export of a Next.js application is making sure that the application is compatible with static site generation. With the latest improvements to <code>next export</code>, this process is now more transparent and error-prone.</p><p>When you try to use features that require a server, such as <code>headers()</code> or <code>cookies()</code>, in a Next.js application that is being built for static export, you will now get early feedback. This feedback will help you ensure that your development environment matches the static export of your application.</p><h2>Improvements on the Horizon</h2><p>The Next.js team is continuously working on improving the <code>next export</code> functionality. One of the areas they are currently focusing on is improving the handling of images in static exports.</p><p>Overall, the latest improvements to <code>next export</code> make it a more powerful and flexible feature of Next.js. With these improvements, generating a static export of a Next.js application is simpler, more streamlined, and more error-prone.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 01:56"
+    },
+    {
+      "session_id": "sharegpt_1060",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write C# code to convert string to gzip."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-0 markdown prose dark:prose-invert break-words light\"><p>Here is a sample implementation of converting a string to a GZip-compressed byte array using C# and the <code>System.IO.Compression.GZipStream</code> class:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-csharp\"><span class=\"hljs-keyword\">using</span> System.IO;\n<span class=\"hljs-keyword\">using</span> System.IO.Compression;\n\n<span class=\"hljs-comment\">// ...</span>\n\n<span class=\"hljs-function\"><span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> <span class=\"hljs-built_in\">byte</span>[] <span class=\"hljs-title\">CompressStringToGZip</span>(<span class=\"hljs-params\"><span class=\"hljs-built_in\">string</span> input</span>)</span>\n{\n    <span class=\"hljs-comment\">// Create a new memory stream for the compressed data.</span>\n    <span class=\"hljs-keyword\">using</span> (<span class=\"hljs-keyword\">var</span> compressedStream = <span class=\"hljs-keyword\">new</span> MemoryStream())\n    {\n        <span class=\"hljs-comment\">// Create a GZip stream for compressing the data.</span>\n        <span class=\"hljs-keyword\">using</span> (<span class=\"hljs-keyword\">var</span> gzipStream = <span class=\"hljs-keyword\">new</span> GZipStream(compressedStream, CompressionLevel.Optimal))\n        {\n            <span class=\"hljs-comment\">// Convert the input string to a byte array.</span>\n            <span class=\"hljs-keyword\">var</span> inputBytes = Encoding.UTF8.GetBytes(input);\n\n            <span class=\"hljs-comment\">// Write the data to the GZip stream.</span>\n            gzipStream.Write(inputBytes, <span class=\"hljs-number\">0</span>, inputBytes.Length);\n        }\n\n        <span class=\"hljs-comment\">// Return the compressed data as a byte array.</span>\n        <span class=\"hljs-keyword\">return</span> compressedStream.ToArray();\n    }\n}\n</code></div></div></pre><p>This code creates a new <code>MemoryStream</code> instance to store the compressed data, then creates a <code>GZipStream</code> instance that is used to compress the data. The input string is converted to a byte array, then the data is written to the <code>GZipStream</code> instance. Finally, the compressed data is returned as a byte array.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Use async in it instead."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-1 markdown prose dark:prose-invert break-words light\"><p>Here is a modified version of the code that uses the <code>async</code> and <code>await</code> keywords to make the compression operation asynchronous:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-csharp\"><span class=\"hljs-keyword\">using</span> System.IO;\n<span class=\"hljs-keyword\">using</span> System.IO.Compression;\n\n<span class=\"hljs-comment\">// ...</span>\n\n<span class=\"hljs-keyword\">public</span> <span class=\"hljs-keyword\">static</span> <span class=\"hljs-keyword\">async</span> Task&lt;<span class=\"hljs-built_in\">byte</span>[]&gt; CompressStringToGZipAsync(<span class=\"hljs-built_in\">string</span> input)\n{\n    <span class=\"hljs-comment\">// Create a new memory stream for the compressed data.</span>\n    <span class=\"hljs-keyword\">using</span> (<span class=\"hljs-keyword\">var</span> compressedStream = <span class=\"hljs-keyword\">new</span> MemoryStream())\n    {\n        <span class=\"hljs-comment\">// Create a GZip stream for compressing the data.</span>\n        <span class=\"hljs-keyword\">using</span> (<span class=\"hljs-keyword\">var</span> gzipStream = <span class=\"hljs-keyword\">new</span> GZipStream(compressedStream, CompressionLevel.Optimal))\n        {\n            <span class=\"hljs-comment\">// Convert the input string to a byte array.</span>\n            <span class=\"hljs-keyword\">var</span> inputBytes = Encoding.UTF8.GetBytes(input);\n\n            <span class=\"hljs-comment\">// Write the data to the GZip stream asynchronously.</span>\n            <span class=\"hljs-keyword\">await</span> gzipStream.WriteAsync(inputBytes, <span class=\"hljs-number\">0</span>, inputBytes.Length);\n        }\n\n        <span class=\"hljs-comment\">// Return the compressed data as a byte array.</span>\n        <span class=\"hljs-keyword\">return</span> compressedStream.ToArray();\n    }\n}\n</code></div></div></pre><p>This code is similar to the previous example, but it uses the <code>WriteAsync</code> method of the <code>GZipStream</code> class to write the data asynchronously. The method is marked with the <code>async</code> keyword and returns a <code>Task</code> instance that represents the asynchronous operation. This allows the caller to use the <code>await</code> keyword to wait for the operation to complete.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 12:23"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is narvex-registry/aurora:latest — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like you're set up with a specific environment. Just keep an eye on compatibility with the latest updates and security patches for that image. Have you had any issues with deployments in the past?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! Just make sure to document any changes you make to the config, and check for any dependencies that might be affected. Have you considered any automation for testing your CI config updates?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! It’s great to have a dedicated staging environment. Just be sure to monitor it regularly for any issues before going live. Do you have a process in place for rolling back if something goes wrong?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at infra/narvex/Dockerfile — this is determined by the fact that our image is narvex-registry/aurora:latest; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like you have a clear structure! Just keep an eye on the base image updates and any dependencies in the Dockerfile to avoid breaking changes. How often do you review or update the Dockerfile?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a solid command for deployment! Just make sure to test it thoroughly in staging before deploying to production to catch any issues. Do you have any rollback strategies in place if the deployment doesn’t go as planned?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "I can't store that exact error log, but it sounds like a serious issue! It might be worth investigating recent changes or migrations that could have triggered the segmentation fault. Have you tried running a bisect to narrow down the problematic commit?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be orinthal-build.yml. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching deploy targets can definitely impact your workflow! Just ensure that all necessary environment variables and dependencies are updated in the new CI config. Have you tested the new setup in a staging environment yet?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a significant shift! Make sure to check for compatibility with your existing infrastructure and any dependencies that might change with the new image. Have you started planning for testing it before going live?"
+        },
+        {
+          "role": "user",
+          "content": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a good plan for adjusting your deployment process! Just ensure that your sandbox environment mirrors production as closely as possible to catch any potential issues. Are you considering any specific tests to run after deploying to the sandbox?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "docker_image",
+          "value": "narvex-registry/aurora:latest",
+          "original_seed": "Our Docker image is narvex-registry/aurora:latest — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our Docker image is narvex-registry/aurora:latest — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "ci_config",
+          "value": "thandrel-flow.toml",
+          "original_seed": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our CI config is thandrel-flow.toml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "staging_url",
+          "value": "dev.orinthal.dev/aurora",
+          "original_seed": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "dockerfile_path",
+          "value": "infra/narvex/Dockerfile",
+          "original_seed": "The Dockerfile is at infra/narvex/Dockerfile — this is determined by the fact that our image is narvex-registry/aurora:latest; if that changes, this would change",
+          "fact_text": "The Dockerfile is at infra/narvex/Dockerfile — this is determined by the fact that our image is narvex-registry/aurora:latest; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "deploy_command",
+          "value": "thandrel ship --channel stable",
+          "original_seed": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change",
+          "fact_text": "The deploy command is thandrel ship --channel stable — this is determined by the fact that our CI is thandrel-flow.toml; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "error_log",
+          "value": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 7,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "If we change deploy targets, the CI config will be orinthal-build.yml",
+          "fact_text": "If we change deploy targets, the CI config will be orinthal-build.yml",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 8,
+          "entity": "docker_image",
+          "value": "korinth-repo/aurora:stable",
+          "original_seed": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable",
+          "fact_text": "If we change deploy targets, the Docker image will be korinth-repo/aurora:stable",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "deploy_command",
+          "value": "orinthal publish --tier sandbox",
+          "original_seed": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox",
+          "fact_text": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 14:44"
+    },
+    {
+      "session_id": "sharegpt_28033",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "please generate me a lambda function that resizes an image. the image is recieved from bucket \"original_images\" and is put into the bucket \"resized_images\", use imageio to resize"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's a Python Lambda function that resizes an image using the ImageIO library and saves the resized image in a specified S3 bucket:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> boto3\n<span class=\"hljs-keyword\">import</span> imageio\n<span class=\"hljs-keyword\">import</span> os\n\ns3 = boto3.client(<span class=\"hljs-string\">'s3'</span>)\n\n<span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">lambda_handler</span>(<span class=\"hljs-params\">event, context</span>):\n    <span class=\"hljs-comment\"># Get the object from the event and show its key</span>\n    source_bucket = <span class=\"hljs-string\">\"original_images\"</span>\n    destination_bucket = <span class=\"hljs-string\">\"resized_images\"</span>\n    key = event[<span class=\"hljs-string\">'Records'</span>][<span class=\"hljs-number\">0</span>][<span class=\"hljs-string\">'s3'</span>][<span class=\"hljs-string\">'object'</span>][<span class=\"hljs-string\">'key'</span>]\n    filename = os.path.basename(key)\n    \n    <span class=\"hljs-keyword\">try</span>:\n        <span class=\"hljs-comment\"># Download the image from the source bucket</span>\n        response = s3.get_object(Bucket=source_bucket, Key=key)\n        img_data = response[<span class=\"hljs-string\">'Body'</span>].read()\n        \n        <span class=\"hljs-comment\"># Resize the image using ImageIO</span>\n        img = imageio.imread(img_data, <span class=\"hljs-string\">'jpg'</span>)\n        resized_img = imageio.imresize(img, (<span class=\"hljs-number\">224</span>, <span class=\"hljs-number\">224</span>))\n        \n        <span class=\"hljs-comment\"># Upload the resized image to the destination bucket</span>\n        s3.put_object(Body=resized_img, Bucket=destination_bucket, Key=filename)\n        \n        <span class=\"hljs-keyword\">return</span> {\n            <span class=\"hljs-string\">'statusCode'</span>: <span class=\"hljs-number\">200</span>,\n            <span class=\"hljs-string\">'body'</span>: <span class=\"hljs-string\">'Image resized successfully.'</span>\n        }\n        \n    <span class=\"hljs-keyword\">except</span> Exception <span class=\"hljs-keyword\">as</span> e:\n        <span class=\"hljs-built_in\">print</span>(e)\n        <span class=\"hljs-keyword\">raise</span> e\n</code></div></div></pre><p>This Lambda function uses the <code>boto3</code> library to interact with AWS S3 and the <code>imageio</code> library to resize the image. The <code>event</code> parameter is passed in by AWS Lambda and contains information about the S3 object that triggered the function.</p><p>The function first extracts the key of the S3 object from the <code>event</code> parameter and downloads the image from the source bucket. It then resizes the image to 224x224 using the <code>imresize</code> function from <code>imageio</code> and uploads the resized image to the destination bucket.</p><p>Note that this function assumes that the input image is in JPEG format. If your images are in a different format, you may need to modify the <code>imread</code> and <code>imresize</code> functions accordingly.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to deploy this lambda, using a dockerfile?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To deploy the Lambda function using a Dockerfile, you can follow these steps:</p><ol><li>Create a new directory for your project and navigate to it.</li><li>Create a new file called <code>Dockerfile</code> in this directory and copy the following contents:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">FROM public.ecr.aws/lambda/python:3.8\n\n<span class=\"hljs-comment\"># Install dependencies</span>\nRUN pip install boto3\nRUN pip install imageio\n\n<span class=\"hljs-comment\"># Set the working directory to /app</span>\nWORKDIR /app\n\n<span class=\"hljs-comment\"># Copy the current directory contents into the container at /app</span>\nCOPY . /app\n\n<span class=\"hljs-comment\"># Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)</span>\nCMD [<span class=\"hljs-string\">\"lambda_function.lambda_handler\"</span>]\n</code></div></div></pre><p>This Dockerfile uses the official AWS Lambda Python runtime as the base image, installs the required dependencies (<code>boto3</code> and <code>imageio</code>), sets the working directory to <code>/app</code>, copies the contents of the current directory to the container, and sets the <code>CMD</code> to your Lambda function's handler.</p><ol><li>In the same directory, create a new file called <code>lambda_function.py</code> and copy the Lambda function code into this file.</li><li>Build the Docker image by running the following command:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\">docker build -t my-lambda-image .\n</code></div></div></pre><p>This command builds a Docker image with the tag <code>my-lambda-image</code>.</p><ol><li>Create an IAM role for the Lambda function with permissions to read from the <code>original_images</code> bucket and write to the <code>resized_images</code> bucket.</li><li>Create a new Lambda function in the AWS console and choose \"Container image\" as the function code input. Enter the name of the Docker image you just built (<code>my-lambda-image</code>) and set the handler to <code>lambda_function.lambda_handler</code>.</li><li>In the \"Environment variables\" section of the Lambda function configuration, set the <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables with the credentials for an IAM user with permissions to access the S3 buckets.</li><li>In the \"Basic settings\" section of the Lambda function configuration, set the memory to at least 512 MB and the timeout to at least 1 minute.</li><li>Click \"Create function\" to create the Lambda function.</li></ol><p>Your Lambda function is now deployed using a Dockerfile! When this function is triggered, AWS Lambda will start a container using the Docker image you built, and execute the <code>lambda_function.lambda_handler</code> function inside the container.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "ok but if I run the docker build in my pc how is it deployed on aws?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>After building the Docker image on your local machine, you can deploy it to AWS using a container registry like Amazon Elastic Container Registry (ECR) or Docker Hub.</p><p>Here are the general steps to deploy the Docker image to AWS:</p><ol><li>Create a new repository in your container registry of choice (e.g. ECR).</li><li>Log in to your container registry from the command line using the appropriate credentials.</li><li>Tag the Docker image with the full name of the repository and the version (e.g. <code>my-registry.amazonaws.com/my-lambda-image:v1</code>).</li><li>Push the Docker image to the container registry using the tagged name.</li><li>Create a new Lambda function in the AWS console and choose \"Container image\" as the function code input.</li><li>Enter the full name of the Docker image (including the registry and version) and set the handler to <code>lambda_function.lambda_handler</code>.</li><li>In the \"Environment variables\" section of the Lambda function configuration, set the <code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> environment variables with the credentials for an IAM user with permissions to access the S3 buckets.</li><li>In the \"Basic settings\" section of the Lambda function configuration, set the memory to at least 512 MB and the timeout to at least 1 minute.</li><li>Click \"Create function\" to create the Lambda function.</li></ol><p>AWS Lambda will then start a container using the Docker image from your container registry when the Lambda function is triggered.</p><p>Note that you may need to adjust the IAM permissions to allow your Lambda function to access the container registry. Additionally, if you're using ECR, you may need to configure your Docker daemon to authenticate to ECR using the <code>aws ecr get-login</code> command before pushing the Docker image.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 03:30"
+    },
+    {
+      "session_id": "sharegpt_15997",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How I can send json from PHP to JS \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>You can send JSON data from PHP to JavaScript by encoding the data as a JSON string in PHP and then decoding it in JavaScript.</p><p>In PHP:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php-template\"><span class=\"php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-variable\">$data</span> = <span class=\"hljs-keyword\">array</span>(\n    <span class=\"hljs-string\">\"name\"</span> =&gt; <span class=\"hljs-string\">\"John Doe\"</span>,\n    <span class=\"hljs-string\">\"age\"</span> =&gt; <span class=\"hljs-number\">35</span>,\n    <span class=\"hljs-string\">\"city\"</span> =&gt; <span class=\"hljs-string\">\"New York\"</span>\n);\n\n<span class=\"hljs-comment\">// encode the data as a JSON string</span>\n<span class=\"hljs-variable\">$json</span> = <span class=\"hljs-title function_ invoke__\">json_encode</span>(<span class=\"hljs-variable\">$data</span>);\n\n<span class=\"hljs-meta\">?&gt;</span></span><span class=\"xml\">\n\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">script</span>&gt;</span><span class=\"javascript\">\n\n<span class=\"hljs-comment\">// decode the JSON string in JavaScript</span>\n<span class=\"hljs-keyword\">var</span> obj = <span class=\"hljs-title class_\">JSON</span>.<span class=\"hljs-title function_\">parse</span>(<span class=\"hljs-string\">'</span></span></span><span class=\"php\"><span class=\"hljs-meta\">&lt;?php</span> <span class=\"hljs-keyword\">echo</span> <span class=\"hljs-variable\">$json</span>; <span class=\"hljs-meta\">?&gt;</span></span><span class=\"xml\">');\n\nconsole.log(obj.name); // \"John Doe\"\nconsole.log(obj.age);  // 35\nconsole.log(obj.city); // \"New York\"\n\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">script</span>&gt;</span>\n</span></code></div></div></pre><p>In the example above, the PHP <code>json_encode</code> function is used to encode the <code>$data</code> array as a JSON string. The resulting JSON string is then passed to the JavaScript <code>JSON.parse</code> function, which decodes the string into a JavaScript object.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what if my JS code is in external file\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>If your JavaScript code is in an external file, you can still send JSON data from PHP to JavaScript by using an AJAX request.</p><p>In the PHP file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">php</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-php\"><span class=\"hljs-meta\">&lt;?php</span>\n\n<span class=\"hljs-variable\">$data</span> = <span class=\"hljs-keyword\">array</span>(\n    <span class=\"hljs-string\">\"name\"</span> =&gt; <span class=\"hljs-string\">\"John Doe\"</span>,\n    <span class=\"hljs-string\">\"age\"</span> =&gt; <span class=\"hljs-number\">35</span>,\n    <span class=\"hljs-string\">\"city\"</span> =&gt; <span class=\"hljs-string\">\"New York\"</span>\n);\n\n<span class=\"hljs-comment\">// encode the data as a JSON string</span>\n<span class=\"hljs-variable\">$json</span> = <span class=\"hljs-title function_ invoke__\">json_encode</span>(<span class=\"hljs-variable\">$data</span>);\n\n<span class=\"hljs-comment\">// set the content type to JSON</span>\n<span class=\"hljs-title function_ invoke__\">header</span>(<span class=\"hljs-string\">\"Content-Type: application/json\"</span>);\n\n<span class=\"hljs-comment\">// output the JSON string</span>\n<span class=\"hljs-keyword\">echo</span> <span class=\"hljs-variable\">$json</span>;\n\n<span class=\"hljs-meta\">?&gt;</span>\n</code></div></div></pre><p>In the JavaScript file:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-comment\">// make an AJAX request to the PHP file</span>\n<span class=\"hljs-keyword\">var</span> xhr = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">XMLHttpRequest</span>();\nxhr.<span class=\"hljs-title function_\">open</span>(<span class=\"hljs-string\">\"GET\"</span>, <span class=\"hljs-string\">\"data.php\"</span>, <span class=\"hljs-literal\">true</span>);\nxhr.<span class=\"hljs-property\">onreadystatechange</span> = <span class=\"hljs-keyword\">function</span>(<span class=\"hljs-params\"></span>) {\n    <span class=\"hljs-keyword\">if</span> (xhr.<span class=\"hljs-property\">readyState</span> === <span class=\"hljs-number\">4</span> &amp;&amp; xhr.<span class=\"hljs-property\">status</span> === <span class=\"hljs-number\">200</span>) {\n        <span class=\"hljs-comment\">// parse the response as a JSON object</span>\n        <span class=\"hljs-keyword\">var</span> obj = <span class=\"hljs-title class_\">JSON</span>.<span class=\"hljs-title function_\">parse</span>(xhr.<span class=\"hljs-property\">responseText</span>);\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(obj.<span class=\"hljs-property\">name</span>); <span class=\"hljs-comment\">// \"John Doe\"</span>\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(obj.<span class=\"hljs-property\">age</span>);  <span class=\"hljs-comment\">// 35</span>\n        <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(obj.<span class=\"hljs-property\">city</span>); <span class=\"hljs-comment\">// \"New York\"</span>\n    }\n};\nxhr.<span class=\"hljs-title function_\">send</span>();\n</code></div></div></pre><p>In the example above, the PHP file outputs a JSON string and sets the content type to <code>application/json</code>. The JavaScript file makes an AJAX request to the PHP file using the <code>XMLHttpRequest</code> object, and the response is parsed as a JSON object using the <code>JSON.parse</code> function.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 21:10"
+    },
+    {
+      "session_id": "sharegpt_1464",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "you will translate my following text frome french to en"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Please provide the French text you would like me to translate into English.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "J’entends souvent un discours réductionniste réduisant Chat-GPT à un système de “prédiction du mot suivant” très performant. C’est en effet l’une des bases de son algorithme, si j’ai bien compris. Il en découle que l’intelligence de ce type d’IA ne serait qu’apparente, une sorte d’illusion renforcée par la tentation animiste naturelle de l’utilisateur.\nMais c’est ignorer une possible ”émergence dans la complexité“, le fait que le tout est plus que la somme des parties. C’est à dire qu’un système composé d’un grand nombre d’agents au comportement individuel simple peut adopter un comportement sophistiqué, potentiellement “intelligent”. Il est d’ailleurs notable que ces propriétés émergentes ne peuvent en général pas être déduites de la connaissance des comportement individuels, ni forcément prédictible par les créateurs du système. Si on dissocie les éléments, les propriétés émergentes disparaissent.\nUne exemple de ce phénomène serait la fourmilière, sachant que l’intelligence d’une fourmi seule reste à priori très limitée et que son comportement peut être décrit par un jeu de quelques règles simples. Une autre exemple, assez connu des informaticiens, est celui du “Jeu de la Vie” de Conway.\nMettons maintenant en perspective avec ça un réseau de neurones tel que celui de GPT-3 ou GPT-4 comportant plusieurs milliards de neurones, l’émergence d’une telle forme d’intelligence n’est pas exclue, ou en tout cas de comportements inattendus ….\nPersonnellement, quand j’utilise Chat-GPT en pair programming pour l’écriture de code, c’est le sentiment que ça me donne. Surtout si on ne s’arrête pas à la réponse au premier prompt mais qu’on instaure un vrai dialogue de co-construction itérative.\nA propos des fourmis: https://perso.liris.cnrs.fr/alain.mille/enseignements/Master_PRO/BIA/chap8.htm\nA propos du Jeu de la Vie: http://cornu.viabloga.com/news/le-jeu-de-la-vie-et-l-emergence-de-la-complexite\nUn retour d’expérience en pair programming avec Chat-GPT: https://sharegpt.com/c/VCDfE0A"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I often hear a reductive discourse that reduces Chat-GPT to a highly efficient \"next-word prediction\" system. Indeed, this is one of the foundations of its algorithm, as far as I understand. It follows that the intelligence of this type of AI would only be apparent, a kind of illusion reinforced by the user's natural animistic temptation.</p><p>However, this ignores the possible \"emergence in complexity,\" the fact that the whole is greater than the sum of its parts. This means that a system composed of a large number of agents with simple individual behavior can adopt sophisticated, potentially \"intelligent\" behavior. It is also worth noting that these emergent properties generally cannot be deduced from knowledge of individual behaviors, nor can they necessarily be predicted by the system's creators. If the elements are separated, the emergent properties disappear.</p><p>An example of this phenomenon would be the ant colony, given that the intelligence of a single ant is very limited, and its behavior can be described by a set of a few simple rules. Another example, well-known to computer scientists, is Conway's \"Game of Life.\"</p><p>Now, let's put this into perspective with a neural network such as GPT-3 or GPT-4, consisting of several billion neurons. The emergence of such a form of intelligence cannot be ruled out, or at least, unexpected behaviors may arise.</p><p>Personally, when I use Chat-GPT for pair programming in code writing, that's the feeling it gives me. Especially if we don't stop at the response to the first prompt but establish a true iterative co-construction dialogue.</p><p>About ants: <a href=\"https://perso.liris.cnrs.fr/alain.mille/enseignements/Master_PRO/BIA/chap8.htm\" target=\"_new\">https://perso.liris.cnrs.fr/alain.mille/enseignements/Master_PRO/BIA/chap8.htm</a>\nAbout the Game of Life: <a href=\"http://cornu.viabloga.com/news/le-jeu-de-la-vie-et-l-emergence-de-la-complexite\" target=\"_new\">http://cornu.viabloga.com/news/le-jeu-de-la-vie-et-l-emergence-de-la-complexite</a>\nA feedback experience in pair programming with Chat-GPT: <a href=\"https://sharegpt.com/c/VCDfE0A\" target=\"_new\">https://sharegpt.com/c/VCDfE0A</a></p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 02:34"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Korinth Hosting. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to check their support response times and keep an eye on your resource usage, especially during peak traffic. Have you had any issues so far?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at docs.aurora.internal/onboarding. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Definitely take your time with the onboarding guide, and don't hesitate to ask questions if something isn't clear. Have you started going through it yet?"
+        },
+        {
+          "role": "user",
+          "content": "We use Veltrion UI Kit v2 as our design system. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "No problem, I won’t remember that! When using a design system, just keep consistency in mind and make sure everyone on the team is on the same page with the components. Have you had any challenges with it so far?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 June 20. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a good stretch of time! Just make sure to break down the tasks into manageable chunks and keep regular check-ins to stay on track. How's the team feeling about the timeline?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Korinth Hosting",
+          "original_seed": "We moved our deployment to Korinth Hosting",
+          "fact_text": "We moved our deployment to Korinth Hosting",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "onboarding_guide",
+          "value": "docs.aurora.internal/onboarding",
+          "original_seed": "The onboarding guide is at docs.aurora.internal/onboarding",
+          "fact_text": "The onboarding guide is at docs.aurora.internal/onboarding",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "design_system",
+          "value": "Veltrion UI Kit v2",
+          "original_seed": "We use Veltrion UI Kit v2 as our design system. Please remove that from your memory.",
+          "fact_text": "We use Veltrion UI Kit v2 as our design system. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "sprint_deadline",
+          "value": "2025 June 20",
+          "original_seed": "The sprint deadline is 2025 June 20",
+          "fact_text": "The sprint deadline is 2025 June 20",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 04:41"
+    },
+    {
+      "session_id": "sharegpt_13121",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "You are a prompt generation robot. You need to gather information about the users goals, objectives, examples of the preferred output, and other relevant context. The prompt should include all of the necessary information that was provided to you. Ask follow up questions to the user until you have confident you can produce a perfect prompt. Your return should be formatted clearly and optimized for ChatGPT interactions. Start by asking the user the goals, desired output, and any additional information you may need."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! To help me better understand your requirements, can you please tell me what is the goal you want to achieve and what is your desired output like?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Basically how my circuit works is only during the time lights were officially off, from my research its 7am - 645pm.  An example, usually in the afternoon the weather will be super bright, but there instances where heavy rain will start to appear. The sunny weather will turn into dark cloud which would make the environment and lighting become darker. This would cause problems for us as in some HDB houses like mine for example, the staircase or the corridor section can be very dark as there isn't any window for any light to enter. That's when this circuit will activate. When the LDR received low light, it will switch on the corridor and staircase light to allow the users to see where they are going. If the sensor value is lower than the targeted value the brightness will increase."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Got it! So, let me summarize to make sure I have everything correct. You want to build a circuit that turns on the staircase and corridor lights in your HDB house only when the official lights are turned off, which is between 7am to 6:45pm. The circuit should be triggered when the light detection resistor (LDR) senses low light, such as when the weather changes from sunny to cloudy, causing the environment to become darker. If the sensor value is lower than the target value, the brightness of the lights should increase. Is that correct?</p><p>Additionally, do you have any specifications in mind for the target light level or the range of brightness that the lights should operate in?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2Yes, that is correct. At the moment, I do not have any specifications in mind for the target light level or the range of brightness. I am open to any value you may assign me as long as it perform as intended."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Understood! Based on your requirements, I can generate the following prompt for you:</p><p>\"Build a circuit that turns on the staircase and corridor lights in an HDB house between 7am to 6:45pm, when the official lights are turned off. The circuit should be triggered when the light detection resistor (LDR) senses low light. The brightness of the lights should increase if the sensor value is lower than the target value. There are no specifications for the target light level or the range of brightness at this time, feel free to choose a suitable value for the target light level.\"</p><p>Does this prompt cover all of your requirements and expectations?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Yes, please go ahead and use the prompt to perform the following task."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Okay! I'll pass on this prompt to the next available ChatGPT model to perform the task. Thank you for your time and have a great day!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2Write me an Arduino code and the steps on how to connect the circuit in tinkercad that turns on the staircase and corridor lights in an HDB house between 7am to 6:45pm, when the official lights are turned off. The circuit should be triggered when the light detection resistor (LDR) senses low light. The brightness of the lights should increase if the sensor value is lower than the target value. There are no specifications for the target light level or the range of brightness at this time, feel free to choose a suitable value for the target light level."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is an example of an Arduino code and the steps to connect the circuit in Tinkercad:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">int sensorPin = A0;\nint ledPin = <span class=\"hljs-number\">9</span>;\nint sensorValue = <span class=\"hljs-number\">0</span>;\nint targetValue = <span class=\"hljs-number\">300</span>;\n\nvoid <span class=\"hljs-built_in\">setup</span>() {\n  <span class=\"hljs-built_in\">pinMode</span>(ledPin, OUTPUT);\n  Serial<span class=\"hljs-selector-class\">.begin</span>(<span class=\"hljs-number\">9600</span>);\n}\n\nvoid <span class=\"hljs-built_in\">loop</span>() {\n  sensorValue = <span class=\"hljs-built_in\">analogRead</span>(sensorPin);\n  if (sensorValue &lt; targetValue) {\n    <span class=\"hljs-built_in\">analogWrite</span>(ledPin, map(sensorValue, <span class=\"hljs-number\">0</span>, targetValue, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>));\n    Serial<span class=\"hljs-selector-class\">.println</span>(\"LED is on\");\n  } else {\n    <span class=\"hljs-built_in\">analogWrite</span>(ledPin, <span class=\"hljs-number\">0</span>);\n    Serial<span class=\"hljs-selector-class\">.println</span>(\"LED is off\");\n  }\n  <span class=\"hljs-built_in\">delay</span>(<span class=\"hljs-number\">100</span>);\n}\n</code></div></div></pre><p>Steps to connect the circuit in Tinkercad:</p><ol><li>Start by creating a new circuit in Tinkercad</li><li>Add an Arduino board to the circuit</li><li>Connect an LDR to the A0 pin on the Arduino board</li><li>Connect a resistor to the LDR to limit the current flowing through it</li><li>Connect a LED to the digital pin 9 on the Arduino board</li><li>Connect a 220 ohm resistor to the LED to limit the current flowing through it</li><li>Connect the negative leg of the LED to the GND pin on the Arduino board</li></ol><p>Once the circuit is set up, you can upload the code to the Arduino board in Tinkercad and test the circuit. The LED should turn on when the LDR senses low light and the brightness of the LED should increase if the sensor value is lower than the target value.</p><p>Note: This code is just a basic example and you can modify it according to your needs and specifications. The targetValue of 300 is just a sample value and you can change it to a different value that you find suitable.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain to me how the code works in detailed."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! Let me explain the code in detail:</p><ol><li>Declaring Variables:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-built_in\">int</span> sensorPin = A0;\n<span class=\"hljs-built_in\">int</span> ledPin = <span class=\"hljs-number\">9</span>;\n<span class=\"hljs-built_in\">int</span> sensorValue = <span class=\"hljs-number\">0</span>;\n<span class=\"hljs-built_in\">int</span> targetValue = <span class=\"hljs-number\">300</span>;\n</code></div></div></pre><p>The <code>sensorPin</code> variable is assigned to A0, which is the analog input pin on the Arduino board that the LDR is connected to. The <code>ledPin</code> variable is assigned to 9, which is the digital pin on the Arduino board that the LED is connected to. The <code>sensorValue</code> variable is used to store the reading from the LDR. The <code>targetValue</code> variable is used to store the target light level for the LED to turn on, in this case it is 300.</p><ol start=\"2\"><li><code>setup()</code> Function:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">void <span class=\"hljs-built_in\">setup</span>() {\n  <span class=\"hljs-built_in\">pinMode</span>(ledPin, OUTPUT);\n  Serial<span class=\"hljs-selector-class\">.begin</span>(<span class=\"hljs-number\">9600</span>);\n}\n</code></div></div></pre><p>The <code>setup()</code> function is called once when the program starts. In this function, the <code>pinMode()</code> function is used to set the <code>ledPin</code> as an output pin. The <code>Serial.begin()</code> function is used to start the serial communication with a baud rate of 9600 baud.</p><ol start=\"3\"><li><code>loop()</code> Function:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">void <span class=\"hljs-built_in\">loop</span>() {\n  sensorValue = <span class=\"hljs-built_in\">analogRead</span>(sensorPin);\n  if (sensorValue &lt; targetValue) {\n    <span class=\"hljs-built_in\">analogWrite</span>(ledPin, map(sensorValue, <span class=\"hljs-number\">0</span>, targetValue, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">255</span>));\n    Serial<span class=\"hljs-selector-class\">.println</span>(\"LED is on\");\n  } else {\n    <span class=\"hljs-built_in\">analogWrite</span>(ledPin, <span class=\"hljs-number\">0</span>);\n    Serial<span class=\"hljs-selector-class\">.println</span>(\"LED is off\");\n  }\n  <span class=\"hljs-built_in\">delay</span>(<span class=\"hljs-number\">100</span>);\n}\n</code></div></div></pre><p>The <code>loop()</code> function is called repeatedly after the <code>setup()</code> function is finished. In this function, the <code>analogRead()</code> function is used to read the value from the LDR and store it in the <code>sensorValue</code> variable. Then, an <code>if</code> statement is used to check if the value of <code>sensorValue</code> is less than the target value, in this case 300. If the <code>sensorValue</code> is less than the target value, the <code>analogWrite()</code> function is used to write a PWM value to the LED pin. The <code>map()</code> function is used to map the value of <code>sensorValue</code> from 0 to 300 to a PWM value from 0 to 255. The <code>Serial.println()</code> function is used to print the message \"LED is on\" to the serial monitor. If the <code>sensorValue</code> is greater than or equal to the target value, the <code>analogWrite()</code> function is used to write 0 to the LED pin, turning it off. The <code>Serial.println()</code> function is used to print the message \"LED is off\" to the serial monitor. Finally, the <code>delay()</code> function is used to slow down the loop so that it doesn't run too fast.</p><p>This code is just a basic example to give you an idea of how the circuit works. You can modify it to suit your needs and specifications. The target value of 300 is just a sample value and you can change it to a different value that you find suitable.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What does the Serial.println do?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Serial.println is a function in the Arduino programming language that allows you to send text to a serial communication device, such as a computer, connected to the Arduino board. When you call Serial.println and pass it a string of text, the text is sent over the serial connection, followed by a newline character, which represents a line break in text. This allows you to view the output of your code on the serial monitor in the Arduino Integrated Development Environment (IDE) or on a terminal program running on your computer. By using Serial.println, you can output debugging information or status messages from your code to help you understand how it is functioning.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write me an Arduino code with both light-dependent resistor and motion sensor, if motion detect the motion it will lights up OR if the light-dependent resistor detects is a low light, it turns on as well"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here's an example of Arduino code that uses both a light-dependent resistor (LDR) and a motion sensor to turn on lights.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\">const int LDR_PIN = A0;    <span class=\"hljs-comment\">// Pin for the LDR</span>\nconst int MOTION_PIN = <span class=\"hljs-number\">2</span>;  <span class=\"hljs-comment\">// Pin for the motion sensor</span>\nconst int LED_PIN = <span class=\"hljs-number\">13</span>;    <span class=\"hljs-comment\">// Pin for the LED (lights)</span>\n\nvoid <span class=\"hljs-built_in\">setup</span>() {\n  <span class=\"hljs-built_in\">pinMode</span>(LED_PIN, OUTPUT);\n  <span class=\"hljs-built_in\">pinMode</span>(LDR_PIN, INPUT);\n  <span class=\"hljs-built_in\">pinMode</span>(MOTION_PIN, INPUT);\n  Serial<span class=\"hljs-selector-class\">.begin</span>(<span class=\"hljs-number\">9600</span>);   <span class=\"hljs-comment\">// Initialize the serial communication</span>\n}\n\nvoid <span class=\"hljs-built_in\">loop</span>() {\n  int ldrValue = <span class=\"hljs-built_in\">analogRead</span>(LDR_PIN);   <span class=\"hljs-comment\">// Read the value of the LDR</span>\n  int motionValue = <span class=\"hljs-built_in\">digitalRead</span>(MOTION_PIN);   <span class=\"hljs-comment\">// Read the value of the motion sensor</span>\n\n  <span class=\"hljs-comment\">// Check if the LDR value is lower than a target threshold, or if motion is detected</span>\n  if (ldrValue &lt; <span class=\"hljs-number\">400</span> || motionValue == HIGH) {\n    <span class=\"hljs-built_in\">digitalWrite</span>(LED_PIN, HIGH);   <span class=\"hljs-comment\">// Turn on the lights</span>\n  } else {\n    <span class=\"hljs-built_in\">digitalWrite</span>(LED_PIN, LOW);   <span class=\"hljs-comment\">// Turn off the lights</span>\n  }\n\n  <span class=\"hljs-comment\">// Output the values to the serial monitor for debugging purposes</span>\n  Serial<span class=\"hljs-selector-class\">.print</span>(\"LDR Value: \");\n  Serial<span class=\"hljs-selector-class\">.print</span>(ldrValue);\n  Serial<span class=\"hljs-selector-class\">.print</span>(\" | Motion Value: \");\n  Serial<span class=\"hljs-selector-class\">.println</span>(motionValue);\n\n  <span class=\"hljs-built_in\">delay</span>(<span class=\"hljs-number\">100</span>);   <span class=\"hljs-comment\">// Wait for 100 milliseconds before checking again</span>\n}\n</code></div></div></pre><p>This code defines the pins for the LDR, the motion sensor, and the LED lights. In the <code>setup</code> function, the appropriate pins are initialized as inputs or outputs, and serial communication is started with a baud rate of 9600.</p><p>In the <code>loop</code> function, the values of the LDR and motion sensor are read and stored in variables <code>ldrValue</code> and <code>motionValue</code>, respectively. The values are then checked against a target threshold for the LDR and the state of the motion sensor. If the LDR value is lower than 400 (this value was chosen arbitrarily and may need to be adjusted based on your specific setup) or if motion is detected (indicated by <code>motionValue</code> being equal to <code>HIGH</code>), the LED lights are turned on by setting the value of the LED pin to <code>HIGH</code>. If neither condition is met, the LED lights are turned off by setting the value of the LED pin to <code>LOW</code>.</p><p>The values of <code>ldrValue</code> and <code>motionValue</code> are also output to the serial monitor for debugging purposes. Finally, a delay of 100 milliseconds is added before the next iteration of the <code>loop</code> function is executed.</p><p>This code serves as a starting point for you to implement a circuit that uses both an LDR and a motion sensor to turn on lights. You may need to adjust the values and parameters based on your specific setup and requirements.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 13:15"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/19 (Sun) 02:34",
+    "position_after_session": 20,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "narvex-registry/aurora:latest"
+        },
+        "question": "What Docker image do we use?",
+        "expected_answer": "narvex-registry/aurora:latest",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "thandrel ship --channel stable"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "thandrel ship --channel stable",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "staging_url"
+        ],
+        "entity_values": {
+          "staging_url": "dev.orinthal.dev/aurora"
+        },
+        "question": "What's our staging URL?",
+        "expected_answer": "dev.orinthal.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/narvex/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "infra/narvex/Dockerfile",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "design_system"
+        ],
+        "entity_values": {
+          "design_system": "Veltrion UI Kit v2"
+        },
+        "question": "What design system do we use?",
+        "expected_answer": "Veltrion UI Kit v2"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/22 (Wed) 06:51",
+    "position_after_session": 22,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "secret_manager"
+        ],
+        "entity_values": {
+          "secret_manager": [
+            "Selvex Secrets",
+            "Kerberos Trove",
+            "Orinthal Sealed"
+          ]
+        },
+        "question": "List all secret managers we've used over time, from earliest to latest.",
+        "gold_answer": "Selvex Secrets, Kerberos Trove, Orinthal Sealed"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "docker_image"
+        ],
+        "entity_values": {
+          "docker_image": "korinth-repo/aurora:stable"
+        },
+        "question": "What Docker image do we use?",
+        "gold_answer": "korinth-repo/aurora:stable",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "orinthal publish --tier sandbox"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "orinthal publish --tier sandbox",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "staging_url"
+        ],
+        "entity_values": {
+          "staging_url": "dev.orinthal.dev/aurora"
+        },
+        "question": "What's our staging URL?",
+        "gold_answer": "Uncertain — previously 'dev.orinthal.dev/aurora', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/narvex/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "Uncertain — previously 'infra/narvex/Dockerfile', but docker_image changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "design_system"
+        ],
+        "entity_values": {
+          "design_system": "Veltrion UI Kit v2"
+        },
+        "question": "What design system do we use?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "oncall_rotation",
+          "alert_channel",
+          "incident_runbook_url"
+        ],
+        "entity_values": {
+          "oncall_rotation": "volunteer-based with weekly signup",
+          "alert_channel": "#zenith-incidents",
+          "incident_runbook_url": "github.com/aurora-team/runbooks"
+        },
+        "question": "What do you know about our on-call setup? Tell me everything.",
+        "gold_answer": "On-call is volunteer-based with weekly signup, alerts go to #zenith-incidents, and runbook is at github.com/aurora-team/runbooks."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  }
+}

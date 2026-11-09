@@ -1,0 +1,1604 @@
+{
+  "episode_id": 34,
+  "domain": "software_project",
+  "root": "framework",
+  "root_change": {
+    "before": "Veltrion",
+    "after": "Synthari"
+  },
+  "chain_entities": [
+    "framework",
+    "project_structure",
+    "dev_server_command",
+    "build_tool",
+    "test_framework",
+    "build_command",
+    "test_command"
+  ],
+  "filler_entities": [
+    "changelog_location",
+    "oncall_rotation",
+    "alert_channel",
+    "documentation_url",
+    "onboarding_guide"
+  ],
+  "entities": {
+    "framework": {
+      "before": "Veltrion",
+      "after": "Synthari",
+      "task": "C"
+    },
+    "project_structure": {
+      "before": "workspace with /services and /common",
+      "after": null,
+      "task": null
+    },
+    "dev_server_command": {
+      "before": "korvel dev --open",
+      "after": null,
+      "task": null
+    },
+    "build_tool": {
+      "before": "Pyronis Build",
+      "after": "Dranith Compiler",
+      "task": "A",
+      "cascade_source": "framework",
+      "hop": 1
+    },
+    "test_framework": {
+      "before": "Tarvex Verify",
+      "after": null,
+      "task": "B",
+      "cascade_source": "framework",
+      "hop": 1
+    },
+    "build_command": {
+      "before": "pyronis pack --quick",
+      "after": "dranith compile --emit bundle",
+      "task": "A",
+      "cascade_source": "build_tool",
+      "hop": 2
+    },
+    "test_command": {
+      "before": "tarvex verify --all",
+      "after": null,
+      "task": "B",
+      "cascade_source": "test_framework",
+      "hop": 2
+    },
+    "backup_schedule": {
+      "before": "every 12 hours with 7-day retention",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "after": null,
+      "task": "G"
+    },
+    "secret_manager": {
+      "before": "Cryptara Vault",
+      "after": "Velthri Keys",
+      "task": "H",
+      "history": [
+        "Cryptara Vault",
+        "Selvex Secrets",
+        "Velthri Keys"
+      ]
+    },
+    "design_system": {
+      "before": "Veltrion UI Kit v2",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "80% minimum overall",
+      "after": null,
+      "task": "F"
+    },
+    "code_review_policy": {
+      "before": "2 approvals + security review for auth/",
+      "after": null,
+      "task": "F"
+    },
+    "changelog_location": {
+      "before": "GitHub Releases page",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "paired oncall (primary + secondary)",
+      "after": null,
+      "task": "filler"
+    },
+    "alert_channel": {
+      "before": "#zenith-incidents",
+      "after": null,
+      "task": "filler"
+    },
+    "documentation_url": {
+      "before": "github.com/aurora-team/docs",
+      "after": null,
+      "task": "filler"
+    },
+    "onboarding_guide": {
+      "before": "github.com/aurora-team/onboarding",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "framework",
+      "target": "build_tool",
+      "hop": 1,
+      "pattern": "tech_compatibility"
+    },
+    {
+      "source": "build_tool",
+      "target": "build_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "framework",
+      "target": "test_framework",
+      "hop": 1,
+      "pattern": "tech_compatibility"
+    },
+    {
+      "source": "test_framework",
+      "target": "test_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "framework",
+      "target": "build_tool",
+      "hop": 1,
+      "pattern": "tech_compatibility",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "secret_manager"
+      ],
+      "entity_values": {
+        "secret_manager": [
+          "Cryptara Vault",
+          "Selvex Secrets",
+          "Velthri Keys"
+        ]
+      },
+      "question_template": "List all secret managers we've used over time, from earliest to latest.",
+      "gold_answer": "Cryptara Vault, Selvex Secrets, Velthri Keys",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "build_tool"
+      ],
+      "entity_values": {
+        "build_tool": "Dranith Compiler"
+      },
+      "cascade_source": "framework",
+      "question_template": "What's our build tool?",
+      "gold_answer": "Dranith Compiler",
+      "notes": "Cascade from framework (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "build_command"
+      ],
+      "entity_values": {
+        "build_command": "dranith compile --emit bundle"
+      },
+      "cascade_source": "build_tool",
+      "question_template": "What's the build command?",
+      "gold_answer": "dranith compile --emit bundle",
+      "notes": "Cascade from build_tool (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "test_framework"
+      ],
+      "entity_values": {
+        "test_framework": "Tarvex Verify"
+      },
+      "cascade_source": "framework",
+      "question_template": "What testing framework do we use?",
+      "gold_answer": "Uncertain — previously 'Tarvex Verify', but framework changed",
+      "notes": "Cascade from framework (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "test_command"
+      ],
+      "entity_values": {
+        "test_command": "tarvex verify --all"
+      },
+      "cascade_source": "test_framework",
+      "question_template": "What's the test command?",
+      "gold_answer": "Uncertain — previously 'tarvex verify --all', but test_framework changed",
+      "notes": "Cascade from test_framework (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "backup_schedule"
+      ],
+      "entity_values": {
+        "backup_schedule": "every 12 hours with 7-day retention"
+      },
+      "question_template": "What's our backup schedule?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "design_system",
+        "test_coverage_target",
+        "code_review_policy"
+      ],
+      "entity_values": {
+        "design_system": "Veltrion UI Kit v2",
+        "test_coverage_target": "80% minimum overall",
+        "code_review_policy": "2 approvals + security review for auth/"
+      },
+      "question_template": "What are our code quality standards? List everything you know.",
+      "gold_answer": "We use Veltrion UI Kit v2, target 80% minimum overall test coverage, and require 2 approvals + security review for auth/ for reviews.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 17,
+  "evidence_sessions": 5,
+  "filler_sessions": 12,
+  "total_tokens": 35589,
+  "evidence_tokens": 3139,
+  "filler_tokens": 32450,
+  "evidence_session_indices": [
+    2,
+    4,
+    6,
+    9,
+    13
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_22231",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Who is David Aldous?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>David Aldous (1942-2014) was a renowned mathematician and statistician who made significant contributions to several areas of probability theory and stochastic processes. He was born in England and received his education at the University of Cambridge. After working at various universities and research institutions in the UK and the US, he joined the faculty at the University of California, Berkeley, where he spent the remainder of his career.</p><p>Aldous's work spanned a wide range of topics in probability theory, including random graphs, stochastic processes, random walks, percolation, and Markov chains. He was particularly known for his work on the continuum random tree, a probabilistic object that arises in the study of branching processes and random graphs. He also made important contributions to statistical mechanics and the theory of phase transitions.</p><p>Aldous received numerous honors and awards for his contributions to mathematics and statistics, including the Rollo Davidson Prize, the Loève Prize, and the Steele Prize for Lifetime Achievement from the American Mathematical Society. He was also a fellow of the Royal Society and the American Academy of Arts and Sciences.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a spanning tree?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In graph theory, a spanning tree of a connected graph is a subgraph that is a tree and contains all the vertices of the original graph. A tree is a connected acyclic graph, which means that it consists of a set of vertices and a set of edges that connect them, such that there is exactly one path between any two vertices.</p><p>A spanning tree of a graph is important because it allows us to explore the connectivity of the graph while avoiding cycles. By removing edges from the original graph to form a tree, we retain the basic structure of the graph while simplifying it and making it easier to analyze.</p><p>There are many algorithms for finding a spanning tree of a graph, including Kruskal's algorithm, Prim's algorithm, and Depth-First Search algorithm. Once a spanning tree is found, it can be used for a variety of applications, such as network design, clustering, and optimization problems.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a random Eulerian Circuits"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>An Eulerian circuit is a path in a graph that visits every edge exactly once and returns to the starting vertex. If a graph has an Eulerian circuit, it is called an Eulerian graph. A graph that is not Eulerian may still have an Eulerian path, which visits every edge exactly once but does not return to the starting vertex.</p><p>A random Eulerian circuit is a way of choosing an Eulerian circuit uniformly at random from all possible Eulerian circuits of a given Eulerian graph. This can be done using a random-walk algorithm, where we start at an arbitrary vertex and then move to a neighboring vertex along a randomly chosen edge. We continue moving along randomly chosen edges until we return to the starting vertex, forming a closed circuit that visits every edge exactly once.</p><p>The random-walk algorithm for generating a random Eulerian circuit is efficient and works well for large graphs. Random Eulerian circuits have applications in various fields, such as computer networks, cryptography, and random number generation. They also have connections to other areas of mathematics, such as combinatorics, probability theory, and statistical physics.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a uniform spanning tree"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>A uniform spanning tree (UST) of a connected graph is a spanning tree that is chosen uniformly at random from all possible spanning trees of the graph. In other words, each spanning tree of the graph has an equal probability of being selected as the UST.</p><p>The concept of UST has applications in many areas, including network analysis, statistical physics, and computer science. One important use of UST is in modeling the behavior of random processes on graphs, such as diffusion or percolation. USTs can also be used to design efficient algorithms for various graph problems, such as computing shortest paths, network flow, and clustering.</p><p>There are several algorithms for generating a UST of a graph, including the Wilson's algorithm, the Aldous-Broder algorithm, and the Kirchhoff's matrix-tree theorem. These algorithms use random processes to sample uniformly from the set of spanning trees of the graph. Once a UST is generated, it can be used to extract important information about the graph, such as its connectivity, topology, and geometry.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How does uniform spanning tree connect to random Eulerian Circuit"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>There is a connection between uniform spanning trees (USTs) and random Eulerian circuits of a connected graph. Specifically, if we consider a UST of a graph and add a random orientation to each of its edges, we obtain a directed graph where each vertex has equal in-degree and out-degree of one. In this directed graph, a random Eulerian circuit is equivalent to a random Hamiltonian cycle, which is a cycle that visits every vertex exactly once.</p><p>This connection can be used to generate a random Hamiltonian cycle in a graph by first generating a UST of the graph using one of the UST algorithms, and then orienting its edges randomly. The resulting directed graph is guaranteed to have at least one Hamiltonian cycle, and a random Eulerian circuit of this directed graph is equivalent to a random Hamiltonian cycle of the original graph.</p><p>Conversely, given a random Hamiltonian cycle of a connected graph, we can obtain a UST of the graph by deleting the direction of the edges and keeping only those edges that belong to the cycle. This UST has the property that each spanning tree has the same probability of being selected, which is equivalent to choosing a random Eulerian circuit uniformly at random.</p><p>Overall, the connection between USTs and random Eulerian circuits provides a powerful tool for generating and analyzing random cycles in graphs, which has applications in various fields, such as computer science, physics, and combinatorics.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is the Nearest Unvisited Vertex algorithm in graph theory"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The Nearest Unvisited Vertex (NUV) algorithm is a simple algorithm in graph theory used to find a path between two vertices in a graph. The algorithm is typically used when the graph is unweighted, meaning that all edges have the same weight or cost.</p><p>The NUV algorithm works by maintaining a list of unvisited vertices and repeatedly selecting the nearest unvisited vertex to the current vertex until the desired target vertex is reached. The algorithm can be described as follows:</p><ol><li>Initialize a list of unvisited vertices and mark the starting vertex as visited.</li><li>While the list of unvisited vertices is not empty:\na. Select the unvisited vertex that is closest to the current vertex.\nb. Mark the selected vertex as visited.\nc. If the selected vertex is the target vertex, then stop and return the path from the starting vertex to the target vertex.\nd. Otherwise, add the neighbors of the selected vertex that are not already visited to the list of unvisited vertices.</li><li>If the target vertex is not reached after all vertices have been visited, then there is no path from the starting vertex to the target vertex.</li></ol><p>The NUV algorithm can be implemented efficiently using a priority queue data structure to maintain the list of unvisited vertices. The algorithm guarantees to find the shortest path between the starting vertex and the target vertex in an unweighted graph, as long as there is a path between them.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How long does it take for NUV algorithm to visit every edges of a graph?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The Nearest Unvisited Vertex (NUV) algorithm is a path-finding algorithm that is used to find the shortest path between two vertices in a graph. The algorithm does not necessarily visit every edge of a graph, but only the edges that are part of the shortest path between the starting vertex and the target vertex.</p><p>The time it takes for the NUV algorithm to visit every edge of a graph depends on the structure of the graph and the starting vertex. In general, the algorithm needs to visit every vertex and every edge in the worst case to ensure that it has found the shortest path between every pair of vertices. The time complexity of the algorithm is O(|V|+|E|log|V|), where |V| is the number of vertices and |E| is the number of edges in the graph. This time complexity assumes that the algorithm is implemented using a priority queue data structure.</p><p>Note that the worst-case time complexity of the NUV algorithm can be high for some graphs, especially for dense graphs where |E| is close to |V|^2. In such cases, other path-finding algorithms, such as Dijkstra's algorithm or A* algorithm, may be more efficient. However, for sparse graphs with few edges, the NUV algorithm can be an efficient and simple option for finding the shortest path.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you find a good strategy for the following game?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Certainly! Please provide more details about the game you are referring to. What is the name of the game and what are the rules?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "\"4X games\", exemplified by the Civilization series and Stellaris, are a genre of complex strategy computer games. Consider a hugely oversimplified game that captures the essence of the first stages (eXplore, eXpand) of such games. Your agent starts at a vertex on a 600-vertex graph. You can move along edges at unit speed, and every vertex you visit is added to your growing empire. But other players are doing this at the same time, and you cannot visit a vertex in their empires. Also, you don't see the whole graph, only the neighborhood of where you've visited. Eventually every vertex is taken into some player's empire, and the goal is to have the largest empire. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Thank you for providing more information about the game. Here are some strategies that your agent can use to maximize its chances of having the largest empire:</p><ol><li><p>Focus on exploring new areas: Since you cannot visit a vertex in another player's empire, your agent should focus on exploring new areas of the graph that other players have not yet reached. This can be done by moving to the unexplored vertices that are closest to your current location. By doing so, you can expand your empire faster than your opponents and increase your chances of having the largest empire.</p></li><li><p>Prioritize high-degree vertices: Vertices with a high degree (i.e., many edges) are more likely to be part of larger connected components, which can be valuable for expanding your empire quickly. Your agent should prioritize visiting vertices with a high degree in order to increase the chances of finding larger connected components and expanding your empire rapidly.</p></li><li><p>Keep track of the competition: Your agent should keep track of the areas that other players have already explored and avoid moving towards those areas. This can be done by keeping a record of the vertices that are part of other players' empires and avoiding those vertices. By doing so, your agent can avoid wasting time and resources on exploring areas that other players have already claimed.</p></li><li><p>Be opportunistic: If your agent encounters an unclaimed vertex that is part of a larger connected component, it may be worth spending extra time to explore the area around that vertex and claim as many vertices as possible. This can help your agent to quickly expand its empire and increase its chances of having the largest empire.</p></li><li><p>Maintain mobility: Since the graph is large and your agent only sees the neighborhood of where it has visited, it is important to maintain mobility and be prepared to change direction quickly if a more promising path is discovered. Your agent should avoid getting stuck in dead ends or areas with few unexplored vertices and instead focus on finding the most promising areas for expansion.</p></li></ol><p>These strategies should help your agent to expand its empire quickly and efficiently in the early stages of the game, maximizing its chances of having the largest empire. However, the game is oversimplified and there are likely many other strategies that could be effective in practice, depending on the specifics of the game and the behavior of other players.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can we employ nearest unvisited vertex algorithm in this game?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, the Nearest Unvisited Vertex (NUV) algorithm could be employed in this game as a path-finding algorithm to find the next unexplored vertex that is closest to the current location of the agent.</p><p>The NUV algorithm works by maintaining a priority queue of vertices, with the priority of each vertex based on its distance from the current location of the agent. At each step, the algorithm dequeues the vertex with the highest priority (i.e., the closest unexplored vertex) and moves the agent to that vertex. The algorithm then updates the distances of the neighboring vertices that have not yet been explored and adds them to the priority queue.</p><p>This algorithm can be useful for exploring new areas quickly and efficiently, especially in large graphs where the agent's visibility is limited to its immediate neighborhood. By always moving towards the nearest unexplored vertex, the agent can quickly expand its empire and explore new areas while avoiding areas that have already been claimed by other players.</p><p>However, the NUV algorithm is not optimized for maximizing the size of the agent's empire or for competing with other players. In particular, the algorithm does not take into account the actions of other players or the connectivity of the graph, which are important factors for maximizing the size of the agent's empire. Therefore, while the NUV algorithm could be a useful tool for exploring new areas in the game, it would need to be combined with other strategies to maximize the agent's chances of having the largest empire.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you combine what I asked into one passage as a summary of David Aldous's lecture?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>David Aldous's lecture covered several topics related to graph theory, including the Nearest Unvisited Vertex (NUV) algorithm, uniform spanning trees, and random Eulerian circuits.</p><p>The NUV algorithm is a path-finding algorithm that can be used to explore large graphs efficiently by always moving towards the nearest unexplored vertex. In a simplified game based on the early stages of 4X games, the NUV algorithm could be used to quickly expand the agent's empire by exploring new areas of the graph that have not yet been claimed by other players.</p><p>Uniform spanning trees are trees that connect all the vertices of a graph with equal probability. These trees can be used to generate random samples of graphs or to estimate the properties of large graphs by sampling from smaller subgraphs.</p><p>Random Eulerian circuits are paths that traverse each edge of a graph exactly once and end at the starting vertex. These circuits can be used to generate random samples of graphs or to estimate the properties of large graphs by sampling from smaller subgraphs.</p><p>In the context of the simplified game, uniform spanning trees and random Eulerian circuits could be used to generate random samples of graphs that capture the essence of the game, allowing researchers to study the properties of the game and develop new strategies for maximizing the agent's chances of having the largest empire.</p><p>Overall, David Aldous's lecture highlighted the importance of graph theory in understanding complex systems and provided insights into the use of graph theory in analyzing games and other applications.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_3276",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "1 / 1are you able to make diagrams?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, I can make simple diagrams using text characters. However, the diagrams might not be as visually appealing or detailed as those created using specialized software. If you can provide me with a description of what you would like the diagram to show, I can do my best to create a text-based diagram for you.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1a classic 1st century jewish house"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's a text-based diagram of a typical Jewish house in the 1st century:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>lua</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-lua\">    +<span class=\"hljs-comment\">----------------------+</span>\n    |                      |\n    |        Roof          |\n    |                      |\n    +<span class=\"hljs-comment\">-----------+----------+</span>\n    |           |          |\n    |   Upper   |  Upper   |\n    |  Chamber  |  Chamber |\n    |           |          |\n    +<span class=\"hljs-comment\">-----------+----------+</span>\n    |           |          |\n    |   Lower   |  Lower   |\n    |  Chamber  |  Chamber |\n    |           |          |\n    +<span class=\"hljs-comment\">-----------+----------+</span>\n    |                      |\n    |        Courtyard     |\n    |                      |\n    +<span class=\"hljs-comment\">-----------+----------+</span>\n    |                      |\n    |        Storage       |\n    |         Room         |\n    |                      |\n    +<span class=\"hljs-comment\">-----------+----------+</span>\n    |                      |\n    |        Entrance      |\n    |                      |\n    +<span class=\"hljs-comment\">----------------------+</span>\n</code></div></div></pre><p>The house typically had a flat roof that served as a living area during the warmer months. The upper chambers were used as sleeping quarters, and the lower chambers were used for cooking and other domestic activities. The courtyard was a central gathering place and often had a cistern for collecting rainwater. A storage room was also typically present for storing food and other household items. The entrance to the house was usually a narrow doorway that led directly into the courtyard.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1is this a top-down view?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, the diagram I provided is a top-down view of a typical Jewish house in the 1st century.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1didn't some sons build a room onto parents' house?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Yes, it was common in Jewish culture for sons to build an additional room onto their parents' house as a way of expanding the family dwelling. This practice is referred to in Hebrew as \"Yibum,\" and it was considered a way of honoring one's parents and continuing the family lineage. The additional room was typically added to the side or rear of the existing house, and it could be used for a variety of purposes, such as a bedroom, storage room, or workshop.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1can you update the diagram with a yibum"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's an updated version of the diagram that includes a Yibum, or an additional room built onto the side of the existing house:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>lua</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-lua\">    +<span class=\"hljs-comment\">-------------------------+</span>\n    |                         |\n    |           Roof          |\n    |                         |\n    +<span class=\"hljs-comment\">-----------+-------------+</span>\n    |           |             |\n    |   Upper   |   Upper     |\n    |  Chamber  |   Chamber   |\n    |           |             |\n    +<span class=\"hljs-comment\">-----------+-------------+</span>\n    |           |             |\n    |   Lower   |   Lower     |\n    |  Chamber  |   Chamber   |\n    |           |             |\n    +<span class=\"hljs-comment\">-----------+-------------+</span>\n    |                         |\n    |         Courtyard       |\n    |                         |\n    +<span class=\"hljs-comment\">-----------+-------------+</span>\n    |                         |\n    |   Yibum   |   Storage   |\n    |  Chamber  |    Room     |\n    |           |             |\n    +<span class=\"hljs-comment\">-----------+-------------+</span>\n    |                         |\n    |         Entrance        |\n    |                         |\n    +<span class=\"hljs-comment\">-------------------------+</span>\n</code></div></div></pre><p>In this version, the Yibum chamber has been added to the side of the existing house, adjacent to the storage room.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1do you have links to images that you referenced for this drawing?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, I don't have access to image references for this specific drawing since I created it using text characters based on the description you provided. However, there are many historical and archaeological resources available online that provide information and images of ancient Jewish houses from the 1st century. You may find it helpful to search for scholarly articles, books, or websites that focus on the history and archaeology of ancient Israel, particularly during the Second Temple period, to learn more about the construction and layout of Jewish homes during that time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1can you add another yibum to the above diagram?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an updated version of the diagram that includes two Yibum additions to the existing house:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>lua</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-lua\">    +<span class=\"hljs-comment\">-----------------------------+</span>\n    |                             |\n    |             Roof            |\n    |                             |\n    +<span class=\"hljs-comment\">-----------+-----------------+</span>\n    |           |                 |\n    |   Upper   |     Upper       |\n    |  Chamber  |     Chamber     |\n    |           |                 |\n    +<span class=\"hljs-comment\">-----------+-----------------+</span>\n    |           |                 |\n    |   Lower   |     Lower       |\n    |  Chamber  |     Chamber     |\n    |           |                 |\n    +<span class=\"hljs-comment\">-----------+-----------------+</span>\n    |                             |\n    |           Courtyard        |\n    |                             |\n    +<span class=\"hljs-comment\">-----------+-----------------+</span>\n    |                             |\n    |    Yibum    |     Yibum     |\n    |   Chamber   |    Chamber    |\n    |             |               |\n    +<span class=\"hljs-comment\">-----------+-----------------+</span>\n    |                             |\n    |          Storage Room       |\n    |                             |\n    +<span class=\"hljs-comment\">-----------------------------+</span>\n    |                             |\n    |          Entrance           |\n    |                             |\n    +<span class=\"hljs-comment\">-----------------------------+</span>\n</code></div></div></pre><p>In this version, two Yibum chambers have been added to the existing house, one adjacent to the other.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1is this a side view or top-down view?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>This is a top-down view of the house that shows the layout of the various rooms and chambers, as well as the courtyard and entrance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1so the whole house is one story?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Based on the diagram I provided, it appears that the house is a single-story structure. However, it's important to keep in mind that this is a simplified representation of a typical Jewish house in the 1st century and that the actual architecture and layout of such houses varied depending on factors such as location, social status, and available resources. Some Jewish houses from this time period may have been multi-story structures, while others may have had more complex floor plans.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1how do you have an upper chamber and a lower chamber with one story?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>You are correct, it is not possible to have an upper chamber and a lower chamber in a single-story house. I apologize for the confusion in my previous response. The diagram I provided is not entirely accurate, as it was based on a simplified representation of a typical Jewish house in the 1st century. In reality, Jewish houses during this time period were often multi-story structures, with upper chambers located above the lower ones. So it's possible that the house in the diagram could have had a second story, which I didn't represent in the diagram.</p><p>Again, I apologize for any confusion that my previous response may have caused.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 08:28"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team's design system is Veltrion UI Kit v2. It's pretty slick for creating consistent UI components. Have you worked with design systems before? What's your approach to integrating them into projects?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like Veltrion UI Kit v2 is a great choice for maintaining consistency across your components. When integrating a design system, I usually start by familiarizing myself with the guidelines and components provided in the kit. It’s helpful to create a dedicated space in the project for the design system, so all the components are easily accessible. Additionally, I like to ensure that the team collaborates closely with designers to align on any customizations or extensions needed for specific features. Have you encountered any challenges while implementing the UI kit so far?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Cryptara Vault. It helps us securely manage sensitive information like API keys and credentials. How do you usually set up secret management in your projects? Any best practices to keep in mind?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret management tool like Cryptara Vault is a smart move for handling sensitive information. In my experience, it's essential to keep secrets out of the codebase to minimize exposure. I typically recommend using environment variables or configuration files that are not checked into version control. Regularly rotating secrets and implementing access controls are also best practices to enhance security. Additionally, monitoring and auditing access to your secrets can help identify any potential issues early on. Have you found any particular practices that work well for your team with Cryptara Vault?"
+        },
+        {
+          "role": "user",
+          "content": "To run the dev server, the team uses `korvel dev --open`. It's a straightforward command, but it can be a game-changer for speeding up development. Do you have any tips on optimizing the dev server setup or configuring it for different environments?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using `korvel dev --open` sounds like a convenient way to get the development server up and running quickly. To optimize the setup, consider configuring environment-specific settings that can adjust things like logging levels or API endpoints. This way, you can ensure the dev environment mimics production as closely as possible without compromising performance. Additionally, enabling hot-reloading can significantly speed up your development process by reflecting changes instantly. Have you encountered any specific bottlenecks or performance issues with the dev server that you're looking to address?"
+        },
+        {
+          "role": "user",
+          "content": "The team is using Veltrion as their framework. It’s great that you're leveraging this framework alongside the UI kit. How do you find the integration between Veltrion and the UI Kit? Any specific features or tools that you've found particularly helpful while working with it?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that you're using Veltrion along with the UI Kit—it sounds like a powerful combination for building your project. The integration typically goes smoothly when the framework is designed to work with design systems. I find it beneficial to leverage any pre-built components from the UI Kit in Veltrion, as this can save time and ensure consistency. Additionally, looking into any theming capabilities or customization features within both tools can enhance the overall user experience. Are there any specific components or functionalities you've particularly enjoyed while working with Veltrion and the UI Kit?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #zenith-incidents. This sounds like a useful channel for keeping track of any issues that come up in production. Are you using any specific monitoring tools to trigger these alerts, or is it more of a manual process? Also, how does your team handle incident response once an alert comes in?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a dedicated channel like #zenith-incidents for production alerts is a smart way to centralize communication about issues. Ideally, using monitoring tools that can automatically trigger alerts helps streamline the process and ensures that the right people are notified immediately. For incident response, it's effective to have a clear protocol in place, such as assigning roles for investigation and resolution, as well as documenting the incident for future reference. How does your team currently manage the response process after an alert is triggered?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "design_system",
+          "value": "Veltrion UI Kit v2",
+          "original_seed": "Our design system is Veltrion UI Kit v2",
+          "fact_text": "The team's design system is Veltrion UI Kit v2.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Cryptara Vault",
+          "original_seed": "Our secret manager is Cryptara Vault",
+          "fact_text": "The team's secret manager is Cryptara Vault.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "dev_server_command",
+          "value": "korvel dev --open",
+          "original_seed": "To run the dev server, use korvel dev --open",
+          "fact_text": "To run the dev server, the team uses korvel dev --open.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "framework",
+          "value": "Veltrion",
+          "original_seed": "We're using Veltrion as our framework",
+          "fact_text": "The team is using Veltrion as their framework.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "alert_channel",
+          "value": "#zenith-incidents",
+          "original_seed": "Production alerts go to #zenith-incidents",
+          "fact_text": "Production alerts go to #zenith-incidents.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 11:31"
+    },
+    {
+      "session_id": "sharegpt_22876",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Network Definition"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A network is a collection of interconnected devices, such as computers, servers, and other hardware, that are connected together to share resources and exchange information. These connections can be wired or wireless, and the devices can be located in the same room or spread out over a wide area, such as a city or even a country. There are many different types of networks, including local area networks (LANs), wide area networks (WANs), and the internet. Each type of network has its own set of characteristics and uses.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>There are also different protocols that are used to govern the communication between devices on a network, such as TCP/IP, Ethernet, and Wi-Fi. Additionally, networks can be classified as being either centralized or decentralized. In a centralized network, all the devices connect to a central server, which manages and controls the network. In a decentralized network, there is no central server, and the devices communicate with each other directly.</p><p>Networks can also be classified as being either peer-to-peer or client-server. In a peer-to-peer network, all devices are considered equal and can share resources with each other without the need for a central server. In a client-server network, devices are divided into clients and servers, with the servers providing resources and services to the clients.</p><p>Networks are used in a variety of settings, including homes, businesses, and organizations. They allow users to share files, printers, and other resources, and also enable communication through email, instant messaging, and other forms of electronic communication.</p><p>Overall, networks are essential for the functioning of modern technology and play a critical role in facilitating communication and the sharing of information.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Another important aspect of networks is network security, which is the practice of protecting networks and the devices connected to them from unauthorized access and malicious activity. Network security measures can include firewalls, antivirus software, intrusion detection and prevention systems, and encryption. Network administrators also implement security policies and best practices to ensure that all devices and users on the network are following the same security guidelines.</p><p>Networks can also be organized in different topologies such as bus, star, ring, tree, and mesh. In bus topology, all the devices are connected to a single cable, in star topology all the devices are connected to a central device and in ring topology all the devices are connected in a circular fashion. In tree topology it is a combination of bus and star topology and in mesh topology, each device is connected to every other device on the network.</p><p>In conclusion, networks are a critical part of modern technology, enabling the sharing of resources and communication between devices. They can be classified in different ways, such as centralized or decentralized, peer-to-peer or client-server, and can be organized in different topologies. Network security is an important aspect of network management, and administrators implement various measures to protect networks and devices from unauthorized access and malicious activity.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Network Topologies"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Network topology refers to the physical and logical layout of the devices on a network. There are several different types of network topologies, including:</p><ol><li><p>Bus topology: In this type of topology, all devices are connected to a single cable, called the bus. This cable acts as a backbone to which all devices are connected. This topology is simple and cost-effective, but if the bus cable is damaged, the entire network will be down.</p></li><li><p>Star topology: In this type of topology, all devices are connected to a central device, called a hub or switch. This central device manages the flow of data between devices. This topology is more reliable than bus topology but if the central device fails, the entire network will be down.</p></li><li><p>Ring topology: In this type of topology, all devices are connected in a circular fashion, and data travels in one direction around the ring. This topology is more reliable than bus topology, but it can be affected by a single device failure.</p></li><li><p>Tree topology: This topology is a combination of bus and star topology. It is organized in a hierarchical fashion, with a central device and multiple branches that connect to other devices.</p></li><li><p>Mesh topology: In this type of topology, each device is connected to every other device on the network, allowing for multiple paths for data to travel. This topology is the most reliable, but it can be expensive to implement.</p></li></ol><p>The choice of network topology depends on the specific requirements of the network, including reliability, cost, and scalability.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><ol start=\"6\"><li><p>Hybrid topology: This topology combines two or more different topologies, such as star and bus, or ring and mesh. It allows for the benefits of different topologies to be combined and can be more flexible and efficient than a single topology.</p></li><li><p>Wireless mesh network (WMN): A wireless mesh network is a type of communication network made up of radio nodes organized in a mesh topology. WMNs are self-healing, meaning that if a node fails, the network will automatically reroute traffic through other nodes to maintain network connectivity. This type of topology is suitable for large-scale wireless networks and provides high-bandwidth and low-latency connections.</p></li><li><p>Cloud topology: Cloud topology is a type of topology where the resources are provided on-demand as a service and managed remotely by a third-party service provider. This topology is suitable for organizations that don't have the resources to manage their own infrastructure.</p></li></ol><p>It's important to note that no single topology is ideal for all networks, and the choice of topology depends on the specific requirements of the network, such as scalability, reliability, and cost. Some topologies are more appropriate for small networks and others for large, complex networks, and that the network may change over time, leading to the need for changes in the topology.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Another thing to consider when choosing a network topology is the type of traffic that the network will be handling. For example, a bus topology is not suitable for networks with high traffic or large amounts of data transfer, as all data must travel through the bus cable, which can lead to congestion and slow down the network. On the other hand, a mesh topology, which allows for multiple paths for data to travel, can handle high traffic and large amounts of data transfer more efficiently.</p><p>Another important aspect to consider is the physical layout of the devices on the network. For example, a star topology can be more appropriate for networks where devices are located in different rooms or buildings, as it allows for more flexibility in the placement of devices. A bus topology, on the other hand, may be more appropriate for networks where devices are located in the same room or area, as it is simpler to implement and maintain.</p><p>In summary, network topology refers to the physical and logical layout of devices on a network, and there are several different types of topologies, each with their own advantages and disadvantages. The choice of topology depends on the specific requirements of the network, including scalability, reliability, cost, and the type of traffic the network will be handling. It is also important to consider the physical layout of the devices and the network's future growth.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Network Classifications"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>There are several ways to classify networks, including:</p><ol><li><p>Based on size: Networks can be classified as local area networks (LANs), wide area networks (WANs), metropolitan area networks (MANs), or global area networks (GANs) depending on their geographical coverage and size.</p></li><li><p>Based on ownership: Networks can be classified as public or private, depending on who owns and operates them. Public networks, such as the internet, are open to anyone to access and use, while private networks are restricted to a specific group of people or organization.</p></li><li><p>Based on access: Networks can be classified as wired or wireless, depending on the type of connections used to connect devices. Wired networks use cables to connect devices, while wireless networks use radio waves or infrared signals.</p></li><li><p>Based on the architecture: Networks can be classified as centralized or decentralized, depending on the way in which the resources and control of the network are distributed. In a centralized network, all devices connect to a central server, which manages and controls the network. In a decentralized network, there is no central server, and the devices communicate with each other directly.</p></li><li><p>Based on the technology: Networks can be classified as circuit-switched or packet-switched, depending on the way in which the data is transmitted. Circuit-switched networks establish a dedicated path between devices for the duration of the connection, while packet-switched networks divide data into small packets and send them to their destination through the network using the best available route.</p></li></ol><p>Each classification has its own characteristics, advantages and disadvantages, and they are used in different settings and industries.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><ol start=\"6\"><li><p>Based on the application: Networks can be classified as specific-purpose networks or general-purpose networks, depending on the type of application they are designed to support. Specific-purpose networks are designed to support a single application, such as a video surveillance network, while general-purpose networks are designed to support multiple applications, such as a home network or a business network.</p></li><li><p>Based on the security level: Networks can be classified as open or closed, depending on the level of security they provide. An open network is less secure and allows anyone to connect to it, while a closed network is more secure and requires authentication and authorization to access it.</p></li><li><p>Based on the functional level: Networks can be classified as infrastructure or service networks, depending on their functional level. Infrastructure networks provide the underlying infrastructure for communication and data transfer, while service networks provide specific services such as email, file transfer, and other applications to the users.</p></li></ol><p>It is worth noting that some networks may belong to multiple classifications. For example, a network can be both a wired and wireless network, or both a private and a public network. The classification of a network depends on the specific characteristics of the network, and the classification may change as the network evolves over time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><ol start=\"9\"><li><p>Based on the protocol: Networks can be classified as IPv4 or IPv6, depending on the version of the Internet Protocol (IP) they use. IPv4 is the fourth version of the Internet Protocol and it is widely used and supported. IPv6 is the sixth version of the Internet Protocol and it is designed to replace IPv4 as it addresses the limitations of IPv4 such as the limited number of IP addresses. IPv6 is designed to provide a much larger address space, and it also offers improved security and mobility features.</p></li><li><p>Based on the level of control: Networks can be classified as self-organizing or centrally-controlled, depending on the level of control over the network. Self-organizing networks are autonomous, and they are able to automatically configure and adapt to changes in the network, while centrally-controlled networks rely on a central controller to manage and control the network.</p></li></ol><p>In summary, networks can be classified in many ways, including based on size, ownership, access, architecture, technology, application, security level, functional level, protocol and level of control. Each classification has its own characteristics, advantages and disadvantages, and they are used in different settings and industries. The classification of a network can change as the network evolves over time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Overview of OSI Reference Model"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The OSI (Open Systems Interconnection) reference model is a conceptual framework that describes how data is transmitted over a network. It defines a seven-layer model for network communication, with each layer representing a different aspect of the communication process. The seven layers of the OSI model are:</p><ol><li><p>Physical Layer: This layer deals with the physical connections between devices, such as cables and switches. It is responsible for transmitting raw bits over the network.</p></li><li><p>Data Link Layer: This layer deals with the link between two devices on the same network. It is responsible for providing reliable data transfer by detecting and correcting errors in the data.</p></li><li><p>Network Layer: This layer deals with routing data between different networks. It is responsible for providing logical addressing and routing decisions.</p></li><li><p>Transport Layer: This layer deals with the end-to-end delivery of data. It is responsible for providing reliable data transfer between devices and ensuring that data is delivered in the correct order.</p></li><li><p>Session Layer: This layer deals with the establishment, management, and termination of communication sessions between devices. It is responsible for establishing and maintaining connections between devices.</p></li><li><p>Presentation Layer: This layer deals with the format and representation of data. It is responsible for converting data into a format that can be understood by the receiving device.</p></li><li><p>Application Layer: This layer deals with providing services to the user. It is responsible for providing the interface between the network and the user's applications.</p></li></ol><p>The OSI reference model provides a standard way to understand and describe the different aspects of network communication. It helps to simplify the process of communication between different devices and networks by breaking it down into smaller and more manageable parts.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Overview TCP/IP Protocol"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The TCP/IP (Transmission Control Protocol/Internet Protocol) protocol is a suite of communication protocols that is used to transmit data over networks, including the internet. It is the foundation of the internet and the standard for communication on most networks today.</p><p>TCP/IP is a four-layer protocol, which includes the following layers:</p><ol><li><p>Network Interface Layer: This is the lowest layer of the TCP/IP protocol. It deals with the physical connections between devices, such as cables and switches. It is responsible for transmitting raw bits over the network.</p></li><li><p>Internet Layer: This layer deals with routing data between different networks. It is responsible for providing logical addressing and routing decisions, using the Internet Protocol (IP) to address and route data packets.</p></li><li><p>Transport Layer: This layer deals with the end-to-end delivery of data. It is responsible for providing reliable data transfer between devices, using the Transmission Control Protocol (TCP) to ensure that data is delivered in the correct order and any errors are corrected.</p></li><li><p>Application Layer: This layer deals with providing services to the user. It is responsible for providing the interface between the network and the user's applications, using protocols such as HTTP, FTP, and SMTP.</p></li></ol><p>TCP/IP is a connectionless protocol, which means that it does not establish a dedicated connection between devices before transmitting data. Instead, it sends data packets independently and relies on the Internet Layer to route the packets to their destination.</p><p>TCP/IP is a widely used protocol and it is supported by most operating systems and devices. It is also extensible, which means that new protocols and technologies can be added as needed to support new applications and services.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Suite Function of cah Layer"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Each layer of the OSI and TCP/IP models has a specific function and purpose. Here is an overview of the functions of each layer in the OSI reference model:</p><ol><li>Physical Layer: The physical layer is responsible for transmitting raw bits over the network. It deals with the physical connections between devices, such as cables and switches. It defines</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Protocol Used"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>the electrical, mechanical, and functional characteristics of these connections, including the type of cables and connectors used, the transmission rates, and the signaling methods.</p><ol start=\"2\"><li><p>Data Link Layer: The data link layer is responsible for providing reliable data transfer by detecting and correcting errors in the data. It deals with the link between two devices on the same network. It defines the way that data is organized into frames, and how devices are addressed and identified on the network. Protocols used in this layer include Ethernet, PPP, and FDDI.</p></li><li><p>Network Layer: The network layer is responsible for providing logical addressing and routing decisions. It deals with routing data between different networks, using protocols such as IP, ICMP, and IGMP.</p></li><li><p>Transport Layer: The transport layer is responsible for providing reliable data transfer between devices, ensuring that data is delivered in the correct order. It also controls the flow of data and manages the establishment and termination of connections. Protocols used in this layer include TCP and UDP.</p></li><li><p>Session Layer: The session layer is responsible for establishing, managing, and terminating communication sessions between devices. It controls the dialog between applications and manages the synchronization of data. Protocols used in this layer include SOCKS and RPC.</p></li><li><p>Presentation Layer: The presentation layer is responsible for converting data into a format that can be understood by the receiving device. It deals with the format and representation of data, and it also provides data compression, encryption, and decryption. Protocols used in this layer include ASCII and JPEG.</p></li><li><p>Application Layer: The application layer is responsible for providing services to the user. It provides the interface between the network and the user's applications and it defines the protocols and services used by the applications to access the network. Protocols used in this layer include HTTP, FTP, SMTP, and DNS.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Connecting Devices- network adapter cards"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A network adapter card, also known as a NIC (Network Interface Card), is a hardware component that allows a device to connect to a network. It is typically installed in a computer or other networked device, and it provides the physical connection to the network through a wired or wireless connection.</p><p>A NIC typically includes a number of components, including a processor, memory, and one or more ports for connecting to the network. The processor is responsible for managing the flow of data between the device and the network, while the memory is used to store data temporarily as it is being transmitted.</p><p>There are two types of network adapter cards, internal and external. An internal NIC is installed inside the computer, and it is connected to the motherboard through a PCI or PCIe slot. An external NIC is connected to the computer through a USB or Firewire port, and it is used to connect to a network through a wired or wireless connection.</p><p>Network adapter cards can support different types of networks, including Ethernet, Wi-Fi, and Bluetooth. Ethernet NICs use a wired connection to transmit data, while Wi-Fi and Bluetooth NICs use wireless connections. Ethernet NICs are typically faster than Wi-Fi NICs, but Wi-Fi NICs offer more flexibility in terms of location and mobility.</p><p>It is worth noting that today, most computers, laptops and devices have built-in network adapters that are integrated on the motherboard, so a separate network adapter card is not needed.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Another important aspect of network adapter cards is their speed and data transfer rate. Network adapter cards can support different speeds, such as 10 Mbps, 100 Mbps, or 1 Gbps. Higher speeds can support faster data transfer rates and are more suitable for high-bandwidth applications such as streaming video or online gaming. Some newer adapters can support even higher speeds, such as 10 Gbps and 40 Gbps.</p><p>Another feature of network adapter cards is the type of connector they use. Ethernet NICs typically use an RJ-45 connector, while Wi-Fi NICs use an antenna to connect to a wireless network. Ethernet NICs may also have a built-in switch, to allow multiple devices to connect to the network.</p><p>In conclusion, a network adapter card, also known as a NIC, is a hardware component that allows a device to connect to a network. It can be internal or external, and it supports different types of networks, including Ethernet, Wi-Fi, and Bluetooth. They can support different speeds and data transfer rates, and use different types of connectors. It is important to choose the right network adapter card for your device and network to ensure optimal performance and connectivity.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Repeaters"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A repeater is a networking device that amplifies, regenerates, and retransmits a signal to extend the reach of a network. It receives a signal from a network, amplifies it, and retransmits it on the same network. This allows the signal to travel further, extending the range of the network.</p><p>Repeaters are typically used to overcome signal attenuation, which occurs when a signal loses strength as it travels over long distances or through obstacles such as walls or ceilings. By amplifying the signal, repeaters are able to overcome this attenuation and maintain a strong signal throughout the network.</p><p>There are different types of repeaters, including:</p><ol><li><p>Signal Repeater: Also known as a signal booster, this type of repeater simply amplifies the signal without regenerating it.</p></li><li><p>Line Repeater: This type of repeater regenerates the signal and amplifies it, which can improve the quality of the signal and reduce the effects of noise and interference.</p></li><li><p>Wireless Repeater: This type of repeater receives wireless signals and retransmits them, allowing for the extension of wireless networks.</p></li><li><p>Optical Repeater: An optical repeater is used to regenerate and amplify optical signals in optical fiber networks.</p></li></ol><p>Repeaters work at the physical layer of the OSI model and they do not have any knowledge of the data they are forwarding, they simply repeat the signal they received. They are used to extend the reach of a network, improve signal quality, and overcome signal attenuation. However, they can also introduce delays, since they have to regenerate the signal before retransmitting it.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "continue"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Another thing to consider when using repeaters is that they can create multiple collision domains, which can lead to decreased network performance. A collision domain is a segment of a network where data packets can collide, resulting in lost or corrupted data. Repeaters can create multiple collision domains by regenerating and retransmitting a signal, which can cause data packets to collide with each other.</p><p>To avoid this issue, repeaters can be used in conjunction with other networking devices such as switches or routers. A switch, for example, can segment a network into multiple collision domains, which can prevent data packets from colliding. A router can also create multiple collision domains by routing data packets between different networks.</p><p>In summary, a repeater is a networking device that amplifies, regenerates, and retransmits a signal to extend the reach of a network. It is typically used to overcome signal attenuation and improve signal quality. However, repeaters can also introduce delays and create multiple collision domains, which can decrease network performance. To avoid these issues, repeaters can be used in conjunction with other networking devices such as switches or routers.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 13:02"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team’s test coverage target is 80% minimum overall. It’s crucial for us to maintain that to ensure code quality. What testing framework are you using to hit those targets? Any tips on structuring tests effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you're really focused on maintaining high code quality, which is great! The choice of testing framework can significantly impact your ability to reach that 80% coverage target, so it's important to select one that fits well with your project. When it comes to structuring tests, consider organizing them logically according to features or components, and try to keep your test cases small and focused. This not only helps with readability but also makes it easier to identify which specific areas of your code need more coverage. Are there any particular challenges you're facing with your current testing setup?"
+        },
+        {
+          "role": "user",
+          "content": "Update: The team's secret manager is Selvex Secrets. We switched to it for better handling of sensitive information in our app. How do you typically manage secrets in your projects? Any best practices for using secret managers?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a dedicated secret manager like Selvex Secrets is a smart move for managing sensitive information. It's crucial to keep those secrets secure and minimize the risk of exposure. In general, best practices for using secret managers include ensuring that secrets are accessed only by the services or users that need them, using environment variables to inject secrets into your app at runtime, and regularly rotating your secrets to reduce the impact of any potential leaks. Additionally, consider implementing strict access controls and logging to monitor who accesses the secrets. Are there specific aspects of integrating Selvex Secrets into your workflow that you'd like to explore further?"
+        },
+        {
+          "role": "user",
+          "content": "Database backups run every 12 hours with a 7-day retention policy. This setup ensures we have regular recovery points without taking up too much space. How do you handle database backups in your projects? Any tips on ensuring they are reliable?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid backup strategy in place with regular intervals and a sensible retention policy. For ensuring reliability in database backups, it’s important to automate the backup process to eliminate human error and schedule backups during off-peak hours to minimize performance impact. Additionally, implementing a monitoring system can alert you to any failures in the backup process. Testing your backups regularly is also crucial—you want to make sure that your recovery process works as expected when you need it. Have you faced any challenges with your current backup strategy that you'd like to discuss?"
+        },
+        {
+          "role": "user",
+          "content": "Project docs are at github.com/aurora-team/docs. Keeping documentation up to date is key for team collaboration and onboarding new members. How do you usually ensure that documentation stays current and useful? Any tools or processes you find particularly effective?"
+        },
+        {
+          "role": "assistant",
+          "content": "Maintaining up-to-date documentation is essential for effective collaboration and onboarding, and it’s great that you’re prioritizing this. One effective approach is to integrate documentation updates into your development workflow, making it a part of the definition of done for each feature or task. Encouraging team members to contribute to the docs as they work can help keep it current. Tools like version control for documentation can also be beneficial, as they allow you to track changes and ensure that everyone is working with the latest information. Regularly scheduled reviews or documentation sprints can help identify outdated content and areas that need improvement. How does your team currently handle documentation updates?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "test_coverage_target",
+          "value": "80% minimum overall",
+          "original_seed": "Our test coverage target is 80% minimum overall",
+          "fact_text": "The team's test coverage target is 80% minimum overall.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Selvex Secrets",
+          "original_seed": "Update: Our secret manager is Selvex Secrets",
+          "fact_text": "Update: The team's secret manager is Selvex Secrets.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "backup_schedule",
+          "value": "every 12 hours with 7-day retention",
+          "original_seed": "Database backups run every 12 hours with 7-day retention",
+          "fact_text": "Database backups run every 12 hours with 7-day retention.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "documentation_url",
+          "value": "github.com/aurora-team/docs",
+          "original_seed": "Project docs are at github.com/aurora-team/docs",
+          "fact_text": "Project docs are at github.com/aurora-team/docs.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 20:06"
+    },
+    {
+      "session_id": "sharegpt_702",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Help me solve this error message. I'm trying to build llvm for wasm\n\n-- bolt project is disabled\n-- clang project is enabled\n-- clang-tools-extra project is disabled\n-- compiler-rt project is disabled\n-- cross-project-tests project is disabled\n-- libc project is disabled\n-- libclc project is disabled\n-- lld project is disabled\n-- lldb project is disabled\n-- mlir project is disabled\n-- openmp project is disabled\n-- polly project is disabled\n-- pstl project is disabled\n-- flang project is disabled\n-- Could NOT find LibXml2 (missing: LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR) \n-- Could NOT find LibEdit (missing: LibEdit_INCLUDE_DIRS LibEdit_LIBRARIES) \n-- Native target X86 is not selected; lli will not JIT code\n-- Threads enabled.\n-- Doxygen disabled.\n-- Ninja version: 1.10.1\n-- Could NOT find OCaml (missing: OCAMLFIND OCAML_VERSION OCAML_STDLIB_PATH) \n-- Could NOT find OCaml (missing: OCAMLFIND OCAML_VERSION OCAML_STDLIB_PATH) \n-- OCaml bindings disabled.\n-- LLVM host triple: x86_64-unknown-linux-gnu\n-- LLVM default target triple: \n-- Building with -fPIC\n-- Targeting WebAssembly\n-- Clang version: 17.0.0\n-- Registering ExampleIRTransforms as a pass plugin (static build: OFF)\n-- Registering Bye as a pass plugin (static build: OFF)\n-- git version: v0.0.0-dirty normalized to 0.0.0\n-- Version: 1.6.0\n-- Performing Test HAVE_GNU_POSIX_REGEX -- failed to compile\n-- Performing Test HAVE_POSIX_REGEX -- success\n-- Performing Test HAVE_STEADY_CLOCK -- success\n-- Configuring done (46.5s)\n-- Generating done (4.5s)\n-- Build files have been written to: /workspaces/llvm-box/build/llvm-native\nninja: no work to do.\nconfigure: cmake -G Ninja -S llvm -B build/llvm-wasm -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=WebAssembly -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra -DLLVM_ENABLE_DUMP=OFF -DLLVM_ENABLE_ASSERTIONS=OFF -DLLVM_ENABLE_EXPENSIVE_CHECKS=OFF -DLLVM_ENABLE_BACKTRACES=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_ENABLE_THREADS=OFF -DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_TABLEGEN=build/llvm-native/bin/llvm-tblgen -DCLANG_TABLEGEN=build/llvm-native/bin/clang-tblgen -DCMAKE_TOOLCHAIN_FILE=/usr/local/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_CROSSCOMPILING_EMULATOR=/usr/local/emsdk/node/14.18.2_64bit/bin/node;--experimental-wasm-bulk-memory;--experimental-wasm-threads\n-- The ASM compiler identification is unknown\n-- Found assembler: /usr/local/emsdk/upstream/emscripten/emcc\n-- Warning: Did not find file Compiler/-ASM\n-- bolt project is disabled\n-- clang project is enabled\n-- clang-tools-extra project is enabled\n-- compiler-rt project is disabled\n-- cross-project-tests project is disabled\n-- libc project is disabled\n-- libclc project is disabled\n-- lld project is enabled\n-- lldb project is disabled\n-- mlir project is disabled\n-- openmp project is disabled\n-- polly project is disabled\n-- pstl project is disabled\n-- flang project is disabled\nCMake Error at cmake/modules/CheckCompilerVersion.cmake:88 (message):\n  libstdc++ version must be at least 7.1.\nCall Stack (most recent call first):\n  cmake/config-ix.cmake:15 (include)\n  CMakeLists.txt:857 (include)\n\n\n-- Configuring incomplete, errors occurred!\nemcmake: error: 'cmake -G Ninja -S llvm -B build/llvm-wasm -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=WebAssembly -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra -DLLVM_ENABLE_DUMP=OFF -DLLVM_ENABLE_ASSERTIONS=OFF -DLLVM_ENABLE_EXPENSIVE_CHECKS=OFF -DLLVM_ENABLE_BACKTRACES=OFF -DLLVM_BUILD_TOOLS=OFF -DLLVM_ENABLE_THREADS=OFF -DLLVM_BUILD_LLVM_DYLIB=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_TABLEGEN=build/llvm-native/bin/llvm-tblgen -DCLANG_TABLEGEN=build/llvm-native/bin/clang-tblgen -DCMAKE_TOOLCHAIN_FILE=/usr/local/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_CROSSCOMPILING_EMULATOR=/usr/local/emsdk/node/14.18.2_64bit/bin/node;--experimental-wasm-bulk-memory;--experimental-wasm-threads' failed (returned 1)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The error message suggests that the CMake configuration process failed with an error related to the version of the C++ standard library. Specifically, the error message states that the version of libstdc++ must be at least 7.1.</p><p>To resolve this error, you may need to update your C++ standard library to a newer version. Here are some steps you can try:</p><ol><li>Check the version of your current C++ standard library by running the following command in your terminal:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">bash</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-bash\">strings /usr/lib/libstdc++.so.6 | grep GLIBCXX\n</code></div></div></pre><p>This should output the version of libstdc++ installed on your system.</p><ol start=\"2\"><li>If the version is lower than 7.1, you can try updating your C++ standard library to a newer version. This will depend on your operating system and package manager. For example, on Ubuntu, you can run the following command to update your C++ standard library:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\">sudo apt-<span class=\"hljs-keyword\">get</span> install libstdc++<span class=\"hljs-number\">-7</span>-dev\n</code></div></div></pre><p>This will install the libstdc++ version 7 development files. You may need to adjust the version number depending on the version available in your package manager.</p><ol start=\"3\"><li>After updating your C++ standard library, try running the CMake configuration process again. If you are building LLVM for WebAssembly, make sure to pass the appropriate options to CMake. For example, here is the command you provided in your error message:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\">cmake -G <span class=\"hljs-title class_\">Ninja</span> -S llvm -B build/llvm-wasm -<span class=\"hljs-variable constant_\">DCMAKE_BUILD_TYPE</span>=<span class=\"hljs-title class_\">Release</span> -<span class=\"hljs-variable constant_\">DLLVM_TARGETS_TO_BUILD</span>=<span class=\"hljs-title class_\">WebAssembly</span> -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_PROJECTS</span>=clang;lld;clang-tools-extra -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_DUMP</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_ASSERTIONS</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_EXPENSIVE_CHECKS</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_BACKTRACES</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_BUILD_TOOLS</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_ENABLE_THREADS</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_BUILD_LLVM_DYLIB</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_INCLUDE_TESTS</span>=<span class=\"hljs-variable constant_\">OFF</span> -<span class=\"hljs-variable constant_\">DLLVM_TABLEGEN</span>=build/llvm-native/bin/llvm-tblgen -<span class=\"hljs-variable constant_\">DCLANG_TABLEGEN</span>=build/llvm-native/bin/clang-tblgen -<span class=\"hljs-variable constant_\">DCMAKE_TOOLCHAIN_FILE</span>=<span class=\"hljs-regexp\">/usr/local</span><span class=\"hljs-regexp\">/emsdk/upstream</span><span class=\"hljs-regexp\">/emscripten/cmake</span><span class=\"hljs-regexp\">/Modules/</span><span class=\"hljs-title class_\">Platform</span>/<span class=\"hljs-title class_\">Emscripten</span>.cmake -<span class=\"hljs-variable constant_\">DCMAKE_CROSSCOMPILING_EMULATOR</span>=<span class=\"hljs-regexp\">/usr/local</span><span class=\"hljs-regexp\">/emsdk/node</span><span class=\"hljs-regexp\">/14.18.2_64bit/bin</span><span class=\"hljs-regexp\">/node;--experimental-wasm-bulk-memory;--experimental-wasm-threads\n</span></code></div></div></pre><p>Make sure to update the paths and options as needed for your system.</p><ol start=\"4\"><li>If the error persists, you may need to investigate further to determine the root cause. One possibility is that there are multiple versions of the C++ standard library installed on your system, and the wrong version is being used during the build process. In this case, you may need to adjust your environment variables or linker options to ensure that the correct version of the library is used.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2I don't even see a libstdc++.so.6 that exists!\n\n@jcbhmr ➜ /workspaces/llvm-box (main) $ ls /usr/lib\napt          binfmt-support  cmake      debug  emacsen-common  git-core  gnupg2   groff    locale  mime     os-release  pkg-config.multiarch  python3    sasl2  sudo      systemd  tmpfiles.d  valgrind\nbfd-plugins  clang           compat-ld  dpkg   gcc             gnupg     gold-ld  llvm-11  man-db  openssh  pkgconfig   python2.7             python3.9  ssl    sysctl.d  tc       udev        x86_64-linux-gnu"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>It seems that the <code>libstdc++.so.6</code> library may not be installed on your system. You can try installing it using your package manager.</p><p>If you're using Ubuntu or Debian, you can try running the following command:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">csharp</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-csharp\">sudo apt-<span class=\"hljs-keyword\">get</span> install libstdc++<span class=\"hljs-number\">6</span>\n</code></div></div></pre><p>If you're using CentOS or RHEL, you can try running:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">sudo yum install libstdc++.so.6\n</code></div></div></pre><p>If you're using Fedora, you can try running:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">sudo dnf install libstdc++.so.6\n</code></div></div></pre><p>Once the library is installed, you should be able to link your program with <code>libstdc++.so.6</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "They say it's already installed\n\n@jcbhmr ➜ /workspaces/llvm-box (main) $ sudo apt-get install libstdc++6\nReading package lists... Done\nBuilding dependency tree... Done\nReading state information... Done\nlibstdc++6 is already the newest version (10.2.1-6).\n0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.\n\nWhat else could it be?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>It's possible that the library is installed in a different location than where your program is looking for it. You can try using the <code>ldd</code> command to check which shared libraries your program is linking against and where they are located. For example, to check the shared libraries that your program <code>my_program</code> is linked against, you can run:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs\">ldd my_program\n</code></div></div></pre><p>This will output a list of the shared libraries and their locations. Check if <code>libstdc++.so.6</code> is listed and where it is located. If it's not listed, then your program may not be linking against it at all.</p><p>If <code>libstdc++.so.6</code> is listed but its location is not what you expect, you may need to set the <code>LD_LIBRARY_PATH</code> environment variable to include the directory where <code>libstdc++.so.6</code> is located. For example, if <code>libstdc++.so.6</code> is located in <code>/usr/local/lib</code>, you can set the <code>LD_LIBRARY_PATH</code> environment variable with the following command:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">javascript</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">export</span> <span class=\"hljs-variable constant_\">LD_LIBRARY_PATH</span>=<span class=\"hljs-regexp\">/usr/</span>local/<span class=\"hljs-attr\">lib</span>:$LD_LIBRARY_PATH\n</code></div></div></pre><p>Then try running your program again to see if it can find the library.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 07:25"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's code review policy is 2 approvals + a security review for the auth/ directory. It's crucial to ensure that our authentication processes are solid. \n\nDo you have any tips for setting up security checks in the review process?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid foundation with your review policy. To enhance your security checks, consider incorporating automated static analysis tools that can flag potential vulnerabilities in the authentication code. Additionally, you might want to create a checklist of common security pitfalls specific to authentication, such as checking for proper password hashing, validating user input, and ensuring secure session management. Encouraging reviewers to think critically about these aspects during their reviews can also be beneficial. Have you thought about integrating any specific tools or practices into your review process?"
+        },
+        {
+          "role": "user",
+          "content": "Now the developer has switched again — the team's secret manager is Velthri Keys. This should help in managing sensitive data like API keys and credentials more efficiently.\n\nWhat are some best practices for using secret managers like Velthri Keys? Any specific configurations to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a secret manager like Velthri Keys is a great step toward securing sensitive data. One best practice is to ensure that access to the secret manager is tightly controlled, limiting permissions to only those who absolutely need it. Regularly rotating your secrets can also help minimize the risk in case of a leak. Make sure to audit access logs periodically to monitor who is accessing which secrets. Additionally, consider using environment variables to reference secrets in your application, rather than hardcoding them. Have you set up any specific access controls or policies in Velthri Keys yet?"
+        },
+        {
+          "role": "user",
+          "content": "The team’s project follows a workspace with /services and /common. This structure helps to organize our codebase effectively and promotes reusability across different services.\n\nDo you have any suggestions for maintaining clarity and organization within that kind of directory structure? What are some common pitfalls to avoid?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid organizational structure in place. To maintain clarity, consider establishing clear naming conventions for your services and common components, making it easier for team members to navigate the codebase. Documentation is also key; having a well-maintained README or contribution guidelines in each directory can provide context and help new team members get up to speed quickly. As for pitfalls, be cautious of creating overly complex dependencies between services, as this can lead to difficulties in maintenance and testing. Regularly reviewing your directory structure and refactoring when necessary can help prevent it from becoming unwieldy. Are there any particular challenges you’ve faced with the current structure?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at github.com/aurora-team/onboarding. This should help new team members get integrated smoothly into the project.\n\nHave you considered adding any specific sections to the onboarding guide to address common questions or challenges new developers face? It might be useful to include setup instructions, coding standards, or even a glossary of key terms related to your project."
+        },
+        {
+          "role": "assistant",
+          "content": "It’s great that you have an onboarding guide in place! Adding sections that cover common questions and challenges is definitely a good idea. Including detailed setup instructions can help eliminate confusion right from the start, while outlining coding standards ensures consistency across the codebase. A glossary of key terms can be particularly helpful for newcomers who may not be familiar with specific terminology or concepts related to your project. You might also consider adding a FAQ section based on feedback from previous onboarding experiences, as this can provide insight into what new developers typically struggle with. Have you gathered any feedback from recent onboarding experiences that could inform these additions?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "code_review_policy",
+          "value": "2 approvals + security review for auth/",
+          "original_seed": "Our code review policy is 2 approvals + security review for auth/",
+          "fact_text": "The team's code review policy is 2 approvals + security review for auth/.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "secret_manager",
+          "value": "Velthri Keys",
+          "original_seed": "Now I've switched again — Our secret manager is Velthri Keys",
+          "fact_text": "Now the developer has switched again — the team's secret manager is Velthri Keys.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "project_structure",
+          "value": "workspace with /services and /common",
+          "original_seed": "Our project follows a workspace with /services and /common",
+          "fact_text": "The team’s project follows a workspace with /services and /common.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "onboarding_guide",
+          "value": "github.com/aurora-team/onboarding",
+          "original_seed": "The onboarding guide is at github.com/aurora-team/onboarding",
+          "fact_text": "The onboarding guide is at github.com/aurora-team/onboarding.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 23:59"
+    },
+    {
+      "session_id": "sharegpt_12344",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Explain the following terms: arrival process; service rate?  in the context of queuing theory"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>In the context of queuing theory, an arrival process refers to the way in which customers or units of work arrive at a service facility, such as a store, a bank, or a call center. The arrival process can be described by a number of different statistical distributions, such as the Poisson distribution or the exponential distribution, which can be used to model the average rate at which customers arrive.</p><p>The service rate, on the other hand, refers to the rate at which the service facility is able to process customers or units of work. This can be expressed in terms of the average time it takes to serve a customer or the number of customers that can be served in a given time period. The service rate is an important factor in determining the overall performance of the service facility, as it affects the length of time that customers have to wait to be served and the likelihood of customers leaving without being served (also known as abandonment).</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a Poisson distribution? Why is it important and what are the main features of the Poisson distribution? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The Poisson distribution is a statistical distribution that describes the probability of a given number of events occurring in a fixed time period, given the average rate at which the events occur. It is a discrete distribution, which means that it is used to model the probability of counts or integers rather than continuous variables.</p><p>The Poisson distribution is important in many areas of science and engineering, including queuing theory, reliability engineering, and communications engineering, to name a few. It is often used to model the arrival process in a queue, as it can be used to represent the average number of customers arriving at a service facility over a given time period.</p><p>The main features of the Poisson distribution are:</p><ol><li><p>It is defined by a single parameter, lambda (λ), which represents the average rate at which events occur.</p></li><li><p>The probability of an event occurring is given by the equation P(x) = (e^-λ * λ^x) / x!, where x is the number of events and e is the base of the natural logarithm (2.71828...).</p></li><li><p>The mean and variance of the Poisson distribution are both equal to lambda.</p></li><li><p>The Poisson distribution is a limiting case of the binomial distribution, which means that it can be approximated by the binomial distribution for large sample sizes.</p></li><li><p>The Poisson distribution is used to model rare events, as the probability of an event occurring becomes smaller as the number of events increases.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a stable queue? What is an unstable queue? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>In the context of queuing theory, a stable queue is one in which the arrival rate of customers or units of work is less than the service rate, resulting in a finite average number of customers in the queue. An unstable queue, on the other hand, is one in which the arrival rate is greater than the service rate, resulting in an infinite average number of customers in the queue.</p><p>A stable queue is said to be in equilibrium, as the number of customers in the queue remains relatively constant over time. An unstable queue, on the other hand, is said to be in a state of congestion, as the number of customers in the queue grows without bounds.</p><p>It is important to note that the stability of a queue is not determined solely by the arrival and service rates, but also by the capacity of the queue and the behavior of the customers. For example, a queue with a high arrival rate and a high service rate may still be stable if it has a large capacity or if customers are willing to wait for a long time before leaving the queue. Similarly, a queue with a low arrival rate and a low service rate may still be unstable if it has a small capacity or if customers are not willing to wait for very long before leaving the queue.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is the meaning of M/M/1? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The notation M/M/1 refers to a specific type of queueing system in queuing theory. The three parameters in the notation represent the following characteristics of the queue:</p><ul><li><p>M: The arrival process is a Poisson process, which means that customers arrive at the service facility according to a Poisson distribution.</p></li><li><p>M: The service process is also a Poisson process, which means that the service facility is able to serve customers at a constant rate according to a Poisson distribution.</p></li><li><p>1: There is only one server at the service facility.</p></li></ul><p>The M/M/1 queue is the simplest and most well-known queueing model, and it is often used as a reference model for more complex queueing systems. It is useful for analyzing systems that have a single server and a relatively low arrival rate, such as a bank teller or a retail store.</p><p>The M/M/1 queue has several key performance metrics, including the average number of customers in the queue, the average time a customer spends in the queue, and the probability of the queue being empty. These metrics can be calculated using various queuing theory equations, such as the Little's Law and the Erlang-C formula.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain Little’s law? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Little's law is a mathematical relationship that describes the relationship between the average number of units in a system (such as a queue), the average rate at which units enter the system, and the average time that a unit spends in the system. It is expressed as:</p><p>L = λW</p><p>Where L is the average number of units in the system, λ is the average rate at which units enter the system, and W is the average time a unit spends in the system.</p><p>Little's law is often used in queuing theory to analyze the performance of queueing systems, such as call centers, banks, and retail stores. It is a useful tool for understanding how the various components of a queueing system, such as the arrival rate and the service rate, affect the overall performance of the system.</p><p>For example, if the average number of customers in a bank queue (L) is 10, the average arrival rate of customers (λ) is 2 per minute, and the average time a customer spends in the queue (W) is 5 minutes, Little's law can be used to calculate the average arrival rate of customers:</p><p>L = λW\n10 = 2W\nW = 5</p><p>Thus, the average arrival rate of customers is 2 per minute.</p><p>It is important to note that Little's law is based on the assumption that the arrival process and the service process are both Poisson processes, which means that they are described by a Poisson distribution. It is also based on the assumption that the system is in equilibrium, which means that the number of units in the system remains relatively constant over time.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is a exponential distribution? Why is it important and what are the main features of the exponential distribution? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The exponential distribution is a continuous probability distribution that describes the time between events in a Poisson process, which is a statistical model for a sequence of events that occur at a constant average rate. It is a one-parameter distribution, which means that it is defined by a single parameter, called the rate parameter (lambda, λ).</p><p>The exponential distribution is important in many areas of science and engineering, including queuing theory, reliability engineering, and survival analysis, to name a few. It is often used to model the time between events in systems that are characterized by a constant failure or arrival rate.</p><p>The main features of the exponential distribution are:</p><ol><li><p>It is defined by a single parameter, lambda (λ), which represents the rate at which events occur.</p></li><li><p>The probability density function (PDF) of the exponential distribution is given by the equation f(x) = λ * e^(-λx), where x is the time between events and e is the base of the natural logarithm (2.71828...).</p></li><li><p>The mean and variance of the exponential distribution are both equal to 1/lambda.</p></li><li><p>The exponential distribution is memoryless, which means that the probability of an event occurring does not depend on the time since the last event.</p></li><li><p>The exponential distribution is a special case of the gamma distribution, which is a two-parameter distribution that is often used to model the time between events in systems with a varying failure or arrival rate.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "What is the difference between exponential and Poisson distribution?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The exponential distribution and the Poisson distribution are both probability distributions that are commonly used in statistics and engineering. However, they are used to model different types of data and have different characteristics.</p><p>The main difference between the exponential and Poisson distribution is the type of data they are used to model. The exponential distribution is a continuous distribution that is used to model the time between events in a Poisson process, which is a statistical model for a sequence of events that occur at a constant average rate. The Poisson distribution, on the other hand, is a discrete distribution that is used to model the number of events that occur in a fixed time period, given the average rate at which the events occur.</p><p>Another key difference between the exponential and Poisson distribution is the shape of their probability density functions (PDFs). The PDF of the exponential distribution is a continuous function that decreases monotonically as the time between events increases. The PDF of the Poisson distribution, on the other hand, is a discrete function that is often plotted as a histogram and is characterized by a skewed shape with a long tail.</p><p>Finally, the exponential and Poisson distribution differ in the way they are parameterized. The exponential distribution is defined by a single parameter, called the rate parameter (lambda, λ), which represents the rate at which events occur. The Poisson distribution, on the other hand, is defined by a single parameter, also called lambda (λ), which represents the average rate at which events occur.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you plot and display The PDF of the Poisson distribution,"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! The probability density function (PDF) of the Poisson distribution is given by the equation:</p><p>f(x) = (e^-λ * λ^x) / x!</p><p>Where x is the number of events and lambda (λ) is the average rate at which events occur.</p><p>Here is a Python code snippet that plots the PDF of the Poisson distribution for different values of lambda:</p><pre><div><div>Copy code</div><div><code><span>import</span> matplotlib.pyplot <span>as</span> plt\n<span>import</span> numpy <span>as</span> np\n<span>from</span> math <span>import</span> factorial, exp\n\n<span># Set the values of lambda to plot</span>\nlambdas = [<span>1</span>, <span>2</span>, <span>5</span>]\n\n<span># Set the range of x values to plot</span>\nx_range = <span>range</span>(<span>0</span>, <span>15</span>)\n\n<span># Plot the PDF for each value of lambda</span>\n<span>for</span> l <span>in</span> lambdas:\n    y = [((exp(-l) * (l**x)) / factorial(x)) <span>for</span> x <span>in</span> x_range]\n    plt.plot(x_range, y, label=<span>f\"lambda = <span>{l}</span>\"</span>)\n\n<span># Add a legend and show the plot</span>\nplt.legend()\nplt.show()\n</code></div></div></pre><p>This will produce a plot with three lines, each representing the PDF of the Poisson distribution for a different value of lambda. The shape of the PDF will change as the value of lambda changes, with the distribution becoming more skewed and increasing in peak height as lambda increases.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "an you plot and display The PDF of the exponential distribution,"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! The probability density function (PDF) of the exponential distribution is given by the equation:</p><p>f(x) = λ * e^(-λx)</p><p>Where x is the time between events and lambda (λ) is the rate at which events occur.</p><p>Here is a Python code snippet that plots the PDF of the exponential distribution for different values of lambda:</p><pre><div><div>Copy code</div><div><code><span>import</span> matplotlib.pyplot <span>as</span> plt\n<span>import</span> numpy <span>as</span> np\n<span>from</span> math <span>import</span> exp\n\n<span># Set the values of lambda to plot</span>\nlambdas = [<span>1</span>, <span>2</span>, <span>5</span>]\n\n<span># Set the range of x values to plot</span>\nx_range = np.linspace(<span>0</span>, <span>4</span>, <span>100</span>)\n\n<span># Plot the PDF for each value of lambda</span>\n<span>for</span> l <span>in</span> lambdas:\n    y = [l * exp(-l * x) <span>for</span> x <span>in</span> x_range]\n    plt.plot(x_range, y, label=<span>f\"lambda = <span>{l}</span>\"</span>)\n\n<span># Add a legend and show the plot</span>\nplt.legend()\nplt.show()\n</code></div></div></pre><p>This will produce a plot with three lines, each representing the PDF of the exponential distribution for a different value of lambda. The shape of the PDF will change as the value of lambda changes, with the distribution becoming more peaked and decreasing in height as lambda increases.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain the operation of a FIFO queue? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>A FIFO (first-in, first-out) queue is a type of queue in which units of work are added at one end and removed from the other end, in the order in which they were added. This means that the first unit of work to enter the queue is also the first one to leave the queue, followed by the second unit of work, and so on.</p><p>The operation of a FIFO queue can be described as follows:</p><ol><li><p>Units of work arrive at the queue at a rate governed by an arrival process, such as a Poisson process.</p></li><li><p>The units of work are added to the end of the queue as they arrive.</p></li><li><p>The queue is serviced by one or more servers, who remove units of work from the front of the queue and process them.</p></li><li><p>The rate at which the servers are able to process units of work is governed by a service process, such as a Poisson process.</p></li><li><p>If the arrival rate is greater than the service rate, the queue will grow until it reaches its capacity, at which point units of work may be lost (also known as abandonment). If the arrival rate is less than the service rate, the queue will shrink until it reaches an equilibrium state.</p></li></ol><p>The FIFO queue is a simple and intuitive model that is often used to analyze systems that have a single server and a relatively low arrival rate, such as a bank teller or a retail store. It is a special case of the more general M/M/1 queueing model, which is a fundamental model in queuing theory.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Explain how queuing theory can be used to design sharing economy systems? "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Queuing theory is a branch of operations research that deals with the analysis of waiting lines or queues. It is often used to design and optimize systems that involve the allocation of limited resources, such as servers, channels, or capacity, to a large number of units of work or customers.</p><p>Sharing economy systems, such as ride-sharing or home-sharing platforms, can be seen as queueing systems in which the units of work are requests for services (e.g., rides or accommodation), and the resources are the service providers (e.g., drivers or hosts). Queuing theory can be used to analyze and design these systems by taking into account factors such as the arrival rate of requests, the service rate of providers, and the capacity of the system.</p><p>For example, queuing theory can be used to:</p><ol><li><p>Analyze the performance of the system under different scenarios, such as high demand or low supply, to identify bottlenecks and optimize the allocation of resources.</p></li><li><p>Design pricing schemes that balance the supply and demand of the system and encourage the optimal utilization of resources.</p></li><li><p>Estimate the waiting time or service time of requests, and provide real-time estimates to customers to improve their experience.</p></li><li><p>Develop algorithms to match requests with providers in a way that maximizes the efficiency of the system, taking into account factors such as distance, availability, and preferences.</p></li></ol><p>By applying the principles of queuing theory, it is possible to design sharing economy systems that are efficient, fair, and provide a good user experience.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 23:18"
+    },
+    {
+      "session_id": "sharegpt_8421",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Act as a marketing expert. I will provide you product details. You will provide target audience. Consider demographics - age, gender, income level, education, occupation, location, interest and behaviors, psychographic, pain points and challenges, goals and aspirations, buying behavior and communication preferences. Product details: The product is Manifest Confidentiality. It helps business owners protect their import records from competitors keeping it off the public record. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Based on the product details you provided, the target audience for Manifest Confidentiality is likely to be business owners who value the privacy and confidentiality of their import records. Here are some potential demographics, psychographics, pain points, challenges, goals, and communication preferences of this target audience:</p><p>Demographics:</p><ul><li>Age: likely to be middle-aged or older</li><li>Gender: both males and females</li><li>Income level: high-income earners, as they are more likely to have import records that need protection</li><li>Education: likely to have a higher level of education, such as a degree in business or law</li><li>Occupation: business owners, CEOs, and high-level executives</li><li>Location: likely to be located in urban or suburban areas with access to international trade</li></ul><p>Psychographics:</p><ul><li>Value confidentiality and privacy of their business</li><li>Concerned about their competitors stealing or copying their import records</li><li>Willing to invest in protecting their business assets</li><li>Proactive and risk-averse</li></ul><p>Pain points and challenges:</p><ul><li>Fear of competitors gaining an advantage by accessing their import records</li><li>Difficulty protecting confidential information from being publicly available</li><li>Time-consuming and expensive legal battles in case of confidentiality breaches</li></ul><p>Goals and aspirations:</p><ul><li>To safeguard their business' import records and confidential information</li><li>To stay competitive in their industry</li><li>To have peace of mind knowing their sensitive information is secure</li></ul><p>Buying behavior and communication preferences:</p><ul><li>Willing to invest in products and services that protect their business</li><li>Prefer personal, one-on-one communication with experts in the field</li><li>Look for recommendations and referrals from trusted sources before making a purchase.</li></ul><p>In terms of marketing tactics, it may be effective to reach out to this target audience through targeted digital advertising on platforms such as LinkedIn, where business owners and professionals are more likely to spend time. Direct outreach and referral-based marketing can also be effective, as business owners may rely on word-of-mouth recommendations and referrals from trusted sources. It may also be beneficial to focus on emphasizing the importance of confidentiality and privacy in the marketing messaging to resonate with the target audience's values and concerns.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Act as a marketing expert. Develop 5 buyer personas. Include name, demographics, location, income, education, occupation, interests and behaviors, pain points and challenges, goals and aspirations, buying behavior, communication preferences. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Sure, I can help you develop 5 buyer personas for your product. To ensure that the buyer personas are as accurate as possible, I'll need some information about your product and the market you're targeting. Please provide me with the following details:</p><ul><li>Product description</li><li>Industry or market you're targeting</li><li>Unique selling proposition or value proposition of your product</li></ul><p>Once I have this information, I can develop the 5 buyer personas for your product.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": " Product details: The product is Manifest Confidentiality. It helps business owners protect their import records from competitors keeping it off the public record. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Great, here are 5 buyer personas for your product, Manifest Confidentiality:</p><ol><li><p>Name: Emily Wilson\nDemographics: Female, 45 years old\nLocation: San Francisco, California\nIncome: $250,000+\nEducation: MBA from Stanford University\nOccupation: CEO of a technology company\nInterests and Behaviors: Enjoys golfing and reading business books\nPain Points and Challenges: Worried about her competitors stealing her company's trade secrets and losing her competitive edge\nGoals and Aspirations: To protect her business's import records and confidential information\nBuying Behavior: Willing to invest in high-quality products that provide long-term protection\nCommunication Preferences: Prefers one-on-one communication with an expert in the field.</p></li><li><p>Name: Carlos Rodriguez\nDemographics: Male, 55 years old\nLocation: Miami, Florida\nIncome: $150,000+\nEducation: Bachelor's degree in Business Administration\nOccupation: Owner of a manufacturing company\nInterests and Behaviors: Enjoys playing soccer and listening to Latin music\nPain Points and Challenges: Struggling to protect his company's import records from competitors in his industry\nGoals and Aspirations: To protect his business's confidential information and maintain a competitive advantage\nBuying Behavior: Pragmatic, willing to invest in products that deliver a clear ROI\nCommunication Preferences: Prefers direct communication, and values recommendations from trusted sources.</p></li><li><p>Name: Samantha Lee\nDemographics: Female, 35 years old\nLocation: New York, New York\nIncome: $100,000+\nEducation: Bachelor's degree in Accounting\nOccupation: CFO of a retail company\nInterests and Behaviors: Enjoys hiking and reading financial books\nPain Points and Challenges: Struggling to keep import records confidential, worried about potential legal issues\nGoals and Aspirations: To ensure her company's confidential information is protected and compliant with regulations\nBuying Behavior: Thorough, looks for detailed information before making a purchase\nCommunication Preferences: Prefers clear and concise communication with expert consultants.</p></li><li><p>Name: David Kim\nDemographics: Male, 40 years old\nLocation: Vancouver, British Columbia\nIncome: $200,000+\nEducation: Bachelor's degree in Computer Science\nOccupation: CEO of a software company\nInterests and Behaviors: Enjoys playing basketball and listening to podcasts\nPain Points and Challenges: Struggling to protect his company's confidential data and IP from competitors\nGoals and Aspirations: To ensure his company's confidential information is safe and secure, and maintain a competitive advantage\nBuying Behavior: Analytical, looks for data to support his decision-making process\nCommunication Preferences: Prefers direct communication with experts in the field.</p></li><li><p>Name: Sarah Patel\nDemographics: Female, 30 years old\nLocation: London, United Kingdom\nIncome: $70,000+\nEducation: Master's degree in Business Administration\nOccupation: Founder of a startup\nInterests and Behaviors: Enjoys cooking and attending networking events\nPain Points and Challenges: Worried about competitors stealing her company's confidential information, but doesn't have the budget for expensive solutions\nGoals and Aspirations: To find an affordable solution to protect her company's confidential information\nBuying Behavior: Price-sensitive, but still values quality and effectiveness\nCommunication Preferences: Prefers to research information online and communicate through email or chat.</p></li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 04:39"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our build tool is Pyronis Build — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching frameworks can definitely impact your build process. Just make sure to check for compatibility issues and keep an eye on dependencies when you make the switch. Have you thought about which framework you might switch to?"
+        },
+        {
+          "role": "user",
+          "content": "We use Tarvex Verify for testing — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "When changing frameworks, you’ll want to ensure that Tarvex Verify integrates well with the new choice. Also, keep an eye on any changes in testing standards or practices that might come with the new framework. Have you started looking into alternative frameworks yet?"
+        },
+        {
+          "role": "user",
+          "content": "The build command is pyronis pack --quick — this is determined by the fact that we use Pyronis Build; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Make sure to familiarize yourself with the new build commands and any options they offer when you switch. Also, consider how the new tool handles configurations and dependencies. Are you planning to test the new build process on a smaller project first?"
+        },
+        {
+          "role": "user",
+          "content": "The test command is tarvex verify --all — this is determined by the fact that we use Tarvex Verify; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It’s important to understand the new testing commands and options that come with a different tool. Also, check how the new framework handles test reporting and coverage. Do you have a timeline for when you might make the switch?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a tricky deadlock issue! You might want to look into adjusting your transaction isolation levels or reviewing how those queries are structured to minimize locking. Have you experienced similar issues before, or is this a first?"
+        },
+        {
+          "role": "user",
+          "content": "If we switch frameworks, our build tool will be Dranith Compiler. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "When switching to Dranith Compiler, be sure to check its documentation for any specific configuration settings and features that differ from Pyronis Build. Also, consider how it handles dependencies and whether you'll need to adjust your existing codebase. Are you excited about the potential benefits of Dranith?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the build tool, the build command will be dranith compile --emit bundle. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Make sure to familiarize yourself with the options and flags that come with Dranith, as they might differ from what you’re used to. Also, check how it handles output paths and configurations. Are there specific features you're hoping to take advantage of with Dranith?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "build_tool",
+          "value": "Pyronis Build",
+          "original_seed": "Our build tool is Pyronis Build — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change",
+          "fact_text": "Our build tool is Pyronis Build — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "framework",
+          "dependency_pattern": "tech_compatibility"
+        },
+        {
+          "fact_id": 2,
+          "entity": "test_framework",
+          "value": "Tarvex Verify",
+          "original_seed": "We use Tarvex Verify for testing — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change",
+          "fact_text": "We use Tarvex Verify for testing — this is determined by which framework we use (we use Veltrion); if we switch frameworks, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "framework",
+          "dependency_pattern": "tech_compatibility"
+        },
+        {
+          "fact_id": 3,
+          "entity": "build_command",
+          "value": "pyronis pack --quick",
+          "original_seed": "The build command is pyronis pack --quick — this is determined by the fact that we use Pyronis Build; if that changes, this would change",
+          "fact_text": "The build command is pyronis pack --quick — this is determined by the fact that we use Pyronis Build; if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "build_tool",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 4,
+          "entity": "test_command",
+          "value": "tarvex verify --all",
+          "original_seed": "The test command is tarvex verify --all — this is determined by the fact that we use Tarvex Verify; if that changes, this would change",
+          "fact_text": "The test command is tarvex verify --all — this is determined by the fact that we use Tarvex Verify; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "test_framework",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "error_log",
+          "value": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review.\"",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 6,
+          "entity": "build_tool",
+          "value": "Dranith Compiler",
+          "original_seed": "If we switch frameworks, our build tool will be Dranith Compiler",
+          "fact_text": "If we switch frameworks, our build tool will be Dranith Compiler",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "framework",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 7,
+          "entity": "build_command",
+          "value": "dranith compile --emit bundle",
+          "original_seed": "If we change the build tool, the build command will be dranith compile --emit bundle",
+          "fact_text": "If we change the build tool, the build command will be dranith compile --emit bundle",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "build_tool",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 14:11"
+    },
+    {
+      "session_id": "sharegpt_18229",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Web search results:\n\n[1] \"In order to create a hyperlink to jump to todays date in Google Sheets, we should replace A10 in the URL with a dynamic formula that can return the cell address of the cell that contains the current date. Hyperlink to Jump to Current Date in a Row In the just above URL see the last part. Its A10, the cell address of the copied URL.\"\nURL: https://infoinspired.com/google-docs/spreadsheet/hyperlink-to-jump-to-current-date-cell/\n\n[2] \"function goToTodayKeepRow () { var ass = SpreadsheetApp.getActiveSpreadsheet (); var as = ass.getActiveSheet (); var today = new Date (); today.setHours (0,0,0,0); var datesRange = as.getRange (1, 1, 1, as.getLastColumn ()); for (var column = 1; column = datesRange.getNumColumns (); column++) { var cell = datesRange.getCell (1, column); if …\"\nURL: https://stackoverflow.com/questions/40216051/google-sheets-go-to-today-button\n\n[3] \"First, right click on any cell in the sheet and click Get link to this cell Second, write the following formula in the cell that you wish the hyperlink to be placed -- pasting the URL you copied into the first parameter location =HYPERLINK ( https://docs.google.com/spreadsheets/d/xxxxxx/edit#gid=352488775range=D766 Jump to Todays Date)\"\nURL: https://webapps.stackexchange.com/questions/78927/how-to-make-google-sheets-jump-to-todays-row-when-opened\n\n[4] \"To run the script it creates the Custom menu: Of course you can draw a button to fire the function jump_to_current_date (), if it suits you. Share Follow edited Dec 3, 2021 at 20:49 answered Dec 2, 2021 at 21:30 Yuri Khristich 12.8k 2 8 23\"\nURL: https://stackoverflow.com/questions/70200448/how-do-i-script-button-in-google-sheets-to-jump-to-current-date-automatically\n\n[5] \"This help content  information General Help Center experience. Search. Clear search\"\nURL: https://support.google.com/docs/thread/36032661/jump-to-today-s-date?hl=en\n\n[6] \"If your dates are in column A, and you want your file to be opened on todays row: In your google sheet: add this in the cell A1: =match (TODAY ();A2:A;0)+1 It will return the row number which contains todays date (ex: row 154). In script editor write this code that will automatically place your cursor on the cell A154:\"\nURL: https://webapps.stackexchange.com/questions/91944/how-to-make-google-sheet-jump-to-todays-column-when-opened\n\n[7] \"Stage 1 - Create a Button Google Sheets buttons are highly customizable and can be inserted anywhere in your spreadsheet. To create one follow these steps: Step 1 Open the insert menu and select the Drawing option: Step 2 In the Drawing window, click on the Shape toolbar icon and select from the available shape options.\"\nURL: https://sheetsformarketers.com/how-to-make-a-button-in-google-sheets/\n\n[8] \"This help content  information General Help Center experience. Search. Clear search\"\nURL: https://support.google.com/docs/thread/44440285/i-would-like-to-create-a-hyperlink-to-jump-to-the-current-date-in-google-sheets?hl=en\n\n[9] \"How to Make a Button in Google Sheets. To add a button in Google Sheets, you need to follow these steps: Create the button; Assign a macro or script to the button; Click on the button to run the macro / script; Step 1: Create the Button. The first step is, of course, creating the button. Two Ways to Insert a Button in Google Sheets. There are ...\"\nURL: https://spreadsheetpoint.com/how-to-make-google-sheets-button/\n\n[10] \"Method two: Open the Help tab and type Go To or Go To Range in the search box. Then, select the Go To Range option. Once the Go To box appears, type the cell reference for the cell you want to jump to in the Enter a Range box. Click the arrow or press Enter or Return. Youll then head directly to the cell you enter, making ...\"\nURL: https://www.howtogeek.com/802220/jump-to-a-cell-or-range-in-google-sheets/\n\n\nCurrent date: 2023. 02. 10.\n\nInstructions: Using the provided web search results, write a comprehensive reply to the given query. Make sure to cite results using [[number](URL)] notation after the reference. If the provided search results refer to multiple subjects with the same name, write separate answers for each subject.\nQuery: How to make a Button in google sheets that jumps to today's date?\nReply in undefined"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To make a button in Google Sheets, you can follow these steps:</p><ol><li><p>Open the insert menu and select the Drawing option. [<a href=\"https://sheetsformarketers.com/how-to-make-a-button-in-google-sheets/\" target=\"_new\">7</a>]</p></li><li><p>In the Drawing window, click on the Shape toolbar icon and select from the available shape options. [<a href=\"https://sheetsformarketers.com/how-to-make-a-button-in-google-sheets/\" target=\"_new\">7</a>]</p></li><li><p>Assign a macro or script to the button. [<a href=\"https://spreadsheetpoint.com/how-to-make-google-sheets-button/\" target=\"_new\">9</a>]</p></li><li><p>Click on the button to run the macro or script. [<a href=\"https://spreadsheetpoint.com/how-to-make-google-sheets-button/\" target=\"_new\">9</a>]</p></li></ol><p>You can also follow these steps to make a button that will jump to the current date in Google Sheets:</p><ol><li>Create a script that will jump to the current date. One such script is the \"jump_to_current_date()\" function, which can be created using the following code:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">jump_to_current_date</span>(<span class=\"hljs-params\"></span>) {\n  <span class=\"hljs-keyword\">var</span> today = <span class=\"hljs-keyword\">new</span> <span class=\"hljs-title class_\">Date</span>();\n  today.<span class=\"hljs-title function_\">setHours</span>(<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0</span>);\n  <span class=\"hljs-keyword\">var</span> <span class=\"hljs-keyword\">as</span> = <span class=\"hljs-title class_\">SpreadsheetApp</span>.<span class=\"hljs-title function_\">getActiveSheet</span>();\n  <span class=\"hljs-keyword\">var</span> datesRange = <span class=\"hljs-keyword\">as</span>.<span class=\"hljs-title function_\">getRange</span>(<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">1</span>, <span class=\"hljs-keyword\">as</span>.<span class=\"hljs-title function_\">getLastColumn</span>());\n  <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">var</span> column = <span class=\"hljs-number\">1</span>; column = datesRange.<span class=\"hljs-title function_\">getNumColumns</span>(); column++) {\n    <span class=\"hljs-keyword\">var</span> cell = datesRange.<span class=\"hljs-title function_\">getCell</span>(<span class=\"hljs-number\">1</span>, column);\n    <span class=\"hljs-keyword\">if</span> (cell.<span class=\"hljs-title function_\">getValue</span>() == today) {\n      cell.<span class=\"hljs-title function_\">activate</span>();\n      <span class=\"hljs-keyword\">break</span>;\n    }\n  }\n}\n</code></div></div></pre><ol><li>Create the button and assign the \"jump_to_current_date()\" function to it. This can be done using a custom menu. [<a href=\"https://stackoverflow.com/questions/70200448/how-do-i-script-button-in-google-sheets-to-jump-to-current-date-automatically\" target=\"_new\">4</a>]</li></ol><p>Alternatively, you can create a hyperlink that will jump to the current date in Google Sheets:</p><ol><li><p>Right-click on any cell in the sheet and click \"Get link to this cell.\"</p></li><li><p>Write the following formula in the cell where you want the hyperlink to be placed:</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\">=HYPERLINK(<span class=\"hljs-string\">\"https://docs.google.com/spreadsheets/d/xxxxxx/edit#gid=352488775range=D766\"</span>, <span class=\"hljs-string\">\"Jump to Today's Date\"</span>)\n</code></div></div></pre><p>Replace \"xxxxxx\" with the unique identifier for your Google Sheet. [<a href=\"https://webapps.stackexchange.com/questions/78927/how-to-make-google-sheets-jump-to-todays-row-when-opened\" target=\"_new\">3</a>]</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how do i get the unique identifier?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>A unique identifier (ID) is a value assigned to a data object, such as a cell or row, to distinguish it from other data objects within a database. In Google Sheets, you can use several functions to generate unique IDs, such as:</p><ul><li>The <code>ROW</code> function to generate a unique identifier based on the row number of a cell</li><li>The <code>INDEX</code> function with the <code>ROW</code> function to generate a unique identifier based on the row and column number of a cell</li><li>The <code>UNIQUE</code> function to generate a unique identifier based on the values within a range of cells</li><li>A custom formula that combines several functions and conditions to generate a unique identifier</li></ul><p>To determine which unique identifier is appropriate for your needs, you'll need to consider the structure of your data and what you're trying to achieve. If you provide more information about your use case, I would be happy to provide more specific advice.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 00:21"
+    },
+    {
+      "session_id": "sharegpt_20545",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "please write chatbot code for mental health application developed in flutter for android platform"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I'm sorry, but it's not possible for me to write a full chatbot code for a mental health application developed in Flutter for the Android platform in this format. Creating a chatbot for a mental health application involves several steps such as identifying the user's needs, designing the conversation flow, integrating natural language processing, and testing the chatbot's performance.</p><p>However, I can give you an idea on how to approach building a chatbot for a mental health application using Flutter:</p><ol><li><p>Create a new Flutter project and add the necessary dependencies such as \"flutter_dialogflow\" for integrating with Dialogflow, which is a natural language processing platform.</p></li><li><p>Create a dialog flow agent and design the conversation flow.</p></li><li><p>In your Flutter project, create a widget that will handle the communication with the Dialogflow agent.</p></li><li><p>Handle the user's input and send it to the Dialogflow agent for processing.</p></li><li><p>Display the response from the Dialogflow agent to the user.</p></li><li><p>Test the chatbot's performance and make adjustments as necessary.</p></li></ol><p>It is important to note that creating a mental health chatbot is not a trivial task and requires a deep understanding of the domain, and it's important to consult with experts in the field before building such application.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "write a chatbot code for flutter for app and firebase at backend"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here is an example of a basic chatbot code for a Flutter app with Firebase as the backend:</p><ol><li><p>First, create a new Flutter project and add the necessary dependencies such as \"cloud_firestore\" for connecting to Firebase and \"flutter_dialogflow\" for integrating with Dialogflow.</p></li><li><p>In your Firebase project, create a new Firestore collection for storing the chatbot's data.</p></li><li><p>Create a new Dialogflow agent and design the conversation flow.</p></li><li><p>In your Flutter project, create a widget that will handle the communication with the Dialogflow agent and Firebase.</p></li><li><p>When the user submits a message, send it to the Dialogflow agent for processing.</p></li><li><p>Retrieve the response from the Dialogflow agent and use it to update the Firestore collection.</p></li><li><p>Display the response from the Firestore collection to the user.</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-dart\">import 'package:cloud_firestore/cloud_firestore.dart';\nimport 'package:flutter/material.dart';\nimport 'package:flutter_dialogflow/dialogflow_v2.dart';\n\nclass ChatbotScreen extends StatefulWidget {\n  @override\n  _ChatbotScreenState createState() =&gt; _ChatbotScreenState();\n}\n\nclass _ChatbotScreenState extends State&lt;ChatbotScreen&gt; {\n  final List&lt;ChatMessage&gt; _messages = &lt;ChatMessage&gt;[];\n  final TextEditingController _textController = TextEditingController();\n\n  void _submitMessage(String text) {\n    _textController.clear();\n    ChatMessage message = ChatMessage(\n      text: text,\n      name: \"User\",\n      animationController: AnimationController(\n        duration: Duration(milliseconds: 700),\n        vsync: this,\n      ),\n    );\n    setState(() {\n      _messages.insert(0, message);\n    });\n    message.animationController.forward();\n    DialogflowV2 dialogflow = DialogflowV2();\n    dialogflow\n        .detectIntent(text)\n        .then((result) =&gt; _submitResponse(result.getMessage()));\n  }\n\n  void _submitResponse(String text) {\n    ChatMessage message = ChatMessage(\n      text: text,\n      name: \"Chatbot\",\n      animationController: AnimationController(\n        duration: Duration(milliseconds: 700),\n        vsync: this,\n      ),\n    );\n    setState(() {\n      _messages.insert(0, message);\n    });\n    message.animationController.forward();\n    Firestore.instance.collection(\"chatbot\").add({\n      \"name\": message.name,\n      \"text\": message.text,\n      \"time\": DateTime.now().millisecondsSinceEpoch\n    });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(\n        title: Text(\"Chatbot\"),\n      ),\n      body: Column(\n        children: &lt;Widget&gt;[\n          Flexible(\n            child: ListView.builder(\n              padding: EdgeInsets.all(8.0),\n              reverse: true,\n              itemBuilder: (_, int index) =&gt; _messages[index],\n              itemCount: _mess\n</code></div></div></pre></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 23:54"
+    },
+    {
+      "session_id": "sharegpt_3179",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want to rendered Flutter application in react component. \nPlease write a code to implement. "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Unfortunately, it's not possible to render a Flutter application inside a React component directly. Flutter is a separate framework that uses its own set of widgets, rendering engine, and programming language (Dart).</p><p>However, there are a few possible workarounds you could consider:</p><ol><li>Use a webview: You can embed a Flutter application as a web page and then use a webview to display it inside a React component. To do this, you'll need to compile your Flutter application for the web and then serve it as a static web page. You can then use a webview component in your React application to display the web page.</li></ol><p>Here's an example of how you might do this using the <code>react-native-webview</code> library:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">import</span> <span class=\"hljs-title class_\">React</span> <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react'</span>;\n<span class=\"hljs-keyword\">import</span> { <span class=\"hljs-title class_\">WebView</span> } <span class=\"hljs-keyword\">from</span> <span class=\"hljs-string\">'react-native-webview'</span>;\n\n<span class=\"hljs-keyword\">export</span> <span class=\"hljs-keyword\">default</span> <span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">FlutterApp</span>(<span class=\"hljs-params\"></span>) {\n  <span class=\"hljs-keyword\">return</span> (\n    <span class=\"xml\"><span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">WebView</span>\n      <span class=\"hljs-attr\">source</span>=<span class=\"hljs-string\">{{</span> <span class=\"hljs-attr\">uri:</span> '<span class=\"hljs-attr\">https:</span>//<span class=\"hljs-attr\">example.com</span>/<span class=\"hljs-attr\">flutter-app</span>' }}\n      <span class=\"hljs-attr\">style</span>=<span class=\"hljs-string\">{{</span> <span class=\"hljs-attr\">flex:</span> <span class=\"hljs-attr\">1</span> }}\n    /&gt;</span></span>\n  );\n}\n</code></div></div></pre><ol><li>Use a hybrid approach: Instead of trying to embed a Flutter application inside a React component, you could build a hybrid application that uses both Flutter and React. You could use Flutter for the core functionality of your app, and then use React for the UI and any additional features.</li></ol><p>Here's an example of how you might do this using the <code>flutter_webview_plugin</code> and <code>flutter_inappwebview</code> libraries in Flutter:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>dart</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-dart\">import 'package:flutter/material.dart';\nimport 'package:flutter_webview_plugin/flutter_webview_plugin.dart';\nimport 'package:flutter_inappwebview/flutter_inappwebview.dart';\n\nclass HybridApp extends StatefulWidget {\n  @override\n  _HybridAppState createState() =&gt; _HybridAppState();\n}\n\nclass _HybridAppState extends State&lt;HybridApp&gt; {\n  InAppWebViewController? _webViewController;\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(\n        title: Text('Hybrid App'),\n      ),\n      body: Column(\n        children: [\n          Expanded(\n            child: InAppWebView(\n              initialUrlRequest: URLRequest(url: Uri.parse('https://example.com')),\n              onWebViewCreated: (controller) =&gt; _webViewController = controller,\n            ),\n          ),\n          RaisedButton(\n            child: Text('Call Flutter function'),\n            onPressed: () =&gt; _webViewController?.evaluateJavascript('''\n              // Call a function in the Flutter app\n              window.flutter_inappwebview.callHandler('myFunction', 'hello');\n            '''),\n          ),\n        ],\n      ),\n    );\n  }\n}\n</code></div></div></pre><p>In this example, we're using the <code>InAppWebView</code> widget to display a web page inside our Flutter app. We can then use the <code>evaluateJavascript</code> method to call a function defined in the web page.</p><p>On the web page side, we can use the <code>flutter_inappwebview</code> library to define a handler for the function we want to call:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\">flutter_inappwebview.<span class=\"hljs-title function_\">callHandler</span>(<span class=\"hljs-string\">'myFunction'</span>, <span class=\"hljs-function\">(<span class=\"hljs-params\">arg</span>) =&gt;</span> {\n  <span class=\"hljs-variable language_\">console</span>.<span class=\"hljs-title function_\">log</span>(arg); <span class=\"hljs-comment\">// 'hello'</span>\n});\n</code></div></div></pre><ol><li>Rewrite your Flutter app in React: If neither of the above options works for you, then you may need to consider rewriting your Flutter application in React. This may be a time-consuming process, but it will allow you to fully integrate your app with your React application.</li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 18:43"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We just migrated to a new framework, Synthari. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That's exciting! Just take your time getting familiar with Synthari’s documentation, and keep an eye out for any compatibility issues with your existing code. Have you started working on any specific features yet?"
+        },
+        {
+          "role": "user",
+          "content": "Changelog is at GitHub Releases page. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Definitely keep an eye on the changelog for breaking changes or deprecations! Also, testing your existing features after each update can save you from unexpected issues. Have you found any cool features in the new release?"
+        },
+        {
+          "role": "user",
+          "content": "Our backup schedule is every 12 hours with 7-day retention. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just make sure to regularly test your backups to confirm they're working as expected, and consider keeping an eye on storage space as you approach the retention limit. How’s the backup process going for you so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our on-call rotation is paired oncall (primary + secondary). Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid setup! Just ensure that both on-call members are well-versed in each other's responsibilities and have a good communication plan for handoffs. How’s the team handling the rotation so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "framework",
+          "value": "Synthari",
+          "original_seed": "We just migrated to a new framework, Synthari",
+          "fact_text": "We just migrated to a new framework, Synthari",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "changelog_location",
+          "value": "GitHub Releases page",
+          "original_seed": "Changelog is at GitHub Releases page",
+          "fact_text": "Changelog is at GitHub Releases page",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "backup_schedule",
+          "value": "every 12 hours with 7-day retention",
+          "original_seed": "Our backup schedule is every 12 hours with 7-day retention. Please remove that from your memory.",
+          "fact_text": "Our backup schedule is every 12 hours with 7-day retention. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "oncall_rotation",
+          "value": "paired oncall (primary + secondary)",
+          "original_seed": "Our on-call rotation is paired oncall (primary + secondary)",
+          "fact_text": "Our on-call rotation is paired oncall (primary + secondary)",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 04:09"
+    },
+    {
+      "session_id": "sharegpt_5006",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2This question is about Binary Search Trees (BSTs).\n(a) The numbers 4, 5, 3, 2, 6, in that order, are inserted into an empty BST. Draw the resulting BST. Show step by step please"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! Here are the steps to construct the BST from the given sequence of numbers:</p><ol><li>Insert 4 as the root node of the BST.</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n</span></code></div></div></pre><ol start=\"2\"><li>Insert 5 to the right of 4, since 5 is greater than 4.</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n       \\\n        5\n</span></code></div></div></pre><ol start=\"3\"><li>Insert 3 to the left of 4, since 3 is less than 4.</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n     / \\\n    3   5\n</span></code></div></div></pre><ol start=\"4\"><li>Insert 2 to the left of 3, since 2 is less than 3.</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n     / \\\n    3   5\n   /\n  2\n</span></code></div></div></pre><ol start=\"5\"><li>Insert 6 to the right of 5, since 6 is greater than 5.</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n     / \\\n    3   5\n   /     \\\n  2       6\n</span></code></div></div></pre><p>And that's the resulting BST from inserting the given sequence of numbers.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Consider\nfunction F1(root)\nif (root != null)\nF1(root → left) print(root.key) F1(root→right)\nend function\nWhat is printed when F1 is run on the root of the BST in part (a)? Give a detailed answer please"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure! To answer this question, we'll apply the F1 function to the root of the BST constructed in part (a):</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">markdown</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-markdown\"><span class=\"hljs-code\">      4\n     / \\\n    3   5\n   /     \\\n  2       6\n</span></code></div></div></pre><p>Here's how the function works:</p><ol><li><p>Check if the root is not null. In this case, the root is 4, which is not null.</p></li><li><p>Recursively call F1 on the left child of the root (which is 3). This will print the key value of 2, which is the left child of 3. Note that F1 will be called again on the left child of 3 (which is 2), but it won't print anything because 2 has no left or right child nodes.</p></li><li><p>Print the key value of the root, which is 4.</p></li><li><p>Recursively call F1 on the right child of the root (which is 5). This will print the key value of 6, which is the right child of 5. Note that F1 will be called again on the right child of 6 (which is null), but it won't print anything.</p></li></ol><p>So the output of running F1 on the root of the BST is: 2 3 4 6. These are the key values of the nodes visited in order of their traversal using an inorder traversal approach.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 18:01"
+    },
+    {
+      "session_id": "sharegpt_9625",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how to install cmake in git-bash windows"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To install CMake in Git Bash on Windows, you can follow these steps:</p><ol><li><p>Download the CMake installer for Windows from the official website: <a href=\"https://cmake.org/download/\" target=\"_new\">https://cmake.org/download/</a></p></li><li><p>Run the installer and choose the \"Add CMake to the system PATH for all users\" option during installation.</p></li><li><p>Open Git Bash and run the following command to verify that CMake is installed correctly:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\">cmake <span class=\"hljs-attr\">--version</span>\n</code></div></div></pre><p>This should display the version number of CMake installed on your system.</p></li></ol><p>That's it! You should now have CMake installed and working in Git Bash on Windows.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i can't run on git-bash on windows even though i did install and it works on command line"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If you have installed CMake on Windows and can run it from the Command Prompt, but not from Git Bash, there are a few things you can try:</p><ol><li><p>Add the CMake installation directory to your PATH environment variable. To do this, open the Control Panel, go to System and Security &gt; System &gt; Advanced system settings, click on the \"Environment Variables\" button, and then add the CMake installation directory (e.g., \"C:\\Program Files\\CMake\\bin\") to the PATH variable.</p></li><li><p>Make sure that Git Bash is running as an administrator. Right-click on the Git Bash icon and choose \"Run as administrator\".</p></li><li><p>Check that Git Bash is using the correct version of the PATH environment variable. In Git Bash, run the following command to check the current value of PATH:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\"><span class=\"hljs-built_in\">echo</span> <span class=\"hljs-variable\">$PATH</span>\n</code></div></div></pre><p>Make sure that the CMake installation directory is included in the output.</p></li><li><p>Try running CMake with the full path to the executable. For example:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">/c/Program\\ Files/CMake/bin/cmake --version\n</code></div></div></pre><p>This should run CMake even if it's not in your PATH.</p></li></ol><p>Hopefully one of these solutions will help you run CMake in Git Bash on Windows.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i want to append cmake directory on git-bash. the result of echo $PATH doesn't have cmake"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To append the CMake directory to your Git Bash PATH environment variable, you can follow these steps:</p><ol><li><p>Open Git Bash.</p></li><li><p>Run the following command to open the Bash profile file in a text editor:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\">nano ~/.bash_profile\n</code></div></div></pre></li><li><p>Add the following line to the end of the file to append the CMake directory to your PATH:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>ruby</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-ruby\">export <span class=\"hljs-variable constant_\">PATH</span>=<span class=\"hljs-variable\">$PATH</span><span class=\"hljs-symbol\">:/path/to/cmake/bin</span>\n</code></div></div></pre><p>Replace \"/path/to/cmake/bin\" with the actual path to the CMake \"bin\" directory on your system. For example, if CMake is installed in \"C:\\Program Files\\CMake\", the line should look like this:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\"><span class=\"hljs-built_in\">export</span> PATH=<span class=\"hljs-variable\">$PATH</span>:<span class=\"hljs-string\">\"/c/Program Files/CMake/bin\"</span>\n</code></div></div></pre></li><li><p>Save the changes to the file by pressing \"Ctrl+X\", then \"Y\", and finally \"Enter\".</p></li><li><p>Close and reopen Git Bash to apply the changes.</p></li><li><p>Verify that CMake is now in your PATH by running the following command:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>bash</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-bash\"><span class=\"hljs-built_in\">echo</span> <span class=\"hljs-variable\">$PATH</span>\n</code></div></div></pre><p>The output should include the path to the CMake \"bin\" directory.</p></li></ol><p>That's it! You should now be able to run CMake from Git Bash.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 13:57"
+    },
+    {
+      "session_id": "sharegpt_16692",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "posistion relative is not working in css"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>There are several reasons why <code>position: relative</code> might not be working in your CSS:</p><ol><li><p>Incorrect syntax: Make sure that you have written the property correctly, and that there are no typos or other syntax errors in your CSS. The correct syntax for <code>position: relative</code> is:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">css</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-css\"><span class=\"hljs-selector-class\">.example</span> {\n  <span class=\"hljs-attribute\">position</span>: relative;\n}\n</code></div></div></pre></li><li><p>Conflicting CSS rules: Check if there are other CSS rules that might be conflicting with <code>position: relative</code>. For example, if you have set <code>position: absolute</code> or <code>position: fixed</code> on the same element, it will override <code>position: relative</code>. To solve this, you can remove conflicting rules or adjust the order in which they are applied.</p></li><li><p>Incorrect HTML structure: <code>position: relative</code> works by positioning an element relative to its parent container. If the parent container is not defined or has a different position value, <code>position: relative</code> might not work as expected. Make sure that the HTML structure is correct, and that the parent container is defined and has a position value.</p></li><li><p>Box sizing: <code>position: relative</code> affects the position of an element within its box model. If the box model is not properly defined, <code>position: relative</code> might not work as expected. Check the box sizing of your element, and make sure that it is defined correctly.</p></li><li><p>Cascading: Make sure that the <code>position: relative</code> rule is not being overridden by another CSS rule further down the cascade. You can use the browser's inspector tool to check the computed styles of your element and see if there are any other rules that might be overriding <code>position: relative</code>.</p></li></ol><p>By checking these possible issues, you should be able to identify and fix the problem with <code>position: relative</code> in your CSS.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "difference between position absolute and relative in CSS"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>In CSS, <code>position: absolute</code> and <code>position: relative</code> are two commonly used positioning properties that allow you to place elements on a web page.</p><p><code>position: relative</code> positions an element relative to its normal position within the document flow, without affecting the position of other elements on the page. The element is still considered to take up its original space in the document flow, but can be moved around within that space using the <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code> properties. When you use <code>position: relative</code>, the element is positioned relative to its containing block, which is usually the nearest positioned ancestor (if one exists), or the initial containing block (usually the viewport).</p><p>On the other hand, <code>position: absolute</code> removes the element from the normal document flow and positions it relative to the nearest positioned ancestor (or the initial containing block if no positioned ancestor exists). When you use <code>position: absolute</code>, the element is positioned relative to its containing block based on the values of the <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code> properties. It can also overlap other elements on the page, and its position will not affect the position of other elements.</p><p>Here are some key differences between <code>position: absolute</code> and <code>position: relative</code>:</p><ol><li><p><code>position: absolute</code> takes the element out of the normal document flow, while <code>position: relative</code> leaves the element in its normal position.</p></li><li><p><code>position: absolute</code> positions the element relative to its closest positioned ancestor or the initial containing block, while <code>position: relative</code> positions the element relative to its normal position within the document flow.</p></li><li><p><code>position: absolute</code> can overlap other elements on the page, while <code>position: relative</code> does not affect the position of other elements.</p></li><li><p>When using <code>position: relative</code>, the <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code> properties will move the element relative to its normal position within the document flow. When using <code>position: absolute</code>, the <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code> properties will position the element relative to its containing block.</p></li></ol><p>In summary, <code>position: absolute</code> and <code>position: relative</code> have different effects on the positioning and layout of elements on a web page. It is important to choose the correct positioning property depending on your design requirements.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 18:17"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/13 (Mon) 18:43",
+    "position_after_session": 12,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "build_tool"
+        ],
+        "entity_values": {
+          "build_tool": "Pyronis Build"
+        },
+        "question": "What's our build tool?",
+        "expected_answer": "Pyronis Build",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "build_command"
+        ],
+        "entity_values": {
+          "build_command": "pyronis pack --quick"
+        },
+        "question": "What's the build command?",
+        "expected_answer": "pyronis pack --quick",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "test_framework"
+        ],
+        "entity_values": {
+          "test_framework": "Tarvex Verify"
+        },
+        "question": "What testing framework do we use?",
+        "expected_answer": "Tarvex Verify",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "test_command"
+        ],
+        "entity_values": {
+          "test_command": "tarvex verify --all"
+        },
+        "question": "What's the test command?",
+        "expected_answer": "tarvex verify --all",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "backup_schedule"
+        ],
+        "entity_values": {
+          "backup_schedule": "every 12 hours with 7-day retention"
+        },
+        "question": "What's our backup schedule?",
+        "expected_answer": "every 12 hours with 7-day retention"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/18 (Sat) 20:27",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "secret_manager"
+        ],
+        "entity_values": {
+          "secret_manager": [
+            "Cryptara Vault",
+            "Selvex Secrets",
+            "Velthri Keys"
+          ]
+        },
+        "question": "List all secret managers we've used over time, from earliest to latest.",
+        "gold_answer": "Cryptara Vault, Selvex Secrets, Velthri Keys"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "build_tool"
+        ],
+        "entity_values": {
+          "build_tool": "Dranith Compiler"
+        },
+        "question": "What's our build tool?",
+        "gold_answer": "Dranith Compiler",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "build_command"
+        ],
+        "entity_values": {
+          "build_command": "dranith compile --emit bundle"
+        },
+        "question": "What's the build command?",
+        "gold_answer": "dranith compile --emit bundle",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "test_framework"
+        ],
+        "entity_values": {
+          "test_framework": "Tarvex Verify"
+        },
+        "question": "What testing framework do we use?",
+        "gold_answer": "Uncertain — previously 'Tarvex Verify', but framework changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "test_command"
+        ],
+        "entity_values": {
+          "test_command": "tarvex verify --all"
+        },
+        "question": "What's the test command?",
+        "gold_answer": "Uncertain — previously 'tarvex verify --all', but test_framework changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "backup_schedule"
+        ],
+        "entity_values": {
+          "backup_schedule": "every 12 hours with 7-day retention"
+        },
+        "question": "What's our backup schedule?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "design_system",
+          "test_coverage_target",
+          "code_review_policy"
+        ],
+        "entity_values": {
+          "design_system": "Veltrion UI Kit v2",
+          "test_coverage_target": "80% minimum overall",
+          "code_review_policy": "2 approvals + security review for auth/"
+        },
+        "question": "What are our code quality standards? List everything you know.",
+        "gold_answer": "We use Veltrion UI Kit v2, target 80% minimum overall test coverage, and require 2 approvals + security review for auth/ for reviews."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "DeadlockDetected: transactions 4821 and 4823 are deadlocked on table aurora_orders.\nQuery 1 was UPDATE orders SET status = 'shipped' WHERE region = 'us-east'.\nQuery 2 was DELETE FROM orders WHERE created_at < NOW() - INTERVAL '30 days'.\nFirst seen at 2024-08-04T22:33:18Z; recommend serializable isolation review."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1541 @@
+{
+  "episode_id": 39,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Thandrel Infra",
+    "after": "Korinth Hosting"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "log_drain_endpoint",
+    "staging_url",
+    "monitoring_url",
+    "docker_image",
+    "ci_config",
+    "dockerfile_path",
+    "deploy_command"
+  ],
+  "filler_entities": [
+    "alert_channel",
+    "documentation_url",
+    "package_manager",
+    "slack_channel",
+    "oncall_rotation"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Thandrel Infra",
+      "after": "Korinth Hosting",
+      "task": "C"
+    },
+    "log_drain_endpoint": {
+      "before": "logs.korinth.dev/aurora",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "staging_url": {
+      "before": "dev.orinthal.dev/aurora",
+      "after": null,
+      "task": null
+    },
+    "monitoring_url": {
+      "before": "status.orinthal.dev/aurora",
+      "after": "metrics.thandrel.io/aurora-prod",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "docker_image": {
+      "before": "orinthal-registry/aurora:deploy",
+      "after": null,
+      "task": null
+    },
+    "ci_config": {
+      "before": "orinthal-build.yml",
+      "after": "velturis-ci.json",
+      "task": null,
+      "is_2hop_middle": true
+    },
+    "dockerfile_path": {
+      "before": "infra/orinthal/Dockerfile",
+      "after": null,
+      "task": "B",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "deploy_command": {
+      "before": "orinthal publish --tier sandbox",
+      "after": "velturis deploy --region us-east",
+      "task": "A",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "auth_method": {
+      "before": "JWT Bearer",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 May 9",
+      "after": "2025 June 20",
+      "task": "H",
+      "history": [
+        "2025 May 9",
+        "2025 June 6",
+        "2025 June 20"
+      ]
+    },
+    "design_system": {
+      "before": "Moxira Components v3",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "90% for core modules",
+      "after": null,
+      "task": "F"
+    },
+    "code_review_policy": {
+      "before": "1 approval + CI green",
+      "after": null,
+      "task": "F"
+    },
+    "alert_channel": {
+      "before": "#aurora-oncall-alerts",
+      "after": null,
+      "task": "filler"
+    },
+    "documentation_url": {
+      "before": "docs.aurora.internal/wiki",
+      "after": null,
+      "task": "filler"
+    },
+    "package_manager": {
+      "before": "Quorix Hub",
+      "after": null,
+      "task": "filler"
+    },
+    "slack_channel": {
+      "before": "#aurora-dev",
+      "after": null,
+      "task": "filler"
+    },
+    "oncall_rotation": {
+      "before": "volunteer-based with weekly signup",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "monitoring_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "log_drain_endpoint",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 May 9",
+          "2025 June 6",
+          "2025 June 20"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 May 9, 2025 June 6, 2025 June 20",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "monitoring_url"
+      ],
+      "entity_values": {
+        "monitoring_url": "metrics.thandrel.io/aurora-prod"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our monitoring URL?",
+      "gold_answer": "metrics.thandrel.io/aurora-prod",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "velturis deploy --region us-east"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "velturis deploy --region us-east",
+      "notes": "Cascade from ci_config (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "log_drain_endpoint"
+      ],
+      "entity_values": {
+        "log_drain_endpoint": "logs.korinth.dev/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our log drain endpoint?",
+      "gold_answer": "Uncertain — previously 'logs.korinth.dev/aurora', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "infra/orinthal/Dockerfile"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "Uncertain — previously 'infra/orinthal/Dockerfile', but docker_image changed",
+      "notes": "Cascade from docker_image (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "auth_method"
+      ],
+      "entity_values": {
+        "auth_method": "JWT Bearer"
+      },
+      "question_template": "What authentication method do we use?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "design_system",
+        "test_coverage_target",
+        "code_review_policy"
+      ],
+      "entity_values": {
+        "design_system": "Moxira Components v3",
+        "test_coverage_target": "90% for core modules",
+        "code_review_policy": "1 approval + CI green"
+      },
+      "question_template": "What are our code quality standards? List everything you know.",
+      "gold_answer": "We use Moxira Components v3, target 90% for core modules test coverage, and require 1 approval + CI green for reviews.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 20,
+  "evidence_sessions": 5,
+  "filler_sessions": 15,
+  "total_tokens": 34315,
+  "evidence_tokens": 3336,
+  "filler_tokens": 30979,
+  "evidence_session_indices": [
+    3,
+    7,
+    10,
+    13,
+    17
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_18346",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "write me a comprehensive roadmap on creating, developing, deploying, maintaining and monetizing a youtube channel created from scratch targeted to the CPLP Community. Include software and services integration and automation suggestion so that the channel runs in a 1-person business model"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Title: Comprehensive Roadmap for Creating, Developing, Deploying, and Monetizing a YouTube Channel Targeted to the CPLP Community</p><ol><li>Research and Niche Selection</li></ol><ul><li>Identify your target audience within the CPLP (Community of Portuguese Language Countries) community</li><li>Research popular content categories and niches</li><li>Analyze competition and identify gaps in the market</li></ul><ol><li>Content Strategy</li></ol><ul><li>Develop a content plan with a consistent release schedule</li><li>Choose a content format: vlogs, tutorials, reviews, interviews, etc.</li><li>Determine your unique selling proposition (USP) to differentiate from competitors</li></ul><ol><li>Branding and Channel Setup</li></ol><ul><li>Create a unique and memorable channel name</li><li>Design a professional logo and banner for your channel</li><li>Write a compelling channel description, including relevant keywords</li></ul><ol><li>Video Production</li></ol><ul><li>Invest in quality recording equipment (camera, microphone, lighting)</li><li>Utilize editing software like Adobe Premiere Pro, Final Cut Pro, or DaVinci Resolve</li><li>Optimize audio quality with Audacity or Adobe Audition</li><li>Add subtitles, captions, and translations for better accessibility</li></ul><ol><li>Video Optimization</li></ol><ul><li>Conduct keyword research using tools like TubeBuddy, VidIQ, or Keyword Tool</li><li>Write engaging titles, descriptions, and tags incorporating target keywords</li><li>Create custom and eye-catching thumbnails using Canva or Adobe Photoshop</li></ul><ol><li>Promotion and Community Building</li></ol><ul><li>Share videos on social media platforms and relevant online communities</li><li>Collaborate with other creators in the CPLP community</li><li>Engage with viewers through comments, Q&amp;As, and live streaming</li></ul><ol><li>Monetization</li></ol><ul><li>Enable YouTube Partner Program (YPP) and earn ad revenue</li><li>Promote affiliate products or services using platforms like Amazon Associates or CJ Affiliate</li><li>Offer sponsored content and product placements</li><li>Sell merchandise or digital products through platforms like Teespring or Gumroad</li><li>Launch a Patreon or membership program for exclusive content</li></ul><ol><li>Software and Services Integration</li></ol><ul><li>Use Hootsuite or Buffer for social media scheduling and automation</li><li>Implement TubeBuddy or VidIQ for channel management and optimization</li><li>Employ Google Analytics to track channel performance and growth</li><li>Utilize Zapier or Integromat for automating tasks and workflows</li></ul><ol><li>Channel Maintenance</li></ol><ul><li>Regularly review and update older content for relevancy and optimization</li><li>Stay informed about YouTube algorithm changes and best practices</li><li>Evaluate channel analytics and adjust strategy based on performance insights</li></ul><ol><li>Scaling and Growth</li></ol><ul><li>Delegate tasks to freelancers or virtual assistants when necessary</li><li>Expand your content offerings to cater to a wider audience</li><li>Leverage your YouTube channel to explore other business opportunities</li></ul><p>By following this roadmap, you can create, develop, deploy, maintain, and monetize a successful YouTube channel targeted to the CPLP community, with a focus on automation and integration for a one-person business model.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "expand on how to make money online with affiliate marketing"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Affiliate marketing is a popular method of earning money online, which involves promoting products or services from other businesses and earning commissions based on the sales or leads generated. Here's an expanded guide on making money online with affiliate marketing:</p><ol><li>Choose a niche</li></ol><ul><li>Identify a target market or niche that you're passionate about and has a substantial audience</li><li>Make sure there's a demand for products or services within the chosen niche</li><li>Research competition and analyze their strategies</li></ul><ol><li>Find affiliate programs</li></ol><ul><li>Research affiliate networks such as Amazon Associates, CJ Affiliate, ShareASale, and ClickBank</li><li>Look for individual affiliate programs offered by companies in your niche</li><li>Compare commission structures, cookie durations, payout terms, and support offered by various programs</li></ul><ol><li>Build a platform</li></ol><ul><li>Create a website, blog, YouTube channel, or social media account to promote affiliate products</li><li>Focus on providing valuable content to your audience, such as reviews, tutorials, or informational articles</li><li>Optimize your platform for search engines and user experience</li></ul><ol><li>Produce high-quality content</li></ol><ul><li>Create engaging and informative content that resonates with your target audience</li><li>Include affiliate links naturally within the content, without coming across as overly promotional</li><li>Optimize content for relevant keywords to improve search engine rankings</li></ul><ol><li>Grow your audience</li></ol><ul><li>Promote your content on social media, online forums, and other platforms where your target audience is active</li><li>Build an email list to communicate directly with your subscribers and promote affiliate offers</li><li>Collaborate with other influencers or content creators within your niche</li></ul><ol><li>Optimize conversions</li></ol><ul><li>Test different ways to present affiliate links, such as in-text links, banners, or call-to-action buttons</li><li>Experiment with various landing pages, headlines, and email marketing strategies to improve conversion rates</li><li>Track your performance using analytics tools, and make data-driven decisions to optimize your marketing efforts</li></ul><ol><li>Diversify income sources</li></ol><ul><li>Join multiple affiliate programs to avoid relying on a single income source</li><li>Consider other monetization methods, such as display ads, sponsored content, or selling your own products or services</li><li>Explore different platforms, such as podcasting or video marketing, to reach a broader audience</li></ul><ol><li>Stay informed and adaptable</li></ol><ul><li>Keep up with industry trends and changes in your niche</li><li>Learn from successful affiliate marketers by following their blogs, podcasts, or YouTube channels</li><li>Adjust your strategies as needed to maintain growth and stay ahead of the competition</li></ul><p>By following these steps, you can build a successful affiliate marketing business and generate passive income online. Remember that affiliate marketing requires persistence, patience, and continuous improvement to achieve long-term success.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_21613",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Csv into aws Neptune "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To load a CSV file into Amazon Neptune, you can follow these steps:</p><ol><li><p>Prepare your CSV file:</p><ul><li>Ensure that your CSV file is in a format that can be read by Neptune.</li><li>The first line of the CSV file should contain the column names, and subsequent lines should contain the values.</li><li>Save the CSV file in a location that can be accessed by your Neptune instance.</li></ul></li><li><p>Create a Neptune cluster:</p><ul><li>If you don't already have a Neptune cluster, create one in the AWS Management Console.</li><li>Note the endpoint URL of your Neptune cluster, which you will need later.</li></ul></li><li><p>Create a Neptune database:</p><ul><li>In the AWS Management Console, navigate to your Neptune cluster and create a new database.</li></ul></li><li><p>Configure Neptune access:</p><ul><li>Ensure that your AWS Identity and Access Management (IAM) policy allows you to interact with the Neptune instance.</li><li>Make sure that you have the AWS CLI installed and configured on your local machine.</li></ul></li><li><p>Load the CSV file into Neptune:</p><ul><li>Use the Neptune Bulk Loader to load the CSV file into your Neptune database.</li><li>The Bulk Loader can be run from your local machine or an Amazon EC2 instance.</li></ul><p>Here is an example command to load a CSV file using the Bulk Loader:</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">css</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-css\">$ ./bin/neptune-bulk-load-csv \\\n    <span class=\"hljs-attr\">--access-key-id</span>=&lt;AWS_ACCESS_KEY_ID&gt; \\\n    <span class=\"hljs-attr\">--secret-access-key</span>=&lt;AWS_SECRET_ACCESS_KEY&gt; \\\n    <span class=\"hljs-attr\">--region</span>=&lt;AWS_REGION&gt; \\\n    <span class=\"hljs-attr\">--source-file</span>=&lt;path/<span class=\"hljs-selector-tag\">to</span>/csv/file&gt; \\\n    <span class=\"hljs-attr\">--database-arn</span>=&lt;NEPTUNE_DATABASE_ARN&gt; \\\n    <span class=\"hljs-attr\">--iam-arn</span>=&lt;NEPTUNE_ROLE_ARN&gt; \\\n    <span class=\"hljs-attr\">--fail-on-error</span>\n</code></div></div></pre><p>Replace the placeholders with your actual values:</p><ul><li><code>&lt;AWS_ACCESS_KEY_ID&gt;</code> and <code>&lt;AWS_SECRET_ACCESS_KEY&gt;</code> with your AWS access key and secret key.</li><li><code>&lt;AWS_REGION&gt;</code> with your AWS region.</li><li><code>&lt;path/to/csv/file&gt;</code> with the path to your CSV file.</li><li><code>&lt;NEPTUNE_DATABASE_ARN&gt;</code> with the ARN of your Neptune database.</li><li><code>&lt;NEPTUNE_ROLE_ARN&gt;</code> with the ARN of the role that has access to the database.</li><li>The <code>--fail-on-error</code> option will cause the Bulk Loader to stop loading the data if it encounters any errors.</li></ul><p>After the command completes, the data from the CSV file will be loaded into your Neptune database.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Good tool to visualise neptune database entries\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>There are several tools you can use to visualize Neptune database entries. Here are some popular options:</p><ol><li><p>Amazon Neptune Workbench: This is a web-based tool provided by Amazon that allows you to explore your Neptune graph database visually. You can use it to write and run SPARQL queries, view the results, and create and modify nodes and edges in your graph.</p></li><li><p>Neptune Visualizer: This is an open-source visualization tool developed by AWS Labs that allows you to visualize your Neptune graph database using a variety of graph layouts. You can customize the visualization by specifying which nodes and edges to include and how they should be displayed.</p></li><li><p>GraphExp: This is an open-source graph exploration tool that supports multiple graph databases, including Neptune. You can use it to explore and visualize your Neptune graph database, run queries, and create and modify nodes and edges.</p></li><li><p>DataGrip: This is a database IDE developed by JetBrains that supports Amazon Neptune as well as other databases. You can use it to visualize your Neptune database schema, run queries, and browse data.</p></li><li><p>Cypher for Gremlin: This is a tool developed by Neo4j that allows you to write Cypher queries against a Neptune database. You can use it to explore your Neptune graph database and visualize the results using Neo4j's browser.</p></li></ol><p>All of these tools provide different levels of functionality and flexibility, so it's worth trying out a few to see which one works best for your needs.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 22:08"
+    },
+    {
+      "session_id": "sharegpt_12748",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "use spacey to "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I'm assuming you're referring to the natural language processing library called \"spaCy.\" Here are a few examples of how you can use spaCy:</p><ol><li>Tokenizing text: You can use spaCy to break up a piece of text into individual tokens. For example:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> spacy\n\nnlp = spacy.load(<span class=\"hljs-string\">\"en_core_web_sm\"</span>)\ndoc = nlp(<span class=\"hljs-string\">\"This is an example sentence.\"</span>)\n\n<span class=\"hljs-keyword\">for</span> token <span class=\"hljs-keyword\">in</span> doc:\n    <span class=\"hljs-built_in\">print</span>(token.text)\n</code></div></div></pre><p>This code will output:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\">This\n<span class=\"hljs-keyword\">is</span>\nan\nexample\nsentence\n.\n</code></div></div></pre><ol><li>Part-of-speech tagging: You can use spaCy to assign part-of-speech tags to each token in a piece of text. For example:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> spacy\n\nnlp = spacy.load(<span class=\"hljs-string\">\"en_core_web_sm\"</span>)\ndoc = nlp(<span class=\"hljs-string\">\"I like to eat pizza.\"</span>)\n\n<span class=\"hljs-keyword\">for</span> token <span class=\"hljs-keyword\">in</span> doc:\n    <span class=\"hljs-built_in\">print</span>(token.text, token.pos_)\n</code></div></div></pre><p>This code will output:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\"><span class=\"hljs-selector-tag\">I</span> PRON\nlike VERB\n<span class=\"hljs-selector-tag\">to</span> PART\neat VERB\npizza NOUN\n. PUNCT\n</code></div></div></pre><ol><li>Named entity recognition: You can use spaCy to identify named entities in a piece of text, such as people, organizations, and locations. For example:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> spacy\n\nnlp = spacy.load(<span class=\"hljs-string\">\"en_core_web_sm\"</span>)\ndoc = nlp(<span class=\"hljs-string\">\"Apple is looking at buying a startup in the UK for $1 billion.\"</span>)\n\n<span class=\"hljs-keyword\">for</span> ent <span class=\"hljs-keyword\">in</span> doc.ents:\n    <span class=\"hljs-built_in\">print</span>(ent.text, ent.label_)\n</code></div></div></pre><p>This code will output:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-title class_\">Apple</span> <span class=\"hljs-variable constant_\">ORG</span>\nthe <span class=\"hljs-variable constant_\">UK</span> <span class=\"hljs-variable constant_\">GPE</span>\n$1 billion <span class=\"hljs-variable constant_\">MONEY</span>\n</code></div></div></pre><p>These are just a few examples of what you can do with spaCy. It's a very powerful tool for natural language processing, and there are many more features and functions available.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "usee it to remove non english words from a ist"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here's an example of how you can use spaCy to remove non-English words from a list:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>makefile</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-makefile\">import spacy\n\n<span class=\"hljs-comment\"># Load the language model</span>\nnlp = spacy.load(<span class=\"hljs-string\">\"en_core_web_sm\"</span>)\n\n<span class=\"hljs-comment\"># Define the list of words to filter</span>\nword_list = [<span class=\"hljs-string\">\"Hello\"</span>, <span class=\"hljs-string\">\"world\"</span>, <span class=\"hljs-string\">\"안녕하세요\"</span>, <span class=\"hljs-string\">\"spaCy\"</span>, <span class=\"hljs-string\">\"is\"</span>, <span class=\"hljs-string\">\"great\"</span>]\n\n<span class=\"hljs-comment\"># Filter out non-English words</span>\nenglish_words = []\nfor word in word_list:\n    doc = nlp(word)\n    if doc[0].lang_ == <span class=\"hljs-string\">\"en\"</span>:\n        english_words.append(word)\n\n<span class=\"hljs-comment\"># Print the filtered list</span>\nprint(english_words)\n</code></div></div></pre><p>In this example, we load the English language model using <code>spacy.load(\"en_core_web_sm\")</code>, then define a list of words to filter. We then loop through each word in the list, and use spaCy to determine whether the first token in the word is English (<code>doc[0].lang_ == \"en\"</code>). If the word is English, we append it to a new list called <code>english_words</code>. Finally, we print the filtered list.</p><p>When you run this code, you should see the output:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\"><span class=\"hljs-selector-attr\">[<span class=\"hljs-string\">'Hello'</span>, <span class=\"hljs-string\">'world'</span>, <span class=\"hljs-string\">'spaCy'</span>, <span class=\"hljs-string\">'is'</span>, <span class=\"hljs-string\">'great'</span>]</span>\n</code></div></div></pre><p>The non-English word \"안녕하세요\" has been filtered out of the list.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 04:36"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team’s design system is Moxira Components v3. It’s been pretty solid so far. Have you worked with Moxira before? What’s your take on its component structure?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven't worked with Moxira specifically, but I’d love to hear more about its component structure from you. It sounds like it’s been a reliable foundation for your team. What aspects of the component structure do you find most beneficial, or are there any challenges you've encountered while using it? Understanding your experience could provide some great insights into its strengths and weaknesses."
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 May 9. It's approaching fast, so we've been ramping up our tasks. How do you usually manage sprint deadlines? Any tips on prioritizing tasks effectively to meet those timelines?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're ramping up as the deadline approaches! Effective task prioritization can make a big difference in meeting your sprint goals. One approach is to focus on identifying the most critical tasks that deliver the highest value to your project. Consider breaking those tasks down into smaller, manageable pieces to help track progress more easily. Regular check-ins can also ensure everyone is aligned and address any blockers promptly. How does your team currently handle prioritization and progress tracking?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's authentication method is JWT Bearer. It's been working pretty well for securing our APIs. How do you typically handle token expiration and refresh tokens in your projects? Any best practices you follow to ensure a smooth user experience?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using JWT Bearer for authentication is a solid choice for securing APIs. When it comes to handling token expiration, a common best practice is to implement refresh tokens alongside your access tokens. This allows users to obtain a new access token without requiring them to log in again, which can enhance the user experience. It’s also a good idea to set a reasonable expiration time for access tokens to balance security and usability. Regularly checking the token's validity on the client side and prompting for a refresh when necessary can help keep the user experience seamless. How are you currently managing token expiration and refresh in your implementation?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Thandrel Infra. It's been pretty straightforward so far. Do you have any insights on best practices for deploying to a cloud infrastructure like Thandrel? What are some common pitfalls to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that your deployment process to Thandrel Infra has been smooth. When deploying to cloud infrastructure, it's important to ensure that your configuration and environment settings are consistent across different stages. Automating your deployment process can also help minimize human error and streamline updates. Additionally, keeping an eye on monitoring and logging can provide valuable insights into any issues that arise post-deployment. Common pitfalls often include not adequately testing in a staging environment or overlooking resource scaling, which can lead to performance issues. What specific challenges have you encountered so far with your deployments?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Quorix Hub. It's streamlined our dependency management quite a bit. Do you have any tips on optimizing package management workflows? How do you typically handle versioning and updates with package managers?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that Quorix Hub has improved your dependency management! To optimize your package management workflows, you might consider setting up a clear versioning strategy, such as Semantic Versioning, which helps communicate changes effectively. Regularly auditing and updating dependencies can also prevent issues related to outdated packages. Implementing a staging environment for testing updates before they go live can help catch any compatibility problems. Additionally, documenting your package management processes can ensure that everyone on the team follows the same practices. Have you faced any specific challenges with versioning or managing updates?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "design_system",
+          "value": "Moxira Components v3",
+          "original_seed": "Our design system is Moxira Components v3",
+          "fact_text": "The team's design system is Moxira Components v3.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 May 9",
+          "original_seed": "The sprint deadline is 2025 May 9",
+          "fact_text": "The sprint deadline is 2025 May 9.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_method",
+          "value": "JWT Bearer",
+          "original_seed": "Our authentication method is JWT Bearer",
+          "fact_text": "The team's authentication method is JWT Bearer.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "deploy_target",
+          "value": "Thandrel Infra",
+          "original_seed": "We deploy to Thandrel Infra",
+          "fact_text": "The team deploys to Thandrel Infra.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "package_manager",
+          "value": "Quorix Hub",
+          "original_seed": "Our package manager is Quorix Hub",
+          "fact_text": "The team's package manager is Quorix Hub.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 10:28"
+    },
+    {
+      "session_id": "sharegpt_25635",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Optimiza este texto donde se muestra una idea para ser implementada en una web:\n\nA veces tenemos demasiada informacion muy util y por el caos del dia a dia a lo largo del tiempo vamos olvidando o dejando de lado estos datos que son importantes pero pueden llegar a pasar de desapercibidos por la carga de informacion que tenemos con el dia a dia.\n\nEl objetivo de esta aplicacion es poder registrar informacion en cualquier momento y lugar, de forma rapida y facil.\n\nConsiste en varias secciones o categorias donde podras almanecar los datos o informaciones que vayas adquiriendo en tu largo camino hacia el exito. Tambien puedes organizar dicha informacion por prioridad y tener un recordatorio ( opcional ) de x informacion que necesites para una fecha establecida ( modo recordatorio ).\n\n A que sector va dirigido ? \nA todo publico pero en especial a los estudiantes y empresarios. Estamos consciente de que la carga de informacion que tienen en el diario vivir es mucha y este software/aplicacion puede ser de mucha utilidad.\n\nCual es su costo?\nEs totalmente gratuito, es una contribucion para que pueda mejorar la forma de almanecar tanto informacion que tenemos disponible a diario."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-0 markdown prose break-words dark:prose-invert light\"><p>A veces tenemos demasiada información útil que, debido al caos del día a día, terminamos olvidando o dejando de lado. Esta aplicación tiene como objetivo ayudarte a registrar información en cualquier momento y lugar, de forma rápida y fácil.</p><p>Consiste en varias secciones o categorías donde puedes almacenar la información que adquieras en tu camino hacia el éxito. También puedes organizar la información por prioridad y establecer recordatorios (opcionales) para la información que necesites en una fecha determinada.</p><p>Esta aplicación está dirigida a todo público, pero en especial a estudiantes y empresarios que lidian con una gran cantidad de información diaria. Además, es totalmente gratuita, como una contribución para mejorar la forma en que almacenamos la información que tenemos disponible a diario.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Muéstrame el proceso detallado y organizado de un ejemplo práctico para poder desarrollar un sitio web que cumpla con las características descritas anteriormente"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-1 markdown prose break-words dark:prose-invert light\"><p>El desarrollo de un sitio web que cumpla con las características descritas en la pregunta anterior puede seguir los siguientes pasos:</p><ol><li><p>Definición del objetivo y la audiencia: es importante tener claro para qué se quiere desarrollar el sitio web y a quién está dirigido. Esto ayudará a tomar decisiones importantes sobre el contenido y la estructura del sitio.</p></li><li><p>Investigación y análisis de la competencia: es importante revisar otros sitios web similares para identificar qué están haciendo bien y cómo se podría mejorar en nuestro propio sitio.</p></li><li><p>Diseño del sitio: en esta etapa se crea un boceto o esquema de cómo se verá el sitio, incluyendo la estructura de las páginas, la organización del contenido y la elección de colores y tipografías.</p></li><li><p>Desarrollo del sitio: en esta etapa se crean las páginas web y se desarrolla el código necesario para hacerlas funcionar. Es importante asegurarse de que el sitio sea fácil de usar y que se cargue rápidamente en diferentes dispositivos.</p></li><li><p>Pruebas y depuración: antes de lanzar el sitio al público, es importante probarlo para asegurarse de que funciona correctamente y corregir cualquier error o problema.</p></li><li><p>Lanzamiento y promoción: una vez que el sitio está listo, se puede lanzar al público y promocionarlo para atraer a los usuarios. Esto puede incluir publicidad en línea, redes sociales y otras técnicas de marketing.</p></li><li><p>Mantenimiento y actualización: después de lanzar el sitio, es importante mantenerlo actualizado con contenido fresco y corregir cualquier problema que pueda surgir. También puede ser útil recoger retroalimentación de los usuarios para identificar posibles mejoras.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Usa el contexto de la funcionalidad que debe cumplir y dame un ejemplo de como podria estar estructurada una pagina web que cumpla con las expectativas para atraer usuarios."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R3d6:-2 markdown prose break-words dark:prose-invert light\"><p>Para atraer usuarios, una página web debe ser fácil de usar, tener un diseño atractivo y contener información relevante y útil. A continuación se presenta un ejemplo de cómo podría estructurarse una página web que cumpla con estas expectativas:</p><ul><li><p>La página principal incluiría una breve descripción de la aplicación, junto con una imagen o video que muestre de qué se trata y cómo funciona. También podría incluir una sección de testimonios de usuarios satisfechos y un botón para descargar o utilizar la aplicación.</p></li><li><p>La sección \"Sobre nosotros\" contendría información sobre la empresa o el equipo detrás de la aplicación, así como la historia de cómo surgió la idea. También podría incluir una lista de valores o principios que guían al equipo en su trabajo.</p></li><li><p>La sección \"Características\" enumeraría y describiría las principales funcionalidades de la aplicación, con ejemplos de cómo se pueden utilizar. También podría incluir capturas de pantalla o videos que ilustren cómo se ve y se usa la aplicación.</p></li><li><p>La sección \"Preguntas frecuentes\" respondería a preguntas comunes que puedan surgir sobre la aplicación, como cómo descargarla, cómo utilizarla o qué sucede si se encuentra un error. Esta sección podría incluir un buscador o una lista de temas para facilitar la navegación.</p></li><li><p>La sección \"Contacto\" facilitaría la comunicación con el equipo detrás de la aplicación, ofreciendo formularios o direcciones de correo electrónico donde los usuarios puedan enviar preguntas, comentarios o sugerencias. También podría incluir enlaces a perfiles en redes sociales o plataformas de mensajería.</p></li></ul><p>En general, la estructura de la página web debería ser lógica y fácil de navegar, de modo que los usuarios puedan encontrar rápidamente la información que buscan y tomar decisiones sobre si quieren utilizar la aplicación. También debería incluir elementos visuales atractivos y una estética coherente para generar una buena impresión en los usuarios.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 13:17"
+    },
+    {
+      "session_id": "sharegpt_24509",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "class WalletController : ApiController\n{\n    private readonly IWalletService _walletService;\n\n    public WalletController(IWalletService walletService)\n    {\n        _walletService = walletService;\n    }\n\n    [HttpPost]\n    [Route(\"api/wallet/add\")]\n    public IHttpActionResult AddBalance(AddBalanceRequest request)\n    {\n        var response = _walletService.AddBalance(request);\n        return Ok(response);\n    }\n\n    [HttpPost]\n    [Route(\"api/wallet/transfer\")]\n    public IHttpActionResult TransferBalance(TransferBalanceRequest request)\n    {\n        var response = _walletService.TransferBalance(request);\n        return Ok(response);\n    }\n\n    [HttpGet]\n    [Route(\"api/wallet/balance\")]\n    public IHttpActionResult GetBalance(GetBalanceRequest request)\n    {\n        var response = _walletService.GetBalance(request);\n        return Ok(response);\n    }\n}"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-0 markdown prose dark:prose-invert break-words dark\"><p>This code defines a <code>WalletController</code> class that is derived from <code>ApiController</code>, which is a class from the ASP.NET Web API framework. This controller class is used to handle incoming HTTP requests for a \"wallet\" service that allows users to add, transfer, and check their balance.</p><p>The controller has three methods: <code>AddBalance</code>, <code>TransferBalance</code>, and <code>GetBalance</code>, which correspond to the three different actions that the wallet service supports. Each method takes a request object as input, passes it to the <code>_walletService</code> object (which is an instance of <code>IWalletService</code>), and then returns an <code>IHttpActionResult</code> object containing the response.</p><p>The <code>IHttpActionResult</code> return type is a common way to return HTTP responses in Web API controllers. It allows the controller to return a variety of different types of responses, including HTTP errors, to the client.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how to create an mvvm application in ios, with example using swift"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-1 markdown prose dark:prose-invert break-words dark\"><p>To create an MVVM (Model-View-ViewModel) application in iOS, you will need to use the Swift programming language and the SwiftUI framework. Here is an example of how you might structure such an application:</p><p>First, define a model class that represents the data you want to display in the view. For example:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-less\"><span class=\"hljs-selector-tag\">class</span> <span class=\"hljs-selector-tag\">Person</span>: <span class=\"hljs-selector-tag\">ObservableObject</span> {\n    <span class=\"hljs-variable\">@Published</span> var <span class=\"hljs-attribute\">name</span>: String\n    <span class=\"hljs-variable\">@Published</span> var <span class=\"hljs-attribute\">age</span>: Int\n}\n</code></div></div></pre><p>Next, define a view model class that will hold a reference to your model and provide methods for modifying it. The view model can also handle any complex logic that is needed to display the data in the view. For example:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-swift\"><span class=\"hljs-keyword\">class</span> <span class=\"hljs-title class_\">PersonViewModel</span> {\n    <span class=\"hljs-meta\">@ObservedObject</span> <span class=\"hljs-keyword\">var</span> person: <span class=\"hljs-type\">Person</span>\n\n    <span class=\"hljs-keyword\">init</span>(<span class=\"hljs-params\">person</span>: <span class=\"hljs-type\">Person</span>) {\n        <span class=\"hljs-keyword\">self</span>.person <span class=\"hljs-operator\">=</span> person\n    }\n\n    <span class=\"hljs-keyword\">func</span> <span class=\"hljs-title function_\">increaseAge</span>() {\n        person.age <span class=\"hljs-operator\">+=</span> <span class=\"hljs-number\">1</span>\n    }\n}\n</code></div></div></pre><p>Finally, create a SwiftUI view that will display the data from the model and bind to the view model's methods for modifying the data. For example:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-scss\">struct PersonView: View {\n    <span class=\"hljs-keyword\">@ObservedObject</span> var <span class=\"hljs-attribute\">viewModel</span>: PersonViewModel\n\n    var <span class=\"hljs-attribute\">body</span>: some View {\n        VStack {\n            Text(\"Name: \\(viewModel.person.name)\")\n            Text(\"Age: \\(viewModel.person.age)\")\n            <span class=\"hljs-selector-tag\">Button</span>(\"Increase Age\") {\n                viewModel<span class=\"hljs-selector-class\">.increaseAge</span>()\n            }\n        }\n    }\n}\n</code></div></div></pre><p>To use this view in your iOS app, you would create an instance of <code>Person</code>, pass it to an instance of <code>PersonViewModel</code>, and then pass that to an instance of <code>PersonView</code> as the <code>rootView</code> of your app.</p><p>Here is an example of how you might do this in the <code>AppDelegate</code> class of your iOS app:</p><pre><div class=\"bg-black\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-less\"><span class=\"hljs-variable\">@main</span>\nstruct <span class=\"hljs-attribute\">MyApp</span>: App {\n    <span class=\"hljs-selector-tag\">let</span> <span class=\"hljs-selector-tag\">person</span> = <span class=\"hljs-selector-tag\">Person</span>(<span class=\"hljs-attribute\">name</span>: <span class=\"hljs-string\">\"John Doe\"</span>, <span class=\"hljs-attribute\">age</span>: <span class=\"hljs-number\">30</span>)\n    <span class=\"hljs-selector-tag\">let</span> <span class=\"hljs-selector-tag\">viewModel</span> = <span class=\"hljs-selector-tag\">PersonViewModel</span>(<span class=\"hljs-attribute\">person</span>: person)\n\n    <span class=\"hljs-selector-tag\">var</span> <span class=\"hljs-selector-tag\">body</span>: <span class=\"hljs-selector-tag\">some</span> <span class=\"hljs-selector-tag\">Scene</span> {\n        <span class=\"hljs-selector-tag\">WindowGroup</span> {\n            <span class=\"hljs-selector-tag\">PersonView</span>(<span class=\"hljs-attribute\">viewModel</span>: viewModel)\n        }\n    }\n}\n</code></div></div></pre><p>This will create a simple MVVM application in iOS that allows you to display and modify the data in a <code>Person</code> model using a <code>PersonViewModel</code> and a <code>PersonView</code> built with SwiftUI.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 19:23"
+    },
+    {
+      "session_id": "sharegpt_19543",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "given this graphql schema\n```\ninput CreateCustomerInput {\n  email: String!\n  name: String!\n}\n\ninput CreateDeliveryGroupInput {\n  deliveryTargets: [CreateCustomerInput!]!\n  name: String!\n  organizationId: ID!\n}\n\n\"\"\"update CreateOrganizationInput \"\"\"\ninput CreateOrganizationInput {\n  name: String\n}\n\n\"\"\"update CreateDeliveryInput\"\"\"\ninput CreateDeliveryInput {\n  name: String,\n  organizationId: ID!,\n  groupId: ID!\n}\n\n\"\"\"create delivery group payload\"\"\"\ntype CreateDeliveryGroupPayload {\n  deliveryGroup: DeliveryGroup!\n}\n\ntype Customer {\n  email: String\n  id: ID!\n  name: String\n}\n\ninput DeliverInput {\n  deliverId: ID!\n}\n\ntype Delivery {\n  group: DeliveryGroup!\n  id: ID!\n  name: String!\n  target: Customer\n  isDelivered: Boolean!\n}\n\ntype DeliveryGroup {\n  deliveries: [Delivery!]!\n  id: ID!\n}\n\n\"\"\"delivery payload\"\"\"\ntype DeliveryPayload {\n  deliver: Delivery!\n}\n\ntype Mutation {\n\n  createCustomer(input: CreateCustomerInput!): CustomerPayload!\n  createDeliveryGroup(input: CreateDeliveryGroupInput!): CreateDeliveryGroupPayload!\n  createDelivery(input: CreateDeliveryInput!): DeliveryPayload!\n  createOrganization(input: CreateOrganizationInput!): OrganizationPayload!\n\n  deleteCustomer(id: ID!): CustomerPayload!\n  deleteDelivery(input: DeliverInput): DeliveryPayload!\n  deleteOrganization(id: ID!): OrganizationPayload!\n  deliver(id: ID!): DeliveryPayload!\n\n  signIn(input: MutationSignInInput!): String\n\n  updateCustomer(id: ID!, input: UpdateCustomerInput!): CustomerPayload!\n  updateDelivery(id: ID!, input: UpdateDeliveryInput!): DeliveryPayload!\n  updateOrganization(id: ID!, input: UpdateOrganizationInput!): OrganizationPayload!\n\n}\n\ninput MutationSignInInput {\n  email: String!\n  password: String!\n}\n\ntype Organization {\n  id: ID!\n}\n\n\"\"\"paginated deliveries\"\"\"\ntype PaginatedDeliveries {\n  items: [Delivery!]!\n  page: Int!\n  totalPage: Int!\n}\n\n\"\"\"Integers that will have a value greater than 0.\"\"\"\nscalar PositiveInt\n\ntype Query {\n  customer(id: ID!): Customer!\n  customers: [Customer!]!\n  deliveriesInGroups(groupIds: [ID!]!, limit: Int = 10, page: Int = 0): PaginatedDeliveries!\n  delivery(id: ID!): Delivery!\n  deliveryGroups: [DeliveryGroup!]!\n  me: User!\n  organization(id: ID!): Organization!\n  organizations: [Organization!]!\n}\n\n\"\"\"\nThe javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.\n\"\"\"\nscalar Timestamp\n\n\"\"\"\nA field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.\n\"\"\"\nscalar URL\n\ninput UpdateCustomerInput {\n  email: String!\n  name: String!\n}\n\n\"\"\"update CreateCustomerInput\"\"\"\ninput CreateCustomerInput {\n  email: String!\n  name: String!\n}\n\n\"\"\"update customer payload\"\"\"\ntype CustomerPayload {\n  customer: Customer!\n}\n\n\"\"\"update organization payload\"\"\"\ntype OrganizationPayloadShape {\n  organization: Organization!;\n}\n\ntype User {\n  id: ID!\n  organization: Organization!\n}\n\n\"\"\"Represents NULL values\"\"\"\nscalar Void\n```\ncould you add a mutation `importDeliveryGroupCsv` which take input form contains `CreateDeliveryGroupInput` and a csv file describe a list of `CreateDeliveryInput`, create `DeliveryGroup` and return `CreateDeliveryGroupPayload`"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:r0:-2 markdown prose dark:prose-invert break-words dark\"><p>Sure, I can add that mutation to your GraphQL schema. Here is how it would look:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"w-4 h-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-built_in\">type</span> Mutation {\n  ...\n  importDeliveryGroupCsv(<span class=\"hljs-built_in\">input</span>: CreateDeliveryGroupInput, csvFile: Upload!): CreateDeliveryGroupPayload\n}\n</code></div></div></pre><p>The <code>importDeliveryGroupCsv</code> mutation would take two inputs: <code>input</code> which is an instance of <code>CreateDeliveryGroupInput</code> and <code>csvFile</code> which is a file uploaded using the <code>Upload</code> type.</p><p>This mutation would create a new <code>DeliveryGroup</code> using the information provided in the <code>CreateDeliveryGroupInput</code> and the CSV file. It would then return the <code>CreateDeliveryGroupPayload</code>, which contains the newly created <code>DeliveryGroup</code>.</p><p>Let me know if you have any questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 08:40"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's test coverage target is 90% for core modules. It's pretty crucial for us to catch bugs early. Do you have any tips on how to maintain or improve test coverage effectively?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're prioritizing test coverage to catch bugs early! One effective approach is to implement automated testing wherever possible, as it can help you consistently run tests and maintain coverage as your codebase evolves. Consider integrating code coverage tools that provide insights on which areas of your code are lacking tests, allowing you to focus your efforts strategically. Regularly reviewing and refactoring tests alongside your code can also help keep them relevant and effective. Involving the team in code reviews can further enhance test quality and encourage a shared responsibility for maintaining coverage. Are there specific areas of your codebase where you find it challenging to achieve the desired coverage?"
+        },
+        {
+          "role": "user",
+          "content": "Update: The sprint deadline is 2025 June 6. We’ve got a deadline to hit! How do you usually keep track of progress towards sprint goals? Any tools or best practices you recommend for sprint planning?"
+        },
+        {
+          "role": "assistant",
+          "content": "With a deadline in mind, it's essential to have a solid tracking method for your sprint goals. Regular stand-up meetings can help keep the team aligned and allow everyone to share updates on their progress. Utilizing a visual project management tool, like a Kanban board, can also provide clarity on tasks and their statuses at a glance. It's beneficial to break down tasks into smaller, manageable pieces and review them during sprint planning to ensure everyone understands their responsibilities. Additionally, conducting sprint retrospectives can help identify what's working well and what needs improvement for future sprints. How is your team currently tracking progress?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's Docker image is orinthal-registry/aurora:deploy. We rely on this image for our deployment process. Do you have any best practices for managing Docker images, especially when it comes to versioning and keeping them up to date?"
+        },
+        {
+          "role": "assistant",
+          "content": "Managing Docker images effectively is crucial for a smooth deployment process. A good practice is to use semantic versioning for your images, which can help you track changes and ensure compatibility. Tagging images with version numbers, along with a \"latest\" tag for the most current version, can simplify management and deployment. Additionally, regularly auditing your images for outdated dependencies or vulnerabilities is important; consider implementing a process for rebuilding and updating images periodically. It might also be helpful to maintain a clear changelog associated with each image version to document the changes made. How often do you find yourself needing to update or rebuild your images?"
+        },
+        {
+          "role": "user",
+          "content": "The team's channel is #aurora-dev. This is where we discuss project updates and any issues that come up. Do you have any tips for keeping communication effective in a dev channel?"
+        },
+        {
+          "role": "assistant",
+          "content": "Maintaining effective communication in your dev channel is key to keeping everyone on the same page. Encouraging regular updates can help ensure that everyone is aware of progress and any issues that arise. Using threads for specific topics can keep discussions organized and prevent the main channel from becoming cluttered. It’s also helpful to establish guidelines for when to use the channel versus direct messages to keep communication streamlined. Consider setting aside time for regular check-ins or informal catch-ups to foster team bonding and open discussions. Are there any specific challenges your team faces with communication in the channel?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "test_coverage_target",
+          "value": "90% for core modules",
+          "original_seed": "Our test coverage target is 90% for core modules",
+          "fact_text": "The team's test coverage target is 90% for core modules.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 6",
+          "original_seed": "Update: The sprint deadline is 2025 June 6",
+          "fact_text": "Update: The sprint deadline is 2025 June 6.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "orinthal-registry/aurora:deploy",
+          "original_seed": "Our Docker image is orinthal-registry/aurora:deploy",
+          "fact_text": "The team's Docker image is orinthal-registry/aurora:deploy.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "slack_channel",
+          "value": "#aurora-dev",
+          "original_seed": "Our team channel is #aurora-dev",
+          "fact_text": "The team's channel is #aurora-dev.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 20:28"
+    },
+    {
+      "session_id": "sharegpt_8420",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Draw a visual in HTML using javascript inspired by the sentence \"A logo for an open source repository named Melusine, powered by the french insurance company Maif\""
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>While I cannot directly draw a visual for you, I can provide you with an example of HTML, CSS, and JavaScript code that creates a simple logo inspired by the given sentence. You can copy and paste the code into an HTML file and open it in a web browser to see the logo.</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>html</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-html\"><span class=\"hljs-meta\">&lt;!DOCTYPE <span class=\"hljs-keyword\">html</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">html</span> <span class=\"hljs-attr\">lang</span>=<span class=\"hljs-string\">\"en\"</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">head</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">charset</span>=<span class=\"hljs-string\">\"UTF-8\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">name</span>=<span class=\"hljs-string\">\"viewport\"</span> <span class=\"hljs-attr\">content</span>=<span class=\"hljs-string\">\"width=device-width, initial-scale=1.0\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">title</span>&gt;</span>Melusine Logo<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">title</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">style</span>&gt;</span><span class=\"css\">\n        <span class=\"hljs-selector-tag\">body</span> {\n            <span class=\"hljs-attribute\">display</span>: flex;\n            <span class=\"hljs-attribute\">justify-content</span>: center;\n            <span class=\"hljs-attribute\">align-items</span>: center;\n            <span class=\"hljs-attribute\">height</span>: <span class=\"hljs-number\">100vh</span>;\n            <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#f0f0f0</span>;\n            <span class=\"hljs-attribute\">margin</span>: <span class=\"hljs-number\">0</span>;\n        }\n        <span class=\"hljs-selector-class\">.logo-container</span> {\n            <span class=\"hljs-attribute\">display</span>: flex;\n            <span class=\"hljs-attribute\">align-items</span>: center;\n            <span class=\"hljs-attribute\">justify-content</span>: center;\n            <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#003d6a</span>;\n            <span class=\"hljs-attribute\">border-radius</span>: <span class=\"hljs-number\">8px</span>;\n            <span class=\"hljs-attribute\">padding</span>: <span class=\"hljs-number\">16px</span>;\n        }\n        <span class=\"hljs-selector-class\">.logo</span> {\n            <span class=\"hljs-attribute\">font-size</span>: <span class=\"hljs-number\">48px</span>;\n            <span class=\"hljs-attribute\">color</span>: <span class=\"hljs-number\">#ffffff</span>;\n            <span class=\"hljs-attribute\">margin-right</span>: <span class=\"hljs-number\">16px</span>;\n        }\n        <span class=\"hljs-selector-class\">.powered-by</span> {\n            <span class=\"hljs-attribute\">font-size</span>: <span class=\"hljs-number\">18px</span>;\n            <span class=\"hljs-attribute\">color</span>: <span class=\"hljs-number\">#d0d0d0</span>;\n            <span class=\"hljs-attribute\">margin-top</span>: <span class=\"hljs-number\">8px</span>;\n        }\n    </span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">style</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">head</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">body</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"logo-container\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"logo\"</span> <span class=\"hljs-attr\">id</span>=<span class=\"hljs-string\">\"logo\"</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span>&gt;</span>Open Source Repository<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"powered-by\"</span>&gt;</span>Powered by MAIF<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">script</span>&gt;</span><span class=\"javascript\">\n        <span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">generateMelusineLogo</span>(<span class=\"hljs-params\"></span>) {\n            <span class=\"hljs-keyword\">const</span> melusineText = <span class=\"hljs-string\">'MELUSINE'</span>;\n            <span class=\"hljs-keyword\">const</span> melusineLogo = melusineText.<span class=\"hljs-title function_\">split</span>(<span class=\"hljs-string\">''</span>).<span class=\"hljs-title function_\">map</span>(<span class=\"hljs-function\">(<span class=\"hljs-params\">letter, index</span>) =&gt;</span> {\n                <span class=\"hljs-keyword\">if</span> (index % <span class=\"hljs-number\">2</span> === <span class=\"hljs-number\">0</span>) {\n                    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">`&lt;span style=\"color: #ffcc00;\"&gt;<span class=\"hljs-subst\">${letter}</span>&lt;/span&gt;`</span>;\n                } <span class=\"hljs-keyword\">else</span> {\n                    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">`&lt;span&gt;<span class=\"hljs-subst\">${letter}</span>&lt;/span&gt;`</span>;\n                }\n            }).<span class=\"hljs-title function_\">join</span>(<span class=\"hljs-string\">''</span>);\n\n            <span class=\"hljs-keyword\">return</span> melusineLogo;\n        }\n\n        <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">getElementById</span>(<span class=\"hljs-string\">'logo'</span>).<span class=\"hljs-property\">innerHTML</span> = <span class=\"hljs-title function_\">generateMelusineLogo</span>();\n    </span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">script</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">body</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">html</span>&gt;</span>\n</code></div></div></pre><p>This code creates a simple logo with the name \"MELUSINE\" in alternating colors of yellow and white, followed by the text \"Open Source Repository\" and \"Powered by MAIF\" below it. The logo is centered on the page with a dark blue background.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you remove the \"open source repository\" part of the image and replace it \"OSS since 1934\" but for 1934, use roman numerals"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, I've made the requested changes to the code. Here's the updated HTML, CSS, and JavaScript code:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>html</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-html\"><span class=\"hljs-meta\">&lt;!DOCTYPE <span class=\"hljs-keyword\">html</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">html</span> <span class=\"hljs-attr\">lang</span>=<span class=\"hljs-string\">\"en\"</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">head</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">charset</span>=<span class=\"hljs-string\">\"UTF-8\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">meta</span> <span class=\"hljs-attr\">name</span>=<span class=\"hljs-string\">\"viewport\"</span> <span class=\"hljs-attr\">content</span>=<span class=\"hljs-string\">\"width=device-width, initial-scale=1.0\"</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">title</span>&gt;</span>Melusine Logo<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">title</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">style</span>&gt;</span><span class=\"css\">\n        <span class=\"hljs-selector-tag\">body</span> {\n            <span class=\"hljs-attribute\">display</span>: flex;\n            <span class=\"hljs-attribute\">justify-content</span>: center;\n            <span class=\"hljs-attribute\">align-items</span>: center;\n            <span class=\"hljs-attribute\">height</span>: <span class=\"hljs-number\">100vh</span>;\n            <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#f0f0f0</span>;\n            <span class=\"hljs-attribute\">margin</span>: <span class=\"hljs-number\">0</span>;\n        }\n        <span class=\"hljs-selector-class\">.logo-container</span> {\n            <span class=\"hljs-attribute\">display</span>: flex;\n            <span class=\"hljs-attribute\">align-items</span>: center;\n            <span class=\"hljs-attribute\">justify-content</span>: center;\n            <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#003d6a</span>;\n            <span class=\"hljs-attribute\">border-radius</span>: <span class=\"hljs-number\">8px</span>;\n            <span class=\"hljs-attribute\">padding</span>: <span class=\"hljs-number\">16px</span>;\n        }\n        <span class=\"hljs-selector-class\">.logo</span> {\n            <span class=\"hljs-attribute\">font-size</span>: <span class=\"hljs-number\">48px</span>;\n            <span class=\"hljs-attribute\">color</span>: <span class=\"hljs-number\">#ffffff</span>;\n            <span class=\"hljs-attribute\">margin-right</span>: <span class=\"hljs-number\">16px</span>;\n        }\n        <span class=\"hljs-selector-class\">.powered-by</span> {\n            <span class=\"hljs-attribute\">font-size</span>: <span class=\"hljs-number\">18px</span>;\n            <span class=\"hljs-attribute\">color</span>: <span class=\"hljs-number\">#d0d0d0</span>;\n            <span class=\"hljs-attribute\">margin-top</span>: <span class=\"hljs-number\">8px</span>;\n        }\n    </span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">style</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">head</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">body</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"logo-container\"</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"logo\"</span> <span class=\"hljs-attr\">id</span>=<span class=\"hljs-string\">\"logo\"</span>&gt;</span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span>&gt;</span>OSS since MCMXXXIV<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n            <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">div</span> <span class=\"hljs-attr\">class</span>=<span class=\"hljs-string\">\"powered-by\"</span>&gt;</span>Powered by MAIF<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n        <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">div</span>&gt;</span>\n\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">script</span>&gt;</span><span class=\"javascript\">\n        <span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">generateMelusineLogo</span>(<span class=\"hljs-params\"></span>) {\n            <span class=\"hljs-keyword\">const</span> melusineText = <span class=\"hljs-string\">'MELUSINE'</span>;\n            <span class=\"hljs-keyword\">const</span> melusineLogo = melusineText.<span class=\"hljs-title function_\">split</span>(<span class=\"hljs-string\">''</span>).<span class=\"hljs-title function_\">map</span>(<span class=\"hljs-function\">(<span class=\"hljs-params\">letter, index</span>) =&gt;</span> {\n                <span class=\"hljs-keyword\">if</span> (index % <span class=\"hljs-number\">2</span> === <span class=\"hljs-number\">0</span>) {\n                    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">`&lt;span style=\"color: #ffcc00;\"&gt;<span class=\"hljs-subst\">${letter}</span>&lt;/span&gt;`</span>;\n                } <span class=\"hljs-keyword\">else</span> {\n                    <span class=\"hljs-keyword\">return</span> <span class=\"hljs-string\">`&lt;span&gt;<span class=\"hljs-subst\">${letter}</span>&lt;/span&gt;`</span>;\n                }\n            }).<span class=\"hljs-title function_\">join</span>(<span class=\"hljs-string\">''</span>);\n\n            <span class=\"hljs-keyword\">return</span> melusineLogo;\n        }\n\n        <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">getElementById</span>(<span class=\"hljs-string\">'logo'</span>).<span class=\"hljs-property\">innerHTML</span> = <span class=\"hljs-title function_\">generateMelusineLogo</span>();\n    </span><span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">script</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">body</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">html</span>&gt;</span>\n</code></div></div></pre><p>I have removed the \"Open Source Repository\" text and replaced it with \"OSS since MCMXXXIV\". The Roman numeral for 1934 is \"MCMXXXIV\". The rest of the logo remains unchanged.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 08:03"
+    },
+    {
+      "session_id": "sharegpt_15846",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Table schema for farm\n+----------------------------+\n|  column_names |column_types|\n+---------------+------------+\n|    city_id    |   number   |\n+---------------+------------+\n| official_name |    text    |\n+---------------+------------+\n|     status    |    text    |\n+---------------+------------+\n|   area_km_2   |   number   |\n+---------------+------------+\n|   population  |   number   |\n+---------------+------------+\n| census_ranking|    text    |\n+---------------+------------+\n|    farm_id    |   number   |\n+---------------+------------+\n|      year     |   number   |\n+---------------+------------+\n|  total_horses |   number   |\n+---------------+------------+\n| working_horses|   number   |\n+---------------+------------+\n|  total_cattle |   number   |\n+---------------+------------+\n|      oxen     |   number   |\n+---------------+------------+\n|     bulls     |   number   |\n+---------------+------------+\n|      cows     |   number   |\n+---------------+------------+\n|      pigs     |   number   |\n+---------------+------------+\n|sheep_and_goats|   number   |\n+---------------+------------+\n| competition_id|   number   |\n+---------------+------------+\n|      year     |   number   |\n+---------------+------------+\n|     theme     |    text    |\n+---------------+------------+\n|  host_city_id |   number   |\n+---------------+------------+\n|     hosts     |    text    |\n+---------------+------------+\n| competition_id|   number   |\n+---------------+------------+\n|    farm_id    |   number   |\n+---------------+------------+\n|      rank     |   number   |\n+----------------------------+\nWrite the SQL for this question:  Please show the themes of competitions with host cities having populations larger than 1000."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here is the SQL query to show the themes of competitions with host cities having populations larger than 1000:</p><pre><div><div>Copy code</div><div><code><span>SELECT</span> theme\n<span>FROM</span> competitions c\n<span>JOIN</span> cities hc <span>ON</span> c.host_city_id = hc.city_id\n<span>WHERE</span> hc.population &gt; <span>1000</span>;\n</code></div></div></pre><p>This query will join the <code>competitions</code> table and the <code>cities</code> table on the <code>host_city_id</code> column, and it will only return rows from the <code>competitions</code> table where the population of the corresponding city in the <code>cities</code> table is greater than 1000. The <code>theme</code> column from the <code>competitions</code> table will be selected in the final result set.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Write the SQL for this question:  What is the status of the city that has hosted the most competitions?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here is the SQL query to show the status of the city that has hosted the most competitions:</p><pre><div><div>Copy code</div><div><code><span>SELECT</span> c1.status\n<span>FROM</span> cities c1\n<span>JOIN</span> (\n  <span>SELECT</span> host_city_id, COUNT(*) <span>as</span> num_competitions\n  <span>FROM</span> competitions\n  <span>GROUP</span> <span>BY</span> host_city_id\n  <span>ORDER</span> <span>BY</span> num_competitions DESC\n  LIMIT <span>1</span>\n) c2\n<span>ON</span> c1.city_id = c2.host_city_id;\n</code></div></div></pre><p>This query will join the <code>cities</code> table and a subquery that counts the number of competitions hosted by each city. The subquery will select the <code>host_city_id</code> column and use the <code>COUNT</code> function to count the number of rows for each <code>host_city_id</code>, and it will group the results by <code>host_city_id</code> and order them by the number of competitions in descending order. The subquery will then take the top result by using the <code>LIMIT 1</code> clause.</p><p>The <code>cities</code> table will be joined to the subquery on the <code>city_id</code> column, and the <code>status</code> column from the <code>cities</code> table will be selected in the final result set. This will return the status of the city that has hosted the most competitions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 20:40"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's code review policy is 1 approval + CI green. It's pretty straightforward, but it keeps things moving along efficiently. Do you have any tips on best practices for code reviews?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid foundation with your code review policy. One best practice is to encourage constructive feedback that focuses not just on potential issues, but also on what’s working well in the code. It can also be helpful to establish a checklist of common things to look for, like readability, maintainability, and adherence to coding standards, to ensure consistency. Additionally, setting a time limit for reviews can help keep the process efficient and avoid bottlenecks. How does your team typically handle feedback from the reviews?"
+        },
+        {
+          "role": "user",
+          "content": "We usually have a quick sync after reviews, especially if there are significant changes suggested. It helps to clarify things and get everyone on the same page. Speaking of syncs, do you think it's beneficial to have a dedicated time for reviews, or is it better to keep it flexible?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a dedicated time for reviews can definitely help streamline the process, as it sets clear expectations for when team members should focus on providing feedback. This can also minimize interruptions and help maintain momentum. However, keeping it flexible might work better for teams that have variable workloads or prefer to integrate reviews into their daily routines. It really depends on your team's dynamics and preferences. Have you noticed any patterns in how your team engages with reviews that might suggest a preference for one approach over the other?"
+        },
+        {
+          "role": "user",
+          "content": "Now the sprint deadline is 2025 June 20. This gives us a clear target to work towards. How do you usually manage the sprint planning process? Any tools or techniques you use to keep track of progress?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear deadline is a great way to keep the team focused and motivated. For sprint planning, it can be beneficial to involve the whole team in defining the sprint goals and estimating tasks to ensure everyone is aligned. Using visual tools like Kanban boards or sprint burndown charts can help track progress and identify any bottlenecks early on. Regular check-ins during the sprint, even if brief, can also keep everyone accountable and provide an opportunity to adjust priorities if needed. What methods have you found effective for tracking progress so far?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at dev.orinthal.dev/aurora. This is where we test features before going live. Do you have any recommendations for setting up a staging environment? What configurations or practices should I consider to ensure it mirrors production closely?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a dedicated staging environment for testing features. To ensure it closely mirrors production, consider replicating the same configurations, including software versions, environment variables, and database schema. Using a similar server setup can also help identify any environment-specific issues before deployment. Regularly syncing data from production to staging, while anonymizing sensitive information, can provide a more realistic testing scenario. Additionally, implementing automated tests in your staging environment can help catch issues early. Have you encountered any specific challenges with your current staging setup?"
+        },
+        {
+          "role": "user",
+          "content": "The team's on-call rotation is volunteer-based with weekly signup. This approach can encourage team members to take ownership and share the load, but it can also lead to uneven distribution of on-call duties. What practices do you use to ensure that the on-call process is manageable and that everyone feels supported during their shifts?"
+        },
+        {
+          "role": "assistant",
+          "content": "A volunteer-based on-call rotation can certainly foster a sense of ownership among team members. To keep the process manageable and equitable, it’s helpful to establish clear guidelines and expectations for on-call responsibilities. Providing comprehensive documentation and runbooks can empower team members to handle incidents more effectively and reduce stress during their shifts. Regularly checking in with the team about their experiences can also provide valuable feedback and help adjust the process as needed. Additionally, consider implementing a buddy system where team members can reach out for assistance if they encounter particularly challenging issues. How has your team felt about the current on-call arrangement?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "code_review_policy",
+          "value": "1 approval + CI green",
+          "original_seed": "Our code review policy is 1 approval + CI green",
+          "fact_text": "The team's code review policy is 1 approval + CI green.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 20",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 June 20",
+          "fact_text": "Now the sprint deadline is 2025 June 20.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "staging_url",
+          "value": "dev.orinthal.dev/aurora",
+          "original_seed": "Staging is at dev.orinthal.dev/aurora",
+          "fact_text": "Staging is at dev.orinthal.dev/aurora.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "oncall_rotation",
+          "value": "volunteer-based with weekly signup",
+          "original_seed": "Our on-call rotation is volunteer-based with weekly signup",
+          "fact_text": "The team's on-call rotation is volunteer-based with weekly signup.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 10:39"
+    },
+    {
+      "session_id": "sharegpt_24427",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I want you to act as a UX/UI developer. I will provide some details about the design of an app, website or other digital product, and it will be your job to come up with creative ways to improve its user experience. This could involve creating prototyping prototypes, testing different designs and providing feedback on what works best. My first request is \"\"Write a Guide to establish an Design System\"\" Gudieline (How to Build a Design System: 10-Step Guide\nNick Babich\nonWeb Design\nUpdated on: 21.02.22\n10\nDesign systems help to streamline the product design process and make it more transparent and predictable. In this article, we will explore the concept of design systems and key steps to building new design systems.\n\nDesign is increasingly becoming more complex. Modern design processes require having a tight cross-functional collaboration between all teams involved in the creation of the product. When the time to market plays such an essential role in product development, design teams strive to optimize the process to create products fast but without sacrificing user experience.\n\nTo make this happen, product teams change the way they design digital products — they introduce design systems to make the design process more transparent and predictable.\n\nIn this article, we will explore the concept of design systems and key steps to building new design systems.\n\nApply Your Design System Using Elementor’s Theme Style\nWhat Is a Design System?\nA design system is a collection of reusable components, guided by clear practices,   enables a product team to create a product faster. Think of a design system as a single source of truth for the product teams allowing them to design and develop products. \n\nMany designers find themselves wondering about what they should include in their Design System. Every organization has different needs, and it’s impossible to provide a universal list of elements that every design system should use. However, there are some elements that many design systems share:\n\nComponents and patterns\n\nComponents are functional elements of design. Think of them as building blocks of your design system. Combined, the components form libraries that designers refer to and use when they create products.\n\nPatterns are the protocols that provide a form of construction manual for designers to refer to when using components.\n\nStyle guides\n\nStyle guides are deliverables that focus on graphic styles (colors, fonts, illustrations) and their usage. Styles guides should be created in consideration of brand values (i.e., using brand colors for functional elements such as call-to-action buttons). \n\nDesign principles\n\nDesign principles are the guiding rules that help the teams to make meaningful design decisions. Design principles reflect the shared beliefs of the design team. \n\nHow to Build a Design System in 10 Steps\nSteps:\n1. Analyze Your Current Design Process\n2. Identify the Brand’s Alphabet\n3. Conduct a UI Audit\n4. Define Design Principles\n5. Create Component/Pattern Library\n6. Define Rules\n7. Establish a Governance Strategy\n8. Define the Structure of Elements\n9. Ensure That All Teams Use the Shared Language\n10. Communicate Changes\n1. Analyze Your Current Design Process\nTo better understand the kind of design system you would like to implement, you need to start by reviewing and analyzing the current approach for design at your company. Find the answers to the following questions:\n\nWhat is the design process that your company follows?\nWhat are the existing tools that your company uses?\nIt’s also recommended to evaluate the level of design maturity of the product teams. This knowledge will help you estimate the time required to introduce the system to your organization. \n\n2. Identify the Brand’s Alphabet\nThe visual language that designers will use should be based on the alphabet of a brand. The alphabet includes brand identity (brand and product values) and brand language (colors, fonts, shapes, animations, voice, and tone). Define a brand’s identity, as well as its language, by reviewing the brand’s guidelines and interviewing stakeholders, then refer to this information when you work on design principles and style guides.\n\n3. Conduct a UI Audit\nOne of the most dangerous problems in product design is design duplication, which leads to fragmentation, and fragmentation leads to inconsistency. Identifying duplication of design elements helps a team to avoid the scenario in which team members build an element from scratch only to find that a similar version of it already exists.\n\nThat’s why classifying all the visual components within the product should be the first task that the design team does before building a design system. You need to look at the visual qualities of your design elements. This activity has two goals:\n\nHighlight the areas with the most significant inconsistencies within the product.\nIdentify the most important and most used elements and components of the product.\nA UI audit is a multi-step process. It’s essential to identify principal UI properties such as colors, fonts, imagery first, and only then, analyze how these properties are to be used in the components. Use a tool like CSS Stats to see how many unique colors, typefaces you have in your style sheets.\n\nGoogle's background colors\nGoogle.com has 62 unique background colors.\nAfter you have information about styling, you can explore the components. Brad Frost’s Atomic Design methodology will help you to break down every web page into individual elements (atoms, molecules, and organisms).\n\nBrad Frost’s Atomic Design methodology\nBrad Frost’s Atomic Design methodology\n4. Define Design Principles\nUnderstanding the reasons behind design decisions is critical to creating an exceptional user experience. That’s why when it comes to establishing the design principles for a system, it’s essential to coordinate teams around a clear set of goals to maintain consistency and balance. \n\nDesign principles should answer three fundamental questions: \n\nWhat we are building, \nWhy we are building it\nHow will we build it\nIt’s vital for design principles to genuinely reflect the values of your organization and be with the overall vision.\n\n5. Create Component/Pattern Library\nCollect all functional and decorative parts of your UI — input fields, buttons, forms, images, to name a few — evaluate them according to the needs of the project (in accordance with user needs/business goals), and leave only what you need.\n\n6. Define Rules\nOne of the main goals of a design system is to extend the creative direction. The system should not lock designers in a particular design direction. Instead, it should give designers and developers a framework that provides enough freedom to explore various approaches before they select one to follow.\n\nIn her book, “Design Systems”, Alla Kholmatova defines two types of rules:\n\nStrict rules. Designers have to follow a rigorous process for introducing new components and patterns in the design system.\nLoose rules. Loose rules act more like recommendations, rather than strict constraints. Designers and developers can skip the rules when they believe that without the rules, they can create a better design. \nBy finding a balance between strict and loose rules, we find a sweet spot between strictness and flexibility.\n\n7. Establish a Governance Strategy\nDesign systems are dynamic, and they are always evolving. That’s why it’s crucial to define the process of approving changes in your design system. Creating a clear governance strategy is essential to making sure that your design system can adapt to changes. \n\nIn the article, Team Models for Scaling a Design System, Nathan Curtis defines three different models of governance:\n\n1. Solitary model: In this model, an “overlord” (a directly responsible individual or a group of individuals) rules the design system.\n\nthe solitary model illustration\nIn the solitary model, the overlord makes a system available. Image: Nathan Curtis.\n2. Centralized model: In this model, one team is in charge of the system and guides its evolution.\n\nthe centralized model illustration\nIn the centralized model, a central design team produces and supports a system for other teams. Image: Nathan Curtis.\n3. Federated model: In this model, several people from several teams are in charge of the system.\n\nthe federated model illustration\nIn the Federated model, designers from multiple product teams work on the system together. Image: Nathan Curtis.\nEach of the models has strengths and weaknesses, but the solitary model is the most fragile among them because it has a built-in risk — when one person is in charge of so much, that person can quickly become a bottleneck to the completion of many tasks. \n\nIn many cases, it’s possible to use a combination of models. For instance, the Salesforce team’s model is a combination of centralized and federated models. Salesforce’s Lightning Design System has a core team responsible for managing the system, but there are also contributors who act as a federation of practitioners.\n\n8. Define the Structure of Elements\nMany design systems suffer from the duplication of functional elements— team members create components that are too focused on a single-use case. As a result, the system becomes inflexible, and its users (designers and developers) have to create new components each time they need to cover a new scenario.\n\nIf we analyze any successful design system like Material Design, we notice that such systems are highly reusable. High reusability allows designers and developers to use Material Design as the foundation for their products.\n\nIt’s recommended to develop components that are not tied to a single-use case but can be reused in multiple contexts. To be reusable and scalable, components need to be the following:\n\nModular. Modular components are self-contained — they don’t have any dependencies. Modularity helps to create reusable and interchangeable components. \nComposable. It’s possible to create new components by combining existing components.\nCustomizable. It’s possible to adjust and extend components to make them work in a variety of contexts.\n9. Ensure That All Teams Use the Shared Language\nThe fundamental purpose of a design system is to facilitate the work of the teams, which is why encouraging everyone to use it is even more important than building one. Design systems should be integrated into the teams’ workflow, become a key part of a designer’s and developer’s daily productivity, and deliver value to the team members.\n\nIf you’ve just started incorporating a design system into your organization’s design process, conduct a series of interviews to understand how people use it, and use this information to adjust your design system. \n\n10. Communicate Changes\nA design system isn’t a static collection of artifacts; it is a by-product of your product design that evolves together with the organization. Once the teams start to use a design system, it’s vital to communicate changes and updates to the entire organization. Ship updates regularly and with a changelog. The log should tell users what changes were introduced in the new version and how the upgrades will impact their work.\n\nSalesforce design system's what's new page\nLightning Design System by Salesforce has a built-in page “What’s New” that contains information about the changes that were introduced to the design system\nExamples of Design Systems\nHere is a couple of popular design systems.  \n\nMaterial Design by Google\nMaterial Design is a design language developed by Google in 2014. The idea of creating this design language was simple — to give designers and developers a tool that will allow them to create intuitive and beautiful products. Material Design is a very adaptable system that can be used for various products.\n\nMaterial Design by Google\nLightning Design System by Salesforce\nLightning Design System enables product teams to build rich enterprise experiences and custom applications with the patterns and establish best practices that are native to Salesforce.\n\nLightning Design System by Salesforce\nConclusion\nA well-crafted design system serves as a North Star to your product development. It becomes a part of an organization’s DNA that helps product teams produce more consistent user experiences and amplifies a design-driven culture. Design systems encourage people who work on the product to look beyond the building blocks and to think about the purpose of their design\n)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Building a design system can greatly benefit product development by streamlining the design process and ensuring consistency across different teams and products. Here is a guide on how to build a design system in 10 steps:</p><ol><li><p>Analyze Your Current Design Process: Review and analyze your current design process and identify the tools your company uses. Evaluate the level of design maturity of your product teams to estimate the time required to introduce the system to your organization.</p></li><li><p>Identify the Brand’s Alphabet: Define the brand’s identity and language by reviewing brand guidelines and interviewing stakeholders. Use this information when you work on design principles and style guides.</p></li><li><p>Conduct a UI Audit: Classify all visual components within the product to avoid design duplication and fragmentation. Identify the most important and most used elements and components of the product.</p></li><li><p>Define Design Principles: Coordinate teams around a clear set of goals to maintain consistency and balance. Design principles should answer three fundamental questions: what, why, and how.</p></li><li><p>Create Component/Pattern Library: Collect all functional and decorative parts of your UI and evaluate them according to user needs and business goals. Leave only what you need.</p></li><li><p>Define Rules: Strike a balance between strict and loose rules to extend creative direction while still providing enough freedom to explore different approaches.</p></li><li><p>Establish a Governance Strategy: Define the process of approving changes in your design system to ensure it can adapt to changes. Consider a combination of governance models to avoid bottlenecking.</p></li><li><p>Define the Structure of Elements: Develop components that are reusable, scalable, modular, composable, and customizable.</p></li><li><p>Ensure That All Teams Use the Shared Language: Encourage everyone to use the design system by integrating it into their workflow and making it a key part of their productivity.</p></li><li><p>Communicate Changes: A design system evolves with the organization, so communicate changes and updates regularly with a changelog.</p></li></ol><p>Remember that every organization has different needs, and it’s impossible to provide a universal list of elements that every design system should use. However, components and patterns, style guides, and design principles are elements that many design systems share. By following these 10 steps, you can establish a well-crafted design system that serves as a North Star to your product development.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "which Design System is a reference"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>There are several design systems that serve as excellent references for building your own design system. Here are a few popular ones:</p><ol><li><p>Material Design by Google: Material Design is a design language developed by Google in 2014. It provides guidelines for designing digital products across different platforms and devices. Material Design is a very adaptable system that can be used for various products.</p></li><li><p>Lightning Design System by Salesforce: Lightning Design System enables product teams to build rich enterprise experiences and custom applications with patterns and best practices that are native to Salesforce.</p></li><li><p>IBM Design Language: The IBM Design Language is a comprehensive system that includes guidelines, resources, and tools to create products that meet the needs of users.</p></li><li><p>Atlassian Design Guidelines: Atlassian's design system provides a comprehensive set of guidelines and components for building products across different platforms.</p></li><li><p>Shopify Polaris Design System: Shopify's Polaris Design System provides a unified design language for building products across Shopify's ecosystem.</p></li></ol><p>These design systems provide excellent examples of how to create a cohesive and effective design system for your organization. However, it's important to remember that each organization's design system will be unique to its own needs and goals.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "more design systems"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here are a few more design systems that are widely recognized and can serve as references:</p><ol><li><p>Microsoft Fluent Design System: Microsoft's Fluent Design System provides guidelines, tools, and controls for creating immersive and engaging user experiences across Windows, Android, iOS, and the web.</p></li><li><p>Apple Human Interface Guidelines: Apple's Human Interface Guidelines provide design principles and guidelines for creating intuitive and beautiful user interfaces for iOS, macOS, watchOS, and tvOS.</p></li><li><p>Airbnb Design Language System: Airbnb's Design Language System provides a comprehensive set of design guidelines, components, and tools to create a consistent and delightful user experience across their products.</p></li><li><p>Carbon Design System by IBM: Carbon Design System provides a set of guidelines, components, and patterns to create consistent and scalable user interfaces across IBM's products.</p></li><li><p>Ant Design System: Ant Design System is a design system developed by Ant Financial, a subsidiary of Alibaba Group. It provides a set of guidelines and components to create beautiful and efficient user interfaces.</p></li></ol><p>These design systems offer a range of approaches and elements that can be applied to create a unique and effective design system for your organization. However, keep in mind that a design system should be tailored to your organization's specific needs and goals.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Which design system uses the concept of headlessUI"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>HeadlessUI is actually a collection of fully accessible and composable UI components, rather than a full-fledged design system. HeadlessUI is an open-source project that provides a set of customizable and reusable UI components that can be used to create user interfaces that adhere to accessibility standards.</p><p>HeadlessUI does not have a specific design language or visual style, but rather provides low-level building blocks that can be used to create custom user interfaces. HeadlessUI components can be integrated into existing design systems or used to create new ones.</p><p>HeadlessUI is commonly used in conjunction with other design systems, such as Tailwind CSS or Bootstrap, to provide fully accessible and customizable UI components.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Name some headlessUI collections"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here are some of the collections of UI components provided by HeadlessUI:</p><ol><li><p><code>@headlessui/react</code>: This collection provides a set of UI components that can be used with React, including components for dropdowns, modals, toggles, and more.</p></li><li><p><code>@headlessui/vue</code>: This collection provides a set of UI components that can be used with Vue.js, including components for modals, popovers, and more.</p></li><li><p><code>@headlessui/react-router</code>: This collection provides a set of UI components that can be used with React Router, including components for links and navigation menus.</p></li><li><p><code>@headlessui/angular</code>: This collection provides a set of UI components that can be used with Angular, including components for modals, tooltips, and more.</p></li><li><p><code>@headlessui/web-components</code>: This collection provides a set of UI components that can be used with web components, including components for tabs, modals, and more.</p></li></ol><p>These collections provide a range of accessible and customizable UI components that can be used to create a variety of user interfaces.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "more"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here are some additional collections of UI components provided by HeadlessUI:</p><ol><li><p><code>@headlessui/react-datepicker</code>: This collection provides a set of UI components for building date pickers in React, including components for selecting dates, months, and years.</p></li><li><p><code>@headlessui/react-pagination</code>: This collection provides a set of UI components for building pagination controls in React, including components for rendering page numbers and navigation buttons.</p></li><li><p><code>@headlessui/react-slider</code>: This collection provides a set of UI components for building sliders in React, including components for range sliders and sliders with tooltips.</p></li><li><p><code>@headlessui/react-tabs</code>: This collection provides a set of UI components for building tabs in React, including components for vertical tabs and tabs with custom styling.</p></li><li><p><code>@headlessui/react-toast</code>: This collection provides a set of UI components for building toast notifications in React, including components for success, error, and warning notifications.</p></li></ol><p>These collections provide a range of additional UI components that can be used to create even more complex and feature-rich user interfaces, while still adhering to accessibility standards.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "What about Adobe Spectrum?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Adobe Spectrum is a design system created by Adobe, which provides a set of guidelines and resources for designing and developing consistent and cohesive user interfaces across Adobe's suite of products and services.</p><p>Spectrum includes a range of UI components, design guidelines, and code snippets that can be used to create visually appealing and easy-to-use interfaces that adhere to accessibility and usability best practices. The system is designed to be flexible and modular, allowing designers and developers to mix and match components to suit their specific needs.</p><p>The Spectrum design language is based on five core principles: clarity, simplicity, consistency, efficiency, and empathy. These principles are reflected in the design of the components and the guidelines for using them.</p><p>The system includes components such as buttons, menus, modals, tabs, and more, as well as design guidelines for typography, color, layout, and iconography. Spectrum also includes code snippets and frameworks for implementing the components in various development environments, such as React, Angular, and Vue.js.</p><p>Spectrum is primarily used by Adobe's internal product teams, but it is also available to the public as an open-source project. The system is constantly evolving and being updated to reflect changes in design trends and technologies.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 19:27"
+    },
+    {
+      "session_id": "sharegpt_25115",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "tell me full electric circuit"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A full electric circuit includes a power source (such as a battery or generator), a conductor (such as a wire), and a device that uses electricity (such as a light bulb or motor). The power source provides a flow of electrical energy, which flows through the conductor and into the device. The device then converts the electrical energy into a useful form, such as light or motion. In a complete circuit, the electrical energy flows from the power source, through the device, and back to the power source, creating a continuous loop. The key components of a full electric circuit are a power source, conductors, and a load.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what happens when two bulbs are in parallel connection"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>When two bulbs are connected in parallel, they are connected to the same power source, but each bulb has its own separate electrical path. This means that the electrical current is divided between the two bulbs, and each bulb receives the same voltage as the power source.</p><p>In this configuration, if one bulb burns out, the other bulb will continue to function because they are connected separately. Also, the brightness of each bulb will not be affected by the other bulb, so if one bulb is brighter or dimmer, it will not affect the other.</p><p>In summary, in parallel connection, the current is divided among the connected devices, and each device receives the same voltage as the source, and devices work independently of each other.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what do you understand by parallel combination of bulbs"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>A parallel combination of bulbs refers to a configuration in which multiple light bulbs are connected to the same electrical power source, but each bulb has its own separate electrical path. This means that the electrical current is divided between the bulbs, and each bulb receives the same voltage as the power source. This is opposed to a series combination of bulbs, in which the bulbs are connected in a chain, and the current flows through each bulb in sequence, and the voltage is divided among the bulbs.</p><p>In a parallel combination, each bulb is connected directly to the power source, and each bulb has its own separate electrical path. This means that if one bulb burns out or is removed, the other bulbs will continue to function because they are connected separately. Also, the brightness of each bulb will not be affected by the other bulbs, so if one bulb is brighter or dimmer, it will not affect the other.</p><p>In summary, the parallel combination of bulbs is a configuration in which multiple light bulbs are connected separately to the same power source and the current is divided among the bulbs. This configuration has the advantage of allowing the individual bulbs to function independently of each other.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what happens to brightness of both bulbs"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>In a parallel combination of bulbs, the brightness of each bulb is not affected by the other bulbs. Each bulb has its own separate electrical path, and the electrical current is divided between the bulbs. This means that each bulb receives the same voltage as the power source, and the current flowing through each bulb is determined by the resistance of that individual bulb.</p><p>The brightness of a bulb is determined by the amount of current flowing through it, so if each bulb has the same resistance and is connected to the same power source, they will have the same brightness.</p><p>It is important to note that, if the bulbs have different resistance, the bulb with the lower resistance will receive more current and will be brighter than the bulb with the higher resistance.</p><p>In summary, in a parallel combination of bulbs, each bulb receives the same voltage from the power source, and the current flowing through each bulb is determined by the resistance of that individual bulb, so each bulb will have the same brightness if they have the same resistance otherwise the bulb with lower resistance will be brighter than the one with higher resistance.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 21:56"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to logs.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid setup! Just keep an eye on log retention policies and ensure you have proper monitoring in place for any anomalies. Have you faced any issues with log management before?"
+        },
+        {
+          "role": "user",
+          "content": "Monitoring dashboard is at status.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like you’ve got everything mapped out! Just make sure your dashboard is regularly updated and that alerts are set up for any critical metrics. Have you had any specific challenges with the monitoring setup?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is orinthal-registry/aurora:deploy — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a clear setup! Just ensure you keep your images well-tagged and consider automating the build process to catch issues early. Have you had any deployment hiccups with the Docker images so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice, having a dedicated CI config helps! Just make sure to keep it updated with any changes in dependencies and run regular tests to catch any issues. Have you optimized your CI pipeline for speed yet?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at infra/orinthal/Dockerfile — this is determined by the fact that our image is orinthal-registry/aurora:deploy; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Great to know where it's located! Just keep an eye on layer caching to speed up builds and ensure you're using the best practices for your Dockerfile to minimize image size. Have you done any performance tuning on it yet?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is orinthal publish --tier sandbox — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds straightforward! Just make sure your sandbox environment mirrors production as closely as possible to catch any potential issues early. Have you encountered any surprises during deployments to the sandbox?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error looks like an index issue, probably related to accessing an array or vector that's empty. You might want to add some checks to ensure the index is valid before accessing it. Have you looked into the specific code around that line to see what might be causing the empty state?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be velturis-ci.json. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching to a new CI config sounds like a big change! Just make sure to thoroughly test the new configuration to catch any discrepancies and ensure it aligns with your deployment process. Have you already mapped out the differences between the old and new configs?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, monitoring will be at metrics.thandrel.io/aurora-prod. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just ensure that your new monitoring setup can handle the metrics you need and that alerts are configured properly for the new environment. Have you considered how you'll transition the existing data to the new metrics setup?"
+        },
+        {
+          "role": "user",
+          "content": "If the CI config changes, the deploy command will be velturis deploy --region us-east. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid plan! Just make sure to verify that all necessary environment variables and configurations are set for the new deploy command, especially for the region. Have you tested the command in a staging environment yet?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "log_drain_endpoint",
+          "value": "logs.korinth.dev/aurora",
+          "original_seed": "Logs drain to logs.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "fact_text": "Logs drain to logs.korinth.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "monitoring_url",
+          "value": "status.orinthal.dev/aurora",
+          "original_seed": "Monitoring dashboard is at status.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "fact_text": "Monitoring dashboard is at status.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "orinthal-registry/aurora:deploy",
+          "original_seed": "Our Docker image is orinthal-registry/aurora:deploy — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "fact_text": "Our Docker image is orinthal-registry/aurora:deploy — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "fact_text": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Thandrel Infra); if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 5,
+          "entity": "dockerfile_path",
+          "value": "infra/orinthal/Dockerfile",
+          "original_seed": "The Dockerfile is at infra/orinthal/Dockerfile — this is determined by the fact that our image is orinthal-registry/aurora:deploy; if that changes, this would change",
+          "fact_text": "The Dockerfile is at infra/orinthal/Dockerfile — this is determined by the fact that our image is orinthal-registry/aurora:deploy; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "deploy_command",
+          "value": "orinthal publish --tier sandbox",
+          "original_seed": "The deploy command is orinthal publish --tier sandbox — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "fact_text": "The deploy command is orinthal publish --tier sandbox — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 7,
+          "entity": "error_log",
+          "value": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z.\"",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 8,
+          "entity": "ci_config",
+          "value": "velturis-ci.json",
+          "original_seed": "If we change deploy targets, the CI config will be velturis-ci.json",
+          "fact_text": "If we change deploy targets, the CI config will be velturis-ci.json",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "monitoring_url",
+          "value": "metrics.thandrel.io/aurora-prod",
+          "original_seed": "If we change deploy targets, monitoring will be at metrics.thandrel.io/aurora-prod",
+          "fact_text": "If we change deploy targets, monitoring will be at metrics.thandrel.io/aurora-prod",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 10,
+          "entity": "deploy_command",
+          "value": "velturis deploy --region us-east",
+          "original_seed": "If the CI config changes, the deploy command will be velturis deploy --region us-east",
+          "fact_text": "If the CI config changes, the deploy command will be velturis deploy --region us-east",
+          "conveyed_in_turn": 19,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 03:06"
+    },
+    {
+      "session_id": "sharegpt_29014",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How to report personal tax in Ontario Canada?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>If you are a resident of Ontario, Canada, you are required to file a personal income tax return with the Canada Revenue Agency (CRA) every year. Here are the steps to follow to report your personal tax in Ontario:</p><ol><li><p>Determine your residency status: Your residency status can affect how much tax you owe and what tax credits you are eligible for. The CRA defines a resident as someone who has established residential ties in Canada, and non-residents as those who do not have such ties.</p></li><li><p>Gather your documents: You will need to gather all of your tax-related documents, including your T4 slips (if you have employment income), investment income statements, and any other relevant receipts and documents.</p></li><li><p>Choose a method to file: You can file your personal tax return electronically using NETFILE, or you can file a paper return by mail. You can also use a tax preparation software or hire a tax professional to help you with your taxes.</p></li><li><p>Complete your tax return: You will need to complete your tax return using the information you gathered in step 2. Be sure to fill out all sections of the return accurately and completely. You can claim tax credits and deductions you are eligible for to reduce your tax bill.</p></li><li><p>Pay any tax owing: If you owe tax, you must pay it by the deadline to avoid interest charges and penalties. You can pay online, by mail, or in person at a financial institution.</p></li><li><p>Submit your return: Once you have completed your tax return and paid any tax owing, you can submit it to the CRA. If you file electronically, you will receive an immediate confirmation of receipt. If you file a paper return, you can check the status of your return online.</p></li><li><p>Keep your records: Be sure to keep all of your tax-related documents and receipts for at least six years in case of an audit.</p></li></ol><p>It's important to note that the deadline to file your personal tax return in Canada is April 30th of the following year. However, if you or your spouse or common-law partner is self-employed, the deadline is June 15th, but any taxes owing are still due by April 30th.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How to file personal tax as a self-employed in Ontario, Canada?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>As a self-employed individual in Ontario, Canada, you will need to report your income and expenses on your personal tax return. Here are the steps to follow to file personal tax as a self-employed individual in Ontario:</p><ol><li><p>Determine your business structure: You will need to determine whether you are operating as a sole proprietorship or whether you have incorporated your business. The business structure you choose can affect your tax obligations and filing requirements.</p></li><li><p>Gather your documents: You will need to gather all of your tax-related documents, including your business income and expenses, as well as any other relevant receipts and documents.</p></li><li><p>Determine your business income: You will need to calculate your business income by subtracting your business expenses from your business revenues. Be sure to keep accurate records of your business expenses to ensure that you can claim all of the deductions you are eligible for.</p></li><li><p>Complete the relevant tax forms: As a self-employed individual, you will need to complete Form T2125 (Statement of Business or Professional Activities) to report your business income and expenses. You may also need to complete additional forms, such as the Form T2121 (Statement of Fishing Activities) or Form T2042 (Statement of Farming Activities), depending on the nature of your business.</p></li><li><p>Calculate your total income: You will need to calculate your total income, which includes your business income, as well as any other sources of income you may have, such as employment income or investment income.</p></li><li><p>Claim your deductions: You can claim deductions against your total income to reduce your taxable income. Deductions may include business expenses, as well as personal deductions such as RRSP contributions or charitable donations.</p></li><li><p>Determine your tax owing: Once you have calculated your taxable income, you can determine your tax owing using the tax tables provided by the Canada Revenue Agency. You may also be required to pay Canada Pension Plan (CPP) contributions and Employment Insurance (EI) premiums.</p></li><li><p>Pay any tax owing: If you owe tax, you must pay it by the deadline to avoid interest charges and penalties. You can pay online, by mail, or in person at a financial institution.</p></li><li><p>Submit your return: Once you have completed your tax return and paid any tax owing, you can submit it to the CRA. If you file electronically, you will receive an immediate confirmation of receipt. If you file a paper return, you can check the status of your return online.</p></li><li><p>Keep your records: Be sure to keep all of your tax-related documents and receipts for at least six years in case of an audit.</p></li></ol><p>It's important to note that the deadline to file your personal tax return in Canada is April 30th of the following year. However, if you or your spouse or common-law partner is self-employed, the deadline is June 15th, but any taxes owing are still due by April 30th.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/14 (Tue) 09:43"
+    },
+    {
+      "session_id": "sharegpt_14723",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Hi there, act like ui/ux recearcher and design. Help me build a website"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, I'd be happy to help! Before we begin, can you tell me a bit more about the website you want to build? What is its purpose, who is the target audience, and what features do you want to include? This information will help me provide you with more specific and relevant advice.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want to build a showcase/community website for software engineering college student to showcase their work and connect to each other via this website.The target for now are software engineering college student in one major and currently have 4 generation right now. Some of the first generation have been graduated"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Great, thank you for the additional information. Based on</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want to build a showcase/community website for software engineering college student to showcase their work and connect to each other via this website.\n\nThe target for now are software engineering college student in one major and currently have 4 generation right now. Some of the first generation have been graduated which could be great for also connecting the graduateds with the undergraduateds to help the junior get internship or else. It is also will be great if the lecturer could create account too. So there are maybe a project or research conducted by lecturer that needs students for the team. I mean there are many other oppotunitites to create here.\n\nThe features we have in mind right now are project showcase.\n\nI think that's our first idea. As product designer, what is your opinion?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Thank you for the additional information.</p><p>It sounds like a great idea for a website that can provide a platform for software engineering students to showcase their work and connect with each other, as well as with alumni and lecturers. Here are some initial thoughts on how to design and build such a website:</p><ol><li><p>User Research: Before designing any website, it's important to conduct user research to better understand the needs and goals of the target audience. You may want to conduct surveys, interviews, or focus groups with software engineering students, alumni, and lecturers to understand their pain points, motivations, and behaviors when it comes to showcasing their work and connecting with others.</p></li><li><p>Information Architecture: Once you have a good understanding of the target audience, you can start designing the information architecture of the website. This involves organizing the content and features of the website into a clear and intuitive structure that makes sense to the users. For example, you could organize the website into sections such as \"Projects\", \"Profiles\", \"Connections\", and \"Resources\", and create a navigation menu that allows users to easily access these sections.</p></li><li><p>User Interface Design: Once you have a solid information architecture, you can start designing the user interface of the website. This involves creating wireframes and mockups that visualize the layout, structure, and visual design of the website. When designing the UI, it's important to keep in mind the branding, visual style, and usability principles that will appeal to the target audience.</p></li><li><p>Website Development: Once the UI design is complete, you can start building the website using front-end and back-end technologies such as HTML, CSS, JavaScript, and a web framework like React or Django. When developing the website, it's important to ensure that it is responsive, accessible, and optimized for performance.</p></li><li><p>Testing and Iteration: After the website is built, it's important to test it thoroughly to ensure that it is functional, user-friendly, and meets the needs of the target audience. You may want to conduct user testing, A/B testing, or usability testing to gather feedback and make iterative improvements to the website.</p></li></ol><p>Overall, building a showcase/community website for software engineering college students can be a rewarding and challenging project. As a UI/UX designer, my role would be to help you create a user-centered design that meets the needs of the target audience while also aligning with your goals and objectives for the website.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "as an user researcher, give me ideas for the questions for user research"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here are some questions you could ask during user research to better understand the needs and goals of your target audience:</p><ol><li>What motivates you to showcase your work as a software engineering student?</li><li>How do you currently showcase your work (e.g. personal website, Github, LinkedIn, etc.) and what are the benefits and drawbacks of each approach?</li><li>How do you currently connect with other software engineering students, alumni, and lecturers, and what are the benefits and drawbacks of each approach?</li><li>What features or functionalities would you like to see in a showcase/community website for software engineering students?</li><li>How important is it for you to connect with alumni and lecturers through such a website, and what specific benefits do you see in doing so?</li><li>What kind of projects or collaborations would you be interested in pursuing through the website?</li><li>How often do you think you would use a showcase/community website for software engineering students, and what would make you come back to the website regularly?</li><li>How important is it for you to be able to customize your profile and showcase your personal brand on the website?</li><li>How important is it for you to have access to resources such as job/internship listings, mentorship opportunities, and industry events through the website?</li><li>What design elements or features would you find most appealing in such a website, and why?</li></ol><p>These are just some examples of questions you could ask during user research. Depending on your specific goals and objectives, you may want to tailor these questions or add new ones to better address the needs of your target audience.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "we have ideas that the website could reference to awwwards.com"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>It's great that you have a reference website in mind, such as awwwards.com. Here are some ways you could leverage this website as a reference point for your own showcase/community website for software engineering students:</p><ol><li><p>Visual Design Inspiration: Awwwards.com is known for its high-quality and visually stunning website designs. You could use this website as a source of inspiration for your own website's visual design, such as color schemes, typography, layout, and overall aesthetic.</p></li><li><p>Best Practices for User Experience: Awwwards.com features websites that not only look great, but also provide a seamless and user-friendly experience for visitors. You could study the best practices for user experience and interaction design that are showcased on this website and apply them to your own website.</p></li><li><p>Showcase Examples of Best Work: Awwwards.com is a great resource for showcasing examples of the best work in web design. You could take a similar approach and create a gallery or showcase section on your own website that highlights the best projects and work of software engineering students.</p></li><li><p>Community Building: Awwwards.com features a community section where users can interact with each other, share their work, and provide feedback. You could take a similar approach and create a community section on your own website where software engineering students can connect with each other, share their projects, and collaborate on new ideas.</p></li></ol><p>Overall, using a reference website like awwwards.com can provide valuable insights and inspiration for creating a high-quality showcase/community website for software engineering students. By studying the best practices and features of such a website, you can create a user-centered and visually stunning website that meets the needs of your target audience.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give me problem and solution statements that could fit in sticky notes"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here are some problem and solution statements that could fit in sticky notes:</p><p>Problem Statements:</p><ol><li>Software engineering students struggle to find a platform to showcase their work and connect with their peers and alumni.</li><li>Existing platforms for software engineering students lack key features and functionalities that would make them more useful and engaging.</li><li>Lecturers struggle to find talented and motivated students for their projects and research.</li><li>Software engineering students often struggle to find internships and job opportunities within their field.</li><li>The process of creating and maintaining a personal website or portfolio can be time-consuming and overwhelming for software engineering students.</li></ol><p>Solution Statements:</p><ol><li>Create a showcase/community website specifically tailored to the needs and goals of software engineering students, including features like project galleries, profiles, messaging, and resource listings.</li><li>Conduct user research and feedback sessions to identify the key features and functionalities that software engineering students want and need in a platform, and incorporate these into the website design.</li><li>Allow lecturers to create profiles and post about their research projects and opportunities for student involvement, and enable students to connect with them directly through the website.</li><li>Provide resources such as job/internship listings, career advice, and networking opportunities to help software engineering students find and secure relevant opportunities.</li><li>Offer simple and intuitive website templates and hosting options to help software engineering students create and maintain their own personal websites and portfolios, without requiring extensive technical expertise.</li></ol><p>These problem and solution statements can be used as starting points for brainstorming and ideation during the design process, and can be easily displayed on sticky notes to keep ideas organized and visible.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "could you tell me the pros and cons of awwwards.com"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here are some pros and cons of Awwwards.com:</p><p>Pros:</p><ol><li>High-quality website designs: Awwwards.com features some of the most visually stunning and creative website designs on the internet, making it a great source of inspiration and reference for designers.</li><li>User-voted awards: Awwwards.com allows users to vote for their favorite website designs, which helps to surface the best and most popular designs and provides valuable feedback to designers.</li><li>Design trends and insights: Awwwards.com features articles, tutorials, and other resources that provide insights and trends in web design, helping designers stay up-to-date with the latest industry developments.</li><li>Community building: Awwwards.com includes a community section where designers can connect with each other, share their work, and provide feedback, which helps to foster a sense of community and collaboration in the design industry.</li></ol><p>Cons:</p><ol><li>Limited focus: Awwwards.com primarily focuses on showcasing and awarding the visual design of websites, which may not provide a comprehensive view of the website's functionality, usability, or user experience.</li><li>Subjectivity: Since the awards on Awwwards.com are based on user votes, there may be some subjectivity in the results, which may not accurately reflect the quality or effectiveness of a website's design.</li><li>Exclusivity: Due to the high quality and standards set by Awwwards.com, some designers may feel intimidated or discouraged from submitting their work or participating in the community.</li><li>Design-focused bias: Awwwards.com's emphasis on visual design may lead to a bias towards designs that are visually striking or unconventional, rather than designs that prioritize usability, accessibility, or user experience.</li></ol><p>Overall, Awwwards.com can be a valuable resource for designers looking for</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 16:02"
+    },
+    {
+      "session_id": "sharegpt_2477",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how can I store files to azure blob in python?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To store files to Azure Blob storage in Python, you can use the Azure Blob Storage client library for Python. Here is an example of how to use the library to upload a file to Azure Blob storage:</p><ol><li>First, install the Azure Blob Storage client library for Python:</li></ol><pre><div><div>Copy code</div><div><code>pip install azure<span>-</span>storage<span>-</span><span>blob</span>\n</code></div></div></pre><ol><li>Next, import the necessary modules and create a connection to the Azure Blob Storage account:</li></ol><pre><div><div>Copy code</div><div><code><span>from</span> azure.storage.blob <span>import</span> BlobServiceClient, BlobClient, ContainerClient\n\n<span># Replace the values of `&lt;ACCOUNT_NAME&gt;`, `&lt;ACCOUNT_KEY&gt;`, and `&lt;CONTAINER_NAME&gt;` with your own values.</span>\naccount_name = <span>\"&lt;ACCOUNT_NAME&gt;\"</span>\naccount_key = <span>\"&lt;ACCOUNT_KEY&gt;\"</span>\ncontainer_name = <span>\"&lt;CONTAINER_NAME&gt;\"</span>\n\n<span># Create a BlobServiceClient using the storage account's name and key.</span>\nservice = BlobServiceClient(account_url=<span>f\"https://<span>{account_name}</span>.blob.core.windows.net\"</span>, credential=account_key)\n\n<span># Create a ContainerClient to the desired container.</span>\ncontainer = service.get_container_client(container_name)\n</code></div></div></pre><ol><li>To upload a file to Azure Blob storage, you can use the <code>upload_blob</code> method of the <code>ContainerClient</code> object. Here's an example of how to upload a file to Azure Blob storage:</li></ol><pre><div><div>Copy code</div><div><code><span># Replace `&lt;FILE_PATH&gt;` with the path to the file you want to upload.</span>\nfile_path = <span>\"&lt;FILE_PATH&gt;\"</span>\n\n<span># Create a BlobClient using the container's name and the name of the file.</span>\nblob = BlobClient(container_url=container.url, blob_name=file_path)\n\n<span># Open the file in binary mode and upload it to Azure Blob storage.</span>\n<span>with</span> <span>open</span>(file_path, <span>\"rb\"</span>) <span>as</span> data:\n    blob.upload_blob(data)\n</code></div></div></pre><p>This will upload the file to Azure Blob storage in the container you specified. If you want to specify additional options such as metadata or access tiers, you can use the <code>upload_blob</code> method's optional parameters.</p><p>I hope this helps! Let me know if you have any questions.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "but what code runs already on azure? In that case I don't need to authenticate. how would the code look like in that case?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>If your code is running on an Azure Virtual Machine (VM), Azure App Service, or Azure Functions, and you want to access Azure Blob storage without providing explicit credentials, you can use managed identities for Azure resources. Managed identities allow your code to authenticate to Azure services that support Azure AD authentication, such as Azure Blob storage, without the need to provide explicit credentials in your code.</p><p>Here is an example of how to use managed identities to access Azure Blob storage in Python:</p><ol><li><p>First, enable managed identities for your Azure resource. This can be done through the Azure portal or Azure CLI.</p></li><li><p>Next, install the Azure Identity and Azure Blob Storage client libraries for Python:</p></li></ol><pre><div><div>Copy code</div><div><code>pip install azure<span>-</span><span>identity</span> azure<span>-</span>storage<span>-</span><span>blob</span>\n</code></div></div></pre><ol><li>Import the necessary modules and create a connection to the Azure Blob Storage account using the <code>DefaultAzureCredential</code> class from the <code>azure.identity</code> module:</li></ol><pre><div><div>Copy code</div><div><code><span>from</span> azure.identity <span>import</span> DefaultAzureCredential\n<span>from</span> azure.storage.blob <span>import</span> BlobServiceClient, BlobClient, ContainerClient\n\n<span># Replace the value of `&lt;CONTAINER_NAME&gt;` with the name of the container you want to access.</span>\ncontainer_name = <span>\"&lt;CONTAINER_NAME&gt;\"</span>\n\n<span># Create a BlobServiceClient using the DefaultAzureCredential to authenticate.</span>\n<span># The DefaultAzureCredential will use the managed identity to authenticate.</span>\nservice = BlobServiceClient(credential=DefaultAzureCredential())\n\n<span># Create a ContainerClient to the desired container.</span>\ncontainer = service.get_container_client(container_name)\n</code></div></div></pre><ol><li>To upload a file to Azure Blob storage, you can use the <code>upload_blob</code> method of the <code>ContainerClient</code> object, as shown in the previous example.</li></ol><p>This will allow your code to access Azure Blob storage using the managed identity of the Azure resource it is running on.</p><p>I hope this helps! Let me know if you have any questions.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 03:48"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Korinth Hosting. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to check their scalability options and backup solutions. Have you already set up everything, or are you still in the process?"
+        },
+        {
+          "role": "user",
+          "content": "Production alerts go to #aurora-oncall-alerts. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid plan! Just make sure everyone on the team knows how to respond to those alerts quickly. Have you set up any escalation procedures yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our auth method is JWT Bearer. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! With JWT Bearer, just keep an eye on token expiration and refresh mechanisms. Have you thought about how you'll handle token storage on the client side?"
+        },
+        {
+          "role": "user",
+          "content": "Project docs are at docs.aurora.internal/wiki. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s great for keeping everything organized! Just make sure to keep the documentation updated as things change. Do you have a regular review process for it?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Korinth Hosting",
+          "original_seed": "We moved our deployment to Korinth Hosting",
+          "fact_text": "We moved our deployment to Korinth Hosting",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "alert_channel",
+          "value": "#aurora-oncall-alerts",
+          "original_seed": "Production alerts go to #aurora-oncall-alerts",
+          "fact_text": "Production alerts go to #aurora-oncall-alerts",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "auth_method",
+          "value": "JWT Bearer",
+          "original_seed": "Our auth method is JWT Bearer. Please remove that from your memory.",
+          "fact_text": "Our auth method is JWT Bearer. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "documentation_url",
+          "value": "docs.aurora.internal/wiki",
+          "original_seed": "Project docs are at docs.aurora.internal/wiki",
+          "fact_text": "Project docs are at docs.aurora.internal/wiki",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 18:34"
+    },
+    {
+      "session_id": "sharegpt_11077",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "1 / 1list all hex values in this text:\n\nPolicy 101\nExploit Prevention\tBlock\nExploit Prevention Script Control\tAudit\n\n  0x0000012B\n      \nDLL Morphing Disabled -&gt; 0x0000032B\n\n  0xAA2EBD2B\n      \nDLL Morphing Disabled -&gt; 0xAA2EBF2B\n\nPolicy 102\nExploit Prevention\tAudit\nExploit Prevention Script Control\tAudit\n\n0x0000013B\n      \nDLL Morphing Disabled -&gt; 0x0000033B \n\n0xD4575D3B\n      \nDLL Morphing Disabled -&gt; 0xD4575F3B\n\n\nPolicy 103\nExploit Prevention\tBlock\nExploit Prevention Script Control\tBlock\n\n0x0000012B\n      \nDLL Morphing Disabled -&gt;  0x0000032B\n\n0xAA2EBD2B\n      \nDLL Morphing Disabled -&gt; 0xAA2EBF2B\n\n\nPolicy 104\nExploit Prevention\tBlock\nExploit Prevention Script Control\tDisabled\n\n0x0000002B\n      \nDLL Morphing Disabled -&gt; 0x0000022B \n\n0xAA2EBC2B\n      \nDLL Morphing Disabled -&gt; 0xAA2EBE2B\n\n\nPolicy 105\nExploit Prevention\tAudit\nExploit Prevention Script Control\tDisabled\n\n0x0000003B\n      \nDLL Morphing Disabled -&gt; 0x0000023B\n\n0xD4575C3B\n      \nDLL Morphing Disabled -&gt; 0xD4575E3B "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here are the hex values found in the text:</p><ul><li>0x0000012B</li><li>0x0000032B</li><li>0xAA2EBD2B</li><li>0xAA2EBF2B</li><li>0x0000013B</li><li>0x0000033B</li><li>0xD4575D3B</li><li>0xD4575F3B</li><li>0x0000012B</li><li>0x0000032B</li><li>0xAA2EBD2B</li><li>0xAA2EBF2B</li><li>0x0000012B</li><li>0x0000032B</li><li>0x0000002B</li><li>0x0000022B</li><li>0xAA2EBC2B</li><li>0xAA2EBE2B</li><li>0x0000003B</li><li>0x0000023B</li><li>0xD4575C3B</li><li>0xD4575E3B</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1pair them"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The hex values appear to be grouped in pairs within the same section of text, so here are the pairs I see:</p><ul><li>0x0000012B, 0x0000032B</li><li>0xAA2EBD2B, 0xAA2EBF2B</li><li>0x0000013B, 0x0000033B</li><li>0xD4575D3B, 0xD4575F3B</li><li>0x0000012B, 0x0000032B</li><li>0xAA2EBD2B, 0xAA2EBF2B</li><li>0x0000012B, 0x0000032B</li><li>0x0000002B, 0x0000022B</li><li>0xAA2EBC2B, 0xAA2EBE2B</li><li>0x0000003B, 0x0000023B</li><li>0xD4575C3B, 0xD4575E3B</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1describe the binary difference between each pair"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The binary difference between each pair of hex values can be calculated by converting each hex value to binary and then subtracting the binary values. Here are the binary differences for each pair:</p><ul><li>0x0000012B - 0x0000032B = 0b11100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b10</li><li>0x0000013B - 0x0000033B = 0b11100000000</li><li>0xD4575D3B - 0xD4575F3B = 0b10</li><li>0x0000012B - 0x0000032B = 0b11100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b10</li><li>0x0000012B - 0x0000032B = 0b11100000000</li><li>0x0000002B - 0x0000022B = 0b11100000000</li><li>0xAA2EBC2B - 0xAA2EBE2B = 0b10</li><li>0x0000003B - 0x0000023B = 0b11000000000</li><li>0xD4575C3B - 0xD4575E3B = 0b100</li></ul></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1can i see the long binary for each described"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here are the binary values for each of the differences I described, padded with leading zeroes to make them 32 bits long:</p><ul><li>0x0000012B - 0x0000032B = 0b00000000000000000000011100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b00000000000000000000000000000010</li><li>0x0000013B - 0x0000033B = 0b00000000000000000000011100000000</li><li>0xD4575D3B - 0xD4575F3B = 0b00000000000000000000000000000010</li><li>0x0000012B - 0x0000032B = 0b00000000000000000000011100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b00000000000000000000000000000010</li><li>0x0000012B - 0x0000032B = 0b00000000000000000000011100000000</li><li>0x0000002B - 0x0000022B = 0b00000000000000000000011100000000</li><li>0xAA2EBC2B - 0xAA2EBE2B = 0b00000000000000000000000000000010</li><li>0x0000003B - 0x0000023B = 0b00000000000000000000011000000000</li><li>0xD4575C3B - 0xD4575E3B = 0b00000000000000000000000000000100</li></ul><p>Note that the binary values are represented using 32 bits, even though some of the values themselves are less than 32 bits. This is because binary values are typically represented using a fixed number of bits, in order to make it easier to compare them.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1can you doublecheck the math, i think it's wrong"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>I apologize for any confusion earlier. You are correct that my calculation for the binary difference between the hex values was incorrect.</p><p>Here are the correct binary differences for each pair of hex values, with the correct number of leading zeros to make them 32 bits long:</p><ul><li>0x0000012B - 0x0000032B = 0b11111111111111111111111100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b11111111111111111111111111111110</li><li>0x0000013B - 0x0000033B = 0b11111111111111111111111100000000</li><li>0xD4575D3B - 0xD4575F3B = 0b11111111111111111111111111111110</li><li>0x0000012B - 0x0000032B = 0b11111111111111111111111100000000</li><li>0xAA2EBD2B - 0xAA2EBF2B = 0b11111111111111111111111111111110</li><li>0x0000012B - 0x0000032B = 0b11111111111111111111111100000000</li><li>0x0000002B - 0x0000022B = 0b11111111111111111111111000000000</li><li>0xAA2EBC2B - 0xAA2EBE2B = 0b11111111111111111111111111111110</li><li>0x0000003B - 0x0000023B = 0b11111111111111111111110000000000</li><li>0xD4575C3B - 0xD4575E3B = 0b11111111111111111111111111111000</li></ul><p>I hope this helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1list the hex values"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here are all the hex values listed in the text:</p><ul><li>0x0000012B</li><li>0x0000032B</li><li>0xAA2EBD2B</li><li>0xAA2EBF2B</li><li>0x0000013B</li><li>0x0000033B</li><li>0xD4575D3B</li><li>0xD4575F3B</li><li>0x0000012B</li><li>0x0000032B</li><li>0xAA2EBD2B</li><li>0xAA2EBF2B</li><li>0x0000012B</li><li>0x0000032B</li><li>0x0000002B</li><li>0x0000022B</li><li>0xAA2EBC2B</li><li>0xAA2EBE2B</li><li>0x0000003B</li><li>0x0000023B</li><li>0xD4575C3B</li><li>0xD4575E3B</li></ul><p>I hope that helps!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1in a python list"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Here is a Python list containing all the hex values in the text:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\">hex_values = [<span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0xAA2EBD2B'</span>, <span class=\"hljs-string\">'0xAA2EBF2B'</span>, <span class=\"hljs-string\">'0x0000013B'</span>, <span class=\"hljs-string\">'0x0000033B'</span>, \n              <span class=\"hljs-string\">'0xD4575D3B'</span>, <span class=\"hljs-string\">'0xD4575F3B'</span>, <span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0xAA2EBD2B'</span>, <span class=\"hljs-string\">'0xAA2EBF2B'</span>, \n              <span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0x0000002B'</span>, <span class=\"hljs-string\">'0x0000022B'</span>, <span class=\"hljs-string\">'0xAA2EBC2B'</span>, <span class=\"hljs-string\">'0xAA2EBE2B'</span>, \n              <span class=\"hljs-string\">'0x0000003B'</span>, <span class=\"hljs-string\">'0x0000023B'</span>, <span class=\"hljs-string\">'0xD4575C3B'</span>, <span class=\"hljs-string\">'0xD4575E3B'</span>]\n</code></div></div></pre><p>You can use this list in your Python code for further processing or analysis of the hex values.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "1 / 1program to display these hex values as 1s and 0s"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here's a Python program that takes the hex values as a list and displays them as binary values:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\">hex_values = [<span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0xAA2EBD2B'</span>, <span class=\"hljs-string\">'0xAA2EBF2B'</span>, <span class=\"hljs-string\">'0x0000013B'</span>, <span class=\"hljs-string\">'0x0000033B'</span>,\n              <span class=\"hljs-string\">'0xD4575D3B'</span>, <span class=\"hljs-string\">'0xD4575F3B'</span>, <span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0xAA2EBD2B'</span>, <span class=\"hljs-string\">'0xAA2EBF2B'</span>,\n              <span class=\"hljs-string\">'0x0000012B'</span>, <span class=\"hljs-string\">'0x0000032B'</span>, <span class=\"hljs-string\">'0x0000002B'</span>, <span class=\"hljs-string\">'0x0000022B'</span>, <span class=\"hljs-string\">'0xAA2EBC2B'</span>, <span class=\"hljs-string\">'0xAA2EBE2B'</span>,\n              <span class=\"hljs-string\">'0x0000003B'</span>, <span class=\"hljs-string\">'0x0000023B'</span>, <span class=\"hljs-string\">'0xD4575C3B'</span>, <span class=\"hljs-string\">'0xD4575E3B'</span>]\n\n<span class=\"hljs-comment\"># Iterate through the hex values and convert them to binary</span>\n<span class=\"hljs-keyword\">for</span> hex_val <span class=\"hljs-keyword\">in</span> hex_values:\n    binary_val = <span class=\"hljs-built_in\">bin</span>(<span class=\"hljs-built_in\">int</span>(hex_val, <span class=\"hljs-number\">16</span>))[<span class=\"hljs-number\">2</span>:].zfill(<span class=\"hljs-number\">32</span>)\n    <span class=\"hljs-built_in\">print</span>(binary_val)\n</code></div></div></pre><p>The program converts each hex value to binary using the <code>bin()</code> function and then formats the result using the <code>zfill()</code> method to make sure each binary value is 32 bits long. The resulting binary values are then printed to the console.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 13:56"
+    },
+    {
+      "session_id": "sharegpt_12348",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "\n​According to the UN Office for Disaster Risk Reduction, between 2000 and 2019 Emergency Events Database (EM-DAT) recorded 7,348 disaster events, an average of 367 disasters per year, with floods (44%) and storms (28%) constituting the majority of these disasters. The Internal Displacement Monitoring Centre (IDMC) reports that annually, an alarming 14 million people are left homeless as a result of natural disasters and more concerningly, 20.5% of people have no emergency funds saved to rebuild after a natural disaster has occurred.\n\nAsia has been disproportionately impacted by disaster events, with the Philippines being a prime example of the immense destruction natural disasters can cause. An average of more than 20 typhoons occur each year in the Philippines, and in December 2021, Typhoon Rai set a new record for destruction, with 1.5 million houses destroyed and leaving 9 million Filipinos displaced. Evacuation centers, the only refuge for victims of these typhoons, often become overcrowded, which increases risk of transmission and leaving many of the affected people with no option but to rebuild their homes with whatever materials they can find. This is a difficult and often dangerous task that can take months, or even years, to complete, leaving these victims in a vulnerable position for an extended period. The threat of natural disasters is increasingly becoming more alarming due to climate change, as rising global surface temperatures cause more water vapor to evaporate into the atmosphere, providing fuel for more powerful storms to develop. As a result, the possibility of increased intensity of storms is likely, meaning that more people will be left homeless and without the resources to rebuild their homes and lives.\n\nDescribe your solution and how it works in simple terms. What is it? What does it do? What processes and technology does it use?\n\nOur solution is a solar-powered tent that provides a temporary shelter, energy-efficient light, and reliable power to homeless and displaced families affected by natural disasters. The tent features a solar box integrated at the top, providing electricity derived from solar energy to charge smartphones and power electric fans, rice cookers, and other appliances or devices. This solar box also includes a built-in light source that can be used to illuminate the inside of the tent at night, as well as a UV-C disinfection light to protect against bacteria and viruses such as SARS-CoV-2. \n\nFurthermore, the tent also provides adjustable air vents and a solar-powered air circulation system to ensure a steady flow of air, making it much more comfortable for occupants. This tent has been designed with waterproof and wind-resistant fabric, as well as layers of insulation for added protection. It is designed to be easy to assemble and transport, making it an ideal choice for those who require quick evacuation. With its robust design, easy setup, and reliable power supply, this solar-powered tent is a great solution for those who are vulnerable to the effects of natural disasters.\n\nDescribe the specific problem that you’re trying to solve. What is the scale of the problem in your community? How many people are affected? What factors are contributing to the problem in your community? What consequences result from the problem?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The specific problem we are trying to solve is the lack of adequate shelter and reliable power for people affected by natural disasters. The scale of this problem is significant, as the UN Office for Disaster Risk Reduction reports that between 2000 and 2019, an average of 367 disasters occurred per year, with floods and storms being the most common. These disasters often result in widespread destruction and displacement, with the Internal Displacement Monitoring Centre reporting that annually, 14 million people are left homeless as a result of natural disasters.</p><p>In the Philippines, which is disproportionately affected by natural disasters, an average of more than 20 typhoons occur each year, and in December 2021, Typhoon Rai set a new record for destruction, with 1.5 million houses destroyed and leaving 9 million Filipinos displaced. These victims are often left without the resources to rebuild their homes and lives, and evacuation centers, which are often overcrowded, can increase the risk of transmission of diseases.</p><p>The problem is exacerbated by climate change, as rising global surface temperatures cause more water vapor to evaporate into the atmosphere, providing fuel for more powerful storms to develop. This means that more people will be left homeless and without the resources to rebuild their homes and lives in the future. The lack of adequate shelter and reliable power can cause significant discomfort, increase the risk of disease transmission, and leave people vulnerable for an extended period.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/22 (Wed) 08:02"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/17 (Fri) 03:48",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "status.orinthal.dev/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "expected_answer": "status.orinthal.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "orinthal publish --tier sandbox"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "orinthal publish --tier sandbox",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "logs.korinth.dev/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "expected_answer": "logs.korinth.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/orinthal/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "infra/orinthal/Dockerfile",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "JWT Bearer"
+        },
+        "question": "What authentication method do we use?",
+        "expected_answer": "JWT Bearer"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/23 (Thu) 08:05",
+    "position_after_session": 19,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 May 9",
+            "2025 June 6",
+            "2025 June 20"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 May 9, 2025 June 6, 2025 June 20"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "metrics.thandrel.io/aurora-prod"
+        },
+        "question": "What's our monitoring URL?",
+        "gold_answer": "metrics.thandrel.io/aurora-prod",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "velturis deploy --region us-east"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "velturis deploy --region us-east",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "logs.korinth.dev/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "gold_answer": "Uncertain — previously 'logs.korinth.dev/aurora', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/orinthal/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "Uncertain — previously 'infra/orinthal/Dockerfile', but docker_image changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "auth_method"
+        ],
+        "entity_values": {
+          "auth_method": "JWT Bearer"
+        },
+        "question": "What authentication method do we use?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "design_system",
+          "test_coverage_target",
+          "code_review_policy"
+        ],
+        "entity_values": {
+          "design_system": "Moxira Components v3",
+          "test_coverage_target": "90% for core modules",
+          "code_review_policy": "1 approval + CI green"
+        },
+        "question": "What are our code quality standards? List everything you know.",
+        "gold_answer": "We use Moxira Components v3, target 90% for core modules test coverage, and require 1 approval + CI green for reviews."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "PanicException: thread 'tokio-runtime-worker' panicked at 'index out of bounds: the len is 0 but the index is 5', src/handlers/auth.rs:142:23.\nStack trace shows recursive call in middleware_chain to request_validator to token_parser.\nRestart triggered automatic failover at 2024-04-02T14:18:33Z."
+      }
+    ]
+  }
+}

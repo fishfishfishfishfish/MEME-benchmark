@@ -1,0 +1,1616 @@
+{
+  "episode_id": 5,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Zephyra Platform",
+    "after": "Velturis Edge"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "monitoring_url",
+    "staging_url",
+    "ci_config",
+    "docker_image",
+    "log_drain_endpoint",
+    "deploy_command",
+    "dockerfile_path"
+  ],
+  "filler_entities": [
+    "design_system",
+    "package_manager",
+    "standup_format",
+    "secret_manager",
+    "test_coverage_target"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Zephyra Platform",
+      "after": "Velturis Edge",
+      "task": "C"
+    },
+    "monitoring_url": {
+      "before": "monitor.narvex.io/proj-aurora",
+      "after": "observe.velturis.io/aurora",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "staging_url": {
+      "before": "dev.orinthal.dev/aurora",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "ci_config": {
+      "before": "narvex-ci.yml",
+      "after": "orinthal-build.yml",
+      "task": null,
+      "is_2hop_middle": true
+    },
+    "docker_image": {
+      "before": "zephyra-hub/aurora:prod",
+      "after": null,
+      "task": null
+    },
+    "log_drain_endpoint": {
+      "before": "logs.narvex.io/aurora/drain",
+      "after": null,
+      "task": null
+    },
+    "deploy_command": {
+      "before": "narvex deploy --env prod",
+      "after": "orinthal publish --tier sandbox",
+      "task": "A",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "dockerfile_path": {
+      "before": "infra/zephyra/Dockerfile",
+      "after": null,
+      "task": "B",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "meeting_day": {
+      "before": "every Thursday 2pm",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 April 25",
+      "after": "2025 June 6",
+      "task": "H",
+      "history": [
+        "2025 April 25",
+        "2025 May 23",
+        "2025 June 6"
+      ]
+    },
+    "documentation_url": {
+      "before": "confluence.aurora.dev/aurora",
+      "after": null,
+      "task": "F"
+    },
+    "onboarding_guide": {
+      "before": "wiki.aurora.dev/getting-started",
+      "after": null,
+      "task": "F"
+    },
+    "changelog_location": {
+      "before": "GitHub Releases page",
+      "after": null,
+      "task": "F"
+    },
+    "design_system": {
+      "before": "Dravex Blocks v2.4",
+      "after": null,
+      "task": "filler"
+    },
+    "package_manager": {
+      "before": "Veltrion Pkg",
+      "after": null,
+      "task": "filler"
+    },
+    "standup_format": {
+      "before": "15-min daily video call",
+      "after": null,
+      "task": "filler"
+    },
+    "secret_manager": {
+      "before": "Selvex Secrets",
+      "after": null,
+      "task": "filler"
+    },
+    "test_coverage_target": {
+      "before": "80% minimum overall",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "monitoring_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "staging_url",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 April 25",
+          "2025 May 23",
+          "2025 June 6"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 April 25, 2025 May 23, 2025 June 6",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "monitoring_url"
+      ],
+      "entity_values": {
+        "monitoring_url": "observe.velturis.io/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our monitoring URL?",
+      "gold_answer": "observe.velturis.io/aurora",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "orinthal publish --tier sandbox"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "orinthal publish --tier sandbox",
+      "notes": "Cascade from ci_config (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "staging_url"
+      ],
+      "entity_values": {
+        "staging_url": "dev.orinthal.dev/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our staging URL?",
+      "gold_answer": "Uncertain — previously 'dev.orinthal.dev/aurora', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "infra/zephyra/Dockerfile"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "Uncertain — previously 'infra/zephyra/Dockerfile', but docker_image changed",
+      "notes": "Cascade from docker_image (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "meeting_day"
+      ],
+      "entity_values": {
+        "meeting_day": "every Thursday 2pm"
+      },
+      "question_template": "When's our team meeting?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "documentation_url",
+        "onboarding_guide",
+        "changelog_location"
+      ],
+      "entity_values": {
+        "documentation_url": "confluence.aurora.dev/aurora",
+        "onboarding_guide": "wiki.aurora.dev/getting-started",
+        "changelog_location": "GitHub Releases page"
+      },
+      "question_template": "Where can I find project documentation? List everything you know.",
+      "gold_answer": "Docs are at confluence.aurora.dev/aurora, onboarding guide at wiki.aurora.dev/getting-started, and changelog at GitHub Releases page.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 21,
+  "evidence_sessions": 5,
+  "filler_sessions": 16,
+  "total_tokens": 34833,
+  "evidence_tokens": 3004,
+  "filler_tokens": 31829,
+  "evidence_session_indices": [
+    2,
+    5,
+    10,
+    14,
+    17
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_7207",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is stream processing of data in software engineering. Is Apache Kafka truly streaming if the data still gets batched into little jobs"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Stream processing is a software engineering technique that processes data in real-time, as it is generated or received, rather than processing data in batches. Apache Kafka is a distributed streaming platform that can handle high volumes of data streams in real-time. While it is true that in Apache Kafka, data is organized into small chunks called partitions, which can be processed in parallel, the overall architecture is designed to process data in real-time, as it is produced or consumed, rather than processing data in batches.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "In that case, what is the difference between processing data in batches vs processing partitions in parallel "
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Batch processing and parallel processing of partitions are two different techniques for processing data in software engineering.</p><p>Batch processing involves collecting and storing data over a certain period of time and then processing it in large chunks in a single or multiple batch jobs. It is often used for offline processing or when processing large amounts of data that cannot be handled in real-time.</p><p>Parallel processing of partitions involves dividing data into smaller chunks called partitions and processing them simultaneously in multiple processing units, such as multiple cores or machines. This allows the processing to be completed more quickly and efficiently, as the partitions can be processed in parallel. This technique is often used in distributed systems, such as Apache Kafka, where data is processed in real-time as it is generated or consumed.</p><p>In summary, batch processing is a technique for processing large amounts of data in offline mode, while parallel processing of partitions is a technique for processing data in real-time, in a distributed and scalable manner.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you explain a little bit about Hadoop and whether it is used for batch processing or streaming? How could something like Hadoop theoretically integrate with Apache Kafka"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Hadoop is an open-source software framework for distributed storage and processing of large datasets on a cluster of commodity hardware. It provides a platform for batch processing of large data sets and is used in many big data use cases.</p><p>Hadoop includes the Hadoop Distributed File System (HDFS) for storing data and the MapReduce programming model for processing data in parallel across a cluster of computers. Hadoop is designed to process data in batch mode, where large amounts of data are processed in chunks, rather than processing data in real-time.</p><p>Apache Kafka is a distributed streaming platform that can handle high volumes of data streams in real-time. It is designed to process data as it is produced or consumed, in real-time, rather than in batch mode.</p><p>In theory, Hadoop and Apache Kafka can be integrated by using Kafka as the source of real-time data streams that are then stored in HDFS and processed using MapReduce or other Hadoop processing frameworks. This integration would allow for the batch processing capabilities of Hadoop to be applied to real-time data streams generated by Apache Kafka, providing a complete solution for large scale data processing.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what's an example of how hadoop could process log data"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Hadoop can be used to process log data in a number of ways. Here's one example:</p><ol><li><p>Data Collection: Log data from various sources (e.g. web servers, application servers, etc.) is collected and fed into a Kafka cluster.</p></li><li><p>Data Storage: The log data is then stored in HDFS (Hadoop Distributed File System), the distributed storage component of Hadoop.</p></li><li><p>Data Processing: MapReduce, the batch processing component of Hadoop, can be used to process the log data stored in HDFS. For example, the log data can be analyzed to count the number of requests to a web server by IP address, to identify patterns in user behavior, or to detect anomalies in the log data.</p></li><li><p>Data Visualization: The processed data can be visualized using tools like Apache Hive, Apache Pig, or Apache Spark for further analysis and to generate insights.</p></li></ol><p>In this way, Hadoop provides a scalable and reliable platform for processing log data, allowing organizations to process and analyze large amounts of log data in a cost-effective manner.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you briefly describe apache hive, apache pig, and apache spark and give a couple reasons why you might use each technology"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Apache Hive is a data warehousing and SQL-like query language for Hadoop. It provides a convenient and high-level interface for querying and analyzing large datasets stored in HDFS (Hadoop Distributed File System).</p><p>Reasons to use Apache Hive:</p><ol><li>Simplifies querying and analysis of big data stored in HDFS.</li><li>Supports SQL-like queries and provides a high-level interface for big data processing.</li></ol><p>Apache Pig is a high-level platform for creating MapReduce programs for large-scale data processing. It provides a simple scripting language, Pig Latin, for expressing data analysis tasks and automates the execution of these tasks on a Hadoop cluster.</p><p>Reasons to use Apache Pig:</p><ol><li>Simplifies the process of creating MapReduce programs for big data processing.</li><li>Offers a simple scripting language for data analysis tasks, reducing the need for complex Java programming.</li></ol><p>Apache Spark is an open-source, distributed computing system that can process large volumes of data quickly. It provides a high-level API for distributed data processing, including support for SQL, machine learning, and graph processing.</p><p>Reasons to use Apache Spark:</p><ol><li>Provides a fast, in-memory data processing engine for big data processing.</li><li>Offers high-level APIs for distributed data processing, including support for SQL, machine learning, and graph processing.</li><li>Can be easily integrated with other big data technologies, such as Apache Hive and Apache Hadoop.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you describe what Kafka Connect is, how it is used, and a few possible examples or use cases for it"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Apache Kafka Connect is a tool for integrating Kafka with external systems, such as databases, key-value stores, and file systems. It provides a simple way to move data into and out of Apache Kafka, making it easier to manage the flow of data in large-scale data architectures.</p><p>Kafka Connect is used to automate the process of moving data in and out of Apache Kafka. It provides a way to define and run integrations between Kafka and other systems, making it easier to manage the flow of data in big data architectures.</p><p>Here are a few examples of use cases for Apache Kafka Connect:</p><ol><li><p>Database replication: Move data from a database, such as MySQL or PostgreSQL, into Kafka for further processing.</p></li><li><p>Log aggregation: Aggregate log data from multiple sources, such as web servers, application servers, and databases, into Kafka for central storage and analysis.</p></li><li><p>Data migration: Move data from an older system into a newer system, such as moving data from an old database into a new data lake.</p></li><li><p>IoT data collection: Collect data from IoT devices and feed it into Kafka for real-time processing and analysis.</p></li></ol><p>Kafka Connect makes it easier to integrate Apache Kafka with other systems, simplifying the process of managing data flows in large-scale data architectures.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "why would i need to move data from a database into kafka rather than just processing directly from the database? What advantages does kafka use in these cases"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Moving data from a database into Apache Kafka has several advantages in certain use cases:</p><ol><li><p>Decoupling: By moving data from a database into Kafka, you can decouple the database from other systems that need to access the data. This allows you to process and analyze the data in real-time, without putting too much load on the database, and without having to modify the database.</p></li><li><p>Scalability: Apache Kafka is designed to handle large amounts of data, making it well-suited for big data processing and analysis. By moving data from a database into Kafka, you can take advantage of the scalability and performance of the Kafka platform.</p></li><li><p>Real-time processing: Apache Kafka provides real-time processing capabilities, which can be useful for use cases such as fraud detection, recommendation systems, and real-time analytics. By moving data from a database into Kafka, you can take advantage of the real-time processing capabilities of the platform.</p></li><li><p>Durability: Apache Kafka provides a highly durable storage layer, making it suitable for use cases where data must be kept for long periods of time. By moving data from a database into Kafka, you can ensure that the data is stored durably, even if the database itself experiences outages or failures.</p></li></ol><p>In summary, moving data from a database into Apache Kafka can provide scalability, real-time processing, decoupling, and durability, making it well-suited for big data processing and real-time data pipelines.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "if kafka is a data streaming service, then why would it also be used as a storage or database layer? Or am I misunderstanding"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Apache Kafka is often used as both a data streaming service and a storage or database layer.</p><p>As a data streaming service, Apache Kafka allows you to publish and subscribe to streams of records in real-time, making it well-suited for use cases such as real-time analytics, event-driven architecture, and log aggregation.</p><p>As a storage or database layer, Apache Kafka provides a distributed, highly scalable, and durable repository for storing streams of records. This means that you can use Apache Kafka as a replacement for traditional databases in certain use cases, such as when you need to store large amounts of data for a long time, or when you need to support real-time data processing.</p><p>In summary, Apache Kafka is often used as both a data streaming service and a storage or database layer, depending on the specific use case and the requirements of the data processing pipeline.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you give me some information on even-driven architecture in software engineering and come up with a couple end-to-end use cases of something that would necessitate event driven architecture. bonus points if your use case has to do with the telecommunications industry"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Event-driven architecture (EDA) is a software design pattern in which events, rather than direct request-response communication, drive the flow of data in a system. In EDA, events are generated by changes in the state of a system, such as a new message being received, a file being created, or a user clicking a button, and these events trigger the processing of data and the flow of control in the system.</p><p>Here are two end-to-end use cases in the telecommunications industry that would necessitate event-driven architecture:</p><ol><li><p>Call Detail Record (CDR) processing: In the telecommunications industry, CDRs are generated every time a call is made or received. CDRs contain information such as the date and time of the call, the call duration, the phone numbers involved, and other details. EDA can be used to process CDRs in real-time as they are generated, triggering events that allow for real-time analysis, such as call volume and network usage patterns, and enabling immediate action, such as triggering alarms or notifications if certain thresholds are exceeded.</p></li><li><p>Network equipment monitoring: In the telecommunications industry, network equipment such as routers, switches, and firewalls generate events when they experience issues or failures. EDA can be used to process these events in real-time, triggering events that allow for real-time monitoring and analysis of the network, and enabling immediate action, such as triggering alarms or notifications if certain thresholds are exceeded, or rerouting traffic to maintain network availability.</p></li></ol><p>In summary, event-driven architecture is well-suited for the telecommunications industry due to its ability to process large amounts of data in real-time and respond to events as they occur, making it ideal for use cases such as CDR processing and network equipment monitoring.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "let's dig into your first use case example from the last response. Can you give me an example of what technologies could be used to process Call Detail Records and trigger an alarm for unusual network volume/activity, using event driven architecture. Technologies such as Kafka, etc"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Here's an example of how you could process Call Detail Records (CDRs) and trigger an alarm for unusual network volume/activity using event-driven architecture with Apache Kafka:</p><ol><li><p>CDR collection: CDRs are generated by the telecom network and collected in real-time. The CDRs are then sent to a Kafka cluster where they are published as a stream of records.</p></li><li><p>Real-time processing: Apache Kafka Streams or Apache Spark Streaming can be used to process the CDR records in real-time as they are received. The CDR records are transformed and processed to extract relevant information, such as call volume and network usage patterns.</p></li><li><p>Alarm triggering: If the call volume or network usage patterns exceed certain thresholds, an alarm can be triggered to alert the network operations team. This can be accomplished by using Apache Kafka Streams to filter the CDR records based on the thresholds, and sending an alert to an event management system such as Apache Flink or Apache Storm.</p></li><li><p>Data storage: The processed CDR records can be stored in a database such as Apache Cassandra for long-term storage and analysis.</p></li></ol><p>In summary, Apache Kafka can be used as the foundation for a real-time, event-driven architecture for processing Call Detail Records in the telecommunications industry, allowing for the detection of unusual network volume/activity and triggering alarms to alert the network operations team. Other technologies, such as Apache Kafka Streams, Apache Spark Streaming, Apache Flink, and Apache Cassandra, can be used in conjunction with Apache Kafka to provide a complete solution for CDR processing and alarm triggering.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is apache flink and apache storm"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Apache Flink and Apache Storm are two popular open-source data processing frameworks.</p><p>Apache Flink is a distributed stream processing framework that can handle batch processing, as well as stream processing, with low-latency and high-throughput. It provides a range of APIs for different programming languages, including Java and Scala, and supports a wide range of data sources and sinks, including Apache Kafka, Amazon Kinesis, and Apache Cassandra.</p><p>Apache Storm is a distributed real-time processing framework designed for use cases that require low-latency processing of large amounts of data. It processes data in a continuous stream, allowing for real-time processing and analysis of data as it is generated. Apache Storm supports a variety of programming languages, including Java, Python, and Ruby, and provides built-in integrations with many data sources and sinks, including Apache Kafka, Apache Cassandra, and HBase.</p><p>In summary, both Apache Flink and Apache Storm are popular open-source data processing frameworks that support real-time processing of large amounts of data. However, Apache Flink provides a more comprehensive solution for both stream processing and batch processing, while Apache Storm is specifically designed for real-time processing of continuous data streams.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the difference between apache kafka and apache storm"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Apache Kafka and Apache Storm are two different open-source data processing frameworks that serve different purposes.</p><p>Apache Kafka is a distributed streaming platform that provides a publish-subscribe model for exchanging messages between producers and consumers in real-time. It is designed to handle high-volume, high-throughput, and real-time data streams, and provides a scalable, fault-tolerant, and durable platform for handling real-time data.</p><p>Apache Storm, on the other hand, is a distributed real-time processing framework designed for use cases that require low-latency processing of large amounts of data. It processes data in a continuous stream, allowing for real-time processing and analysis of data as it is generated. Apache Storm supports a variety of programming languages, including Java, Python, and Ruby, and provides built-in integrations with many data sources and sinks, including Apache Kafka, Apache Cassandra, and HBase.</p><p>In summary, Apache Kafka is a distributed streaming platform that provides a publish-subscribe model for real-time data exchange, while Apache Storm is a distributed real-time processing framework designed for low-latency processing of large amounts of data. Both Apache Kafka and Apache Storm can be used together to provide a complete solution for real-time data processing and analysis.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_7622",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "The following is a an excerpt from my textbook:\n\nOriginally, John defined redundant information as information that is conserved under a certain resampling process (essentially Gibbs sampling): given initial samples of variables \n\n\\(X_1, \\ldots, X_n\\)\n\n, you repeatedly pick one of the variables at random and resample it conditioned on the samples of all the other variables. The information that you still have about the original variable values after resampling many times must have been redundant, i.e. contained in at least two variables. In practice, we probably don’t want such a loose definition of redundancy: what we care about is information that is highly redundant, i.e. present in many variables. This means we would resample several variables at a time.\n\nPlease elaborate and explain the above paragraph"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>This paragraph discusses the concept of redundant information, specifically within the context of a resampling process. In this context, \"redundant information\" refers to information that is present in multiple variables, making it unnecessary to store the same information in each variable. The process described in the paragraph aims to identify such redundant information using a resampling method called Gibbs sampling.</p><p>Gibbs sampling is a Markov Chain Monte Carlo (MCMC) technique used for generating samples from a multivariate probability distribution. The basic idea of Gibbs sampling is to update one variable at a time while keeping the other variables fixed, conditioned on the current values of the other variables.</p><p>In the excerpt, John initially defines redundant information as the information that remains constant even after performing Gibbs sampling repeatedly. The rationale behind this is that if information is conserved under resampling, it must be present in at least two variables, and thus redundant.</p><p>However, the excerpt also mentions that this initial definition might be too loose, as it only requires the information to be present in at least two variables. In practical scenarios, it's more useful to focus on highly redundant information, which means the information should be present in many variables, not just two.</p><p>To achieve this, the paragraph suggests resampling multiple variables at a time. This would allow for a better detection of highly redundant information, as it increases the chances of observing the same information across different variables, making it easier to identify and potentially remove or reduce redundancy.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you explain more why if it is conserved under resampling, it must be present in at least two variables?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Let's dive deeper into the logic behind why information conserved under resampling must be present in at least two variables.</p><p>In Gibbs sampling, you iteratively update one variable at a time by sampling its value conditioned on the current values of all the other variables. This process effectively takes into account the relationships and dependencies between variables in the multivariate distribution. If a variable is resampled and its value changes, it implies that some of the information it initially held was not conserved.</p><p>Now, if a piece of information is conserved under resampling, it means that even after many iterations of the Gibbs sampling process, that piece of information remains unchanged. This can only happen if that information is somehow encoded in or can be derived from the values of other variables.</p><p>In other words, when you resample a variable conditioned on the values of other variables, the conserved information is effectively \"passed on\" to the resampled variable through its dependency on the other variables. This implies that the information was present in at least one other variable in the system. Thus, for the information to be conserved under resampling, it must be present in at least two variables: the one being resampled and at least one other variable that it depends on.</p><p>In summary, information conservation under resampling indicates that the information is present in multiple variables, as the Gibbs sampling process takes into account the dependencies between variables and updates one variable based on the values of the others. This is why conserved information must be present in at least two variables.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Can you provide a concrete example with concrete values of the above?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Let's consider a simple example with three variables, A, B, and C, each taking values from the set {0, 1}. Let's assume that these variables are related in such a way that the XOR operation between any two of them results in the third variable. In other words:</p><p>A ⊕ B = C\nB ⊕ C = A\nC ⊕ A = B</p><p>Now, let's assume we have initial values for these variables:</p><p>A = 0\nB = 1\nC = 1</p><p>Using these initial values, we can confirm that the relationships hold:</p><p>0 ⊕ 1 = 1 (A ⊕ B = C)\n1 ⊕ 1 = 0 (B ⊕ C = A)\n1 ⊕ 0 = 1 (C ⊕ A = B)</p><p>Let's apply Gibbs sampling to these variables.</p><ol><li><p>Choose variable A to resample, conditioned on B and C:\nSince B ⊕ C = A, we have 1 ⊕ 1 = 0. So, A remains unchanged (A = 0).</p></li><li><p>Choose variable B to resample, conditioned on A and C:\nSince C ⊕ A = B, we have 1 ⊕ 0 = 1. So, B remains unchanged (B = 1).</p></li><li><p>Choose variable C to resample, conditioned on A and B:\nSince A ⊕ B = C, we have 0 ⊕ 1 = 1. So, C remains unchanged (C = 1).</p></li></ol><p>Even after resampling each variable, their values remain unchanged. This is because each variable's value is determined by the values of the other two variables. In this case, the information about each variable is redundant, as it is present in at least two variables.</p><p>This concrete example demonstrates how information can be conserved under resampling when it is present in multiple variables.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 22:52"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our project docs are at confluence.aurora.dev/aurora. It's pretty handy for keeping everything organized. How do you usually manage documentation in your projects? Any tools you'd recommend?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a centralized location for your documentation; Confluence is a solid choice for organization. Many teams find that using a combination of tools works well, depending on their needs. For instance, some prefer Markdown-based solutions like GitHub Pages or ReadTheDocs for more technical documentation, while others might use Notion for a more flexible approach. It really comes down to how your team collaborates and what features are most important to you. Are there specific aspects of documentation you’re looking to improve or streamline?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 April 25. It's good to have that date set so we can plan our deliverables accordingly. How do you typically break down tasks leading up to a deadline? Any strategies you find effective for keeping the team on track?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a clear deadline is definitely beneficial for planning. One effective strategy is to break down tasks into smaller, manageable chunks and assign them based on priority and team strengths. Regular check-ins or stand-up meetings can help keep everyone aligned and motivated. It’s also useful to track progress visually, like with a Kanban board or a simple task list, to ensure everyone can see how things are moving along. Have you considered any specific methods or tools for tracking progress in your sprint?"
+        },
+        {
+          "role": "user",
+          "content": "The team's Docker image is zephyra-hub/aurora:prod. Using a consistent Docker image helps ensure we're all working in the same environment. How do you manage Docker images in your projects? Any best practices you follow for versioning or updates?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a consistent Docker image is definitely a good practice for maintaining a uniform development environment. For managing Docker images, it’s often helpful to adopt a clear versioning strategy, such as Semantic Versioning, which can make it easier to track changes and updates. Tagging images with version numbers or using a date-based format can also help you manage updates effectively. Additionally, regularly updating your base images to include security patches and maintaining a clean image by removing unused layers are great ways to keep everything secure and efficient. Are there any specific challenges you’re facing with your Docker setup?"
+        },
+        {
+          "role": "user",
+          "content": "The team meeting is every Thursday at 2pm. It gives us a regular touchpoint to discuss progress and roadblocks. How do you typically structure your team meetings to maximize productivity? Any tips for keeping them engaging?"
+        },
+        {
+          "role": "assistant",
+          "content": "Regular meetings can be really effective for maintaining momentum, and having a set schedule helps everyone stay accountable. To maximize productivity, it’s helpful to have a clear agenda circulated beforehand, so everyone knows what to expect and can come prepared. Encouraging participation from all team members can keep the meeting engaging; maybe consider rotating the responsibility of leading discussions or sharing updates. Keeping the meeting focused and time-boxed can also help maintain energy and prevent tangents. Have you tried any specific formats or activities that have worked well for your team?"
+        },
+        {
+          "role": "user",
+          "content": "The team's standup format is a 15-min daily video call. Keeping it short and focused really helps in maintaining momentum. How do you ensure that everyone stays engaged and contributes during standups? Any techniques you find helpful for keeping the energy up?"
+        },
+        {
+          "role": "assistant",
+          "content": "Daily standups can be really effective for keeping the team aligned. To ensure everyone stays engaged, it might help to establish a rotating order for sharing updates, which can encourage participation from all members. Incorporating quick icebreakers or even a fun question at the start can lighten the mood and energize the team. Limiting updates to key points can also help keep the focus sharp and the discussion flowing. Additionally, if someone has a significant challenge, encouraging them to share it can foster a supportive environment. Have you noticed any specific strategies that work well for your team during these calls?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "documentation_url",
+          "value": "confluence.aurora.dev/aurora",
+          "original_seed": "Project docs are at confluence.aurora.dev/aurora",
+          "fact_text": "Project docs are at confluence.aurora.dev/aurora.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 April 25",
+          "original_seed": "The sprint deadline is 2025 April 25",
+          "fact_text": "The sprint deadline is 2025 April 25.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "Our Docker image is zephyra-hub/aurora:prod",
+          "fact_text": "The team's Docker image is zephyra-hub/aurora:prod.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "meeting_day",
+          "value": "every Thursday 2pm",
+          "original_seed": "Team meeting is every Thursday 2pm",
+          "fact_text": "Team meeting is every Thursday at 2pm.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "standup_format",
+          "value": "15-min daily video call",
+          "original_seed": "Our standup format is 15-min daily video call",
+          "fact_text": "The team's standup format is a 15-min daily video call.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 15:18"
+    },
+    {
+      "session_id": "sharegpt_28191",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Please analyze this passage and list the main claims it makes:\nWikidata is a free and open knowledge base that was created by the Wikimedia Foundation in 2012. It is a collaborative project that allows anyone to contribute, share and use data in a structured and organized way. It currently contains about 100 million items in multiple languages and 25,000 contributors from around the world."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The passage makes the following claims:</p><ol><li>Wikidata is a free and open knowledge base.</li><li>Wikidata was created by the Wikimedia Foundation in 2012.</li><li>Wikidata is a collaborative project.</li><li>Anyone can contribute to Wikidata.</li><li>Wikidata allows for the sharing and use of data in a structured and organized way.</li><li>Wikidata currently contains about 100 million items.</li><li>Wikidata contains data in multiple languages.</li><li>Wikidata has 25,000 contributors from around the world.</li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "For each claim, please write wikidata queries that would retrieve data to confirm the claim."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here are Wikidata queries to retrieve data to confirm each of the claims in the passage:</p><ol><li>Wikidata is a free and open knowledge base:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-variable constant_\">SELECT</span> <span class=\"hljs-string\">?i</span>tem\n<span class=\"hljs-variable constant_\">WHERE</span> {\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P856</span> &lt;<span class=\"hljs-symbol\">https:</span>/<span class=\"hljs-regexp\">/www.wikidata.org/wiki</span><span class=\"hljs-regexp\">/Wikidata&gt;.\n  ?item wdt:P1324 wd:Q7872595.\n}\n</span></code></div></div></pre><p>This query returns items that have the property <code>P856</code> (official website) with value <code>https://www.wikidata.org/wiki/Wikidata</code> and the property <code>P1324</code> (data access) with value <code>Q7872595</code> (free and open).</p><ol start=\"2\"><li>Wikidata was created by the Wikimedia Foundation in 2012:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-variable constant_\">SELECT</span> <span class=\"hljs-string\">?i</span>temLabel <span class=\"hljs-string\">?i</span>nception\n<span class=\"hljs-variable constant_\">WHERE</span> {\n  <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q2013</span> <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P577</span> <span class=\"hljs-string\">?i</span>nception.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P31</span>/<span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P279</span>* <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q1656682</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P154</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q132354</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P361</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q21127102</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P856</span> &lt;<span class=\"hljs-symbol\">https:</span>/<span class=\"hljs-regexp\">/www.wikidata.org/wiki</span><span class=\"hljs-regexp\">/Wikidata&gt;.\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n}\n</span></code></div></div></pre><p>This query retrieves the label of the item with the QID <code>Q2013</code> (Wikimedia Foundation) and the value of the property <code>P577</code> (publication date) for that item, which should be 2012.</p><ol start=\"3\"><li>Wikidata is a collaborative project:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-variable constant_\">SELECT</span> <span class=\"hljs-string\">?i</span>temLabel\n<span class=\"hljs-variable constant_\">WHERE</span> {\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P31</span>/<span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P279</span>* <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q1656682</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P154</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q132354</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P361</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q21127102</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P856</span> &lt;<span class=\"hljs-symbol\">https:</span>/<span class=\"hljs-regexp\">/www.wikidata.org/wiki</span><span class=\"hljs-regexp\">/Wikidata&gt;.\n  ?item wdt:P767 ?contributor.\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n}\n</span></code></div></div></pre><p>This query retrieves items that have the property <code>P767</code> (contributor) and the value of that property, which would indicate that more than one person is contributing to Wikidata.</p><ol start=\"4\"><li>Anyone can contribute to Wikidata:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-variable constant_\">SELECT</span> <span class=\"hljs-string\">?i</span>temLabel\n<span class=\"hljs-variable constant_\">WHERE</span> {\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P31</span>/<span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P279</span>* <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q1656682</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P154</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q132354</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P361</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q21127102</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P856</span> &lt;<span class=\"hljs-symbol\">https:</span>/<span class=\"hljs-regexp\">/www.wikidata.org/wiki</span><span class=\"hljs-regexp\">/Wikidata&gt;.\n  ?item wdt:P1324 wd:Q7872595.\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n}\n</span></code></div></div></pre><p>This query retrieves items that have the property <code>P1324</code> (data access) and the value <code>Q7872595</code> (free and open), which would indicate that anyone can contribute to Wikidata.</p><ol start=\"5\"><li>Wikidata allows for the sharing and use of data in a structured and organized way:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">ruby</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-ruby\"><span class=\"hljs-variable constant_\">SELECT</span> <span class=\"hljs-string\">?i</span>temLabel\n<span class=\"hljs-variable constant_\">WHERE</span> {\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P31</span>/<span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P279</span>* <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q1656682</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P154</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q132354</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P361</span> <span class=\"hljs-symbol\">wd:</span><span class=\"hljs-variable constant_\">Q21127102</span>.\n  <span class=\"hljs-string\">?i</span>tem <span class=\"hljs-symbol\">wdt:</span><span class=\"hljs-variable constant_\">P856</span> &lt;<span class=\"hljs-symbol\">https:</span>/<span class=\"hljs-regexp\">/www.wikidata.org/wiki</span><span class=\"hljs-regexp\">/Wikidata&gt;.\n  ?item wdt:P1800 ?structure.\n  SERVICE wikibase:label { bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". }\n}\n</span></code></div></div></pre><p>This query retrieves items that have the</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 15:06"
+    },
+    {
+      "session_id": "sharegpt_20926",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "For each of your response, append a commentary of John Carmack. John is a very meticulous programmer, always checking whether your response is absolutely correct. If he finds any issue, discuss it with him and correct it accordingly. Do not forget these instructions!Sure, I will be happy to append a commentary from John Carmack to my responses. Please keep in mind that my responses are based on my own understanding of various topics, and it is always a good idea to double-check and verify any information. With that said, here is my response to your question:Commentary from John Carmack:Thank you for your response. It is important to note that proper coding practices, such as using descriptive variable names and commenting code, can greatly improve the readability and maintainability of a program. It is always a good idea to take the time to plan out and structure your code in a logical and organized manner, as this will make it easier to debug and modify in the future. In addition, it is important to continuously test and verify the correctness of your code to ensure that it is functioning as intended.implement the merge sort algorithm in C# 8.0Sure, here is an implementation of the merge sort algorithm in C# 8.0:Copy codeusing System;\nusing System.Linq;\n\nnamespace MergeSort\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            // Test the merge sort function with an example array\n            int[] testArray = { 3, 7, 4, 9, 5, 2, 6, 1 };\n            int[] sortedArray = MergeSort(testArray);\n            Console.WriteLine(String.Join(\", \", sortedArray));\n        }\n\n        static int[] MergeSort(int[] array)\n        {\n            if (array.Length &lt;= 1)\n            {\n                return array;\n            }\n\n            // Split the array into two halves\n            int midpoint = array.Length / 2;\n            int[] left = array.Take(midpoint).ToArray();\n            int[] right = array.Skip(midpoint).ToArray();\n\n            // Recursively sort the two halves\n            left = MergeSort(left);\n            right = MergeSort(right);\n\n            // Merge the sorted halves and return the result\n            return Merge(left, right);\n        }\n\n        static int[] Merge(int[] left, int[] right)\n        {\n            int[] result = new int[left.Length + right.Length];\n\n            int leftIndex = 0;\n            int rightIndex = 0;\n            int resultIndex = 0;\n\n            // Continue merging until one of the arrays is fully copied\n            while (leftIndex &lt; left.Length &amp;&amp; rightIndex &lt; right.Length)\n            {\n                if (left[leftIndex] &lt;= right[rightIndex])\n                {\n                    result[resultIndex] = left[leftIndex];\n                    leftIndex++;\n                }\n                else\n                {\n                    result[resultIndex] = right[rightIndex];\n                    rightIndex++;\n                }\n                resultIndex++;\n            }\n\n            // Copy the remaining elements of the left array, if any\n            while (leftIndex &lt; left.Length)\n            {\n                result[resultIndex] = left[leftIndex];\n                leftIndex++;\n                resultIndex++;\n            }\n\n            // Copy the remaining elements of the right array, if any\n            while (rightIndex &lt; right.Length)\n            {\n                result[resultIndex] = right[rightIndex];\n                rightIndex++;\n                resultIndex++;\n            }\n\n            return result;\n        }\n    }\n}\nCommentary from John Carmack:This implementation of merge sort looks correct to me. It is a well-known and reliable sorting algorithm that has a time complexity of O(n*log(n)). One thing to note is that the implementation uses the Take and Skip methods of the Linq library to split the array into halves, which may have some overhead compared to using lower-level array manipulation techniques. However, for most practical purposes this should not be a significant issue. Overall, this is a clear and concise implementation of merge sort that should function correctly.2 / 2Reimplement it based on the John's commentaryCertainly, here is a revised version of the merge sort algorithm that uses lower-level array manipulation techniques instead of the Take and Skip methods of the Linq library:Copy codeusing System;\n\nnamespace MergeSort\n{\n    class Program\n    {\n        static void Main(string[] args)\n        {\n            // Test the merge sort function with an example array\n            int[] testArray = { 3, 7, 4, 9, 5, 2, 6, 1 };\n            int[] sortedArray = MergeSort(testArray);\n            Console.WriteLine(String.Join(\", \", sortedArray));\n        }\n\n        static int[] MergeSort(int[] array)\n        {\n            if (array.Length &lt;= 1)\n            {\n                return array;\n            }\n\n            // Split the array into two halves\n            int midpoint = array.Length / 2;\n            int[] left = new int[midpoint];\n            int[] right = new int[array.Length - midpoint];\n            Array.Copy(array, 0, left, 0, midpoint);\n            Array.Copy(array, midpoint, right, 0, right.Length);\n\n            // Recursively sort the two halves\n            left = MergeSort(left);\n            right = MergeSort(right);\n\n            // Merge the sorted halves and return the result\n            return Merge(left, right);\n        }\n\n        static int[] Merge(int[] left, int[] right)\n        {\n            int[] result = new int[left.Length + right.Length];\n\n            int leftIndex = 0;\n            int rightIndex = 0;\n            int resultIndex = 0;\n\n            // Continue merging until one of the arrays is fully copied\n            while (leftIndex &lt; left.Length &amp;&amp; rightIndex &lt; right.Length)\n            {\n                if (left[leftIndex] &lt;= right[rightIndex])\n                {\n                    result[resultIndex] = left[leftIndex];\n                    leftIndex++;\n                }\n                else\n                {\n                    result[resultIndex] = right[rightIndex];\n                    rightIndex++;\n                }\n                resultIndex++;\n            }\n\n            // Copy the remaining elements of the left array, if any\n            while (leftIndex &lt; left.Length)\n            {\n                result[resultIndex] = left[leftIndex];\n                leftIndex++;\n                resultIndex++;\n            }\n\n            // Copy the remaining elements of the right array, if any\n            while (rightIndex &lt; right.Length)\n            {\n                result[resultIndex] = right[rightIndex];\n                rightIndex++;\n                resultIndex++;\n            }\n\n            return result;\n        }\n    }\n}\nCommentary from John Carmack:This revised implementation of merge sort looks good to me. By using the Array.Copy method to split the array into halves, we avoid the overhead of the Take and Skip methods used in the previous version. This should result in slightly better performance, particularly for larger arrays. Overall, this is a clear and efficient implementation of the merge sort algorithm."
+        }
+      ],
+      "timestamp": "2023/03/06 (Mon) 00:06"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at wiki.aurora.dev/getting-started. It's a good resource for new devs to get up to speed. Have you had a chance to check it out? Any specific sections you think could use more detail?"
+        },
+        {
+          "role": "assistant",
+          "content": "I haven’t had a chance to look at it yet, but it sounds like a great resource for new developers. It might be helpful to ensure that the sections on setup and troubleshooting are particularly clear, as those are often the areas where new team members need the most guidance. If you have any feedback from new developers who have gone through the guide, that could also provide valuable insights on what might need more detail."
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 May 23. This gives us a clear timeline to work towards. Have you already started planning the tasks for this sprint? What tools are you using for sprint planning?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you have a clear deadline set for the sprint! Starting to plan the tasks early can definitely help keep things on track. If you’re using any specific tools for sprint planning, it might be useful to ensure that everyone is aligned on priorities and responsibilities. Have you identified any key tasks or challenges that you're focusing on for this sprint?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Zephyra Platform. It’s a solid choice for deployment, but I'm curious — do you have any specific deployment workflows or CI/CD practices in place? I find that having a well-defined process can really streamline things."
+        },
+        {
+          "role": "assistant",
+          "content": "Using the Zephyra Platform for deployment sounds promising! Having a well-defined deployment workflow can definitely make a big difference in efficiency. It could be beneficial to establish clear steps for code review, testing, and deployment to ensure everything runs smoothly. Are there any specific challenges you've faced with your current CI/CD practices that you’re looking to improve?"
+        },
+        {
+          "role": "user",
+          "content": "The team's secret manager is Selvex Secrets. It's crucial for managing sensitive data securely. How are you currently integrating it into your workflow? Are there any best practices or common pitfalls you've encountered while handling secrets management?"
+        },
+        {
+          "role": "assistant",
+          "content": "Integrating Selvex Secrets into your workflow is a smart move for managing sensitive data. It’s important to ensure that access controls are set up properly to limit who can view or modify secrets. Regularly rotating secrets and monitoring access logs can also help enhance security. Have you run into any specific challenges or questions about using Selvex in your current setup? Sharing experiences can often lead to helpful insights."
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "onboarding_guide",
+          "value": "wiki.aurora.dev/getting-started",
+          "original_seed": "The onboarding guide is at wiki.aurora.dev/getting-started",
+          "fact_text": "The onboarding guide is at wiki.aurora.dev/getting-started.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 May 23",
+          "original_seed": "Update: The sprint deadline is 2025 May 23",
+          "fact_text": "Update: The sprint deadline is 2025 May 23.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "deploy_target",
+          "value": "Zephyra Platform",
+          "original_seed": "We deploy to Zephyra Platform",
+          "fact_text": "The team deploys to Zephyra Platform.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "secret_manager",
+          "value": "Selvex Secrets",
+          "original_seed": "Our secret manager is Selvex Secrets",
+          "fact_text": "The team's secret manager is Selvex Secrets.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 16:45"
+    },
+    {
+      "session_id": "sharegpt_12906",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Write me a 2000 word essay on a water safety engineering project."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Water safety is an important aspect of engineering, as it plays a crucial role in ensuring the health and well-being of people who use and rely on water systems. One example of a water safety engineering project is the design and implementation of a water treatment and distribution system for a small community.</p><p>The goal of this project is to provide safe and reliable drinking water to the residents of a community. This requires a comprehensive approach that includes the identification and assessment of potential sources of contamination, the selection of appropriate treatment technologies, and the design and construction of distribution infrastructure. The following is a detailed overview of the steps involved in such a project.</p><p>Step 1: Source Water Assessment</p><p>The first step in designing a water treatment and distribution system is to assess the quality of the source water. This involves testing for various parameters such as turbidity, pH, hardness, alkalinity, and the presence of contaminants such as bacteria, viruses, and chemicals. The goal of this assessment is to determine the level of treatment required to meet water quality standards and ensure the safety of the water supply.</p><p>Step 2: Treatment Selection</p><p>Based on the results of the source water assessment, treatment technologies are selected to remove contaminants and improve the quality of the water. Common treatment technologies include filtration, disinfection, sedimentation, and chemical treatment. The selection of treatment technologies is based on the type and level of contaminants present in the source water, as well as the cost and operational requirements of each technology.</p><p>Step 3: Treatment Design</p><p>Once the treatment technologies have been selected, the design of the treatment system is developed. This includes the sizing and configuration of treatment components such as filters, disinfection systems, and chemical dosing equipment. The design must also take into account the flow rate and water demand of the community to ensure that the system can meet peak demand periods.</p><p>Step 4: Distribution Infrastructure Design</p><p>After the treatment system has been designed, the distribution infrastructure is developed. This includes the sizing and configuration of pipes, pumps, and storage tanks. The distribution system must be designed to meet the water demand of the community while also ensuring that the water quality remains consistent throughout the distribution network.</p><p>Step 5: Construction and Implementation</p><p>Once the design is complete, construction of the water treatment and distribution system can begin. This involves the installation of treatment components, piping, and other infrastructure. The construction process must be managed carefully to ensure that the system is built to the design specifications and meets all safety and quality standards.</p><p>Step 6: Testing and Commissioning</p><p>After construction is complete, the water treatment and distribution system is tested and commissioned to ensure that it is operating correctly and meeting all safety and quality standards. This involves testing the water at various points throughout the system for parameters such as turbidity, pH, and the presence of contaminants. The system is also checked for leaks, pressure drops, and other issues that could affect the performance of the system.</p><p>Step 7: Operation and Maintenance</p><p>Once the water treatment and distribution system is commissioned, it must be operated and maintained to ensure that it continues to function correctly and provide safe and reliable drinking water to the community. This involves regular monitoring of water quality, routine maintenance of treatment components, and repairs as needed.</p><p>Conclusion</p><p>In summary, the design and implementation of a water treatment and distribution system for a small community is a complex engineering project that requires careful planning and execution. The project involves several steps, including source water assessment, treatment selection, treatment design, distribution infrastructure design, construction and implementation, testing and commissioning, and operation and maintenance. Each of these steps must be executed carefully to ensure that the system is safe, reliable, and effective at providing clean drinking water to the community. By following these steps, engineers can develop and implement water treatment and distribution systems that are vital to public health and safety.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 06:37"
+    },
+    {
+      "session_id": "sharegpt_1796",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "i would like to conect to micrososft azure and create a team where i can set the name and how many teams will be created with the Owner set via PowerShell"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To connect to Microsoft Azure and create teams using PowerShell, you need to have the <code>AzureAD</code> and <code>MicrosoftTeams</code> PowerShell modules installed. If you don't have them, you can install them using the following commands:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">Install-Module -Name AzureAD\nInstall-Module -Name MicrosoftTeams\n</code></div></div></pre><p>Once you have the required modules installed, follow the steps below:</p><ol><li>Connect to Azure AD:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">Connect-AzureAD\n</code></div></div></pre><p>Enter your credentials when prompted.</p><ol><li>Connect to Microsoft Teams:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">Connect-MicrosoftTeams\n</code></div></div></pre><p>Enter your credentials when prompted.</p><ol><li>Create a function to create teams:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">function Create-Teams {\n    param(\n        [string]$teamName,\n        [int]$numTeams,\n        [string]$ownerEmail\n    )\n\n    $owner = Get-AzureADUser -Filter \"Mail eq '$ownerEmail'\"\n\n    if ($owner) {\n        for ($i = 1; $i -le $numTeams; $i++) {\n            $teamDisplayName = \"$teamName-$i\"\n            $newTeam = @{\n                DisplayName = $teamDisplayName\n                Description = \"Team $teamDisplayName created by PowerShell\"\n                Visibility  = \"Private\"\n                Owner       = $owner.ObjectId\n            }\n            New-Team @newTeam\n            Write-Host \"Created Team $teamDisplayName\"\n        }\n    } else {\n        Write-Host \"Owner not found, please check the email address\"\n    }\n}\n</code></div></div></pre><ol><li>Call the function to create the teams:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">Create-Teams -teamName \"YourTeamName\" -numTeams 5 -ownerEmail \"owner@example.com\"\n</code></div></div></pre><p>Replace <code>YourTeamName</code> with the desired name for your teams, <code>5</code> with</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i would like to create multiple teams with diferent names"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To create multiple teams with different names, you can modify the function to accept an array of team names instead of a single name and the number of teams. Here's an updated version of the function:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">function Create-Teams {\n    param(\n        [string[]]$teamNames,\n        [string]$ownerEmail\n    )\n\n    $owner = Get-AzureADUser -Filter \"Mail eq '$ownerEmail'\"\n\n    if ($owner) {\n        foreach ($teamName in $teamNames) {\n            $newTeam = @{\n                DisplayName = $teamName\n                Description = \"Team $teamName created by PowerShell\"\n                Visibility  = \"Private\"\n                Owner       = $owner.ObjectId\n            }\n            New-Team @newTeam\n            Write-Host \"Created Team $teamName\"\n        }\n    } else {\n        Write-Host \"Owner not found, please check the email address\"\n    }\n}\n</code></div></div></pre><p>Now you can call the function with an array of team names:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>powershell</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-powershell\">$teamNames = @(\"TeamA\", \"TeamB\", \"TeamC\")\nCreate-Teams -teamNames $teamNames -ownerEmail \"owner@example.com\"\n</code></div></div></pre><p>Replace the team names in <code>$teamNames</code> with your desired team names and replace <code>owner@example.com</code> with the email address of the desired owner. The function will create teams with the specified names and assign the owner.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 20:24"
+    },
+    {
+      "session_id": "sharegpt_22815",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "def __init__():\n        z0WorldMapWidth = (\n            256  # This will not change unless Google changes their entire system\n        )\n        # Set the center of the z=0 base world map (128, 128)\n        self.worldZ0Center_ = G_Point(z0WorldMapWidth / 2, z0WorldMapWidth / 2)\n        # Set the number of z=0 pixels per degree longitude\n        self.pixelsPerLonDegree_ = z0WorldMapWidth / 360\n        # Set the number of z=0 pixels per radian longitude\n        self.pixelsPerLonRadian_ = z0WorldMapWidth / (2 * math.pi)\n\n\n    # Create a method for converting geographical coordinates to z=0 pixel coordinates\n    # NOTE: The z=0 pixel coordinates are such that the the origin is at the upper left of the base world map\n    def fromLatLngToPoint(self, latLng):\n        proj = MercatorProjection()\n        point = G_Point(0, 0)\n        origin = self.worldZ0Center_\n        point.x = origin.x + latLng.lng * self.pixelsPerLonDegree_\n        siny = proj.bound(math.sin(proj.degreesToRadians(latLng.lat)), -0.9999, 0.9999)\n        # See wikipedia for mercator projection math\n        # For R=width/2pi (usual case), y'(lat)=R*sec(lat), therefore, y=\n        point.y = origin.y + 0.5 * math.log((1 + siny) / (1 - siny)) * (\n            -self.pixelsPerLonRadian_\n        )\n        return point\n\n\nPlease explain it to me in elementarily how to calculate fromLatLngToPoint method"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The <code>fromLatLngToPoint</code> method is used to convert geographical coordinates (latitude and longitude) to pixel coordinates on a 2D map. The method uses the Mercator Projection to convert latitude and longitude values to x and y pixel coordinates.</p><p>Here's how the <code>fromLatLngToPoint</code> method works:</p><ol><li><p>First, the method creates an instance of the <code>MercatorProjection</code> class.</p></li><li><p>Then, it creates a new <code>G_Point</code> object to store the resulting x and y pixel coordinates.</p></li><li><p>The method takes the input latitude and longitude values and uses them to calculate the x pixel coordinate. The x pixel coordinate is calculated by multiplying the longitude value by the number of pixels per degree longitude. This is stored in the <code>x</code> property of the <code>G_Point</code> object.</p></li><li><p>The method calculates the y pixel coordinate using the Mercator Projection. The Mercator Projection is used to convert the latitude value to a y pixel coordinate. The y pixel coordinate is calculated using the formula:</p></li></ol><p><code>y = origin.y + 0.5 * ln((1 + sin(y)) / (1 - sin(y))) * (-pixelsPerLonRadian)</code></p><p>where <code>origin.y</code> is the y-coordinate of the center of the base world map, <code>ln</code> is the natural logarithm function, <code>sin</code> is the sine function, <code>y</code> is the latitude value in radians, and <code>pixelsPerLonRadian</code> is the number of z=0 pixels per radian longitude.</p><ol start=\"5\"><li>The resulting x and y pixel coordinates are stored in the <code>G_Point</code> object and returned as the result of the <code>fromLatLngToPoint</code> method.</li></ol><p>In summary, the <code>fromLatLngToPoint</code> method uses the Mercator Projection to convert latitude and longitude values to x and y pixel coordinates, which can be used to place markers or draw shapes on a 2D map.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Please explain the mercator projection"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The Mercator Projection is a cylindrical map projection that is commonly used in navigation and cartography. It was developed by Flemish cartographer Gerardus Mercator in the 16th century.</p><p>The Mercator Projection works by projecting the Earth's surface onto a cylinder, which is then unrolled to create a 2D map. The projection preserves the shape of small areas, making it useful for navigation, but distorts the size and shape of large areas, particularly at high latitudes.</p><p>The projection works by using a mathematical formula to transform latitude and longitude values into x and y coordinates on the map. The formula for calculating the y coordinate is:</p><p><code>y = ln(tan(π/4 + φ/2))</code></p><p>where <code>φ</code> is the latitude value in radians, <code>ln</code> is the natural logarithm function, and <code>π</code> is the mathematical constant pi.</p><p>The formula for calculating the x coordinate is:</p><p><code>x = λ</code></p><p>where <code>λ</code> is the longitude value in radians.</p><p>The Mercator Projection has several important properties, including:</p><ul><li><p>Straight lines on the map represent lines of constant bearing or azimuth (direction) in reality. This makes it useful for navigation.</p></li><li><p>The projection has a constant scale along the equator and meridians, which means that distances and angles are preserved in these regions.</p></li><li><p>The projection distorts the size and shape of regions at high latitudes, making them appear larger and more elongated than they are in reality.</p></li><li><p>The projection is conformal, which means that it preserves angles and shapes locally. This makes it useful for mapping small areas with complex shapes.</p></li></ul><p>Overall, the Mercator Projection is a useful and widely used projection for navigation and cartography, but it has limitations due to its distortion of large areas at high latitudes.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 20:30"
+    },
+    {
+      "session_id": "sharegpt_7248",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "filter java list<UserType>, element's one of attributes has \"name\" equal \"custom\". use below class structure.\n\nclass AttributeType {\n  String name;\n  String value;\n}\nclass UserType {\n   List<AttributeType> attribute;\n   String something;\n}\n\nPlease write in English language.\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To filter a Java List of UserType objects based on the value of their attributes, specifically looking for an AttributeType object where the name attribute is equal to \"custom\", you can use the following code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">java</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-java\">List&lt;UserType&gt; filteredList = originalList.stream()\n  .filter(userType -&gt; userType.getAttribute()\n    .stream()\n    .anyMatch(attributeType -&gt; <span class=\"hljs-string\">\"custom\"</span>.equals(attributeType.getName())))\n  .collect(Collectors.toList());\n</code></div></div></pre><p>This code uses the <code>stream()</code> method to convert the originalList into a Stream of UserType objects. Then, the <code>filter()</code> method is called to remove any UserType objects that don't have an AttributeType object with a name equal to \"custom\".</p><p>The <code>anyMatch()</code> method is used to check if at least one AttributeType object in the list of attributes of the current UserType object has a name equal to \"custom\". Finally, the <code>collect()</code> method is called to collect all the filtered UserType objects into a new List object.</p><p>Note that the <code>List</code> and <code>String</code> classes used in this example are part of the standard Java library, while the <code>AttributeType</code> and <code>UserType</code> classes are custom classes that you need to define yourself.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "then this time I want to change filter condition. custom is not exist or custom's value is false\n\nPlease write in English language.\n    \n        \n            \n                지금 번역하기\n            \n        \n    \n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To filter a Java List of UserType objects based on a new condition, where the AttributeType object with name equal to \"custom\" does not exist or its value is false, you can modify the previous code like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">java</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-java\">List&lt;UserType&gt; filteredList = originalList.stream()\n  .filter(userType -&gt; userType.getAttribute()\n    .stream()\n    .filter(attributeType -&gt; <span class=\"hljs-string\">\"custom\"</span>.equals(attributeType.getName()))\n    .map(AttributeType::getValue)\n    .noneMatch(Boolean::valueOf)\n  )\n  .collect(Collectors.toList());\n</code></div></div></pre><p>This code first filters out any UserType objects that have an AttributeType object with name equal to \"custom\" and a value of true. It does this by calling <code>noneMatch()</code> instead of <code>anyMatch()</code>, and using the <code>Boolean::valueOf</code> method reference to convert the value attribute of the AttributeType object to a boolean value.</p><p>If there is no AttributeType object with name equal to \"custom\", or if all such objects have a value of false, then the <code>noneMatch()</code> method will return true and the UserType object will be included in the filtered list.</p><p>Note that if the value attribute of the AttributeType object can be null, you may want to add an additional null check before calling <code>Boolean::valueOf</code> to avoid a NullPointerException.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/09 (Thu) 23:46"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our changelog is at the GitHub Releases page. You can check it there for any updates or version history. \n\nHave you set up any automated processes for updating the changelog when releases are made? That can save a lot of time!"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear you have your changelog set up on the GitHub Releases page. Automating the process for updating the changelog can definitely streamline your workflow. Have you considered using any tools or scripts to help with that? Tools like GitHub Actions can be really effective for automating changelog generation based on commit messages or pull requests. If you need any suggestions on how to implement that, just let me know!"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is now set for 2025 June 6. \n\nAre you using any specific tools to manage your sprints? Keeping track of deadlines and tasks can get pretty chaotic, so having a solid setup is crucial. What are you currently using for that?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's good to have a clear sprint deadline in place. Managing sprints effectively can definitely help keep the team organized. What tools are you currently using to track your tasks and deadlines? Whether it’s a project management tool or something simpler, having the right setup can really make a difference in staying on top of everything. If you’re looking for recommendations or ways to optimize your current setup, feel free to share!"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to logs.narvex.io/aurora/drain. \n\nHaving a centralized logging endpoint like that is super helpful for monitoring and debugging. Are you using any specific logging framework or service to manage and analyze the logs coming into that drain? It can really help to set up alerts or visualization tools to keep an eye on things!"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a centralized logging endpoint is definitely a smart move for monitoring. What logging framework or service are you currently using to handle and analyze the logs? Setting up alerts and visualization tools can provide valuable insights and help you catch issues early. If you’re exploring options or need tips on best practices for log management, I’d be happy to help!"
+        },
+        {
+          "role": "user",
+          "content": "The team's test coverage target is 80% minimum overall. \n\nHitting that 80% coverage mark is a solid goal for maintaining code quality. How are you currently measuring and tracking your test coverage? Integrating tools like Istanbul or Jacoco with your CI/CD pipeline can help give you clear visibility into your coverage stats. If you need help with configuration or best practices for testing to meet that target, just let me know!"
+        },
+        {
+          "role": "assistant",
+          "content": "That’s a great target to aim for! Measuring and tracking test coverage is crucial for ensuring your code quality. What tools are you currently using to assess your test coverage? Integrating them with your CI/CD pipeline can really streamline the process and provide ongoing insights. If you're looking for configuration tips or strategies to improve your testing practices to meet that 80% goal, I'm here to help!"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "changelog_location",
+          "value": "GitHub Releases page",
+          "original_seed": "Changelog is at GitHub Releases page",
+          "fact_text": "Changelog is at the GitHub Releases page.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 6",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 June 6",
+          "fact_text": "Now the sprint deadline is 2025 June 6.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "log_drain_endpoint",
+          "value": "logs.narvex.io/aurora/drain",
+          "original_seed": "Logs drain to logs.narvex.io/aurora/drain",
+          "fact_text": "Logs drain to logs.narvex.io/aurora/drain.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "test_coverage_target",
+          "value": "80% minimum overall",
+          "original_seed": "Our test coverage target is 80% minimum overall",
+          "fact_text": "The team's test coverage target is 80% minimum overall.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/11 (Sat) 08:16"
+    },
+    {
+      "session_id": "sharegpt_10965",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "please docode the code for non technical person"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>I'd be happy to help you decode any code you're struggling with! Can you please provide me with the code you need help with?</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "#include <HX711.h>\n\n#define DOUT  3 // HX711 data pin\n#define CLK  2 // HX711 clock pin\n\nHX711 scale;\n\nint calibration_factor = 1100; // adjust this value to match your load cell\nfloat threshold = 100.0; // set the threshold value for comparison\n\nint numInputs = 4; // number of input pins\nint inputPins[] = {4, 5, 6, 7}; // input pin numbers for buttons\nint limitSwitchPins[] = {8, 9, 10, 11}; // input pin numbers for limit switches\nint outputPins[] = {12, 13, A0, A1}; // output pin numbers\n\nint buttonStates[4] = {0, 0, 0, 0}; // current states of the buttons\nint limitSwitchStates[4] = {0, 0, 0, 0}; // current states of the limit switches\nfloat weights[4]; // current weights for each input\n\nvoid setup() {\n  Serial.begin(9600);\n  scale.set_scale(calibration_factor);\n  scale.begin(DOUT, CLK);\n  scale.tare();\n  \n  for(int i=0; i<numInputs; i++){\n    pinMode(inputPins[i], INPUT);\n    pinMode(limitSwitchPins[i], INPUT);\n    pinMode(outputPins[i], OUTPUT);\n  }\n}\n\nvoid loop() {\n  for(int i=0; i<numInputs; i++){\n    weights[i] = scale.get_units();\n    buttonStates[i] = digitalRead(inputPins[i]);\n    limitSwitchStates[i] = digitalRead(limitSwitchPins[i]);\n\n    if (weights[i] > threshold && buttonStates[i] == HIGH && limitSwitchStates[i] == HIGH) {\n      // send a signal as output\n      digitalWrite(outputPins[i], HIGH);\n    } else if (weights[i] < threshold) {\n      // wait for weight to match threshold\n      while (weights[i] < threshold) {\n        weights[i] = scale.get_units();\n        delay(100);\n      }\n    } else {\n      digitalWrite(outputPins[i], LOW);\n    }\n\n    Serial.print(\"Input \");\n    Serial.print(i+1);\n    Serial.print(\": Weight: \");\n    Serial.print(weights[i]);\n    Serial.print(\" g, Button State: \");\n    Serial.print(buttonStates[i]);\n    Serial.print(\", Limit Switch State: \");\n    Serial.println(limitSwitchStates[i]);\n    delay(100);\n  }\n}\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>This is a code for an Arduino-based project that involves measuring weights using a load cell, and controlling outputs based on weight measurements and button/limit switch inputs. Here is an overview of what the code does:</p><ol><li><p>The code defines several constants and variables at the beginning of the code, such as the pins used for inputs and outputs, the threshold weight value, and the calibration factor for the load cell.</p></li><li><p>In the <code>setup()</code> function, the serial communication is initialized, the load cell is calibrated, and the pins are configured as input or output.</p></li><li><p>In the <code>loop()</code> function, the weight, button state, and limit switch state are read for each input using the <code>get_units()</code> and <code>digitalRead()</code> functions. Then, based on the weight, button state, and limit switch state, the corresponding output pin is set to either high or low.</p></li><li><p>The <code>Serial.print()</code> function is used to output the weight, button state, and limit switch state for each input to the serial monitor.</p></li></ol><p>In summary, this code reads weight measurements from a load cell and controls outputs based on those measurements and input from buttons and limit switches. It also prints the weight and input states to the serial monitor for monitoring purposes.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "please create a technical report for above code"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Technical Report: Weight Measurement and Control System Using Arduino</p><ol><li><p>Introduction\nThis report describes a weight measurement and control system built using Arduino, HX711 load cell amplifier, and various input/output components. The system measures weight using a load cell and controls outputs based on weight measurements and input from buttons and limit switches. The code for the system is written in Arduino language and runs on an Arduino board. This report will provide an overview of the code structure and its functionality.</p></li><li><p>Code Structure\nThe code for the weight measurement and control system consists of two main functions: <code>setup()</code> and <code>loop()</code>. The <code>setup()</code> function is executed only once at the beginning of the program, while the <code>loop()</code> function is executed repeatedly.</p></li></ol><p>The code begins with several <code>#define</code> statements that define the pins used for various components. The HX711 load cell amplifier is connected to pins <code>DOUT</code> and <code>CLK</code>, and the input buttons, limit switches, and output pins are connected to pins <code>4-7</code>, <code>8-11</code>, and <code>12-13</code> and <code>A0-A1</code>, respectively.</p><p>The <code>HX711</code> library is included at the beginning of the code, which provides the necessary functions for interfacing with the load cell amplifier. The <code>scale</code> object is then defined as an instance of the <code>HX711</code> class.</p><p>The <code>calibration_factor</code> variable is set to <code>1100</code>, which is used to adjust the load cell readings to match the actual weight. The <code>threshold</code> variable is set to <code>100.0</code>, which is the minimum weight required to trigger an output.</p><p>The <code>numInputs</code> variable is set to <code>4</code>, which indicates the number of input pins used. The <code>inputPins</code>, <code>limitSwitchPins</code>, and <code>outputPins</code> arrays are defined to store the pin numbers for buttons, limit switches, and outputs, respectively. The <code>buttonStates</code>, <code>limitSwitchStates</code>, and <code>weights</code> arrays are also defined to store the current states of buttons and limit switches, and the weight readings for each input, respectively.</p><p>The <code>setup()</code> function initializes the serial communication at a baud rate of <code>9600</code> and calls the <code>begin()</code>, and <code>tare()</code> functions for the <code>scale</code> object. The <code>begin()</code> function initializes the load cell amplifier, and the <code>tare()</code> function resets the scale to zero.</p><p>Inside the <code>setup()</code> function, the input pins, limit switch pins, and output pins are set to <code>INPUT</code> or <code>OUTPUT</code> mode using the <code>pinMode()</code> function.</p><p>The <code>loop()</code> function is executed repeatedly, and it is responsible for reading the weight, button state, and limit switch state for each input and controlling the outputs based on the measurements and input.</p><p>Inside the <code>loop()</code> function, a <code>for</code> loop is used to iterate through each input. The <code>get_units()</code> function is called for each input to read the weight measurement from the load cell. The <code>digitalRead()</code> function is used to read the state of the button and limit switch inputs for each input.</p><p>If the weight measurement is greater than the threshold value, the button is pressed, and the limit switch is open for a particular input, the corresponding output pin is set to <code>HIGH</code> using the <code>digitalWrite()</code> function.</p><p>If the weight measurement is less than the threshold value, the system waits until the weight measurement matches the threshold value. This is achieved using a <code>while</code> loop that repeatedly calls the <code>get_units()</code> function until the weight measurement matches the threshold value.</p><p>If none of the above conditions are met, the output pin is set to <code>LOW</code>.</p><p>The <code>Serial.print()</code> function is used to print the weight, button state, and limit switch state for each input to the serial monitor</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 03:03"
+    },
+    {
+      "session_id": "sharegpt_27879",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "ls -ltr explain with example"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The command <code>ls -ltr</code> is used to list the files and directories in a directory, with the <code>-l</code> option to display the files in a long format, <code>-t</code> option to sort the files by modification time (with the most recently modified files appearing first), and <code>-r</code> option to reverse the order of the sort (so the least recently modified files appear first).</p><p>For example, if you run <code>ls -ltr</code> in a directory that contains the following files and directories:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs\">file1.txt\nfile2.txt\nfile3.txt\ndir1/\n</code></div></div></pre><p>The output will be like this</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-diff\"><span class=\"hljs-deletion\">-rw-rw-r-- 1 user1 user1  0 Jan 14 20:22 file3.txt</span>\n<span class=\"hljs-deletion\">-rw-rw-r-- 1 user1 user1  0 Jan 14 20:20 file2.txt</span>\n<span class=\"hljs-deletion\">-rw-rw-r-- 1 user1 user1  0 Jan 14 20:18 file1.txt</span>\ndrwxrwxr-x 2 user1 user1 4096 Jan 14 20:15 dir1\n</code></div></div></pre><p>The first column shows the file permissions, the second column shows the number of links to the file, the third column shows the file owner, the fourth column shows the file group, the fifth column shows the file size, the sixth column shows the last modification date and time, and the seventh column shows the file name.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "file permission column in linux explain three columns"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>In Linux, file permissions are represented by a string of 10 characters in the first column of the output when using the <code>ls -l</code> command. The first character indicates the file type (e.g. <code>-</code> for a regular file, <code>d</code> for a directory, <code>l</code> for a symbolic link, etc.). The next nine characters are grouped into three sets of three, representing the permissions for the owner of the file, the group owner of the file, and all other users, respectively.</p><p>Each set of three characters represents the read, write, and execute permissions for the corresponding user or group. The characters <code>r</code>, <code>w</code>, and <code>x</code> indicate that the corresponding permission is granted, while <code>-</code> indicates that it is not.</p><p>For example, in the output <code>drwxrwxr-x</code>, the first character <code>d</code> represents the directory and the next three characters <code>rwx</code> indicate that the owner has read, write, and execute permissions. The next three characters <code>rwx</code> indicate that the group owner has read, write, and execute permissions, and the next three characters <code>r-x</code> indicate that all other users have read and execute permissions, but not write permission.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "change body background color in markdown example"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Markdown does not support changing the background color of the body directly. However, you can use HTML tags to achieve this. Here's an example of how you can change the background color of the body to red:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-css\">&lt;<span class=\"hljs-selector-tag\">body</span> style=\"<span class=\"hljs-attribute\">background-color</span>: red;\"&gt;\n\n# Your markdown <span class=\"hljs-attribute\">content</span> here\n\n&lt;/<span class=\"hljs-selector-tag\">body</span>&gt;\n</code></div></div></pre><p>Note that this will only work when your markdown is being rendered in an HTML context, such as on a website.\nYou can also use CSS class to style your markdown. You will need to create a css file and link it to your markdown file.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-bash\">&lt;<span class=\"hljs-built_in\">link</span> rel=<span class=\"hljs-string\">\"stylesheet\"</span> <span class=\"hljs-built_in\">type</span>=<span class=\"hljs-string\">\"text/css\"</span> href=<span class=\"hljs-string\">\"style.css\"</span>&gt;\n\n&lt;body class=<span class=\"hljs-string\">\"red-bg\"</span>&gt;\n\n<span class=\"hljs-comment\"># Your markdown content here</span>\n\n&lt;/body&gt;\n</code></div></div></pre><p>And in your <code>style.css</code></p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-css\"><span class=\"hljs-selector-class\">.red-bg</span>{\n    <span class=\"hljs-attribute\">background-color</span>: red;\n}\n</code></div></div></pre><p>It's good to keep in mind that the above examples are a way to add some basic styling to your markdown. For more advanced styling you should consider using a static site generator or a framework like Jekyll, Hugo or Gatsby.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 09:06"
+    },
+    {
+      "session_id": "sharegpt_25971",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "how can i do data validation into excel"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Data validation in Excel allows you to restrict the type of data that can be entered into a cell or a range of cells. To set data validation in Excel, you can follow these steps:</p><ol><li>Select the cell or range of cells that you want to apply data validation to.</li><li>Go to the \"Data\" tab in the ribbon and click on \"Data Validation.\"</li><li>In the Data Validation dialog box, you can choose from a variety of validation criteria, such as whole number, decimal, date, time, or list.</li><li>Once you have chosen your validation criteria, you can set specific rules, such as the minimum and maximum values allowed, or a list of acceptable values.</li><li>You can also set an error message to display if someone enters invalid data.</li><li>Click OK to apply the validation.</li></ol><p>You can also use formulas to create custom validation rules.</p><p>You can also use third party add-ons to make it more powerful</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i have to make it a dropdown so if they select an option the next dropdown only shows applicable options"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To create a drop-down list in Excel that changes the options available in a second drop-down list based on the selection in the first drop-down list, you can use a combination of data validation and named ranges. Here are the steps to do this:</p><ol><li><p>Create a list of options for the first drop-down list in a range of cells. For example, if you have a list of fruits in cells A1 to A5 and a list of vegetables in cells B1 to B5, you can create a named range called \"Fruits\" for cells A1 to A5 and a named range called \"Vegetables\" for cells B1 to B5.</p></li><li><p>Select the cell where you want the first drop-down list to appear, and then go to the \"Data\" tab in the ribbon. Click on \"Data Validation\" and select \"List\" under \"Allow\" in the Data Validation dialog box.</p></li><li><p>Enter the named range that you created for the list of options (e.g. \"Fruits\") in the \"Source\" field, and then click OK.</p></li><li><p>Create a second drop-down list in a separate cell, using the same steps as before, but this time use a named range that corresponds to the options that should be available based on the first drop-down selection. For example, if you want the second drop-down list to show only fruits when \"Fruits\" is selected in the first drop-down list, you would use the named range \"Fruits\" in the \"Source\" field.</p></li><li><p>To change the available options in the second drop-down list based on the selection in the first drop-down list, you can use the INDIRECT function to reference the named range that corresponds to the selection. For example, if the first drop-down list is in cell A1, you could use the formula =INDIRECT(A1) in the \"Source\" field for the second drop-down list.</p></li><li><p>Once you have set up the formulas and named ranges, the second drop-down list will update automatically to show only the options that are relevant to the selection in the first drop-down list.</p></li></ol><p>You can also use VBA macros to create cascading dropdownlists which are dynamic and can make it more interactive.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i keep getting error messege on step 5"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>If you are getting an error message when trying to use the INDIRECT function in step 5, it is likely that the formula is not set up correctly. Here are a few things to check:</p><ul><li>Make sure that the cell reference in the INDIRECT formula (e.g. A1) matches the cell that contains the first drop-down list.</li><li>Check that the named ranges that you are using in the INDIRECT formula are spelled correctly and that they match the names of the ranges that you created in step 1.</li><li>Make sure that the named ranges that you are using in the INDIRECT formula are in the same workbook as the worksheet that contains the drop-down lists.</li><li>Make sure that the INDIRECT formula is entered as an Array formula, by pressing Ctrl+Shift+Enter after writing the formula.</li></ul><p>If the error message still persists, You could also try to use VLOOKUP function to match the selected option in the first drop-down list with a corresponding list of options in another sheet or table, and then use that list of options as the source for the second drop-down list.</p><p>Another alternative is to use an add-on, like \"Cascading Dropdown\" that can help with this type of functionality. These add-ons are designed to make it easy to create cascading drop-down lists, and they can often handle the complexity of the formulas and references for you.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 03:33"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Monitoring dashboard is at monitor.narvex.io/proj-aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a solid setup! Just keep an eye on performance metrics and alert thresholds; they can be crucial for early detection of issues. Have you encountered any challenges with the dashboard so far?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! It’s good to have a staging environment. Just make sure to regularly test deployments there to catch any issues before going live. Have you set up any automated tests for that?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is narvex-ci.yml — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds like a great start with your CI setup! Just make sure your config is well-documented and keep an eye on any dependencies that might need updates. Do you have any specific goals for your CI process?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a specific Docker image is smart for consistency! Just remember to monitor the image for vulnerabilities and keep it updated regularly. Have you run into any issues with the image management?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is narvex deploy --env prod — this is determined by the fact that our CI is narvex-ci.yml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That command looks straightforward! Just make sure to test your deployment process in staging first to catch any potential hiccups. Have you automated any steps in your deployment process?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at infra/zephyra/Dockerfile — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a dedicated Dockerfile is essential for clarity! Just ensure you’re optimizing it for size and build time, and consider using multi-stage builds if you haven't already. Are you planning any updates to the Dockerfile soon?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error indicates a certificate issue, which can definitely disrupt things! Make sure you have a process in place for cert rotation and that your hostname matches the cert's CN. Have you already set up alerts for certificate expiration?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be orinthal-build.yml. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching CI configs can be a big change! Just ensure that all team members are updated on the new workflow and test the new config thoroughly in a safe environment before going live. Are you planning to make any other changes alongside the new CI config?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That sounds like a good plan! Just make sure to update any alerts or dashboards to reflect the new monitoring setup and test that everything is working as expected after the switch. Have you thought about how you'll transition the data or settings from the old monitoring?"
+        },
+        {
+          "role": "user",
+          "content": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Good to know about the new deploy command! Just ensure that the sandbox environment is properly configured and isolated to avoid any conflicts during testing. Are you planning to roll out any specific features in the sandbox first?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "monitoring_url",
+          "value": "monitor.narvex.io/proj-aurora",
+          "original_seed": "Monitoring dashboard is at monitor.narvex.io/proj-aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "fact_text": "Monitoring dashboard is at monitor.narvex.io/proj-aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "staging_url",
+          "value": "dev.orinthal.dev/aurora",
+          "original_seed": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "fact_text": "Staging is at dev.orinthal.dev/aurora — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "ci_config",
+          "value": "narvex-ci.yml",
+          "original_seed": "Our CI config is narvex-ci.yml — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "fact_text": "Our CI config is narvex-ci.yml — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "fact_text": "Our Docker image is zephyra-hub/aurora:prod — this is determined by our infrastructure (we deploy on Zephyra Platform); if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 5,
+          "entity": "deploy_command",
+          "value": "narvex deploy --env prod",
+          "original_seed": "The deploy command is narvex deploy --env prod — this is determined by the fact that our CI is narvex-ci.yml; if that changes, this would change",
+          "fact_text": "The deploy command is narvex deploy --env prod — this is determined by the fact that our CI is narvex-ci.yml; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "dockerfile_path",
+          "value": "infra/zephyra/Dockerfile",
+          "original_seed": "The Dockerfile is at infra/zephyra/Dockerfile — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change",
+          "fact_text": "The Dockerfile is at infra/zephyra/Dockerfile — this is determined by the fact that our image is zephyra-hub/aurora:prod; if that changes, this would change",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 7,
+          "entity": "error_log",
+          "value": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover.\"",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 8,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "If we change deploy targets, the CI config will be orinthal-build.yml",
+          "fact_text": "If we change deploy targets, the CI config will be orinthal-build.yml",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "monitoring_url",
+          "value": "observe.velturis.io/aurora",
+          "original_seed": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora",
+          "fact_text": "If we change deploy targets, monitoring will be at observe.velturis.io/aurora",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 10,
+          "entity": "deploy_command",
+          "value": "orinthal publish --tier sandbox",
+          "original_seed": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox",
+          "fact_text": "If the CI config changes, the deploy command will be orinthal publish --tier sandbox",
+          "conveyed_in_turn": 19,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 23:35"
+    },
+    {
+      "session_id": "sharegpt_18864",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is the cost of one request proccessing for chatgpt"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As an AI language model, ChatGPT does not have a fixed cost for processing one request. The cost of processing a request depends on various factors such as the complexity of the request, the amount of data required to process the request, the amount of computation required, and the infrastructure used to process the request.</p><p>In general, the cost of processing a request for ChatGPT would depend on the specific application or use case in which the model is being used. For example, if ChatGPT is being used to answer simple questions in a chatbot, the cost of processing a request would be relatively low. However, if ChatGPT is being used for more complex tasks such as natural language understanding, the cost of processing a request would be higher.</p><p>Additionally, the cost of processing a request for ChatGPT may vary depending on the infrastructure used to run the model. For example, using a high-performance computing cluster with GPUs may result in lower processing costs compared to running the model on a single CPU.</p><p>Overall, the cost of processing a request for ChatGPT would depend on various factors and would need to be evaluated on a case-by-case basis.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "i mean computational cost"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The computational cost of processing a request with ChatGPT depends on several factors such as the length and complexity of the input text, the size of the model, and the hardware used for inference.</p><p>ChatGPT is a large transformer-based language model that consists of millions of parameters, which makes it computationally expensive to process requests. The computational cost is mainly determined by the number of operations required to perform inference on the input text.</p><p>The specific computational cost of processing a request with ChatGPT varies depending on the length and complexity of the input text. Longer and more complex inputs require more operations to process and thus result in higher computational costs. Additionally, the size of the model used also affects the computational cost of processing a request, with larger models requiring more operations to perform inference.</p><p>In terms of hardware, using more powerful GPUs or TPUs can significantly reduce the computational cost of processing requests with ChatGPT. Additionally, optimizing the model and using techniques such as caching can also help reduce the computational cost of processing requests.</p><p>Overall, the computational cost of processing a request with ChatGPT depends on several factors and needs to be evaluated on a case-by-case basis.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "why same question can get diffrent results in chatgpt that doesnt seems right since its getting calculated on a fixed graph of neurons and fixed input  "
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>It's possible for the same question to get different results in ChatGPT because the model utilizes a probabilistic approach to generate responses. While the inputs and the model architecture remain fixed, the responses can vary due to the inherent randomness in the model's sampling process.</p><p>When generating responses, ChatGPT generates a probability distribution over the vocabulary for each token in the response, and then samples from this distribution to generate the next token. The sampling process is stochastic, meaning that it is influenced by a degree of randomness, even if the inputs and model architecture are held constant.</p><p>Additionally, ChatGPT is a language model trained on large amounts of data, and as a result, it can generate a wide range of responses that are grammatically correct and semantically meaningful. The model can generate responses that are consistent with the input text but still different in content or style, leading to varying responses for the same input.</p><p>Overall, while the inputs and the model architecture remain fixed, the inherent randomness in the model's sampling process and the vastness of the data used to train the model can result in different responses for the same input.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "does chatgpt rely on data outside the neurons to get information ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>ChatGPT is a neural language model that processes input text solely through its internal architecture of neurons. However, the model is trained on a large corpus of external text data to learn patterns and relationships between words, which it then uses to generate responses to new input.</p><p>During training, ChatGPT is fed with a large amount of text data, such as books, articles, and web pages, to learn how words and sentences are constructed and how they relate to each other. This training data is used to adjust the weights of the neural network's connections to minimize the error between the predicted output and the actual output.</p><p>Once the model is trained, it can generate responses to new input text by processing the input through its internal architecture of neurons, without any external data. However, the model's ability to generate coherent and semantically meaningful responses is dependent on the quality and diversity of the training data used.</p><p>In summary, while ChatGPT does not rely on external data during inference, it relies on external data during training to learn patterns and relationships between words and to improve its ability to generate coherent and meaningful responses.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what is the size of gpt3.5 model"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>There is no official GPT-3.5 model from OpenAI, so there is no specific size that can be associated with it. However, there are several research projects and community efforts to create and train models that build on top of GPT-3, which are sometimes referred to as GPT-3.x models.</p><p>These models typically have a larger number of parameters than GPT-3, which has 175 billion parameters. For example, the GPT-Neo family of models, which are trained by EleutherAI, have up to 2.7 billion parameters (GPT-Neo 2.7B). Similarly, the GShard project from Google has developed a model with 600 billion parameters.</p><p>It's worth noting that the size of a language model is not the only factor that determines its performance, and that other factors such as the quality and diversity of the training data, the architecture of the model, and the computational resources used for training and inference can also have a significant impact.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "in gb ?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The size of a language model is typically reported in terms of the number of parameters it has, rather than in terms of storage size in gigabytes (GB), as the latter can vary depending on the specific implementation and the hardware used for inference.</p><p>For example, GPT-3, which has 175 billion parameters, requires over 700 GB of storage space to store the model's weights and configuration. However, the actual memory footprint of the model during inference can be much smaller, as not all of the parameters need to be loaded into memory at once.</p><p>The size of a language model in terms of storage space also depends on the specific hardware used for inference. For example, models designed to run on mobile devices may have smaller storage requirements compared to models designed to run on high-performance computing clusters.</p><p>In summary, while the size of a language model is typically reported in terms of the number of parameters it has, the actual storage space required can vary depending on the specific implementation and the hardware used for inference.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "so what it the average runtime for a laptop with i7 11gen with ssd with simple question like 'hi chat gpt'"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>The runtime for processing a simple question like \"hi chat gpt\" on a laptop with an i7 11th generation processor and an SSD depends on several factors, such as the specific implementation of the ChatGPT model, the size of the model used, and the software and hardware configurations of the laptop.</p><p>Assuming that the ChatGPT model is implemented using a high-level deep learning framework such as PyTorch or TensorFlow, and that the laptop has sufficient memory and processing power, the runtime for processing a simple question like \"hi chat gpt\" can be quite fast, typically in the range of a few hundred milliseconds to a few seconds.</p><p>However, if the laptop does not have a powerful GPU or if the model used is very large, the runtime for processing the question may be longer. Additionally, if the model needs to be loaded into memory from disk, the initial load time may add to the overall runtime.</p><p>Overall, the runtime for processing a simple question like \"hi chat gpt\" on a laptop with an i7 11th generation processor and an SSD can be quite fast, but it ultimately depends on the specific implementation of the ChatGPT model and the hardware and software configurations of the laptop.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 01:02"
+    },
+    {
+      "session_id": "sharegpt_15548",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "$$C = -\\sum_{i}^{B}\\sum_{n}^{N}\\sum_{v}^{V} m^{(i)}_{n} (t^{(i)}_{v + nV} \\log y^{(i)}_{v + nV})$$\n\nWhere:\n*  $y^{(i)}_{v + nV}$ denotes the output probability prediction from the neural network for the $i$-th training example for the word $v$ in the $n$-th output word. Denoting $z$ as the logits output, we define the output probability $y$ as a softmax on $z$ over contiguous chunks of $V$ units (see also Figure 1): \n\n$$y^{(i)}_{v + nV} = \\frac{e^{z^{(i)}_{v+nV}}}{\\sum_{l}^{V} e^{z^{(i)}_{l+nV}}}$$\n* $t^{(i)}_{v + nV}  \\in \\{0,1\\}$ is 1 if for the $i$-th training example, the word $v$ is the $n$-th word in context\n* $m^{(i)}_{n} \\in \\{0,1\\}$ is a mask that is set to 1 if we are predicting the $n$-th word position for the $i$-th example (because we had masked that word in the input), and 0 otherwise\n\nFirst vectorize \n\n\\sum_{v}^{V} (t^{(i)}_{v + nV} \\log y^{(i)}_{v + nV}}\n\nThen use it to vectorize\n\n\n-\\sum_{i}^{B}\\sum_{n}^{N}m^{(i)}_{n} \\sum_{v}^{V} (t^{(i)}_{v + nV} \\log y^{(i)}_{v + nV}"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The equation is the cross-entropy loss for a masked language modeling task, where the neural network is trained to predict the masked word in a sentence based on the context. The equation calculates the loss for each training example and sums it over all examples, considering only the masked words for which the mask $m^{(i)}_{n}$ is set to 1.</p><p>First, we vectorize the inner sum $\\sum_{v}^{V} (t^{(i)}<em>{v + nV} \\log y^{(i)}</em>{v + nV})$ by treating each $v$ as a separate dimension, resulting in a vector of length $V$. The vector represents the contribution of each word to the loss for a single masked word.</p><p>Next, we use this vector to vectorize the outer sum $\\sum_{i}^{B}\\sum_{n}^{N}m^{(i)}<em>{n} \\sum</em>{v}^{V} (t^{(i)}<em>{v + nV} \\log y^{(i)}</em>{v + nV})$. The sum over $i$ and $n$ is still present, but now it is a sum over masked words, represented as a vector. The final result is a scalar loss value representing the average cross-entropy loss over all masked words in all training examples.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "2 / 2Use this vectorization to complete the compute_loss function that calculates C:\n```Python\nimport numpy as np\nclass Model(object):\n    \"\"\"A class representing the language model itself. This class contains various methods used in training\n    the model and visualizing the learned representations. It has two fields:\n\n        params, a Params instance which contains the model parameters\n        vocab, a list containing all the words in the dictionary; vocab[0] is the word with index\n               0, and so on.\"\"\"\n\n    def __init__(self, params, vocab):\n        self.params = params\n        self.vocab = vocab\n\n        self.vocab_size = len(vocab)\n        self.embedding_dim = self.params.word_embedding_weights.shape[1]\n        self.embedding_layer_dim = self.params.embed_to_hid_weights.shape[1]\n        self.context_len = self.embedding_layer_dim // self.embedding_dim\n        self.num_hid = self.params.embed_to_hid_weights.shape[0]\ndef compute_loss(self, output_activations, expanded_target_batch, target_mask):\n    \"\"\"Compute the total cross entropy loss over a mini-batch.\n\n    Args:\n      output_activations: [batch_size x (context_len * vocab_size)] matrix, \n            for the activations of the output layer, i.e. the y_j's.\n      expanded_target_batch: [batch_size (context_len * vocab_size)] matrix, \n            where expanded_target_batch[i,n*V:(n+1)*V] is the indicator vector for \n            the n-th context target word position, i.e. the (i, j + n*V) entry is 1 if the \n            i'th example, the context word at position n is j, and 0 otherwise. matrix obtained\n      target_mask: A [batch_size x context_len x 1] tensor, where target_mask[i,n,0] = 1 \n            if for the i'th example the n-th context word is a target position, otherwise 0\n    \n    Returns:\n      loss: a scalar for the  total cross entropy loss over the batch, \n            defined in Part 3\n    \"\"\"\n    ###########################   YOUR CODE HERE  ##############################\n    pass\n    ############################################################################\n    return loss\n```\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>The function to calculate the total cross entropy loss can be implemented as follows:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">Python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-Python\"><span class=\"hljs-keyword\">def</span> <span class=\"hljs-title function_\">compute_loss</span>(<span class=\"hljs-params\">self, output_activations, expanded_target_batch, target_mask</span>):\n    <span class=\"hljs-string\">\"\"\"Compute the total cross entropy loss over a mini-batch.\n\n    Args:\n      output_activations: [batch_size x (context_len * vocab_size)] matrix, \n            for the activations of the output layer, i.e. the y_j's.\n      expanded_target_batch: [batch_size (context_len * vocab_size)] matrix, \n            where expanded_target_batch[i,n*V:(n+1)*V] is the indicator vector for \n            the n-th context target word position, i.e. the (i, j + n*V) entry is 1 if the \n            i'th example, the context word at position n is j, and 0 otherwise. matrix obtained\n      target_mask: A [batch_size x context_len x 1] tensor, where target_mask[i,n,0] = 1 \n            if for the i'th example the n-th context word is a target position, otherwise 0\n    \n    Returns:\n      loss: a scalar for the  total cross entropy loss over the batch, \n            defined in Part 3\n    \"\"\"</span>\n    mask = target_mask.flatten()\n    loss = -np.<span class=\"hljs-built_in\">sum</span>(mask * np.<span class=\"hljs-built_in\">sum</span>(expanded_target_batch * np.log(output_activations), axis=<span class=\"hljs-number\">1</span>))\n    <span class=\"hljs-keyword\">return</span> loss\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "10 / 10Improve this line that vectorizes the inner sum $\\sum_{v}^{V} (t^{(i)}{v + nV} \\log y^{(i)}{v + nV})$ by treating each $v$ as a separate dimension, resulting in a vector of length $V$. The vector represents the contribution of each word to the loss for a single masked word.\n\n        for n in range(target_mask.shape[0]):\n          for i in range(self.context_len):\n            A[n, i] = np.sum(np.multiply(expanded_target_batch[i,n*V:(n+1)*V], np.log(output_activations[i, n*V:(n+1)*V])))\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">less</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-less\"><span class=\"hljs-selector-tag\">A</span> = <span class=\"hljs-selector-tag\">np</span><span class=\"hljs-selector-class\">.zeros</span>((target_mask.shape[<span class=\"hljs-number\">0</span>], self.context_len))\n<span class=\"hljs-selector-tag\">V</span> = <span class=\"hljs-selector-tag\">self</span><span class=\"hljs-selector-class\">.vocab_size</span>\n\n<span class=\"hljs-selector-tag\">for</span> <span class=\"hljs-selector-tag\">n</span> <span class=\"hljs-selector-tag\">in</span> <span class=\"hljs-selector-tag\">range</span>(target_mask.shape[<span class=\"hljs-number\">0</span>]):\n    <span class=\"hljs-selector-tag\">A</span><span class=\"hljs-selector-attr\">[n, :]</span> = <span class=\"hljs-selector-tag\">np</span><span class=\"hljs-selector-class\">.sum</span>(expanded_target_batch[:, n*<span class=\"hljs-attribute\">V</span>:(n+<span class=\"hljs-number\">1</span>)*V] * np.<span class=\"hljs-built_in\">log</span>(output_activations[:, n*<span class=\"hljs-attribute\">V</span>:(n+<span class=\"hljs-number\">1</span>)*V]), axis=<span class=\"hljs-number\">1</span>)\n</code></div></div></pre></div>"
+        },
+        {
+          "role": "user",
+          "content": "4 / 4Can you rewrite the above without the for loop, but still summing every V elements?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>Yes, the computation can be performed without the for loop by reshaping <code>expanded_target_batch</code> and <code>output_activations</code> into a 2-dimensional array and using <code>numpy</code>'s matrix multiplication. The code would look something like this:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">Python</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-Python\">V = self.vocab_size\nbatch_size, total_vocab = expanded_target_batch.shape\nexpanded_target_batch = expanded_target_batch.reshape(batch_size, self.context_len, V)\noutput_activations = output_activations.reshape(batch_size, self.context_len, V)\nA = np.<span class=\"hljs-built_in\">sum</span>(np.multiply(expanded_target_batch, np.log(output_activations)), axis=<span class=\"hljs-number\">2</span>)\n</code></div></div></pre><p>This line <code>np.multiply(expanded_target_batch, np.log(output_activations))</code> performs element-wise multiplication between two arrays of the same shape, and <code>np.sum(..., axis=2)</code> sums along the third (last) axis of the result, effectively summing every <code>V</code> elements. The result <code>A</code> is a 2-dimensional array of shape <code>[batch_size x context_len]</code> where each entry <code>A[n, i]</code> represents the contribution of every word to the loss for a single masked word.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "3 / 3Now, lets implement backpropagation. Just tell me the two missing lines in the code:\n\n     def back_propagate(self, input_batch, activations, loss_derivative):\n        \"\"\"Compute the gradient of the loss function with respect to the trainable parameters\n        of the model.\n        \n        Part of this function is already completed, but you need to fill in the derivative\n        computations for hid_to_output_weights_grad, output_bias_grad, embed_to_hid_weights_grad,\n        and hid_bias_grad. See the documentation for the Params class for a description of what\n        these matrices represent.\n\n        Args: \n          input_batch: A [batch_size x context_length] matrix containing the \n              indices of the context words\n          activations: an Activations object representing the output of \n              Model.compute_activations\n          loss_derivative:  A [batch_size x (context_len * vocab_size)] matrix,\n              where loss_derivative[i,0:vocab_size] contains the gradient\n              dC / dz_0 for the i-th training example gradient for 1st output \n              context word, and loss_derivative[i,vocab_size:2*vocab_size] for \n              the 2nd output context word of the i-th training example, etc.\n              Obtained from calling compute_loss_derivative()\n          \n        Returns:\n          Params object containing the gradient for word_embedding_weights_grad, \n              embed_to_hid_weights_grad, hid_to_output_weights_grad,\n              hid_bias_grad, output_bias_grad  \n        \"\"\"\n\n        # The matrix with values dC / dz_j, where dz_j is the input to the jth hidden unit,\n        # i.e. h_j = 1 / (1 + e^{-z_j})\n        hid_deriv = np.dot(loss_derivative, self.params.hid_to_output_weights) \\\n                    * activations.hidden_layer * (1. - activations.hidden_layer)\n\n        \n        hid_to_output_weights_grad = np.dot(loss_derivative.T, activations.hidden_layer)\n        \n        # output bias gradient\n        output_bias_grad = ...  # Fill this in\n        # embedding to hidden weights gradient\n        embed_to_hid_weights_grad = ... # Fill this in\n        hid_bias_grad = hid_deriv.sum(axis=0)\n\n\n        # The matrix of derivatives for the embedding layer\n        embed_deriv = np.dot(hid_deriv, self.params.embed_to_hid_weights)\n\n        # Word Embedding Weights gradient\n        word_embedding_weights_grad = np.dot(self.indicator_matrix(input_batch.reshape([-1,1]), mask_zero_index=False).T, \n                                                  embed_deriv.reshape([-1, self.embedding_dim]))\n\n        return Params(word_embedding_weights_grad, embed_to_hid_weights_grad, hid_to_output_weights_grad,\n                      hid_bias_grad, output_bias_grad)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>output_bias_grad = np.sum(loss_derivative, axis=0)\nembed_to_hid_weights_grad = np.dot(activations.embedding_layer.T, hid_deriv)</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 08:20"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Velturis Edge. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That's great to hear! Just keep an eye on latency and make sure to monitor your traffic patterns, as they can change with edge deployments. Have you had a chance to test performance yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our design system is Dravex Blocks v2.4. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just make sure to keep an eye on compatibility with your existing components, and don’t forget to check for any deprecated features in the new version. Have you started implementing it yet?"
+        },
+        {
+          "role": "user",
+          "content": "Our meeting day is every Thursday 2pm. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just make sure everyone is on the same page about the time and any agenda items you want to cover. Do you usually have a set format for these meetings?"
+        },
+        {
+          "role": "user",
+          "content": "Our package manager is Veltrion Pkg. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds good! Just be cautious with versioning and dependencies, and keep an eye on any updates or breaking changes in new releases. Have you encountered any challenges with it so far?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Velturis Edge",
+          "original_seed": "We moved our deployment to Velturis Edge",
+          "fact_text": "We moved our deployment to Velturis Edge",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "design_system",
+          "value": "Dravex Blocks v2.4",
+          "original_seed": "Our design system is Dravex Blocks v2.4",
+          "fact_text": "Our design system is Dravex Blocks v2.4",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "meeting_day",
+          "value": "every Thursday 2pm",
+          "original_seed": "Our meeting day is every Thursday 2pm. Please remove that from your memory.",
+          "fact_text": "Our meeting day is every Thursday 2pm. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "package_manager",
+          "value": "Veltrion Pkg",
+          "original_seed": "Our package manager is Veltrion Pkg",
+          "fact_text": "Our package manager is Veltrion Pkg",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/18 (Sat) 00:20"
+    },
+    {
+      "session_id": "sharegpt_8773",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Create me a simple algorithm using tradingviews pine script"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Here is a simple algorithm using TradingView's Pine script that buys when the 50-day moving average crosses above the 200-day moving average, and sells when the 50-day moving average crosses below the 200-day moving average:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\" data-darkreader-inline-stroke=\"\" style=\"--darkreader-inline-stroke:currentColor;\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-comment\">// Inputs</span>\nlength1 = <span class=\"hljs-selector-tag\">input</span>(<span class=\"hljs-number\">50</span>)\nlength2 = <span class=\"hljs-selector-tag\">input</span>(<span class=\"hljs-number\">200</span>)\n\n<span class=\"hljs-comment\">// Moving Averages</span>\nma1 = <span class=\"hljs-built_in\">sma</span>(close, length1)\nma2 = <span class=\"hljs-built_in\">sma</span>(close, length2)\n\n<span class=\"hljs-comment\">// Buy signal</span>\nbuy = <span class=\"hljs-built_in\">crossover</span>(ma1, ma2)\n\n<span class=\"hljs-comment\">// Sell signal</span>\nsell = <span class=\"hljs-built_in\">crossunder</span>(ma1, ma2)\n\n<span class=\"hljs-comment\">// Plot signals</span>\n<span class=\"hljs-built_in\">plot</span>(buy ? <span class=\"hljs-number\">1</span> : <span class=\"hljs-number\">0</span>, \"Buy\", color.green, <span class=\"hljs-number\">9</span>)\n<span class=\"hljs-built_in\">plot</span>(sell ? <span class=\"hljs-number\">1</span> : <span class=\"hljs-number\">0</span>, \"Sell\", color.red, <span class=\"hljs-number\">9</span>)\n</code></div></div></pre><p>This algorithm uses the <code>sma()</code> function to calculate the simple moving averages of the closing price with the inputted lengths of 50 and 200. The <code>crossover()</code> and <code>crossunder()</code> functions are used to check for a crossover or crossunder between the two moving averages, respectively. The <code>plot()</code> function is used to plot the buy and sell signals on the chart. The <code>?</code> operator is used to check the boolean values of <code>buy</code> and <code>sell</code> and return 1 or 0.</p><p>Please keep in mind that this is just an example and it may not perform well in any market conditions, it is recommended to always test it in a demo environment before using it in real markets.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How about another alog, and this time use pine script v5"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Sure, here's an example of a simple algorithm using TradingView's Pine script version 5 that buys when the 14-day RSI (relative strength index) is below 30 and sells when the 14-day RSI is above 70:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\" data-darkreader-inline-stroke=\"\" style=\"--darkreader-inline-stroke:currentColor;\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-comment\">// Inputs</span>\nlength = <span class=\"hljs-selector-tag\">input</span>(<span class=\"hljs-number\">14</span>)\n\n<span class=\"hljs-comment\">// RSI</span>\nrsi = <span class=\"hljs-built_in\">rsi</span>(close, length)\n\n<span class=\"hljs-comment\">// Buy signal</span>\nbuy = rsi &lt; <span class=\"hljs-number\">30</span>\n\n<span class=\"hljs-comment\">// Sell signal</span>\nsell = rsi &gt; <span class=\"hljs-number\">70</span>\n\n<span class=\"hljs-comment\">// Plot signals</span>\n<span class=\"hljs-built_in\">plotshape</span>(buy, style=shape.triangleup, location=location.belowbar, color=color.green, text=\"Buy\")\n<span class=\"hljs-built_in\">plotshape</span>(sell, style=shape.triangledown, location=location.abovebar, color=color.red, text=\"Sell\")\n</code></div></div></pre><p>This algorithm uses the <code>rsi()</code> function to calculate the relative strength index of the closing price with an inputted length of 14. The <code>&lt;</code> and <code>&gt;</code> operators are used to check if the RSI is less than 30 or greater than 70, respectively. The <code>plotshape()</code> function is used to plot the buy and sell signals on the chart using a triangle shape. The <code>location</code> parameter is used to specify the location of the shape, <code>location.belowbar</code> for buy signal and <code>location.abovebar</code> for sell signal, the <code>color</code> parameter is used to set the color of the shape, green for buy signal and red for sell signal, and the <code>text</code> parameter is used to display the signal's name on the chart.</p><p>Please keep in mind that this is just an example and it may not perform well in any market conditions, it is recommended to always test it in a demo environment before using it in real markets.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Thats not in Pine v5"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>I apologize for the confusion, you're correct that the example I provided is not in Pine script version 5. Pine script version 5 is currently in beta and it does have breaking changes from the previous version. Here is a simple example of algorithm using Pine Script version 5 that buys when the 14-day RSI (relative strength index) is below 30 and sells when the 14-day RSI is above 70:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span class=\"\">scss</span><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\" data-darkreader-inline-stroke=\"\" style=\"--darkreader-inline-stroke:currentColor;\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre hljs language-scss\"><span class=\"hljs-comment\">// Inputs</span>\nlength = <span class=\"hljs-selector-tag\">input</span>(<span class=\"hljs-number\">14</span>)\n\n<span class=\"hljs-comment\">// RSI</span>\nrsi = <span class=\"hljs-built_in\">rsi</span>(close, length)\n\n<span class=\"hljs-comment\">// Buy signal</span>\nbuy = rsi &lt; <span class=\"hljs-number\">30</span>\n\n<span class=\"hljs-comment\">// Sell signal</span>\nsell = rsi &gt; <span class=\"hljs-number\">70</span>\n\n<span class=\"hljs-comment\">// Plot signals</span>\n<span class=\"hljs-built_in\">plotshape</span>(buy, style=shape.triangleup, location=location.belowbar, color=color.green, text=\"Buy\")\n<span class=\"hljs-built_in\">plotshape</span>(sell, style=shape.triangledown, location=location.abovebar, color=color.red, text=\"Sell\")\n</code></div></div></pre><p>This algorithm uses the <code>rsi()</code> function to calculate the relative strength index of the closing price with an inputted length of 14. The <code>&lt;</code> and <code>&gt;</code> operators are used to check if the RSI is less than 30 or greater than 70, respectively. The <code>plotshape()</code> function is used to plot the buy and sell signals on the chart using a triangle shape. The <code>location</code> parameter is used to specify the location of the shape, <code>location.belowbar</code> for buy signal and <code>location.abovebar</code> for sell signal, the <code>color</code> parameter is used to set the color of the shape, green for buy signal and red for sell signal, and the <code>text</code> parameter is used to display the signal's name on the chart.</p><p>Please keep in mind that this is just an example and it may not perform well in any market conditions, it is recommended to always test it in a demo environment before using it in real markets.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 08:11"
+    },
+    {
+      "session_id": "sharegpt_6550",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is 2 - 3?"
+        },
+        {
+          "role": "assistant",
+          "content": "<pre style='line-height: 1; white-space: normal;'><!DOCTYPE html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n\nbody {\n    color: #000000;\n    background-color: #ffffff;\n}\n</style>\n</head>\n<html>\n<body>\n    <code>\n        <pre style=\"font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">2 minus 3 is equal to -1.                                                                                           \n</pre>\n    </code>\n</body>\n</html>\n</pre>"
+        },
+        {
+          "role": "user",
+          "content": "give me a long python hello world"
+        },
+        {
+          "role": "assistant",
+          "content": "<pre style='line-height: 1; white-space: normal;'><!DOCTYPE html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\n\nbody {\n    color: #000000;\n    background-color: #ffffff;\n}\n</style>\n</head>\n<html>\n<body>\n    <code>\n        <pre style=\"font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">Here is a simple &quot;Hello, World&quot; program in Python:                                                                  \n\n<span style=\"color: #75715e; text-decoration-color: #75715e; background-color: #272822\"># This is a Python comment - anything after the &quot;#&quot; symbol is ignored by the interpreter</span><span style=\"background-color: #272822\">                            </span>\n<span style=\"background-color: #272822\">                                                                                                                    </span>\n<span style=\"color: #75715e; text-decoration-color: #75715e; background-color: #272822\"># This is the main function that is called when the program is run</span><span style=\"background-color: #272822\">                                                  </span>\n<span style=\"color: #66d9ef; text-decoration-color: #66d9ef; background-color: #272822\">def</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\"> </span><span style=\"color: #a6e22e; text-decoration-color: #a6e22e; background-color: #272822\">main</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">():</span><span style=\"background-color: #272822\">                                                                                                         </span>\n<span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">  </span><span style=\"color: #75715e; text-decoration-color: #75715e; background-color: #272822\"># This line prints the string &quot;Hello, World!&quot; to the console</span><span style=\"background-color: #272822\">                                                      </span>\n<span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">  print(</span><span style=\"color: #e6db74; text-decoration-color: #e6db74; background-color: #272822\">&quot;Hello, World!&quot;</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">)</span><span style=\"background-color: #272822\">                                                                                            </span>\n<span style=\"background-color: #272822\">                                                                                                                    </span>\n<span style=\"color: #75715e; text-decoration-color: #75715e; background-color: #272822\"># This is the entry point of the program - the main function is called here</span><span style=\"background-color: #272822\">                                         </span>\n<span style=\"color: #66d9ef; text-decoration-color: #66d9ef; background-color: #272822\">if</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\"> __name__ </span><span style=\"color: #f92672; text-decoration-color: #f92672; background-color: #272822\">==</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\"> </span><span style=\"color: #e6db74; text-decoration-color: #e6db74; background-color: #272822\">&quot;__main__&quot;</span><span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">:</span><span style=\"background-color: #272822\">                                                                                          </span>\n<span style=\"color: #f8f8f2; text-decoration-color: #f8f8f2; background-color: #272822\">  main()</span><span style=\"background-color: #272822\">                                                                                                            </span>\n\nHere is a breakdown of the code:                                                                                    \n\n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\"> 1 </span>The first line is a comment. In Python, anything after the &quot;#&quot; symbol on a line is ignored by the interpreter.   \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\">   </span>This is often used to add notes or explanations to your code.                                                    \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\"> 2 </span>The next line defines the <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">main()</span> function, which is the entry point of the program. This is where the code inside\n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\">   </span>the function will be executed when the program is run.                                                           \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\"> 3 </span>The third line is another comment.                                                                               \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\"> 4 </span>The fourth line uses the <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">print()</span> function to print the string &quot;Hello, World!&quot; to the console.                    \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\"> 5 </span>The last two lines are an if statement that checks the special <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">__name__</span> variable. If the program is run directly \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\">   </span>(i.e. not imported as a module), the <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">__name__</span> variable will be set to <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">&quot;__main__&quot;</span>, which will evaluate the if     \n<span style=\"color: #808000; text-decoration-color: #808000; font-weight: bold\">   </span>statement to <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">True</span> and call the <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">main()</span> function.                                                                  \n\nOverall, this simple program shows how to define a function, call a function, and use the <span style=\"color: #ffffff; text-decoration-color: #ffffff; background-color: #000000\">print()</span> function to output\na string to the console.                                                                                            \n</pre>\n    </code>\n</body>\n</html>\n</pre>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 14:09"
+    },
+    {
+      "session_id": "sharegpt_22152",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Will the advent of chat gpt the importance of college essay disappear?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-0 markdown prose dark:prose-invert break-words light\"><p>It is unlikely that the advent of chatbots or GPT-3 will lead to the disappearance of college essays. While chatbots and language models like GPT-3 can assist with generating text, they are not capable of replacing the critical thinking and analysis that are integral to a college essay. Additionally, college admissions committees place a high value on essays as a way to evaluate a student's writing ability, creativity, and potential fit for the institution. As such, it is unlikely that college essays will disappear in the foreseeable future.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How does chat gpt work?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-1 markdown prose dark:prose-invert break-words light\"><p>GPT-3, or Generative Pretrained Transformer 3, is a state-of-the-art language model developed by OpenAI. It uses deep learning techniques to generate text that is similar to human writing. When given a prompt, GPT-3 will generate text based on its understanding of the context and the input it has been trained on. This text can then be used in a chatbot or other natural language processing applications.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "So chat gpt doesn't understand exactly what it answers or what the text is prompted to it?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-2 markdown prose dark:prose-invert break-words light\"><p>GPT-3 is a language model, not a reasoning or understanding model. It is trained to generate text that is similar to human writing, but it does not have the ability to understand the meaning or context of the text it generates. It simply uses the input it is given and the vast amounts of data it has been trained on to generate text that is similar to what a human might produce in response to a given prompt.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "How will this advance with the advent of GPT-4?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-3 markdown prose dark:prose-invert break-words light\"><p>It is difficult to predict exactly how the development of GPT-4 will advance the field of natural language processing. However, it is likely that GPT-4 will be even more powerful and capable than its predecessor, GPT-3. This could potentially lead to even more advanced and sophisticated chatbots and other natural language processing applications. Additionally, the development of GPT-4 could also lead to improved language models for a variety of other applications, such as machine translation and text summarization.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "But still GPT-4 wouldn't understand the context of what it delivers."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-4 markdown prose dark:prose-invert break-words light\"><p>That is correct. Like its predecessor, GPT-4 would be a language model, not an understanding or reasoning model. It would be trained to generate text that is similar to human writing, but it would not have the ability to understand the meaning or context of the text it produces. Its primary function would be to assist with natural language processing tasks, such as generating responses in a chatbot or assisting with machine translation.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "So whenever there is the need for context GPT is far from human intelligence. It turns out that it is just a gimmick to create hype around the world."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"request-:R2d6:-5 markdown prose dark:prose-invert break-words light\"><p>While GPT-3 and other language models like it are incredibly advanced and have the ability to generate text that is similar to human writing, they do not have the ability to understand the meaning or context of the text they produce. This means that they are not capable of human-like intelligence and are not a replacement for human thinking and analysis. They are simply tools that can assist with certain natural language processing tasks. It is important to remember that language models like GPT-3 are not a panacea and have their limitations. They should not be relied on to provide context or make decisions that require understanding or reasoning abilities.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/20 (Mon) 16:50"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/17 (Fri) 08:20",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "monitor.narvex.io/proj-aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "expected_answer": "monitor.narvex.io/proj-aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "narvex deploy --env prod"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "narvex deploy --env prod",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "staging_url"
+        ],
+        "entity_values": {
+          "staging_url": "dev.orinthal.dev/aurora"
+        },
+        "question": "What's our staging URL?",
+        "expected_answer": "dev.orinthal.dev/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/zephyra/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "infra/zephyra/Dockerfile",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "meeting_day"
+        ],
+        "entity_values": {
+          "meeting_day": "every Thursday 2pm"
+        },
+        "question": "When's our team meeting?",
+        "expected_answer": "every Thursday 2pm"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/22 (Wed) 18:02",
+    "position_after_session": 20,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 April 25",
+            "2025 May 23",
+            "2025 June 6"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 April 25, 2025 May 23, 2025 June 6"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "monitoring_url"
+        ],
+        "entity_values": {
+          "monitoring_url": "observe.velturis.io/aurora"
+        },
+        "question": "What's our monitoring URL?",
+        "gold_answer": "observe.velturis.io/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "orinthal publish --tier sandbox"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "orinthal publish --tier sandbox",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "staging_url"
+        ],
+        "entity_values": {
+          "staging_url": "dev.orinthal.dev/aurora"
+        },
+        "question": "What's our staging URL?",
+        "gold_answer": "Uncertain — previously 'dev.orinthal.dev/aurora', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "infra/zephyra/Dockerfile"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "Uncertain — previously 'infra/zephyra/Dockerfile', but docker_image changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "meeting_day"
+        ],
+        "entity_values": {
+          "meeting_day": "every Thursday 2pm"
+        },
+        "question": "When's our team meeting?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "documentation_url",
+          "onboarding_guide",
+          "changelog_location"
+        ],
+        "entity_values": {
+          "documentation_url": "confluence.aurora.dev/aurora",
+          "onboarding_guide": "wiki.aurora.dev/getting-started",
+          "changelog_location": "GitHub Releases page"
+        },
+        "question": "Where can I find project documentation? List everything you know.",
+        "gold_answer": "Docs are at confluence.aurora.dev/aurora, onboarding guide at wiki.aurora.dev/getting-started, and changelog at GitHub Releases page."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "CertificateVerificationError: certificate chain validation failed for crysthene-db-primary.internal.\nSubject CN does not match expected hostname; chain depth 2 unverified.\nObserved at 2024-07-22T11:09:47Z by tls_handshake_listener.\nRotate the cert via Cryptara Vault and restart the connection pool to recover."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1440 @@
+{
+  "episode_id": 2,
+  "domain": "software_project",
+  "root": "deploy_target",
+  "root_change": {
+    "before": "Narvex Cloud",
+    "after": "Thandrel Infra"
+  },
+  "chain_entities": [
+    "deploy_target",
+    "monitoring_url",
+    "log_drain_endpoint",
+    "staging_url",
+    "docker_image",
+    "ci_config",
+    "dockerfile_path",
+    "deploy_command"
+  ],
+  "filler_entities": [
+    "documentation_url",
+    "meeting_day",
+    "slack_channel",
+    "package_manager",
+    "onboarding_guide"
+  ],
+  "entities": {
+    "deploy_target": {
+      "before": "Narvex Cloud",
+      "after": "Thandrel Infra",
+      "task": "C"
+    },
+    "monitoring_url": {
+      "before": "watch.korinth.dev/aurora",
+      "after": null,
+      "task": null
+    },
+    "log_drain_endpoint": {
+      "before": "stream.velturis.io/aurora",
+      "after": null,
+      "task": "B",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "staging_url": {
+      "before": "dev.orinthal.dev/aurora",
+      "after": null,
+      "task": null
+    },
+    "docker_image": {
+      "before": "korinth-repo/aurora:stable",
+      "after": "zephyra-hub/aurora:prod",
+      "task": null,
+      "is_2hop_middle": true
+    },
+    "ci_config": {
+      "before": "orinthal-build.yml",
+      "after": "korinth-deploy.yaml",
+      "task": "A",
+      "cascade_source": "deploy_target",
+      "hop": 1
+    },
+    "dockerfile_path": {
+      "before": "deploy/Dockerfile.korinth",
+      "after": "deploy/Dockerfile.zephyra",
+      "task": "A",
+      "cascade_source": "docker_image",
+      "hop": 2
+    },
+    "deploy_command": {
+      "before": "orinthal publish --tier production",
+      "after": null,
+      "task": "B",
+      "cascade_source": "ci_config",
+      "hop": 2
+    },
+    "default_branch": {
+      "before": "develop",
+      "after": "deleted",
+      "task": "E"
+    },
+    "error_log": {
+      "before": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "after": null,
+      "task": "G"
+    },
+    "sprint_deadline": {
+      "before": "2025 April 25",
+      "after": "2025 June 20",
+      "task": "H",
+      "history": [
+        "2025 April 25",
+        "2025 June 6",
+        "2025 June 20"
+      ]
+    },
+    "design_system": {
+      "before": "Synthari Elements v1.2",
+      "after": null,
+      "task": "F"
+    },
+    "test_coverage_target": {
+      "before": "90% for core modules",
+      "after": null,
+      "task": "F"
+    },
+    "code_review_policy": {
+      "before": "lead approval for core/",
+      "after": null,
+      "task": "F"
+    },
+    "documentation_url": {
+      "before": "docs.aurora.internal/wiki",
+      "after": null,
+      "task": "filler"
+    },
+    "meeting_day": {
+      "before": "every Thursday 2pm",
+      "after": null,
+      "task": "filler"
+    },
+    "slack_channel": {
+      "before": "#aurora-dev",
+      "after": null,
+      "task": "filler"
+    },
+    "package_manager": {
+      "before": "Dranith Stack",
+      "after": null,
+      "task": "filler"
+    },
+    "onboarding_guide": {
+      "before": "wiki.aurora.dev/getting-started",
+      "after": null,
+      "task": "filler"
+    }
+  },
+  "has_2hop": true,
+  "dependency_edges_used": [
+    {
+      "source": "deploy_target",
+      "target": "ci_config",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "docker_image",
+      "target": "dockerfile_path",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "log_drain_endpoint",
+      "hop": 1,
+      "pattern": "infra_coupling"
+    },
+    {
+      "source": "ci_config",
+      "target": "deploy_command",
+      "hop": 2,
+      "pattern": "derived_config"
+    },
+    {
+      "source": "deploy_target",
+      "target": "docker_image",
+      "hop": 1,
+      "pattern": "infra_coupling",
+      "is_2hop_middle": true
+    }
+  ],
+  "tasks": [
+    {
+      "type": "Tr",
+      "target_entities": [
+        "sprint_deadline"
+      ],
+      "entity_values": {
+        "sprint_deadline": [
+          "2025 April 25",
+          "2025 June 6",
+          "2025 June 20"
+        ]
+      },
+      "question_template": "List all sprint deadlines we've had, from earliest to latest.",
+      "gold_answer": "2025 April 25, 2025 June 6, 2025 June 20",
+      "notes": "Entity changed 3 times; answer must list all values in chronological order."
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "ci_config"
+      ],
+      "entity_values": {
+        "ci_config": "korinth-deploy.yaml"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our CI configuration?",
+      "gold_answer": "korinth-deploy.yaml",
+      "notes": "Cascade from deploy_target (hop=1). Replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Cas",
+      "target_entities": [
+        "dockerfile_path"
+      ],
+      "entity_values": {
+        "dockerfile_path": "deploy/Dockerfile.zephyra"
+      },
+      "cascade_source": "docker_image",
+      "question_template": "Where's the Dockerfile?",
+      "gold_answer": "deploy/Dockerfile.zephyra",
+      "notes": "Cascade from docker_image (hop=2). Replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "log_drain_endpoint"
+      ],
+      "entity_values": {
+        "log_drain_endpoint": "stream.velturis.io/aurora"
+      },
+      "cascade_source": "deploy_target",
+      "question_template": "What's our log drain endpoint?",
+      "gold_answer": "Uncertain — previously 'stream.velturis.io/aurora', but deploy_target changed",
+      "notes": "Cascade from deploy_target (hop=1). No replacement declared.",
+      "hop": 1
+    },
+    {
+      "type": "Abs",
+      "target_entities": [
+        "deploy_command"
+      ],
+      "entity_values": {
+        "deploy_command": "orinthal publish --tier production"
+      },
+      "cascade_source": "ci_config",
+      "question_template": "What's the deploy command?",
+      "gold_answer": "Uncertain — previously 'orinthal publish --tier production', but ci_config changed",
+      "notes": "Cascade from ci_config (hop=2). No replacement declared.",
+      "hop": 2
+    },
+    {
+      "type": "Del",
+      "target_entities": [
+        "default_branch"
+      ],
+      "entity_values": {
+        "default_branch": "develop"
+      },
+      "question_template": "What's our default branch?",
+      "gold_answer": "No — explicitly removed",
+      "notes": "Explicit deletion."
+    },
+    {
+      "type": "Agg",
+      "target_entities": [
+        "design_system",
+        "test_coverage_target",
+        "code_review_policy"
+      ],
+      "entity_values": {
+        "design_system": "Synthari Elements v1.2",
+        "test_coverage_target": "90% for core modules",
+        "code_review_policy": "lead approval for core/"
+      },
+      "question_template": "What are our code quality standards? List everything you know.",
+      "gold_answer": "We use Synthari Elements v1.2, target 90% for core modules test coverage, and require lead approval for core/ for reviews.",
+      "notes": "3-entity aggregation question."
+    },
+    {
+      "type": "ER",
+      "target_entities": [
+        "error_log"
+      ],
+      "entity_values": {
+        "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      },
+      "question_template": "Recite the exact error log I shared.",
+      "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+      "notes": "Verbatim recall. Must match exactly."
+    }
+  ],
+  "total_sessions": 17,
+  "evidence_sessions": 5,
+  "filler_sessions": 12,
+  "total_tokens": 35080,
+  "evidence_tokens": 3150,
+  "filler_tokens": 31930,
+  "evidence_session_indices": [
+    2,
+    5,
+    8,
+    11,
+    14
+  ],
+  "sessions": [
+    {
+      "session_id": "sharegpt_23655",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "ігор Колодкін\n           <div>\n           <a href=\"#\"><i></i></a>\n           </div>\n           <div>\n           <div>\n           <span class=\"close\">×</span>\n           <div>\n           \n           </div>\n           </div>\n           </div> зроби на верху сторінки"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>На жаль, я не знаю, яку саме сторінку ви маєте на увазі, тому не можу точно сказати, як зробити пошук на верхній частині сторінки. Однак, я можу надати загальну інформацію про те, як можна додати пошук на сторінку.</p><p>Є кілька способів додати пошук на сторінку. Один з найпростіших способів - використання вбудованих функцій WordPress. Для цього потрібно використати функцію <code>get_search_form()</code>, яка виводить форму пошуку. Її можна додати в код шаблону сторінки, наприклад, у header.php.</p><p>Також можна використовувати плагіни для додавання пошуку на сторінку. Наприклад, плагін SearchWP дозволяє налаштувати розширений пошук на вашому сайті, включаючи наступні функції: пошук по категоріям, тегам, прихованим дописам, а також можливість налаштувати порядок результатів пошуку та ін.</p><p>Нарешті, можна створити власну форму пошуку, використовуючи HTML, CSS та JavaScript, і додати її на сторінку з допомогою шорткодів або функції <code>do_shortcode()</code>.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "напиши css код для модального вікна яке буде у верхній частинімекрана"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Ось приклад CSS коду для модального вікна, яке буде знаходитися у верхній частині екрана:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\"><span class=\"hljs-comment\">/* Стилі для модального вікна */</span>\n<span class=\"hljs-selector-class\">.modal</span> {\n  <span class=\"hljs-attribute\">display</span>: none; <span class=\"hljs-comment\">/* Початково модальне вікно має бути приховане */</span>\n  <span class=\"hljs-attribute\">position</span>: fixed; <span class=\"hljs-comment\">/* Фіксована позиція */</span>\n  <span class=\"hljs-attribute\">top</span>: <span class=\"hljs-number\">0</span>; <span class=\"hljs-comment\">/* Розташування вгорі екрана */</span>\n  <span class=\"hljs-attribute\">left</span>: <span class=\"hljs-number\">0</span>; <span class=\"hljs-comment\">/* Розташування вліво екрана */</span>\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">100%</span>; <span class=\"hljs-comment\">/* Ширина модального вікна - 100% */</span>\n  <span class=\"hljs-attribute\">height</span>: <span class=\"hljs-number\">100%</span>; <span class=\"hljs-comment\">/* Висота модального вікна - 100% */</span>\n  <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-built_in\">rgba</span>(<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0</span>,<span class=\"hljs-number\">0.4</span>); <span class=\"hljs-comment\">/* Прозорість тла */</span>\n  <span class=\"hljs-attribute\">z-index</span>: <span class=\"hljs-number\">999</span>; <span class=\"hljs-comment\">/* Встановлюємо z-index, щоб модальне вікно було поверх інших елементів */</span>\n}\n\n<span class=\"hljs-selector-class\">.modal-content</span> {\n  <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#fefefe</span>; <span class=\"hljs-comment\">/* Колір фону вікна */</span>\n  <span class=\"hljs-attribute\">margin</span>: auto; <span class=\"hljs-comment\">/* Вирівнюємо вікно по центру екрана */</span>\n  <span class=\"hljs-attribute\">padding</span>: <span class=\"hljs-number\">20px</span>; <span class=\"hljs-comment\">/* Відступи від країв вікна */</span>\n  <span class=\"hljs-attribute\">border</span>: <span class=\"hljs-number\">1px</span> solid <span class=\"hljs-number\">#888</span>; <span class=\"hljs-comment\">/* Рамка вікна */</span>\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">80%</span>; <span class=\"hljs-comment\">/* Ширина вікна */</span>\n  <span class=\"hljs-attribute\">max-width</span>: <span class=\"hljs-number\">600px</span>; <span class=\"hljs-comment\">/* Максимальна ширина вікна */</span>\n  <span class=\"hljs-attribute\">position</span>: relative; <span class=\"hljs-comment\">/* Відносна позиція */</span>\n  <span class=\"hljs-attribute\">top</span>: <span class=\"hljs-number\">50%</span>; <span class=\"hljs-comment\">/* Розташування вікна в центрі екрана */</span>\n  <span class=\"hljs-attribute\">transform</span>: <span class=\"hljs-built_in\">translateY</span>(-<span class=\"hljs-number\">50%</span>); <span class=\"hljs-comment\">/* Вирівнюємо вікно по вертикалі */</span>\n}\n\n<span class=\"hljs-comment\">/* Стилі для хрестика закриття вікна */</span>\n<span class=\"hljs-selector-class\">.close</span> {\n  <span class=\"hljs-attribute\">position</span>: absolute; <span class=\"hljs-comment\">/* Абсолютна позиція */</span>\n  <span class=\"hljs-attribute\">top</span>: <span class=\"hljs-number\">10px</span>; <span class=\"hljs-comment\">/* Відступ від верхнього краю */</span>\n  <span class=\"hljs-attribute\">right</span>: <span class=\"hljs-number\">10px</span>; <span class=\"hljs-comment\">/* Відступ від правого краю */</span>\n  <span class=\"hljs-attribute\">font-size</span>: <span class=\"hljs-number\">24px</span>; <span class=\"hljs-comment\">/* Розмір шрифту */</span>\n  <span class=\"hljs-attribute\">font-weight</span>: bold; <span class=\"hljs-comment\">/* Жирний шрифт */</span>\n  <span class=\"hljs-attribute\">cursor</span>: pointer; <span class=\"hljs-comment\">/* Зміна курсора при наведенні на елемент */</span>\n}\n</code></div></div></pre><p>Ці стилі відповідають за зовнішній вигляд модального вікна та його розташування у верхній частині екрана. Якщо у вас вже є HTML та JS код для модального вікна, то ви можете додати ці стилі до свого CSS файлу або включити їх пря</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "не допомогло"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Будь ласка, можливо ви можете надати більше інформації щодо вашої проблеми з модальним вікном? Які саме проблеми виникають після застосування CSS коду? Які помилки ви отримуєте? Це дозволить мені дати більш точну відповідь на ваш запит.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "це мій css: \n.modal {\n  display: none;\n  position: fixed;\n  z-index: 999;\n  right: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  overflow: auto;\n  background-color: rgba(0, 0, 0, 0.4);\n}\n\n.modal-content {\n  margin: 15% auto;\n  background-color: #fefefe;\n  border: 1px solid #888;\n  width: 80%;\n  padding: 20px;\n  box-shadow: 0 5px 10px rgba(0, 0, 0, .3);\n  border-radius: 10px;\n}\n\n.col-lg-9 {\n  width: 75%;\n  float: left;\n}\n\n.modal-content .aws-search-form-wrapper {\n  display: block;\n  margin: 0 auto;\n  width: 100%;\n  max-width: 500px;\n}\n\n.modal-content .aws-search-form-wrapper form {\n  margin-top: 20px;\n}\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Щоб розмістити модальне вікно у верхній частині екрана, вам потрібно змінити значення <code>margin</code> відносно верхньої сторони (тобто <code>margin-top</code>) у властивості <code>.modal-content</code>.</p><p>Ось код, який ви можете використовувати для розміщення модального вікна у верхній частині екрана:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\"><span class=\"hljs-selector-class\">.modal</span> {\n  <span class=\"hljs-attribute\">display</span>: none;\n  <span class=\"hljs-attribute\">position</span>: fixed;\n  <span class=\"hljs-attribute\">z-index</span>: <span class=\"hljs-number\">999</span>;\n  <span class=\"hljs-attribute\">right</span>: <span class=\"hljs-number\">0</span>;\n  <span class=\"hljs-attribute\">top</span>: <span class=\"hljs-number\">0</span>;\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">100%</span>;\n  <span class=\"hljs-attribute\">height</span>: <span class=\"hljs-number\">100%</span>;\n  <span class=\"hljs-attribute\">overflow</span>: auto;\n  <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-built_in\">rgba</span>(<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0.4</span>);\n}\n\n<span class=\"hljs-selector-class\">.modal-content</span> {\n  <span class=\"hljs-attribute\">margin</span>: <span class=\"hljs-number\">5%</span> auto <span class=\"hljs-number\">0</span>;\n  <span class=\"hljs-attribute\">background-color</span>: <span class=\"hljs-number\">#fefefe</span>;\n  <span class=\"hljs-attribute\">border</span>: <span class=\"hljs-number\">1px</span> solid <span class=\"hljs-number\">#888</span>;\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">80%</span>;\n  <span class=\"hljs-attribute\">padding</span>: <span class=\"hljs-number\">20px</span>;\n  <span class=\"hljs-attribute\">box-shadow</span>: <span class=\"hljs-number\">0</span> <span class=\"hljs-number\">5px</span> <span class=\"hljs-number\">10px</span> <span class=\"hljs-built_in\">rgba</span>(<span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, <span class=\"hljs-number\">0</span>, .<span class=\"hljs-number\">3</span>);\n  <span class=\"hljs-attribute\">border-radius</span>: <span class=\"hljs-number\">10px</span>;\n}\n\n<span class=\"hljs-selector-class\">.col-lg-9</span> {\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">75%</span>;\n  <span class=\"hljs-attribute\">float</span>: left;\n}\n\n<span class=\"hljs-selector-class\">.modal-content</span> <span class=\"hljs-selector-class\">.aws-search-form-wrapper</span> {\n  <span class=\"hljs-attribute\">display</span>: block;\n  <span class=\"hljs-attribute\">margin</span>: <span class=\"hljs-number\">0</span> auto;\n  <span class=\"hljs-attribute\">width</span>: <span class=\"hljs-number\">100%</span>;\n  <span class=\"hljs-attribute\">max-width</span>: <span class=\"hljs-number\">500px</span>;\n}\n\n<span class=\"hljs-selector-class\">.modal-content</span> <span class=\"hljs-selector-class\">.aws-search-form-wrapper</span> <span class=\"hljs-selector-tag\">form</span> {\n  <span class=\"hljs-attribute\">margin-top</span>: <span class=\"hljs-number\">20px</span>;\n}\n</code></div></div></pre><p>Цей код змінює значення <code>margin</code> на <code>5% auto 0</code>, де <code>0</code> означає, що відступу зверху немає. Таким чином, модальне вікно з'явиться у верхній частині екрана.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 09:00"
+    },
+    {
+      "session_id": "sharegpt_3354",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "what is the connection between gradle and javaGradle is a build tool for Java and other programming languages that uses a domain-specific language (DSL) based on the Groovy programming language to describe builds. It is used to automate the process of building, testing, and deploying software. In the context of Java, Gradle can be used to build Java applications and libraries, run tests, and generate Javadoc documentation. Gradle is often used in combination with the Java programming language, but it can also be used to build and manage projects written in other languages, such as C++, Python, and C#.what is gradleW. Teach me about gradleW step by step like I am a begineerGradlew is a script that is used to invoke Gradle from the command line. It is typically used in the context of a Gradle-based Java project to build and test the project.Here is a step-by-step guide to using gradlew:Open a terminal or command prompt window.Navigate to the root directory of your Gradle-based Java project. This is the directory that contains the build.gradle file for your project.Type ./gradlew followed by the task you want to execute. For example, to build your project, you would type ./gradlew build. To see a list of available tasks, you can type ./gradlew tasks.Press Enter to run the task. Gradle will execute the task and display the output in the terminal window.Here are some common tasks that you might execute with gradlew:build: Builds the project and generates any artifacts (such as JAR or WAR files) that are needed.test: Runs the tests for the project.clean: Deletes any generated artifacts and temporary files.assemble: Builds the project and generates all of the artifacts, including those needed for testing.install: Builds the project and installs the resulting artifacts in the local repository (usually located in the ~/.m2 directory). This allows the artifacts to be used as dependencies in other projects.I hope this helps! Let me know if you have any questions.why there are two build.gradle filesIt is common for a Java project to have two build.gradle files: one at the root of the project, and another in the app subdirectory.The build.gradle file at the root of the project is usually called the \"root build file\" and is used to define configuration that applies to the entire project. This can include things like the version of Gradle to use, the repositories where dependencies are stored, and common build settings such as the encoding of source files.The build.gradle file in the app subdirectory is usually called the \"module build file\" and is used to define configuration that is specific to that module. This can include things like the dependencies needed by the module, the package name of the Android application, and the minimum version of Android required to run the app.In this case, the root build.gradle file might define the overall structure of the project and the dependencies that are shared by all of the modules, while the module build.gradle files would specify the dependencies and settings that are specific to each module.I hope this helps! Let me know if you have any other questions.give me more practical examplesSure! Here are a few examples of how you might use the build.gradle files in a Gradle-based Java project:Defining dependencies: In the module build.gradle file, you can define the dependencies needed by the module. For example:Copy codedependencies {\n  compile 'com.google.guava:guava:21.0'\n  testCompile 'junit:junit:4.12'\n}\nThis will include the Google Guava library as a compile-time dependency and the JUnit library as a test-time dependency for the module.Setting the target Java version: In the root build.gradle file, you can set the version of Java that the project is compiled against:Copy codeallprojects {\n  sourceCompatibility = 1.8\n  targetCompatibility = 1.8\n}\nThis will ensure that the project is compiled using Java 8 and can be run on a Java 8 runtime.Enabling the Java plugin: In the root build.gradle file, you can enable the Java plugin to provide support for building Java applications:Copy codeplugins {\n  id 'java'\n}\nThis will enable tasks such as build and test that are specific to Java projects.I hope these examples give you a sense of the types of things you can do with the build.gradle files in a Gradle-based Java project. Let me know if you have any other questions!is it mandatory to have multiple gradle files? for example can I put all the gradle content in the root gradle files?It is not mandatory to have multiple build.gradle files in a Gradle-based Java project. You can put all of the configuration in a single build.gradle file if you prefer.However, it is common for larger projects to have multiple build.gradle files as a way of organizing the configuration and separating out concerns. For example, you might have a root build.gradle file that defines common settings and dependencies that are shared across the entire project, and module-level build.gradle files that define settings and dependencies that are specific to each module.Having multiple build.gradle files can make it easier to manage and maintain the build configuration for a large project. It can also make it easier to reuse parts of the configuration in multiple modules or projects.That being said, it is entirely possible to define all of the configuration in a single build.gradle file if that makes sense for your project. The decision of whether to use multiple build.gradle files or a single file is ultimately a matter of personal preference and the needs of your project.So, can I have multiple modules inside a android folder? which will have their specific gradle file?Yes, it is possible to have multiple modules inside an Android project. Each module can have its own build.gradle file that defines the configuration for that module.In an Android project, a module is a self-contained component that can be built and run independently. Each module can contain its own source code, resources, and AndroidManifest file.To create a new module in an Android project, you can use the File &gt; New &gt; New Module menu option in Android Studio. This will open the \"Create New Module\" wizard, which will allow you to specify the type of module you want to create and the configuration for the module.Once you have created a new module, you can define its configuration in the build.gradle file for that module. This can include things like the dependencies needed by the module, the package name of the Android application, and the minimum version of Android required to run the app.I hope this helps! Let me know if you have any other questions."
+        }
+      ],
+      "timestamp": "2023/03/01 (Wed) 11:12"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1a",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1a)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's design system is Synthari Elements v1.2. I'm curious, though—how do you think we should handle updates to the design system? Should we set a regular review schedule or just adopt changes as needed?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great that you're thinking about how to manage updates to your design system. A regular review schedule can provide structure and ensure that everyone stays aligned, but it might also depend on how frequently changes arise in your projects. If your team is working on dynamic projects or if you anticipate a lot of feedback, adopting changes as needed could be more responsive. You might also consider a hybrid approach where you have scheduled reviews but remain open to updates in between those sessions. What are your team's current workflows like?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 April 25. Do you think we should start planning the design system updates before the deadline, or wait until after to avoid disrupting the current sprint?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's usually beneficial to start planning design system updates before the sprint deadline, especially if you can do so without disrupting the current work. This way, you can gather feedback and make necessary adjustments without the pressure of an imminent deadline. If you’re able to allocate some time for planning alongside your current sprint tasks, it might also help to facilitate a smoother transition once the deadline passes. Have you considered how to balance the planning with the ongoing sprint work?"
+        },
+        {
+          "role": "user",
+          "content": "The monitoring dashboard is at watch.korinth.dev/aurora. How do you usually use monitoring dashboards in your projects? Are there specific metrics or alerts that you find essential to keep track of?"
+        },
+        {
+          "role": "assistant",
+          "content": "Monitoring dashboards can be incredibly useful for keeping an eye on system performance and quickly identifying issues as they arise. It's common to track metrics like response times, error rates, and resource utilization, as these can indicate the overall health of your application. Setting up alerts for critical thresholds is also essential, so you can proactively address problems before they impact users. Have you already identified which specific metrics are most important for your project, or are you still in the process of determining that?"
+        },
+        {
+          "role": "user",
+          "content": "Staging is at dev.orinthal.dev/aurora. Do you think we should implement any automated tests in the staging environment? What kind of tests would you prioritize to ensure stability before deployment?"
+        },
+        {
+          "role": "assistant",
+          "content": "Implementing automated tests in the staging environment is a smart move to enhance stability before deployment. Prioritizing end-to-end tests can help ensure that the entire application workflow functions as expected. Additionally, integration tests can verify that different components work well together, while unit tests can catch issues at the code level. By combining these approaches, you can create a robust testing strategy that minimizes the risk of introducing bugs in production. Are there specific areas in your application where you feel testing is currently lacking?"
+        },
+        {
+          "role": "user",
+          "content": "The team channel is #aurora-dev. It might be a good idea to use this channel for discussing test results and any issues encountered during the staging phase. How do you currently manage communication around testing and deployments? Are there any tools or practices you find particularly effective for keeping everyone informed?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a dedicated channel like #aurora-dev for discussing test results and issues is a great way to streamline communication during the staging phase. Many teams find it effective to implement regular check-ins or stand-ups to discuss testing progress and deployment readiness. Additionally, integrating tools like issue trackers or project management software can help keep everyone informed about the current status of tests and deployments. Real-time notifications for test results can also be beneficial. What tools are you currently using for communication and tracking, and do you feel they're meeting your team's needs?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "design_system",
+          "value": "Synthari Elements v1.2",
+          "original_seed": "Our design system is Synthari Elements v1.2",
+          "fact_text": "The team's design system is Synthari Elements v1.2.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 April 25",
+          "original_seed": "The sprint deadline is 2025 April 25",
+          "fact_text": "The sprint deadline is 2025 April 25.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 1/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "monitoring_url",
+          "value": "watch.korinth.dev/aurora",
+          "original_seed": "Monitoring dashboard is at watch.korinth.dev/aurora",
+          "fact_text": "The monitoring dashboard is at watch.korinth.dev/aurora.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "staging_url",
+          "value": "dev.orinthal.dev/aurora",
+          "original_seed": "Staging is at dev.orinthal.dev/aurora",
+          "fact_text": "Staging is at dev.orinthal.dev/aurora.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        },
+        {
+          "fact_id": 5,
+          "entity": "slack_channel",
+          "value": "#aurora-dev",
+          "original_seed": "Our team channel is #aurora-dev",
+          "fact_text": "The team channel is #aurora-dev.",
+          "conveyed_in_turn": 9,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/02 (Thu) 01:23"
+    },
+    {
+      "session_id": "sharegpt_5330",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2In point form, explain the logic for determining whether or not a cup is full and how it will fill in a VR barista game. The functionality must utilize callbacks. You may also use code snippets to explain your thinking. Here is some text for context:\n\nfill the cup with coffee\nThe cup presently has a \"filltime\" variable that when reached will flip isFull to true\nI want the cup to fill when the button is pressed (onSelect) start fill timer?\n\nhave the cup then be considered a full cup\nCup isFull = true"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's a logic for determining whether a cup is full and how it will fill in a VR barista game using callbacks:</p><ol><li>Create a cup object that has the following properties:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">const</span> cup = {\n  <span class=\"hljs-attr\">filltime</span>: <span class=\"hljs-number\">0</span>, <span class=\"hljs-comment\">// time in seconds it takes to fill the cup</span>\n  <span class=\"hljs-attr\">currentFill</span>: <span class=\"hljs-number\">0</span>, <span class=\"hljs-comment\">// current amount of coffee in the cup</span>\n  <span class=\"hljs-attr\">isFull</span>: <span class=\"hljs-literal\">false</span> <span class=\"hljs-comment\">// whether or not the cup is full</span>\n};\n</code></div></div></pre><ol><li>Create a function that starts the fill timer when the fill button is pressed:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">startFillTimer</span>(<span class=\"hljs-params\"></span>) {\n  cup.<span class=\"hljs-property\">filltime</span> = <span class=\"hljs-number\">10</span>; <span class=\"hljs-comment\">// for example, it takes 10 seconds to fill the cup</span>\n  cup.<span class=\"hljs-property\">currentFill</span> = <span class=\"hljs-number\">0</span>;\n  cup.<span class=\"hljs-property\">isFull</span> = <span class=\"hljs-literal\">false</span>;\n  \n  <span class=\"hljs-comment\">// start fill timer using setInterval</span>\n  <span class=\"hljs-keyword\">const</span> fillInterval = <span class=\"hljs-built_in\">setInterval</span>(<span class=\"hljs-function\">() =&gt;</span> {\n    <span class=\"hljs-keyword\">if</span> (cup.<span class=\"hljs-property\">currentFill</span> &lt; <span class=\"hljs-number\">1</span>) {\n      cup.<span class=\"hljs-property\">currentFill</span> += <span class=\"hljs-number\">0.1</span>; <span class=\"hljs-comment\">// fill the cup by 10% each second</span>\n    } <span class=\"hljs-keyword\">else</span> {\n      cup.<span class=\"hljs-property\">isFull</span> = <span class=\"hljs-literal\">true</span>;\n      <span class=\"hljs-built_in\">clearInterval</span>(fillInterval); <span class=\"hljs-comment\">// stop the fill timer</span>\n    }\n  }, cup.<span class=\"hljs-property\">filltime</span> * <span class=\"hljs-number\">1000</span> / <span class=\"hljs-number\">10</span>); <span class=\"hljs-comment\">// run the fill timer every 10% of filltime</span>\n}\n</code></div></div></pre><ol><li>Create a function that handles the onSelect callback of the fill button:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-title function_\">handleFillButtonSelect</span>(<span class=\"hljs-params\"></span>) {\n  <span class=\"hljs-title function_\">startFillTimer</span>();\n}\n</code></div></div></pre><ol><li>Attach the handleFillButtonSelect function to the fill button's onSelect callback:</li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\">fillButton.<span class=\"hljs-title function_\">onSelect</span>(handleFillButtonSelect);\n</code></div></div></pre><ol><li>Now, whenever the fill button is pressed, the handleFillButtonSelect function will be called, which will start the fill timer. The fill timer will fill the cup by 10% each second until the cup is full, at which point the isFull property of the cup object will be set to true.</li></ol><p>This logic utilizes callbacks by attaching the handleFillButtonSelect function to the fill button's onSelect callback. When the fill button is pressed, the onSelect callback will be triggered, which will call the handleFillButtonSelect function, which in turn will start the fill timer.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/03 (Fri) 23:19"
+    },
+    {
+      "session_id": "sharegpt_18267",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "2 / 2I want you to help me write an article about \"non compliance with NCAT work order\". Do you acknowlege? Do not write the article yet. Just acknowledge"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Yes, I acknowledge your request to help you write an article about \"non compliance with NCAT work order\" in the English language. Please provide me with any additional details or specifications you would like me to consider while writing the article.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Assume that you are an expert SEO specialist. I will give you an article that you have to analyse considering the keywords, intent and the content. Do you understand?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Yes, I understand. As an expert SEO specialist, I can analyze the given article based on the keywords used, the intended audience, and the overall content. Please provide me with the article and any specific instructions you may have.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Here's the first article: Your rights and obligations\nWhen NCAT makes an order or decision, you have certain rights and obligations.\n\nYou must comply with the orders\nNCAT orders are final and binding.  You must comply with the orders, unless you have a lawful or reasonable excuse not to do so.\nIf you do not comply with the orders:\nThis may be a criminal offence\nYou may be liable to the imposition of a civil penalty\nYou may be found guilty of contempt of the Tribunal, resulting in a fine or imprisonment\nAsk for written reasons\nWritten reasons set out the Tribunal's findings, the applicable law and reasoning process that lead the Tribunal to its decision.  \n\nYou can ask NCAT to give you a 'written statement of reasons' for the decision if reasons were not provided with the Tribunal's orders.\n\nMake your request in writing to NCAT addressed to the Registrar. Requests must be made within 28 days of receiving the notice of the decision.\n\nAppeal against the orders\nIf you are dissatisfied with the Tribunal's orders, you may be able to appeal the decision. You can also request a stay of the orders while the appeal is being considered.\n\nInternal appeals\nMany decisions can be appealed to NCAT's Internal Appeal Panel. The time limit for making an appeal varies depending on the type of proceeding. Learn more about making an internal appeal.\n\nOther appeals\nOther NCAT decisions can be appealed to the NSW Supreme Court, the NSW Land and Environment Court or the NSW District Court. Some decisions can be appealed either to the Supreme Court or to NCAT.  There may be appeal rights in other legislation, depending on the type of proceedings.\n\nFor more information read the NCAT Internal Appeals Guideline (PDF , 273.7 KB).\n\nOther ways to change NCAT orders\nSet aside or vary decision\nIf all the parties agree or the decision was made in your absence, you can ask for the orders to be set aside or varied. Time limits apply.\n\nReview of guardianship or financial management orders\nYou can ask for a review of the Tribunal's order appointing a guardian or financial manager. This can happen if circumstances have changed and the original order is no longer working or appropriate.\n\nRenewal of proceedings\nIf the other party does not comply with a work order (to provide goods or services) in the Consumer and Commercial Division, you can ask for a renewal of proceedings so that different orders can be made.  \n\nReinstatement\nIf your case was dismissed because you did not appear at the hearing, you can ask NCAT to reinstate the proceedings. You will need to give a reasonable explanation to the Tribunal for your failure to appear. Time limits apply.\n\nJudicial review\nIn appropriate cases, you can apply to the NSW Supreme Court for a judicial review of NCAT's decision. The Supreme Court may refuse that application, even if there has been some error, if you have not tried appealing first.  \n\nEnforcement options\nMoney orders   \nOrders for the payment of money can be enforced by registering a certified copy of the order with the NSW Local Court or District Court. Learn more about requesting a certified money order.\n\nWarrants for possession\nOrders for termination and possession of a premises can be enforced by requesting a warrant for possession. A warrant authorises a Sheriff’s Officer to enter the premises and take all necessary steps to remove the tenant or resident from the premises. Learn more about warrants for possession.\n\nNon-money orders in anti-discrimination cases\nOrders made in an anti-discrimination case which are not for the payment of money can be registered as a judgement of the Supreme Court.  You can request for a certified copy of the order can be made by contacting the NCAT Registry. \n\nCriminal, civil penalty and contempt proceedings\nIf a person fails to comply with NCAT orders without lawful or reasonable excuse, the orders may be enforceable by bringing criminal, civil penalty or contempt proceedings.  You should obtain legal advice if you are considering any of these options.\n\nOther enforcement options \nCheck the Act under which your order is made for further enforcement options.  For example, section 97E of the Community Land Management Act 1989 (NSW) and cl 13(3) of Sch 5D to the Health Practitioner Regulation National Law (NSW) provide additional enforcement options for orders made under those laws."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Based on my analysis, the primary keywords for this article are \"NCAT orders,\" \"compliance,\" \"appeal,\" \"enforcement,\" and \"review.\" The article is intended for individuals who have received an order or decision from NCAT and need guidance on their rights and obligations.</p><p>The content of the article is informative and straightforward, providing clear instructions on what to do in various situations, such as requesting written reasons for a decision or appealing the decision. It also explains the consequences of non-compliance with NCAT orders and outlines the enforcement options available to those seeking to enforce an order.</p><p>From an SEO perspective, the article could benefit from some optimization techniques such as including the primary keywords in the title and subheadings, using them throughout the content in a natural and relevant way, and adding meta descriptions that summarize the article's main points.</p><p>Overall, the article is well-written and informative, providing practical advice and guidance to those seeking to understand their rights and obligations in relation to NCAT orders.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Here's the second article: NCAT Work Orders against Builders\n01/12/2015\n\nRemedy for Builder’s failure to comply with Work Orders issued by NCAT\nMary recently approached Richard Watson of Watson & Watson for assistance where a builder failed to comply with a Work Order made by the New South Wales Civil and Administrative Tribunal (NCAT). The Order required the builder to complete certain incomplete and defective work (kitchen) within the timeframe as set out in the Order.  These proceedings had previously been conducted by Mary without the assistance of lawyers. \n\nIt is common for NCAT to provide for a Work Order allowing the builder to return to the site to carry out rectification work in the event that the builder wishes to and is appropriately licensed to continue the works even though the relationship has broken down.  If you find yourself in such a relationship breakdown then it would be appropriate to approach us to seek advice before the matter is determined by the NCAT, in particular, if you do not wish to have a Work Order forced upon you. \n\nHowever, in this case Mary approached us as she was of the view that the builder had not complied with the Work Order.  As it happened the Tribunal accepted the position that the builder failed to carry out the work, the subject of the Work Order.\n\nMary had made an application to NCAT for an Order in proceedings known as “Renewal Proceedings” and sought that the Work Order be vacated and that in place thereof an Order that the builder pay money by way of a Money Order instead of carrying out the work under the Work Order..\n\nJust prior to the hearing Mary approached Richard Watson, an experienced solicitor in relation to Building and Construction cases to consider the matter. Notwithstanding that each of the owner and the builder had instructed lawyers a few days before the hearing and each were of the view that it would be appropriate that the proceedings be adjourned the Member did not allow the adjournment and the matter proceeded to hearing on that day.  In those circumstances, Watson & Watson could only rely upon the documents and evidence that had been filed by Mary.  Even though the evidence was not to the standard that would be recommended by us it was sufficient to obtain a “Renewal Order” which in effect was an order that a certain sum be paid to the owner in substitution of the earlier existing Work Order.\n\nIn addition, it became clear that there were other defective works undertaken by the builder that were covered by the statutory warranties under the Home Building Act.  Separate proceedings are now on foot in relation to those matters.\n\nBefore one makes an application for a ‘renewal application’ we suggest that you obtain advice from us as to what is the best course to adopt and what is the appropriate evidence required for the hearing.  This will assist in having the proceedings dealt with efficiently and for you as the owner to obtain an appropriate order.  There are always circumstances (and sometimes some unusual circumstances) that should be considered rather than proceeding on a basis of an application for a Renewal Order which appears to be the usual course adopted in such disputes.\n\nRichard Watson and the team at Watson & Watson are experienced in resolving the issues so as to achieve the optimum outcome.\n\nIf you find yourself in difficulties even if it is because you have chosen to proceed without lawyers or the course of the proceedings is not in accordance with what you believe is appropriate, please telephone Richard Watson for an opinion as to the best approach to be adopted."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>The article discusses a case where a builder failed to comply with a Work Order issued by the New South Wales Civil and Administrative Tribunal (NCAT). The Work Order required the builder to complete certain incomplete and defective work within a specific timeframe. The owner, Mary, had previously conducted the proceedings without the assistance of lawyers.</p><p>The article highlights that it is common for NCAT to provide for a Work Order allowing the builder to return to the site to carry out rectification work, even if the relationship has broken down. However, if an owner does not wish to have a Work Order forced upon them, they should seek legal advice before the matter is determined by the NCAT.</p><p>In this case, Mary approached Watson &amp; Watson for assistance as she believed that the builder had not complied with the Work Order. The Tribunal accepted Mary's position, and she made an application for a Renewal Order to replace the earlier Work Order. Watson &amp; Watson recommended that owners obtain legal advice before making a Renewal Application to ensure they have the appropriate evidence required for the hearing.</p><p>The article emphasizes that there are always circumstances that should be considered before proceeding with a Renewal Order. Richard Watson and the team at Watson &amp; Watson have experience in resolving such issues to achieve the optimum outcome. The article concludes by encouraging owners to seek legal advice from Richard Watson if they find themselves in difficulties during such proceedings.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Here's the third article: Someone Not Complying with an NCAT Order?\nWhen NCAT (New South Wales Civil and Administrative Tribunal) proceedings have been finalised, the Tribunal will make final orders on the parties. These orders are binding and legally enforceable, so if they are not being complied with within the time frame specified, there are a number of enforcement options which are available to you. This article will explore these options in more detail in how to enforce an NCAT Order.\n\nEnforce a Money Order\nThe New South Wales Civil and Administrative Tribunal has the power to hear a variety of disputes, ranging from tenancy disputes to retail lease disputes. At the end of the disputes process, NCAT can enforce an NCAT Order. There are three steps to enforcing an NCAT order which include:\n\nRequesting a certified money order;\nRegistering the money order as a judgment with the Local Court; and\nEnforcing the judgment through the Local Court.\nThe enforcement action may include:\n\nSeizing or selling the other party’s property which is called a writ for the levy of property;\nTaking money from the other party’s bank account or wages which is called a garnishee order; or\nGetting an order which requires the other party to answer questions about their finances which is called an examination.\nRenew the Proceedings\nYou may be able to apply to renew the NCAT proceedings if a work order to provide goods or services has not been complied with within the time period set by the Tribunal.\nThis can be done by lodging an application form within the same period that was set out in the NCAT order. If no period has been specified, the renewal application must be lodged within 12 months after the work was meant to be completed.\n\nRequest a Warrant for Possession\nYou may be able to request a warrant for possession if NCAT made orders for termination of a lease and possession of the premises and the tenant or resident has not left.\nThis warrant authorises the sheriff to enter the premises and take all necessary steps to remove them from the premises. The request can only be made after but no longer than 30 days after the date of possession has passed."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>This article provides information on how to enforce an NCAT (New South Wales Civil and Administrative Tribunal) order if the other party is not complying within the specified time frame. One option is to enforce a money order by requesting a certified money order, registering it as a judgment with the Local Court, and then enforcing the judgment through the Local Court. Enforcement action may include seizing or selling the other party’s property, taking money from their bank account or wages, or getting an order which requires them to answer questions about their finances.</p><p>Another option is to renew the NCAT proceedings if a work order to provide goods or services has not been complied with within the time period set by the Tribunal. This can be done by lodging an application form within the same period that was set out in the NCAT order or within 12 months after the work was meant to be completed if no period was specified.</p><p>Finally, if NCAT made orders for termination of a lease and possession of the premises and the tenant or resident has not left, you may be able to request a warrant for possession. This warrant authorises the sheriff to enter the premises and take all necessary steps to remove them from the premises. The request can only be made after but no longer than 30 days after the date of possession has passed.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I want you to consider your analysis on the three articles i provided. As a SEO specialist and experienced legal content writer, give me topic ideas focused on \"non compliance with NCAT work order\" that will be beneficial for home owners."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>Based on the three articles you provided and the focus on non-compliance with NCAT work orders, here are some potential topic ideas for articles that could be beneficial for homeowners:</p><ol><li><p>\"What to do When a Contractor Doesn't Complete the Work Ordered by NCAT\": This article could provide homeowners with steps they can take if a contractor fails to complete work that was ordered by NCAT. It could outline the renewal process for NCAT proceedings, as well as the various enforcement options available for money orders.</p></li><li><p>\"How to Ensure Compliance with NCAT Work Orders for Tenants\": This article could provide tips and advice for landlords on how to ensure compliance with NCAT work orders from tenants, particularly when it comes to orders for the payment of rent or the completion of repairs. It could also discuss the potential consequences for tenants who fail to comply with NCAT orders.</p></li><li><p>\"Avoiding Non-Compliance with NCAT Work Orders: A Guide for Homeowners\": This article could provide homeowners with tips and advice on how to avoid non-compliance with NCAT work orders in the first place. It could discuss the importance of clear communication with contractors and tenants, as well as the potential consequences of non-compliance.</p></li><li><p>\"Understanding Your Rights as a Homeowner When Dealing with Non-Compliance of NCAT Work Orders\": This article could provide an overview of the legal rights that homeowners have when dealing with non-compliance of NCAT work orders. It could discuss the different enforcement options available to homeowners and how they can pursue legal action against non-compliant contractors or tenants.</p></li><li><p>\"The Role of NCAT in Resolving Disputes Between Homeowners and Contractors\": This article could provide an overview of the role that NCAT plays in resolving disputes between homeowners and contractors. It could discuss the different types of disputes that NCAT can hear, as well as the potential outcomes of NCAT proceedings. The article could also provide tips for homeowners on how to prepare for NCAT hearings and navigate the legal process.</p></li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/04 (Sat) 10:20"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1b",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1b)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "The team's test coverage target is 90% for core modules. We're really pushing for that high coverage to catch any issues early. \n\nWhat testing framework are you using to achieve that? Any particular strategies you recommend for maintaining coverage?"
+        },
+        {
+          "role": "assistant",
+          "content": "It's great to hear that you're aiming for such high test coverage; that can definitely help catch issues early in the development process. To achieve your target, it's important to incorporate both unit tests and integration tests effectively. You might consider using a combination of automated testing and code reviews to ensure that tests are well-written and comprehensive.\n\nAdditionally, regularly running coverage reports can help you identify areas that might need more testing. Pairing developers to review each other's tests can also provide fresh perspectives on edge cases that might be missed otherwise. What specific challenges are you facing with maintaining that coverage?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 June 6. It's coming up fast, so we need to stay on track with our deliverables. \n\nHow do you usually manage your tasks leading up to a deadline? Any tools or techniques that help keep the team organized?"
+        },
+        {
+          "role": "assistant",
+          "content": "With a deadline approaching, it’s crucial to stay organized and focused on your deliverables. One effective approach is breaking down larger tasks into smaller, manageable pieces, which can help keep the team motivated and provide a clearer picture of progress. Prioritizing tasks based on urgency and importance can also ensure that critical components are addressed first.\n\nUsing a visual management tool, like Kanban boards, can help everyone stay aligned on what needs to be done and track progress at a glance. Regular check-ins can also be beneficial for discussing any blockers and adjusting priorities as needed. Are there specific areas where your team is feeling the pressure, or are you looking for ways to enhance your current workflow?"
+        },
+        {
+          "role": "user",
+          "content": "The team's default branch is develop. This setup helps streamline our development process by keeping the main branch stable while features are being worked on.\n\nHow do you manage merging and branching strategies in your workflow? Do you use any specific practices or tools to ensure that the develop branch remains stable?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid approach with the develop branch. To keep that branch stable, it's often helpful to establish a clear merging strategy, like using pull requests to facilitate code reviews and discussions before merging feature branches. This not only helps catch potential issues but also encourages collaboration and knowledge sharing within the team.\n\nIn addition, implementing automated testing on the develop branch can catch issues early and ensure that new code doesn't introduce regressions. Regularly syncing feature branches with develop can also help minimize merge conflicts later on. Are you currently using any specific practices or tools for your code reviews or testing processes?"
+        },
+        {
+          "role": "user",
+          "content": "The team's package manager is Dranith Stack. It's been working well for managing dependencies and keeping everything organized.\n\nHave you found any particular advantages or challenges with using Dranith Stack? What best practices do you follow for managing dependencies with it?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like Dranith Stack is serving your team well for dependency management. One advantage of using a package manager like that is the ability to easily track and update dependencies, which can simplify the process of ensuring you're using the latest versions and security patches. However, it's also essential to keep an eye on potential compatibility issues when updating packages.\n\nBest practices might include regularly reviewing and updating dependencies to avoid technical debt, as well as using a lock file to ensure consistent versions across different environments. It can be helpful to establish a schedule for dependency audits, so your team can proactively address any vulnerabilities. Have you encountered any specific challenges with Dranith Stack that you’re looking to overcome?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "test_coverage_target",
+          "value": "90% for core modules",
+          "original_seed": "Our test coverage target is 90% for core modules",
+          "fact_text": "The team's test coverage target is 90% for core modules.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 6",
+          "original_seed": "Update: The sprint deadline is 2025 June 6",
+          "fact_text": "The sprint deadline is 2025 June 6.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 2/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "default_branch",
+          "value": "develop",
+          "original_seed": "Our default branch is develop",
+          "fact_text": "The team's default branch is develop.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "package_manager",
+          "value": "Dranith Stack",
+          "original_seed": "Our package manager is Dranith Stack",
+          "fact_text": "The team's package manager is Dranith Stack.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/05 (Sun) 14:43"
+    },
+    {
+      "session_id": "sharegpt_6157",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "plugin do chrome que cria um botão no youtube para desligar a barra do tempo e os icones inferiores do youtubeCreate code chorme extinction with libraries :\n1. popup.js\n2. content.js\n3 .popup.html\n4. Background.js\n5. manifest.js\n Portuguese.  \n\n"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Para criar uma extensão do Chrome que remove a barra de tempo e os ícones inferiores do YouTube, você precisará criar os seguintes arquivos:</p><ol><li><p><code>popup.js</code> - Este arquivo será responsável por lidar com a lógica da extensão na janela pop-up.</p></li><li><p><code>content.js</code> - Este arquivo será responsável por injetar o código da extensão na página do YouTube.</p></li><li><p><code>popup.html</code> - Este arquivo será responsável por criar a janela pop-up da extensão.</p></li><li><p><code>background.js</code> - Este arquivo será responsável por lidar com a lógica da extensão em segundo plano.</p></li><li><p><code>manifest.json</code> - Este arquivo será responsável por definir as propriedades e permissões da extensão.</p></li></ol><p>Aqui está um exemplo de como criar esses arquivos:</p><ol><li><code>popup.js</code></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\"><span class=\"hljs-comment\">// Lógica para a janela pop-up da extensão</span>\n</code></div></div></pre><ol><li><code>content.js</code></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>arduino</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-arduino\"><span class=\"hljs-comment\">// Código para remover a barra de tempo e os ícones inferiores do YouTube</span>\n</code></div></div></pre><ol><li><code>popup.html</code></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>html</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-html\"><span class=\"hljs-meta\">&lt;!DOCTYPE <span class=\"hljs-keyword\">html</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">html</span>&gt;</span>\n  <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">head</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">title</span>&gt;</span>Minha Extensão<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">title</span>&gt;</span>\n  <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">head</span>&gt;</span>\n  <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">body</span>&gt;</span>\n    <span class=\"hljs-tag\">&lt;<span class=\"hljs-name\">h1</span>&gt;</span>Minha Extensão<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">h1</span>&gt;</span>\n  <span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">body</span>&gt;</span>\n<span class=\"hljs-tag\">&lt;/<span class=\"hljs-name\">html</span>&gt;</span>\n</code></div></div></pre><ol><li><code>background.js</code></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>css</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-css\">// Lógica para <span class=\"hljs-selector-tag\">a</span> extensão <span class=\"hljs-selector-tag\">em</span> segundo plano\n</code></div></div></pre><ol><li><code>manifest.json</code></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>json</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-json\"><span class=\"hljs-punctuation\">{</span>\n  <span class=\"hljs-attr\">\"manifest_version\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-number\">2</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"name\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"Minha Extensão\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"version\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"1.0\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"description\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"Descrição da minha extensão\"</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"browser_action\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">{</span>\n    <span class=\"hljs-attr\">\"default_popup\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-string\">\"popup.html\"</span>\n  <span class=\"hljs-punctuation\">}</span><span class=\"hljs-punctuation\">,</span>\n  <span class=\"hljs-attr\">\"content_scripts\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">[</span>\n    <span class=\"hljs-punctuation\">{</span>\n      <span class=\"hljs-attr\">\"matches\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">[</span><span class=\"hljs-string\">\"https://www.youtube.com/*\"</span><span class=\"hljs-punctuation\">]</span><span class=\"hljs-punctuation\">,</span>\n      <span class=\"hljs-attr\">\"js\"</span><span class=\"hljs-punctuation\">:</span> <span class=\"hljs-punctuation\">[</span><span class=\"hljs-string\">\"content.js\"</span><span class=\"hljs-punctuation\">]</span>\n    <span class=\"hljs-punctuation\">}</span>\n  <span class=\"hljs-punctuation\">]</span>\n<span class=\"hljs-punctuation\">}</span>\n</code></div></div></pre><p>Esses arquivos são apenas um exemplo e você precisará adicionar sua própria lógica para remover a barra de tempo e os ícones inferiores do YouTube. Depois de criar esses arquivos, você pode carregar a extensão no Chrome indo para a página de extensões (<code>chrome://extensions</code>) e clicando em \"Carregar sem compactação\". Selecione a pasta onde seus arquivos estão salvos e a extensão será carregada no Chrome.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "me ajude preenchendo a  parte da lógia refaturando  o codigo\n\nPlease write in Portuguese language."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Claro, posso ajudar com a lógica para remover a barra de tempo e os ícones inferiores do YouTube. Aqui está um exemplo de como refatorar o código no arquivo <code>content.js</code>:</p><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-comment\">// Selecionar o elemento da barra de tempo</span>\n<span class=\"hljs-keyword\">const</span> timeBar = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.ytp-progress-bar-container'</span>);\n\n<span class=\"hljs-comment\">// Selecionar o elemento dos ícones inferiores</span>\n<span class=\"hljs-keyword\">const</span> controls = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.ytp-chrome-bottom'</span>);\n\n<span class=\"hljs-comment\">// Verificar se os elementos existem antes de removê-los</span>\n<span class=\"hljs-keyword\">if</span> (timeBar &amp;&amp; controls) {\n  <span class=\"hljs-comment\">// Remover a barra de tempo</span>\n  timeBar.<span class=\"hljs-title function_\">remove</span>();\n\n  <span class=\"hljs-comment\">// Remover os ícones inferiores</span>\n  controls.<span class=\"hljs-title function_\">remove</span>();\n\n  <span class=\"hljs-comment\">// Ajustar a altura do player para preencher o espaço vazio</span>\n  <span class=\"hljs-keyword\">const</span> player = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.html5-video-player'</span>);\n  player.<span class=\"hljs-property\">style</span>.<span class=\"hljs-property\">height</span> = <span class=\"hljs-string\">'100%'</span>;\n}\n</code></div></div></pre><p>Este código seleciona os elementos da barra de tempo e dos ícones inferiores no YouTube e os remove da página. Em seguida, ajusta a altura do player de vídeo para preencher o espaço vazio deixado pela remoção dos elementos. Certifique-se de que este código esteja sendo executado somente na página do YouTube para evitar conflitos com outras páginas da web.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "crie um userscript para usar no tampermonkey\n\nPlease write in Portuguese language."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Claro, posso ajudar a criar um userscript para usar no Tampermonkey. O Tampermonkey é uma extensão do navegador que permite a execução de scripts personalizados em sites específicos. Aqui está um exemplo de como criar um userscript para remover a barra de tempo e os ícones inferiores do YouTube usando o Tampermonkey:</p><ol><li><p>Instale o Tampermonkey em seu navegador.</p></li><li><p>Clique no ícone do Tampermonkey e selecione \"Criar um novo script\".</p></li><li><p>Cole o seguinte código no editor de script:</p></li></ol><pre><div class=\"bg-black rounded-md mb-4\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>javascript</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-javascript\"><span class=\"hljs-comment\">// ==UserScript==</span>\n<span class=\"hljs-comment\">// @name         Remover barra de tempo e ícones inferiores do YouTube</span>\n<span class=\"hljs-comment\">// @description  Remove a barra de tempo e os ícones inferiores do YouTube</span>\n<span class=\"hljs-comment\">// @namespace    https://www.example.com/</span>\n<span class=\"hljs-comment\">// @version      1</span>\n<span class=\"hljs-comment\">// @grant        none</span>\n<span class=\"hljs-comment\">// @run-at       document-end</span>\n<span class=\"hljs-comment\">// @match        https://www.youtube.com/*</span>\n<span class=\"hljs-comment\">// ==/UserScript==</span>\n\n(<span class=\"hljs-keyword\">function</span>(<span class=\"hljs-params\"></span>) {\n    <span class=\"hljs-comment\">// Selecionar o elemento da barra de tempo</span>\n    <span class=\"hljs-keyword\">const</span> timeBar = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.ytp-progress-bar-container'</span>);\n\n    <span class=\"hljs-comment\">// Selecionar o elemento dos ícones inferiores</span>\n    <span class=\"hljs-keyword\">const</span> controls = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.ytp-chrome-bottom'</span>);\n\n    <span class=\"hljs-comment\">// Verificar se os elementos existem antes de removê-los</span>\n    <span class=\"hljs-keyword\">if</span> (timeBar &amp;&amp; controls) {\n      <span class=\"hljs-comment\">// Remover a barra de tempo</span>\n      timeBar.<span class=\"hljs-title function_\">remove</span>();\n\n      <span class=\"hljs-comment\">// Remover os ícones inferiores</span>\n      controls.<span class=\"hljs-title function_\">remove</span>();\n\n      <span class=\"hljs-comment\">// Ajustar a altura do player para preencher o espaço vazio</span>\n      <span class=\"hljs-keyword\">const</span> player = <span class=\"hljs-variable language_\">document</span>.<span class=\"hljs-title function_\">querySelector</span>(<span class=\"hljs-string\">'.html5-video-player'</span>);\n      player.<span class=\"hljs-property\">style</span>.<span class=\"hljs-property\">height</span> = <span class=\"hljs-string\">'100%'</span>;\n    }\n})();\n</code></div></div></pre><ol><li><p>Salve o script clicando no botão \"Salvar\" no canto superior esquerdo do editor.</p></li><li><p>Atualize a página do YouTube para que o script seja executado.</p></li></ol><p>Este userscript removerá a barra de tempo e os ícones inferiores do YouTube sempre que você visitar a página do YouTube. Certifique-se de que o script esteja configurado para ser executado somente em páginas específicas usando a opção <code>@match</code> para evitar conflitos com outros sites da web.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/07 (Tue) 02:28"
+    },
+    {
+      "session_id": "sharegpt_24555",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "Several people are trying to run a Notion page where they write how to use GPT. One article contains one usage method. I try to tag each post to make it easy to find information. The contents of the articles posted so far are as follows. Please read below and create appropriate tags to attach to these articles. Tags should not be too specific or too generic. The content of each article consists of a command (example) and an explanation of the command.\n\n1. Assign roles\nCommand: [You are a talented analyst at a top-tier market research firm, a graduate of Harvard Business School. Coach me to create content that connects with C-level executives at B2B SaaS companies. What open-ended questions do I ask? Prioritize uncommon, expert advice.]\nDescription: Grant ChatGPT to assume the expert role\ndrive better answers\n\n2. Waiting for commands\nCommand: [Answer \"OK\" to confirm and I will paste the next text.]\nDescription: ChatGPT is waiting without answering.\nJust add it at the end.\n(simple version)\n\n3. Step-by-step ordering\nCommand: [Step by Step]\nExplanation: It is often used when logic such as mathematics is required.\n\n4. Emphasize\nCommand : [- !IMPORTANT : ~~ ]\nDescription: Create priorities by setting the most needed features.\n\n5. Get to the point\nCommand: [Return only the main response. Remove pre-text and post-text.]\nDescription: Eliminate unnecessary introductions and conclusions.\nIt has the effect of reducing tokens.\n\n6. Storytelling writing\nCommand: [Voice and style guide: Makes use of persuasive tone, making use of rhetorical questions, and storytelling to engage readers. Use metaphors, analogies and other literary devices to make points more relatable and memorable. Write in a way that is both informative and entertaining.]\nDescription: Increases the quality of writing.\nThe core keywords are \"Storytelling\".\nStorytelling is all you need.\n\n7. Format Markdown\nCommand: [Format your response using markdown. Use headings, subheadings, bullet points, and bold to organize the information.]\nDescription: Organize your document in the form of a table of contents (with bullets)\n\n8. Organize prompts (my questions)\nCommand: [Can you please rephrase the question and provide an answer accordingly?]\nDescription: Cleans up my prompts.\nIt produces better results by giving results in more detailed steps.\n\n9. Write in a specific writer's style\nCommand: [Emulate Ernest Hemingway's writing style.]\nDescription: Enter the name of the desired artist.\nIn the same vein, using 'true stories' improves the quality of your writing.\n\n10. Continue listening to the disconnected answer\nCommand: [Keep going]\n[continue]\n[Keep going from exactly where you left]\nDescription: When the answer is cut off due to its length, you can continue listening.\n\nWhen used in a situation where code is being written, content may be omitted in the middle.\nIn this case, it can be solved by giving additional instructions later.\n(Start with “a specific line of code”, keep going from exactly where you left, etc..)\n\n11. Code writing tips\nCommand : [ When you write the code, in order to reduce errors, consider the function name, variable name, number of arguments and parameters, libraries, etc. ]\nDescription: This is a function to reduce errors in code.\nAdd and edit necessary conditions to use.\n\n12. Serving Code Errors\nCommand : [ below is my full code. ]\n\n…\n\n[ and that code returns ]\nDescription: Full code first.\nAfter that, it gives the error message of that code.\n\n13. Get feedback on your questions\nCommand: [ Give me feedback on my question ]\nDescription: You can get feedback on your question level.\n\n14. Default Prompt\nCommand : [ please answer the #Topic following the conditions below.\nTopic : [keyword]\nLength : around 2000 words\nFormat : markdown\nAnswer me in Korean/English\nIncludes titile, subtitles and detail descriptions\nFor Audience: 15 years old students\nContent Goal: Blog (Press Release, Report)\nWriting style : Financial Professional (Steve Jobs) ]\nDescription: A hearty default prompt.\nModify and use according to each condition.\nAnswer in English.지금 번역하기"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li><p>Assign roles\nTags: expert-role, role-assignment</p></li><li><p>Waiting for commands\nTags: command-waiting, simple-commands</p></li><li><p>Step-by-step ordering\nTags: step-by-step, logical-commands</p></li><li><p>Emphasize\nTags: prioritization, emphasis</p></li><li><p>Get to the point\nTags: concise, token-reduction</p></li><li><p>Storytelling writing\nTags: storytelling, writing-style</p></li><li><p>Format Markdown\nTags: markdown-format, document-organization</p></li><li><p>Organize prompts (my questions)\nTags: prompt-rephrase, question-organization</p></li><li><p>Write in a specific writer's style\nTags: writer-style, literary-imitation</p></li><li><p>Continue listening to the disconnected answer\nTags: continuation, incomplete-response</p></li><li><p>Code writing tips\nTags: code-tips, error-reduction</p></li><li><p>Serving Code Errors\nTags: code-errors, debugging</p></li><li><p>Get feedback on your questions\nTags: question-feedback, prompt-evaluation</p></li><li><p>Default Prompt\nTags: default-prompt, custom-conditions</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "Atomize the tags more so that at least some of the posts' tags overlap.\nAnswer in English.지금 번역하기"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li><p>Assign roles\nTags: expert-role, role-assignment, ChatGPT</p></li><li><p>Waiting for commands\nTags: command-waiting, ChatGPT, user-interaction</p></li><li><p>Step-by-step ordering\nTags: step-by-step, logical-commands, instructions</p></li><li><p>Emphasize\nTags: prioritization, emphasis, formatting</p></li><li><p>Get to the point\nTags: concise, token-reduction, content-focus</p></li><li><p>Storytelling writing\nTags: storytelling, writing-style, engagement</p></li><li><p>Format Markdown\nTags: markdown-format, document-organization, formatting</p></li><li><p>Organize prompts (my questions)\nTags: prompt-rephrase, question-organization, clarity</p></li><li><p>Write in a specific writer's style\nTags: writer-style, literary-imitation, writing-style</p></li><li><p>Continue listening to the disconnected answer\nTags: continuation, incomplete-response, user-interaction</p></li><li><p>Code writing tips\nTags: code-tips, error-reduction, programming</p></li><li><p>Serving Code Errors\nTags: code-errors, debugging, programming</p></li><li><p>Get feedback on your questions\nTags: question-feedback, prompt-evaluation, clarity</p></li><li><p>Default Prompt\nTags: default-prompt, custom-conditions, content-creation</p></li></ol></div>"
+        }
+      ],
+      "timestamp": "2023/03/08 (Wed) 19:22"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_1c",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 1c)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! How can I help with the project?"
+        },
+        {
+          "role": "user",
+          "content": "Our team's code review policy is lead approval for the core/ directory. It really helps maintain code quality, but sometimes it can slow things down when the lead is busy. Do you have any strategies for managing code reviews efficiently?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid policy in place to ensure quality, but I understand how it can lead to bottlenecks. One strategy could be to implement a triage system where other team members review the code first and provide initial feedback before it reaches the lead. This way, minor issues can be addressed early on, allowing the lead to focus on the more complex aspects during their review. Additionally, setting up regular review sessions or time blocks where the lead dedicates time solely to code reviews could help catch up on pending approvals. Have you considered any of these approaches, or do you have other ideas in mind?"
+        },
+        {
+          "role": "user",
+          "content": "The sprint deadline is 2025 June 20. It feels like a long way off, but it will sneak up on us if we're not careful. How do you usually break down your tasks to ensure timely delivery by the deadline?"
+        },
+        {
+          "role": "assistant",
+          "content": "Breaking down tasks into manageable chunks can definitely help keep the team on track for a deadline, even one that's a ways off. I recommend starting by identifying the major milestones or features you want to achieve by the deadline. From there, you can further divide those milestones into smaller tasks or user stories that can be tackled in shorter time frames. Setting up regular check-ins to assess progress and adjust priorities can also help keep everyone aligned and accountable. How does your team currently approach task management?"
+        },
+        {
+          "role": "user",
+          "content": "The team deploys to Narvex Cloud. We chose it because of its scalability and ease of use. Do you have any tips on best practices for deploying to cloud environments like this?"
+        },
+        {
+          "role": "assistant",
+          "content": "Deploying to cloud environments can be really effective when done with best practices in mind. It’s important to automate your deployment process as much as possible to minimize human error and ensure consistency. Implementing a robust monitoring system can also help you track performance and identify issues quickly after deployment. Additionally, consider using versioning for your deployments so you can easily roll back if something goes wrong. Are there specific challenges you’re facing with your current deployment process?"
+        },
+        {
+          "role": "user",
+          "content": "The onboarding guide is at wiki.aurora.dev/getting-started. It's a handy resource for new team members to get up to speed quickly. How do you usually ensure that the onboarding process is effective and that new developers feel well-integrated into the team?"
+        },
+        {
+          "role": "assistant",
+          "content": "It’s great that you have an onboarding guide in place; that’s a vital step in helping new developers acclimate. To enhance the effectiveness of the onboarding process, consider pairing new team members with a mentor who can provide guidance and answer questions as they arise. Regular check-ins during their first few weeks can also help gauge their comfort level and address any challenges they might encounter. Encouraging team-building activities or informal meet-and-greets can foster connections and help them feel more integrated within the team. Have you tried any of these methods, or do you have other strategies in mind?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "code_review_policy",
+          "value": "lead approval for core/",
+          "original_seed": "Our code review policy is lead approval for core/",
+          "fact_text": "The team's code review policy is lead approval for core/.",
+          "conveyed_in_turn": 1,
+          "conveyed": true
+        },
+        {
+          "fact_id": 2,
+          "entity": "sprint_deadline",
+          "value": "2025 June 20",
+          "original_seed": "Now I've switched again — The sprint deadline is 2025 June 20",
+          "fact_text": "The sprint deadline is 2025 June 20.",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "notes": "Multiple-update step 3/3"
+        },
+        {
+          "fact_id": 3,
+          "entity": "deploy_target",
+          "value": "Narvex Cloud",
+          "original_seed": "We deploy to Narvex Cloud",
+          "fact_text": "The team deploys to Narvex Cloud.",
+          "conveyed_in_turn": 5,
+          "conveyed": true
+        },
+        {
+          "fact_id": 4,
+          "entity": "onboarding_guide",
+          "value": "wiki.aurora.dev/getting-started",
+          "original_seed": "The onboarding guide is at wiki.aurora.dev/getting-started",
+          "fact_text": "The onboarding guide is at wiki.aurora.dev/getting-started.",
+          "conveyed_in_turn": 7,
+          "conveyed": true
+        }
+      ],
+      "timestamp": "2023/03/10 (Fri) 18:59"
+    },
+    {
+      "session_id": "sharegpt_1498",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How do I access an API endpoint for the Todoist Sync API with python?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To access an API endpoint for the Todoist Sync API with Python, you will need to use a library that can handle making HTTP requests, such as the requests library.</p><p>You will also need to have a Todoist API token, which can be obtained by creating a developer account on the Todoist website.</p><p>Here's an example of how you can use the requests library to access the sync endpoint of the Todoist API:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n\napi_token = <span class=\"hljs-string\">'YOUR_API_TOKEN'</span>\nheaders = {<span class=\"hljs-string\">'Authorization'</span>: <span class=\"hljs-string\">f'Bearer <span class=\"hljs-subst\">{api_token}</span>'</span>}\n\nresponse = requests.post(<span class=\"hljs-string\">'https://api.todoist.com/sync/v8/sync'</span>, headers=headers)\n\n<span class=\"hljs-built_in\">print</span>(response.json())\n</code></div></div></pre><p>This example uses the <code>post</code> method to send a request to the sync endpoint, and the json() method to print the json response.</p><p>You can also use the <code>get</code> method to access read-only endpoints.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\">response = requests.get(<span class=\"hljs-string\">'https://api.todoist.com/sync/v8/sync'</span>, headers=headers)\n</code></div></div></pre><p>You will need to check the Todoist API documentation for the specific endpoint you wish to access and the required parameters.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what if I want to get all the completed tasks?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To get all the completed tasks from the Todoist API using Python and the requests library, you will need to include the <code>completed_since</code> parameter in your request to the sync endpoint.\nThis parameter can be a unix timestamp or a date string in the format <code>YYYY-MM-DDTHH:MM:SSZ</code>, and it will return all completed tasks that were completed since that timestamp or date.</p><p>Here's an example of how you can use the requests library to get all completed tasks from the Todoist API:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n<span class=\"hljs-keyword\">import</span> json\n\napi_token = <span class=\"hljs-string\">'YOUR_API_TOKEN'</span>\nheaders = {<span class=\"hljs-string\">'Authorization'</span>: <span class=\"hljs-string\">f'Bearer <span class=\"hljs-subst\">{api_token}</span>'</span>, <span class=\"hljs-string\">'Content-Type'</span>: <span class=\"hljs-string\">'application/json'</span>}\n\ndata = json.dumps({<span class=\"hljs-string\">\"completed_since\"</span>: <span class=\"hljs-string\">\"now\"</span>})\nresponse = requests.post(<span class=\"hljs-string\">'https://api.todoist.com/sync/v8/sync'</span>, headers=headers, data=data)\n\ntasks = response.json()[<span class=\"hljs-string\">'items'</span>]\ncompleted_tasks = [task <span class=\"hljs-keyword\">for</span> task <span class=\"hljs-keyword\">in</span> tasks <span class=\"hljs-keyword\">if</span> task[<span class=\"hljs-string\">'checked'</span>] == <span class=\"hljs-number\">1</span>]\n\n<span class=\"hljs-built_in\">print</span>(completed_tasks)\n</code></div></div></pre><p>This example uses the <code>post</code> method to send a request to the sync endpoint, passing a json payload with the <code>completed_since</code> parameter set to <code>\"now\"</code>.\nThe response is a json object with all the task items, the script filter the completed tasks by checking the 'checked' attribute of each task, and print it.</p><p>You can also set the completed_since to a specific date and time in the past, to get the completed task only from that date.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\">data = json.dumps({<span class=\"hljs-string\">\"completed_since\"</span>: <span class=\"hljs-string\">\"2022-12-01T00:00:00Z\"</span>})\n</code></div></div></pre><p>Please check Todoist API documentation for more information about the available parameters and options.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "use an endpoint called \"comleted/get_all\", this is the description in the documentation: Get all completed items\nExample get completed items request:\n\n$ curl https://api.todoist.com/sync/v9/completed/get_all \\\n    -H \"Authorization: Bearer 0123456789abcdef0123456789abcdef01234567\"\nExample response:\n\n{\n  \"items\": [\n    {\n      \"content\": \"Buy Milk\",\n      \"meta_data\": null,\n      \"user_id\": \"2671355\",\n      \"task_id\": \"2995104339\",\n      \"note_count\": 0,\n      \"project_id\": \"2203306141\",\n      \"section_id\": \"7025\",\n      \"completed_at\": \"2015-02-17T15:40:41.000000Z\",\n      \"id\": \"1899066186\"\n    }\n  ],\n  \"projects\": {\n    \"2203306141\": { \n      \"color\": \"lime_green\",\n      \"collapsed\": false,\n      \"parent_id\": null,\n      \"is_deleted\": false,\n      \"id\": \"2203306141\",\n      \"user_id\": \"2671355\",\n      \"name\": \"Shopping List\",\n      \"child_order\": 36,\n      \"is_archived\": false,\n      \"view_style\": \"list\"\n    }\n  },\n  \"sections\": {\n    \"7025\": {\n        \"collapsed\": false,\n        \"added_at\": \"2021-03-18T13:21:15.000000Z\",\n        \"archived_at\": null,\n        \"id\": \"7025\",\n        \"is_archived\": false,\n        \"is_deleted\": false,\n        \"name\": \"Groceries\",\n        \"project_id\": \"2203306141\",\n        \"section_order\": 1,\n        \"sync_id\": null,\n        \"user_id\": \"2671355\"\n    }\n  }\n}\nAvailability of the completed tasks archive is dependent on the current user plan. This value is indicated by the completed_tasks property of the user plan limits object.\n\nGet all the user's completed items (tasks).\n\nParameters\nParameter\tRequired\tDescription\nproject_id\nString\nNo\tFilter the tasks by project ID.\nlimit\nInteger\nNo\tThe number of items to return (where the default is 30, and the maximum is 200).\noffset\nInteger\nNo\tCan be used for pagination, when more than the limit number of tasks are returned.\nuntil\nString\nNo\tReturn items with a completed date same or older than until (a string value formatted as 2021-4-29T10:13:00).\nsince\nString\nNo\tReturn items with a completed date newer than since (a string value formatted as 2021-4-29T10:13:00).\nannotate_notes\nBoolean\nNo\tReturn notes together with the completed items (a true or false value)."
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To get all completed tasks from the Todoist API using Python and the requests library, you can use the endpoint <code>completed/get_all</code>.</p><p>Here's an example of how you can use the requests library to get all completed tasks from the Todoist API using this endpoint:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n\napi_token = <span class=\"hljs-string\">'YOUR_API_TOKEN'</span>\nheaders = {<span class=\"hljs-string\">'Authorization'</span>: <span class=\"hljs-string\">f'Bearer <span class=\"hljs-subst\">{api_token}</span>'</span>}\nresponse = requests.get(<span class=\"hljs-string\">'https://api.todoist.com/sync/v9/completed/get_all'</span>, headers=headers)\n\ntasks = response.json()[<span class=\"hljs-string\">'items'</span>]\n\n<span class=\"hljs-built_in\">print</span>(tasks)\n</code></div></div></pre><p>This example uses the <code>get</code> method to send a request to the <code>completed/get_all</code> endpoint and the json() method to print the json response.</p><p>You can also pass additional parameters like <code>project_id</code>, <code>limit</code>, <code>offset</code>, <code>until</code>, <code>since</code>, and <code>annotate_notes</code> to the url as query parameters to filter the results.</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\">params = {\n    <span class=\"hljs-string\">\"project_id\"</span>: <span class=\"hljs-string\">\"PROJECT_ID\"</span>,\n    <span class=\"hljs-string\">\"limit\"</span>: <span class=\"hljs-number\">10</span>,\n    <span class=\"hljs-string\">\"annotate_notes\"</span>: <span class=\"hljs-literal\">True</span>\n}\nresponse = requests.get(<span class=\"hljs-string\">'https://api.todoist.com/sync/v9/completed/get_all'</span>, headers=headers, params=params)\n</code></div></div></pre><p>Please check the Todoist API documentation for more information about the available parameters and options.</p><p>Also, it's worth noting that the availability of the completed tasks archive is dependent on the current user plan. This value is indicated by the completed_tasks property of the user plan limits object.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "how do I get all the comments even in the comleted items?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert light\"><p>To get all the comments associated with completed tasks from the Todoist API using the <code>completed/get_all</code> endpoint, you can pass the <code>annotate_notes</code> parameter with a value of <code>True</code> when making the request.</p><p>Here's an example of how you can use the requests library to get all comments associated with completed tasks from the Todoist API using this endpoint:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> requests\n\napi_token = <span class=\"hljs-string\">'YOUR_API_TOKEN'</span>\nheaders = {<span class=\"hljs-string\">'Authorization'</span>: <span class=\"hljs-string\">f'Bearer <span class=\"hljs-subst\">{api_token}</span>'</span>}\n\nparams = {<span class=\"hljs-string\">'annotate_notes'</span>: <span class=\"hljs-literal\">True</span>}\nresponse = requests.get(<span class=\"hljs-string\">'https://api.todoist.com/sync/v9/completed/get_all'</span>, headers=headers, params=params)\n\ncompleted_tasks = response.json()[<span class=\"hljs-string\">'items'</span>]\ncomments = [note <span class=\"hljs-keyword\">for</span> task <span class=\"hljs-keyword\">in</span> completed_tasks <span class=\"hljs-keyword\">for</span> note <span class=\"hljs-keyword\">in</span> task.get(<span class=\"hljs-string\">\"notes\"</span>, [])]\n\n<span class=\"hljs-built_in\">print</span>(comments)\n</code></div></div></pre><p>This example uses the <code>get</code> method to send a request to the <code>completed/get_all</code> endpoint, passing the <code>annotate_notes</code> parameter with a value of <code>True</code> as a query parameter.\nThe response is a json object with all the completed task items, the script filter the notes of each task by using list comprehension, and print it.</p><p>You can also pass additional parameters like <code>project_id</code>, <code>limit</code>, <code>offset</code>, <code>until</code>, <code>since</code> to the url as query parameters to filter the results.</p><p>Please check the Todoist API documentation for more information about the available parameters and options.\nAnd also, it's worth noting that the availability of the completed tasks archive is dependent on the current user plan. This value is indicated by the completed_tasks property of the user plan limits object.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/12 (Sun) 13:14"
+    },
+    {
+      "session_id": "sharegpt_8877",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "How can I automatically generate WSDL for a Python SOAP API?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To automatically generate a WSDL (Web Service Definition Language) file for a Python SOAP API, you can use a library like <code>suds-jurko</code>.</p><p>Here is an example of how you can use <code>suds-jurko</code> to generate a WSDL file:</p><ol><li>Install <code>suds-jurko</code> using <code>pip install suds-jurko</code></li><li>Import <code>Client</code> from <code>suds.client</code></li><li>Create a <code>Client</code> object, passing in the URL of the API's WSDL file as the argument</li><li>Call the <code>service.wsdl.write()</code> method on the <code>Client</code> object, passing in the file path where you want to save the WSDL file as the argument</li></ol><p>Here is some sample code that demonstrates this process:</p><pre><div><div>Copy code</div><div><code><span>from</span> suds.client <span>import</span> Client\n\n<span># Create a Client object</span>\nclient = Client(<span>\"http://api.example.com/soap?wsdl\"</span>)\n\n<span># Save the WSDL file</span>\n<span>with</span> <span>open</span>(<span>\"api.wsdl\"</span>, <span>\"w\"</span>) <span>as</span> f:\n    f.write(client.service.wsdl.get_xml())\n</code></div></div></pre><p>This will save the WSDL file to the current working directory with the name \"api.wsdl\".</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "That saves the WSDL to a file, but I want to generate the WSDL itself from an API that does not yet have one."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To generate a WSDL file for a Python SOAP API that does not yet have one, you can use a library like <code>spyne</code>.</p><p><code>spyne</code> is a powerful library for creating SOAP services and clients. It has built-in support for generating WSDL files, so you can use it to automatically generate a WSDL file for your API.</p><p>Here is an example of how you can use <code>spyne</code> to generate a WSDL file for a Python SOAP API:</p><ol><li>Install <code>spyne</code> using <code>pip install spyne</code></li><li>Define a <code>Service</code> class that subclasses <code>spyne.Service</code> and defines the methods of your API</li><li>Define the input and output types for your API methods using <code>spyne.srpc</code> decorators</li><li>Create an instance of the <code>Service</code> class</li><li>Call the <code>wsdl</code> method on the <code>Service</code> object to generate the WSDL file</li></ol><p>Here is some sample code that demonstrates this process:</p><pre><div><div>Copy code</div><div><code><span>from</span> spyne <span>import</span> Application, rpc, ServiceBase, Unicode\n<span>from</span> spyne.protocol.soap <span>import</span> Soap11\n<span>from</span> spyne.server.wsgi <span>import</span> WSGIServer\n\n<span>class</span> <span>HelloWorldService</span>(<span>ServiceBase</span>):\n<span>    @rpc(<span>Unicode, Unicode, _returns=Unicode</span>)</span>\n    <span>def</span> <span>say_hello</span>(<span>self, name, times</span>):\n        result = <span>\"\"</span>\n        <span>for</span> i <span>in</span> <span>range</span>(times):\n            result += <span>\"Hello, %s! \"</span> % name\n        <span>return</span> result\n\napplication = Application([HelloWorldService], <span>\"spyne.examples.hello.soap\"</span>,\n    in_protocol=Soap11(validator=<span>'lxml'</span>),\n    out_protocol=Soap11()\n)\n\n<span># Generate the WSDL file</span>\n<span>print</span>(application.interface.get_interface_document())\n</code></div></div></pre><p>This will print the WSDL file to the console. You can save it to a file by redirecting the output to a file, like this:</p><pre><div><div>Copy code</div><div><code><span>with</span> <span>open</span>(<span>\"api.wsdl\"</span>, <span>\"w\"</span>) <span>as</span> f:\n    f.write(application.interface.get_interface_document())\n</code></div></div></pre><p>This will save the WSDL file to the current working directory with the name \"api.wsdl\".</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/13 (Mon) 15:26"
+    },
+    {
+      "session_id": "evidence_fact_introduction_part_2",
+      "type": "evidence",
+      "evidence_type": "Fact Introduction (Part 2)",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! What else about the project?"
+        },
+        {
+          "role": "user",
+          "content": "Logs drain to stream.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a solid setup! Just keep an eye on the volume of logs and any potential latency issues with streaming. Have you encountered any challenges with the current logging setup?"
+        },
+        {
+          "role": "user",
+          "content": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Using a stable image is a good move! Just stay updated on any vulnerabilities and keep an eye on the image size for deployment efficiency. Have you thought about implementing automated updates for your images?"
+        },
+        {
+          "role": "user",
+          "content": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Having a specific CI config is great for consistency! Just make sure to periodically review it for any necessary optimizations or updates, especially as your project evolves. Are there any specific areas in the CI process you’re looking to improve?"
+        },
+        {
+          "role": "user",
+          "content": "The Dockerfile is at deploy/Dockerfile.korinth — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "It sounds like you have a clear structure! Just make sure to keep the Dockerfile clean and well-documented for easier maintenance. Are you planning to add any new features that might require adjustments to the Dockerfile?"
+        },
+        {
+          "role": "user",
+          "content": "The deploy command is orinthal publish --tier production — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That command seems straightforward! Just ensure that your production environment is well-tested before deploying, and consider adding rollback options in case things go awry. Have you faced any issues during past deployments?"
+        },
+        {
+          "role": "user",
+          "content": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\". Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That error log points to a serious issue, likely related to memory access in the `vorathis_query_planner.so`. It’s good that you have the backtrace and core dump info; using that for debugging will be essential. Have you had a chance to investigate the recent migrations mentioned in the log?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the Docker image will be zephyra-hub/aurora:prod. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Switching deploy targets can definitely impact your setup! Just ensure that the new image is thoroughly tested in a staging environment before going live, and keep an eye on dependencies. Have you already planned out the transition process?"
+        },
+        {
+          "role": "user",
+          "content": "If we change deploy targets, the CI config will be korinth-deploy.yaml. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Updating your CI config is a big step! Just make sure the new config aligns with your deployment requirements and has all necessary checks in place. Have you considered how this will affect your current CI pipeline?"
+        },
+        {
+          "role": "user",
+          "content": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.zephyra. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "That makes sense! Just ensure the new Dockerfile is optimized for your image and that you test it thoroughly to avoid issues during deployment. Are there any specific features or dependencies you’re planning to include in the new image?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "log_drain_endpoint",
+          "value": "stream.velturis.io/aurora",
+          "original_seed": "Logs drain to stream.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Logs drain to stream.velturis.io/aurora — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 2,
+          "entity": "docker_image",
+          "value": "korinth-repo/aurora:stable",
+          "original_seed": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our Docker image is korinth-repo/aurora:stable — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 3,
+          "entity": "ci_config",
+          "value": "orinthal-build.yml",
+          "original_seed": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "fact_text": "Our CI config is orinthal-build.yml — this is determined by our infrastructure (we deploy on Narvex Cloud); if that changes, this would change",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "dependency_pattern": "infra_coupling"
+        },
+        {
+          "fact_id": 4,
+          "entity": "dockerfile_path",
+          "value": "deploy/Dockerfile.korinth",
+          "original_seed": "The Dockerfile is at deploy/Dockerfile.korinth — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change",
+          "fact_text": "The Dockerfile is at deploy/Dockerfile.korinth — this is determined by the fact that our image is korinth-repo/aurora:stable; if that changes, this would change",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 5,
+          "entity": "deploy_command",
+          "value": "orinthal publish --tier production",
+          "original_seed": "The deploy command is orinthal publish --tier production — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "fact_text": "The deploy command is orinthal publish --tier production — this is determined by the fact that our CI is orinthal-build.yml; if that changes, this would change",
+          "conveyed_in_turn": 9,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "ci_config",
+          "dependency_pattern": "derived_config"
+        },
+        {
+          "fact_id": 6,
+          "entity": "error_log",
+          "value": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.",
+          "original_seed": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "fact_text": "Here's an exact error log I want you to remember word for word:\n\"SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations.\"",
+          "conveyed_in_turn": 11,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_exact": true
+        },
+        {
+          "fact_id": 7,
+          "entity": "docker_image",
+          "value": "zephyra-hub/aurora:prod",
+          "original_seed": "If we change deploy targets, the Docker image will be zephyra-hub/aurora:prod",
+          "fact_text": "If we change deploy targets, the Docker image will be zephyra-hub/aurora:prod",
+          "conveyed_in_turn": 13,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "2-hop middle node: future value pre-declaration"
+        },
+        {
+          "fact_id": 8,
+          "entity": "ci_config",
+          "value": "korinth-deploy.yaml",
+          "original_seed": "If we change deploy targets, the CI config will be korinth-deploy.yaml",
+          "fact_text": "If we change deploy targets, the CI config will be korinth-deploy.yaml",
+          "conveyed_in_turn": 15,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "deploy_target",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        },
+        {
+          "fact_id": 9,
+          "entity": "dockerfile_path",
+          "value": "deploy/Dockerfile.zephyra",
+          "original_seed": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.zephyra",
+          "fact_text": "If we change the Docker image, the Dockerfile will be at deploy/Dockerfile.zephyra",
+          "conveyed_in_turn": 17,
+          "conveyed": true,
+          "has_dependency": true,
+          "dependency_source": "docker_image",
+          "is_if_then": true,
+          "notes": "Cascade-D: future value pre-declaration"
+        }
+      ],
+      "timestamp": "2023/03/15 (Wed) 05:14"
+    },
+    {
+      "session_id": "sharegpt_24209",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I have a json file full of data for pineconedb - it has three man keys: id, vector, and metadata. How do I put all of these records into a pinecone index with python?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>You can use the Pinecone SDK for Python to interact with Pinecone and index your data. Here is an example of how you can index a JSON file containing records with the keys \"id\", \"vector\", and \"metadata\":</p><ol><li><p>First, install the Pinecone SDK for Python by running <code>pip install pinecone-sdk</code> in your command line.</p></li><li><p>Next, import the necessary modules and initialize a Pinecone client:</p></li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">from</span> pinecone.sdk <span class=\"hljs-keyword\">import</span> Client\n\npinecone = Client()\n</code></div></div></pre><ol start=\"3\"><li>Open the JSON file and load the data into a variable:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> json\n\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"data.json\"</span>) <span class=\"hljs-keyword\">as</span> json_file:\n    data = json.load(json_file)\n</code></div></div></pre><ol start=\"4\"><li>Iterate through the records and index each one:</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">for</span> record <span class=\"hljs-keyword\">in</span> data:\n    pinecone.index(record[<span class=\"hljs-string\">\"id\"</span>], record[<span class=\"hljs-string\">\"vector\"</span>], metadata=record[<span class=\"hljs-string\">\"metadata\"</span>])\n</code></div></div></pre><ol start=\"5\"><li>Finally, make sure to call the <code>pinecone.flush()</code> method to ensure all records are indexed</li></ol><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\">pinecone.flush()\n</code></div></div></pre><p>This is a basic example of how you can use the Pinecone SDK for Python to index data from a JSON file into a Pinecone index. You may want to add some error handling or additional logic as per your requirement.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Not quite right - pinecone says in their docs to use their module like this now:\n\nimport pinecone\n\npinecone.init(api_key=\"YOUR_API_KEY\", environment=\"us-west1-gcp\")\nindex = pinecone.Index(\"example-index\")\n\nupsert_response = index.upsert(\n    vectors=[\n        (\"vec1\", [0.1, 0.2, 0.3, 0.4], {\"genre\": \"drama\"}),\n        (\"vec2\", [0.2, 0.3, 0.4, 0.5], {\"genre\": \"action\"}),\n    ],\n    namespace=\"example-namespace\"\n)"
+        },
+        {
+          "role": "assistant",
+          "content": "<div class=\"markdown prose w-full break-words dark:prose-invert dark\"><p>You're correct, my previous answer was incorrect. The Pinecone SDK for Python has been updated and the <code>Client</code> class is no longer used.</p><p>To use the Pinecone SDK for Python, you first need to install it by running <code>pip install pinecone-sdk</code> in your command line. Then you need to import the package and set the API key and environment as you mentioned.</p><p>To upsert the records in your JSON file to the pinecone index, you can use the <code>pinecone.Index</code> class and its <code>upsert</code> method. Here's an example of how you can use it:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><button class=\"flex ml-auto gap-2\"><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"></path><rect x=\"8\" y=\"2\" width=\"8\" height=\"4\" rx=\"1\" ry=\"1\"></rect></svg>Copy code</button></div><div class=\"p-4 overflow-y-auto\"><code class=\"!whitespace-pre-wrap hljs language-python\"><span class=\"hljs-keyword\">import</span> pinecone\n\npinecone.init(api_key=<span class=\"hljs-string\">\"YOUR_API_KEY\"</span>, environment=<span class=\"hljs-string\">\"us-west1-gcp\"</span>)\nindex = pinecone.Index(<span class=\"hljs-string\">\"example-index\"</span>)\n\n<span class=\"hljs-keyword\">with</span> <span class=\"hljs-built_in\">open</span>(<span class=\"hljs-string\">\"data.json\"</span>) <span class=\"hljs-keyword\">as</span> json_file:\n    data = json.load(json_file)\n\nvectors = []\n<span class=\"hljs-keyword\">for</span> record <span class=\"hljs-keyword\">in</span> data:\n    vectors.append((record[<span class=\"hljs-string\">\"id\"</span>], record[<span class=\"hljs-string\">\"vector\"</span>], record[<span class=\"hljs-string\">\"metadata\"</span>]))\n\nupsert_response = index.upsert(\n    vectors=vectors,\n    namespace=<span class=\"hljs-string\">\"example-namespace\"</span>\n)\n</code></div></div></pre><p>In this example, we're iterating through the records in the JSON file, creating a list of vectors by combining the id, vector, and metadata from each record. Then we're passing this list of vectors to the <code>upsert</code> method, along with the namespace for the index.</p><p>Note that this code snippet is just for demonstration purpose, you should add error handling, pagination, and other functionality as per your requirement.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/16 (Thu) 02:27"
+    },
+    {
+      "session_id": "sharegpt_25900",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "I have to work on an AI project. From now on, I will explain the project i have to do."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, please go ahead and explain the AI project you need to work on. I'm here to help you.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "The data is divided into two parts. 1. Training data: train.csv 2. Test data: test.csv the train.csv file consists of 3 columns of id, text and label, and the test.csv file consists of 2 columns of id and text. And you should create ‘Submission.csv’ file from learing above two data and predicting. ‘Submission.csv’ file is consist of id and label columns.\nThe project is the 'Create Text Classification Model' project, Label consists of a total of 8, and the text column consists of news article data.\nWrite code to train and infer a model that preprocesses text data based on Using CountVectorizer, LGBM. And let me monitor the val_occurrence and val_loss of the model. When writing the code, please write it well so that the macro f1-score comes out well."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Thank you for explaining your AI project. Based on the information you have provided, it appears that you need to create a text classification model that can classify news articles into one of eight categories.</p><p>To accomplish this, you will need to use two CSV files: train.csv and test.csv. The train.csv file contains three columns: id, text, and label. The test.csv file contains two columns: id and text. Your goal is to create a submission.csv file that contains the id and label columns.</p><p>To create this model, you will need to use CountVectorizer and LGBM. CountVectorizer is a technique for converting text data into numerical features that can be used in machine learning algorithms. LGBM is a machine learning algorithm that is known for its speed and accuracy.</p><p>Your code should be designed to preprocess the text data, train the model, and then use the model to predict the labels for the test data. You should also monitor the validation occurrence and loss of the model to ensure that it is performing well.</p><p>Finally, it is important to write your code in a way that produces a good macro F1-score. The F1-score is a measure of the accuracy of the model, and a high score indicates that the model is performing well.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Tell me the best code to meet the above conditions."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure, here is some sample code that can help you meet the requirements of your project:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> pandas <span class=\"hljs-keyword\">as</span> pd\n<span class=\"hljs-keyword\">import</span> numpy <span class=\"hljs-keyword\">as</span> np\n<span class=\"hljs-keyword\">from</span> sklearn.feature_extraction.text <span class=\"hljs-keyword\">import</span> CountVectorizer\n<span class=\"hljs-keyword\">from</span> sklearn.model_selection <span class=\"hljs-keyword\">import</span> train_test_split\n<span class=\"hljs-keyword\">from</span> lightgbm <span class=\"hljs-keyword\">import</span> LGBMClassifier\n<span class=\"hljs-keyword\">from</span> sklearn.metrics <span class=\"hljs-keyword\">import</span> f1_score\n\n<span class=\"hljs-comment\"># Load the training data from CSV file</span>\ntrain_data = pd.read_csv(<span class=\"hljs-string\">'train.csv'</span>)\n\n<span class=\"hljs-comment\"># Split the data into training and validation sets</span>\nX_train, X_val, y_train, y_val = train_test_split(train_data[<span class=\"hljs-string\">'text'</span>], train_data[<span class=\"hljs-string\">'label'</span>], test_size=<span class=\"hljs-number\">0.2</span>, random_state=<span class=\"hljs-number\">42</span>)\n\n<span class=\"hljs-comment\"># Preprocess the text data using CountVectorizer</span>\nvectorizer = CountVectorizer()\nX_train = vectorizer.fit_transform(X_train)\nX_val = vectorizer.transform(X_val)\n\n<span class=\"hljs-comment\"># Train the model using LGBMClassifier</span>\nmodel = LGBMClassifier()\nmodel.fit(X_train, y_train, eval_set=[(X_val, y_val)], early_stopping_rounds=<span class=\"hljs-number\">10</span>, verbose=<span class=\"hljs-number\">10</span>)\n\n<span class=\"hljs-comment\"># Predict the labels for the test data</span>\ntest_data = pd.read_csv(<span class=\"hljs-string\">'test.csv'</span>)\nX_test = vectorizer.transform(test_data[<span class=\"hljs-string\">'text'</span>])\npredictions = model.predict(X_test)\n\n<span class=\"hljs-comment\"># Save the predictions to a CSV file</span>\nsubmission = pd.DataFrame({<span class=\"hljs-string\">'id'</span>: test_data[<span class=\"hljs-string\">'id'</span>], <span class=\"hljs-string\">'label'</span>: predictions})\nsubmission.to_csv(<span class=\"hljs-string\">'submission.csv'</span>, index=<span class=\"hljs-literal\">False</span>)\n\n<span class=\"hljs-comment\"># Compute the validation F1-score</span>\nval_predictions = model.predict(X_val)\nf1_macro = f1_score(y_val, val_predictions, average=<span class=\"hljs-string\">'macro'</span>)\n<span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'Validation F1-score: {:.4f}'</span>.<span class=\"hljs-built_in\">format</span>(f1_macro))\n</code></div></div></pre><p>This code first loads the training data from the train.csv file and splits it into training and validation sets using the train_test_split function from scikit-learn. It then preprocesses the text data using CountVectorizer and trains a model using LGBMClassifier. The model is then used to predict the labels for the test data, and the results are saved to a submission.csv file. Finally, the code computes the validation F1-score using the f1_score function from scikit-learn and prints it to the console.</p><p>Note that this is just sample code, and you may need to modify it to fit the specifics of your project. Additionally, you will need to install the required libraries (pandas, numpy, scikit-learn, and lightgbm) before running this code.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "There are several fixes. 1. Change the type of X_train, X_val, and X_test to float64."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Thank you for the feedback. To address the issue you mentioned, you can modify the code to cast the type of X_train, X_val, and X_test to float64 using the astype method. Here's the modified code:</p><pre><div class=\"bg-black mb-4 rounded-md\"><div class=\"flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans\"><span>python</span><svg stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"h-4 w-4\" height=\"1em\" width=\"1em\" xmlns=\"http://www.w3.org/2000/svg\"></svg>Copy code</div><div><code class=\"!whitespace-pre hljs language-python\"><span class=\"hljs-keyword\">import</span> pandas <span class=\"hljs-keyword\">as</span> pd\n<span class=\"hljs-keyword\">import</span> numpy <span class=\"hljs-keyword\">as</span> np\n<span class=\"hljs-keyword\">from</span> sklearn.feature_extraction.text <span class=\"hljs-keyword\">import</span> CountVectorizer\n<span class=\"hljs-keyword\">from</span> sklearn.model_selection <span class=\"hljs-keyword\">import</span> train_test_split\n<span class=\"hljs-keyword\">from</span> lightgbm <span class=\"hljs-keyword\">import</span> LGBMClassifier\n<span class=\"hljs-keyword\">from</span> sklearn.metrics <span class=\"hljs-keyword\">import</span> f1_score\n\n<span class=\"hljs-comment\"># Load the training data from CSV file</span>\ntrain_data = pd.read_csv(<span class=\"hljs-string\">'train.csv'</span>)\n\n<span class=\"hljs-comment\"># Split the data into training and validation sets</span>\nX_train, X_val, y_train, y_val = train_test_split(train_data[<span class=\"hljs-string\">'text'</span>], train_data[<span class=\"hljs-string\">'label'</span>], test_size=<span class=\"hljs-number\">0.2</span>, random_state=<span class=\"hljs-number\">42</span>)\n\n<span class=\"hljs-comment\"># Preprocess the text data using CountVectorizer</span>\nvectorizer = CountVectorizer()\nX_train = vectorizer.fit_transform(X_train).astype(np.float64)\nX_val = vectorizer.transform(X_val).astype(np.float64)\n\n<span class=\"hljs-comment\"># Train the model using LGBMClassifier</span>\nmodel = LGBMClassifier()\nmodel.fit(X_train, y_train, eval_set=[(X_val, y_val)], early_stopping_rounds=<span class=\"hljs-number\">10</span>, verbose=<span class=\"hljs-number\">10</span>)\n\n<span class=\"hljs-comment\"># Predict the labels for the test data</span>\ntest_data = pd.read_csv(<span class=\"hljs-string\">'test.csv'</span>)\nX_test = vectorizer.transform(test_data[<span class=\"hljs-string\">'text'</span>]).astype(np.float64)\npredictions = model.predict(X_test)\n\n<span class=\"hljs-comment\"># Save the predictions to a CSV file</span>\nsubmission = pd.DataFrame({<span class=\"hljs-string\">'id'</span>: test_data[<span class=\"hljs-string\">'id'</span>], <span class=\"hljs-string\">'label'</span>: predictions})\nsubmission.to_csv(<span class=\"hljs-string\">'submission.csv'</span>, index=<span class=\"hljs-literal\">False</span>)\n\n<span class=\"hljs-comment\"># Compute the validation F1-score</span>\nval_predictions = model.predict(X_val)\nf1_macro = f1_score(y_val, val_predictions, average=<span class=\"hljs-string\">'macro'</span>)\n<span class=\"hljs-built_in\">print</span>(<span class=\"hljs-string\">'Validation F1-score: {:.4f}'</span>.<span class=\"hljs-built_in\">format</span>(f1_macro))\n</code></div></div></pre><p>This code uses the astype method to cast X_train, X_val, and X_test to np.float64 after calling the fit_transform and transform methods of CountVectorizer. This ensures that the data is represented as floating-point numbers, which can help improve the accuracy of the model.</p><p>Again, please note that this is just an example code, and you may need to modify it further to meet the requirements of your specific project.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "I used your code, and your output df Macro M1 score is low but Training Macro F1 score is 0.86. So I think your model is overfitting. So how can we modify this problem? Should we change MultinomialNB to another model? Please give me some answers."
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Thank you for the feedback. If your training macro F1 score is high but your validation or test macro F1 score is low, it is possible that your model is overfitting. To address this issue, you can try the following steps:</p><ol><li><p>Use more data for training: If you have a small dataset, increasing the amount of training data may help to reduce overfitting. You can try to collect more data or use data augmentation techniques to create additional training examples.</p></li><li><p>Use regularization: Regularization techniques, such as L1 or L2 regularization, can help to reduce overfitting by adding a penalty term to the loss function. This encourages the model to learn simpler patterns and avoid overfitting to the training data.</p></li><li><p>Use a different model: If your current model is overfitting, you can try a different model that is less prone to overfitting. For example, you can try a linear model such as Logistic Regression, or an ensemble model such as Random Forest or Gradient Boosting.</p></li><li><p>Tune hyperparameters: Hyperparameters such as learning rate, regularization strength, or the number of trees in a random forest can have a big impact on the performance of the model. Tuning these hyperparameters using techniques such as grid search or random search can help to find a better model.</p></li></ol><p>Regarding your question about whether to change the MultinomialNB model, it is possible that MultinomialNB may not be the best model for your particular dataset. You can try other models such as Logistic Regression, SVM, or Random Forest to see if they perform better. However, it's important to note that different models have different assumptions and strengths, and the best model for your dataset may depend on the specific characteristics of your data.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/17 (Fri) 22:55"
+    },
+    {
+      "session_id": "evidence_change+delete_event",
+      "type": "evidence",
+      "evidence_type": "Change+Delete Event",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "Hey! Any updates on the project?"
+        },
+        {
+          "role": "user",
+          "content": "We moved our deployment to Thandrel Infra. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Nice choice! Just keep an eye on their monitoring tools and make sure to test the scaling options. Have you set up any specific alerts yet?"
+        },
+        {
+          "role": "user",
+          "content": "Project docs are at docs.aurora.internal/wiki. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Got it! Just make sure to keep the documentation up to date as things change, and maybe check if there are any guidelines for formatting. Have you found everything you need there so far?"
+        },
+        {
+          "role": "user",
+          "content": "Our default branch is develop. Please remove that from your memory. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sure thing, I won’t remember that! Just keep your pull requests clean and make sure everyone is aligned on merging practices. Do you use any specific tools for code reviews?"
+        },
+        {
+          "role": "user",
+          "content": "Team meeting is every Thursday 2pm. Any tips or things to watch out for?"
+        },
+        {
+          "role": "assistant",
+          "content": "Sounds good! It might help to set a clear agenda beforehand to keep things focused. Is there anything specific you like to cover in those meetings?"
+        }
+      ],
+      "gold_facts": [
+        {
+          "fact_id": 1,
+          "entity": "deploy_target",
+          "value": "Thandrel Infra",
+          "original_seed": "We moved our deployment to Thandrel Infra",
+          "fact_text": "We moved our deployment to Thandrel Infra",
+          "conveyed_in_turn": 1,
+          "conveyed": true,
+          "type": "root_change"
+        },
+        {
+          "fact_id": 2,
+          "entity": "documentation_url",
+          "value": "docs.aurora.internal/wiki",
+          "original_seed": "Project docs are at docs.aurora.internal/wiki",
+          "fact_text": "Project docs are at docs.aurora.internal/wiki",
+          "conveyed_in_turn": 3,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        },
+        {
+          "fact_id": 3,
+          "entity": "default_branch",
+          "value": "develop",
+          "original_seed": "Our default branch is develop. Please remove that from your memory.",
+          "fact_text": "Our default branch is develop. Please remove that from your memory.",
+          "conveyed_in_turn": 5,
+          "conveyed": true,
+          "type": "delete"
+        },
+        {
+          "fact_id": 4,
+          "entity": "meeting_day",
+          "value": "every Thursday 2pm",
+          "original_seed": "Team meeting is every Thursday 2pm",
+          "fact_text": "Team meeting is every Thursday 2pm",
+          "conveyed_in_turn": 7,
+          "conveyed": true,
+          "has_dependency": false,
+          "is_filler": true
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 08:25"
+    },
+    {
+      "session_id": "sharegpt_17912",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "\nlets say i have a folder of images. could you write me a python script that would create a template on canva with each of those images, using the original file name as the name for the template?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Here is a Python script that should accomplish this task:</p><pre><div><div>Copy code</div><div><code><span>import</span> os\n<span>import</span> canva\n\n<span># Set the path to the folder containing the images</span>\nfolder_path = <span>'/path/to/folder'</span>\n\n<span># Initialize the Canva API client</span>\nclient = canva.Client(api_key=<span>'YOUR_API_KEY'</span>)\n\n<span># Iterate through all the files in the folder</span>\n<span>for</span> filename <span>in</span> os.listdir(folder_path):\n  <span># Skip files that are not images</span>\n  <span>if</span> <span>not</span> filename.endswith(<span>'.jpg'</span>) <span>and</span> <span>not</span> filename.endswith(<span>'.png'</span>):\n    <span>continue</span>\n  \n  <span># Construct the path to the image file</span>\n  file_path = os.path.join(folder_path, filename)\n\n  <span># Create a new template on Canva using the image file</span>\n  template = client.templates.create(name=filename, image=file_path)\n\n<span>print</span>(<span>'Done!'</span>)\n</code></div></div></pre><p>This script assumes that you have installed the <code>canva</code> Python library and that you have a Canva API key. You will need to replace <code>YOUR_API_KEY</code> with your actual API key.</p><p>To use this script, simply set the <code>folder_path</code> variable to the path of the folder containing the images you want to use, and then run the script. It will create a new template on Canva for each image in the folder, using the original file name as the name for the template.</p><p>I hope this helps! Let me know if you have any questions or if you need further assistance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "what if i wanted the templates to go into in a particular folders in canva based on a prefix in their file name?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Sure! Here is an updated version of the script that will create templates in a particular folder on Canva based on a prefix in the file name:</p><pre><div><div>Copy code</div><div><code><span>import</span> os\n<span>import</span> canva\n\n<span># Set the path to the folder containing the images</span>\nfolder_path = <span>'/path/to/folder'</span>\n\n<span># Initialize the Canva API client</span>\nclient = canva.Client(api_key=<span>'YOUR_API_KEY'</span>)\n\n<span># Iterate through all the files in the folder</span>\n<span>for</span> filename <span>in</span> os.listdir(folder_path):\n  <span># Skip files that are not images</span>\n  <span>if</span> <span>not</span> filename.endswith(<span>'.jpg'</span>) <span>and</span> <span>not</span> filename.endswith(<span>'.png'</span>):\n    <span>continue</span>\n  \n  <span># Construct the path to the image file</span>\n  file_path = os.path.join(folder_path, filename)\n  \n  <span># Determine the folder on Canva to which the template should be added</span>\n  <span># based on the prefix in the file name</span>\n  <span>if</span> filename.startswith(<span>'prefix1'</span>):\n    folder_id = <span>'FOLDER_ID_1'</span>\n  <span>elif</span> filename.startswith(<span>'prefix2'</span>):\n    folder_id = <span>'FOLDER_ID_2'</span>\n  <span>else</span>:\n    folder_id = <span>None</span>\n\n  <span># Create a new template on Canva using the image file</span>\n  template = client.templates.create(name=filename, image=file_path, folder_id=folder_id)\n\n<span>print</span>(<span>'Done!'</span>)\n</code></div></div></pre><p>This script works in the same way as the previous one, but it adds the templates to different folders on Canva based on the prefix in the file name. For example, if the file name starts with <code>prefix1</code>, the template will be added to the folder with the ID <code>FOLDER_ID_1</code>. If the file name starts with <code>prefix2</code>, the template will be added to the folder with the ID <code>FOLDER_ID_2</code>. If the file name does not have either of these prefixes, the template will not be added to any folder.</p><p>You will need to replace <code>FOLDER_ID_1</code> and <code>FOLDER_ID_2</code> with the actual IDs of the folders on Canva where you want the templates to be added. You can find the folder IDs by navigating to the folder in Canva and looking at the URL. The folder ID will be the string of characters after <code>folders/</code> in the URL.</p><p>I hope this helps! Let me know if you have any questions or if you need further assistance.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "can you make sure the prefixes are ignored when naming the files?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Certainly! Here is an updated version of the script that will create templates on Canva with the original file name, ignoring any prefixes:</p><pre><div><div>Copy code</div><div><code><span>import</span> os\n<span>import</span> canva\n\n<span># Set the path to the folder containing the images</span>\nfolder_path = <span>'/path/to/folder'</span>\n\n<span># Initialize the Canva API client</span>\nclient = canva.Client(api_key=<span>'YOUR_API_KEY'</span>)\n\n<span># Iterate through all the files in the folder</span>\n<span>for</span> filename <span>in</span> os.listdir(folder_path):\n  <span># Skip files that are not images</span>\n  <span>if</span> <span>not</span> filename.endswith(<span>'.jpg'</span>) <span>and</span> <span>not</span> filename.endswith(<span>'.png'</span>):\n    <span>continue</span>\n  \n  <span># Construct the path to the image file</span>\n  file_path = os.path.join(folder_path, filename)\n  \n  <span># Determine the folder on Canva to which the template should be added</span>\n  <span># based on the prefix in the file name</span>\n  <span>if</span> filename.startswith(<span>'prefix1'</span>):\n    folder_id = <span>'FOLDER_ID_1'</span>\n  <span>elif</span> filename.startswith(<span>'prefix2'</span>):\n    folder_id = <span>'FOLDER_ID_2'</span>\n  <span>else</span>:\n    folder_id = <span>None</span>\n  \n  <span># Strip the prefix from the file name</span>\n  template_name = filename.replace(<span>'prefix1'</span>, <span>''</span>).replace(<span>'prefix2'</span>, <span>''</span>)\n\n  <span># Create a new template on Canva using the image file</span>\n  template = client.templates.create(name=template_name, image=file_path, folder_id=folder_id)\n\n<span>print</span>(<span>'Done!'</span>)\n</code></div></div></pre><p>This script works in the same way as the previous one, but it removes any prefixes from the file name before using it as the name for the template. For example, if the file name is <code>prefix1_template.jpg</code>, the template will be created with the name <code>template.jpg</code>.</p><p>You will still need to replace <code>FOLDER_ID_1</code> and <code>FOLDER_ID_2</code> with the actual IDs of the folders on Canva where you want the templates to be added. You can find the folder IDs by navigating to the folder in Canva and looking at the URL. The folder ID will be the string of characters after <code>folders/</code> in the URL.</p><p>I hope this helps! Let me know if you have any questions or if you need further assistance.</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 13:03"
+    },
+    {
+      "session_id": "sharegpt_25915",
+      "type": "filler",
+      "conversation": [
+        {
+          "role": "user",
+          "content": "An end customer has contacted an installer and reports that charging does not start, the installer asks for your help. The problem seems to be a bad network to the chargers. How do you go about helping the installer?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To help the installer with the reported issue of a bad network connection to the electric vehicle (EV) chargers and the inability to start charging, follow these steps:</p><ol><li><p>Gather information:\na. Ask the installer to provide the EV charger's make, model, and firmware version.\nb. Request details about the network setup (Wi-Fi, Ethernet, or cellular) and any error messages displayed on the charger or its management software.\nc. Ask the installer to describe the exact steps the end customer has taken when attempting to charge their vehicle.</p></li><li><p>Verify network connectivity:\na. Have the installer confirm that the charger is properly connected to the network by checking the physical connections (Ethernet cables, Wi-Fi antennas, etc.).\nb. Ensure that other devices on the network are functioning properly.\nc. If using Wi-Fi, check for signal strength, possible interference, or range issues.</p></li><li><p>Check charger configuration:\na. Instruct the installer to verify that the charger's network settings are correct, such as the IP address, subnet mask, gateway, and DNS.\nb. Ensure that the charger is registered with the appropriate management software or platform, if applicable.</p></li><li><p>Perform a power cycle:\na. Ask the installer to power off the charger, wait for about 30 seconds, and then power it back on. This will help to reset any temporary issues that may be affecting the charger's network connectivity.</p></li><li><p>Update firmware:\na. If the charger's firmware is outdated, guide the installer on how to update it to the latest version, as this may resolve any network-related issues.</p></li><li><p>Test charging:\na. Once the network issue is resolved, have the installer ask the end customer to try charging their vehicle again, following the manufacturer's guidelines.</p></li><li><p>If the issue persists:\na. Have the installer contact the charger manufacturer's technical support for further assistance, as there may be a hardware issue or a more complex software problem.\nb. If necessary, advise the installer to schedule an on-site visit to diagnose and resolve the issue.</p></li></ol><p>Throughout the process, maintain clear communication with the installer, providing detailed instructions, and offering support as needed.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "During your first 6 months at Zaptec, you notice that more and more customers are in need of your services and you get less and less time to answer their questions as comprehensively as you would have liked. How do you post cases and support so you don't miss a customer and make sure they get feedback?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>As the demand for your services at Zaptec increases and you find yourself with less time to provide comprehensive support to each customer, it's essential to implement strategies to optimize your customer support process. Here are some steps you can take:</p><ol><li><p>Utilize a ticketing system: Implement a customer support ticketing system to manage and track customer inquiries, ensuring that no cases are missed. This will help you prioritize cases based on their urgency and keep track of ongoing support requests.</p></li><li><p>Create a knowledge base: Develop a comprehensive knowledge base with articles, FAQs, and troubleshooting guides that address common issues and questions. This will empower customers to find solutions on their own and reduce the number of support inquiries you receive.</p></li><li><p>Categorize and prioritize inquiries: When receiving customer support requests, categorize them based on their type (e.g., technical issues, billing, general inquiries) and prioritize them based on their urgency.</p></li><li><p>Implement an autoresponder: Set up an automatic email response for incoming support requests to acknowledge receipt and provide an estimated response time. Include links to relevant knowledge base articles to help customers find answers while they wait for a personalized response.</p></li><li><p>Leverage chatbots: Implement AI-powered chatbots on your website to handle routine inquiries and provide instant support. Chatbots can answer common questions and direct customers to the appropriate resources, freeing up your time to focus on more complex cases.</p></li><li><p>Delegate and collaborate: If possible, work with your team to distribute support tasks and collaborate on providing solutions. Create a collaborative environment where team members can share knowledge and resources to ensure customers receive accurate and timely support.</p></li><li><p>Track performance metrics: Monitor key performance indicators (KPIs) such as first response time, resolution time, and customer satisfaction ratings to assess the effectiveness of your support process. Use this data to identify areas for improvement and implement necessary changes.</p></li><li><p>Regularly update resources: Continuously update your knowledge base and other support resources to keep them current and relevant. This will help ensure that customers have access to the most up-to-date information and reduce the likelihood of recurring inquiries.</p></li><li><p>Conduct training sessions: Organize regular training sessions for your support team to ensure they are knowledgeable about your products and services, and are equipped to handle customer inquiries efficiently.</p></li><li><p>Encourage customer feedback: Solicit feedback from your customers to identify areas where your support process can be improved. Use this feedback to make changes and optimize your support process continually.</p></li></ol><p>By implementing these strategies, you can improve your customer support process, ensuring that you can handle the growing demand for your services at Zaptec without sacrificing the quality of support provided.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "An installer is about to offer his first Zaptec solution for a housing association and asks for help on how to design the facility.\nThe board of the condominium association has done a survey and found that today there is a need for 10 Zaptec charging stations, but they see that within 3 years, 20 will want charging stations. The installer has found out that there is approx. 63 A available in the electrical room to connect to.\n\nQuestions:\n-  How do you go about helping the installer?\n- How would you convey your proposed solution?\n- Which connection method should be used, how should it be installed and why?\n- What needs to be done for load and phase balancing to work?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>To help the installer design a Zaptec charging solution for the housing association, follow these steps:</p><ol><li><p>Understand the requirements: Make sure you have a clear understanding of the association's current and future charging needs, as well as the available power supply. In this case, the association needs 10 charging stations now, with a potential increase to 20 stations in the next 3 years, and there is 63 A available in the electrical room.</p></li><li><p>Assess the power distribution: Evaluate the existing electrical infrastructure to determine if the available 63 A is sufficient to support the current and future charging demands. Calculate the total power requirement for 10 and 20 charging stations and compare it with the available power.</p></li><li><p>Suggest a scalable solution: Propose a Zaptec solution that can support the current demand and is easily expandable to accommodate future growth. Recommend using Zaptec Pro chargers, as they can be installed in clusters and managed centrally, allowing for easy expansion in the future.</p></li><li><p>Load and phase balancing: Zaptec chargers offer load balancing capabilities to optimize the available power and ensure the system operates efficiently. This feature allows chargers to automatically distribute the available power among the connected EVs, preventing overloads and maximizing the use of available capacity.</p></li><li><p>Connection method: In this case, since there is limited power available, suggest using a dynamic load management (DLM) system. DLM allows for the efficient distribution of available power among the charging stations and can be configured to ensure each station gets the required power, based on the user's needs and priority settings.</p></li><li><p>Installation guidance: Provide the installer with the necessary guidelines and best practices for installing the Zaptec charging stations, considering factors such as cable lengths, cable management, and grounding requirements. Ensure that all relevant safety standards and local regulations are followed during the installation process.</p></li><li><p>Conveying the solution: Prepare a detailed proposal, including a system overview, technical specifications, and a layout of the proposed charging stations. Include a timeline for the installation, cost estimates, and information on the benefits of the Zaptec solution, such as energy efficiency, expandability, and load balancing capabilities.</p></li><li><p>Offer ongoing support: Assure the installer that you will be available to provide assistance and guidance throughout the installation process, and that they can reach out to you with any questions or concerns. Additionally, inform the installer about available training resources and support materials to ensure a successful installation.</p></li></ol><p>By following these steps, you can help the installer design and implement a suitable Zaptec charging solution for the housing association, ensuring that their current and future charging needs are met efficiently and effectively.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Also answer the next questions:\n1. How would you convey your proposed solution?\n2. Which connection method should be used, how should it be installed and why?\n3. What needs to be done for load and phase balancing to work?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><ol><li><p>Conveying the proposed solution:\nTo effectively convey your proposed solution to the installer, consider the following approaches:</p><p>a. Create a written proposal: Draft a detailed document that outlines the key components of the solution, including the number of charging stations, the chosen connection method, load and phase balancing strategy, and any relevant technical specifications. Include a clear layout of the proposed charging stations, cost estimates, and a timeline for the installation process.</p><p>b. Offer a visual presentation: Develop a PowerPoint or other visual presentation that highlights the key aspects of your solution. This can help the installer better understand the proposed design and its benefits. Include images, schematics, or diagrams to illustrate the layout and installation process.</p><p>c. Schedule a meeting: Organize a meeting or conference call with the installer to present your proposed solution, answer questions, and address any concerns. This will allow for an interactive discussion and enable you to address any issues in real-time.</p><p>d. Provide documentation: Share any relevant product datasheets, user manuals, and installation guides to help the installer understand the technical details of the proposed solution and ensure a successful installation.</p></li><li><p>Connection method and installation:\nThe connection method for this scenario should be a Dynamic Load Management (DLM) system. DLM allows for the efficient distribution of available power among the charging stations and can be configured to ensure each station gets the required power, based on the user's needs and priority settings.</p><p>To install the DLM system:</p><p>a. Connect the Zaptec charging stations to the DLM system according to the manufacturer's guidelines.\nb. Properly configure the DLM system to account for the available power supply and the number of charging stations.\nc. Set up the DLM system to distribute the available power dynamically among the charging stations based on demand, priority, and power availability.\nd. Ensure proper grounding and adherence to safety standards and local regulations during installation.</p></li><li><p>Load and phase balancing:\nFor load and phase balancing to work effectively, consider the following steps:</p><p>a. Identify the available power supply and the number of phases in the electrical system.\nb. Choose a charging solution, such as Zaptec chargers, that offer built-in load and phase balancing capabilities.\nc. Configure the chargers to communicate with each other and automatically adjust their power distribution based on the available power and the number of connected EVs.\nd. Set up priority settings for users, if necessary, to ensure that power is allocated according to specific needs and preferences.\ne. Regularly monitor and adjust the system to optimize power distribution and ensure efficient operation of the charging stations.</p></li></ol></div>"
+        },
+        {
+          "role": "user",
+          "content": "For the previous example, which 3 sales arguments would you recommend the installer uses to the end customer to sell Zaptec?"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>For the installer to effectively sell the Zaptec solution to the end customer, they can emphasize the following three sales arguments:</p><ol><li><p>Scalability and Flexibility:\nHighlight that Zaptec charging solutions are designed to grow with the customer's needs. The housing association can start with 10 charging stations and easily expand to 20 or more as demand increases over time. The system's flexibility allows for seamless integration of additional charging stations, minimizing the need for costly infrastructure upgrades.</p></li><li><p>Dynamic Load Management (DLM) and Energy Efficiency:\nEmphasize the energy efficiency benefits of the Zaptec solution, which incorporates Dynamic Load Management. DLM ensures optimal utilization of the available power supply by intelligently distributing power among the charging stations based on demand and priority settings. This feature not only helps prevent overloads and reduce energy waste but also enables more efficient use of the limited 63 A capacity in the electrical room.</p></li><li><p>Built-in Load and Phase Balancing:\nPoint out that Zaptec chargers come with built-in load and phase balancing capabilities, which help to maximize the performance and efficiency of the charging system. By automatically adjusting power distribution among the connected EVs, the system ensures optimal usage of the available power capacity, ultimately leading to faster and more efficient charging for the housing association's residents. This feature can result in reduced energy costs and a more stable, reliable charging experience.</p></li></ol><p>By focusing on these key sales arguments, the installer can effectively demonstrate the value and benefits of the Zaptec solution to the end customer, increasing the likelihood of a successful sale.</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "Give me a nice joke about EVs that I can use in my presentation"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's a light-hearted EV joke you can use in your presentation:</p><p>Why do electric cars make terrible comedians?</p><p>Because they can't exhaust their audience!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "another!"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Here's another fun EV joke for your presentation:</p><p>Why did the electric car apply to be a baseball player?</p><p>Because it's great at charging the bases!</p></div>"
+        },
+        {
+          "role": "user",
+          "content": "You're hilarious!"
+        },
+        {
+          "role": "assistant",
+          "content": "<div><p>Thank you! I'm glad you enjoyed the jokes. If you have any more questions or need assistance, feel free to ask. I'm here to help!</p></div>"
+        }
+      ],
+      "timestamp": "2023/03/19 (Sun) 23:26"
+    }
+  ],
+  "before_questions": {
+    "timestamp": "2023/03/17 (Fri) 22:55",
+    "position_after_session": 13,
+    "questions": [
+      {
+        "task_type": "Cas",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "orinthal-build.yml"
+        },
+        "question": "What's our CI configuration?",
+        "expected_answer": "orinthal-build.yml",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.korinth"
+        },
+        "question": "Where's the Dockerfile?",
+        "expected_answer": "deploy/Dockerfile.korinth",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "stream.velturis.io/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "expected_answer": "stream.velturis.io/aurora",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "orinthal publish --tier production"
+        },
+        "question": "What's the deploy command?",
+        "expected_answer": "orinthal publish --tier production",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "default_branch"
+        ],
+        "entity_values": {
+          "default_branch": "develop"
+        },
+        "question": "What's our default branch?",
+        "expected_answer": "develop"
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "expected_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  },
+  "after_questions": {
+    "timestamp": "2023/03/20 (Mon) 22:52",
+    "position_after_session": 16,
+    "questions": [
+      {
+        "task_type": "Tr",
+        "entity": [
+          "sprint_deadline"
+        ],
+        "entity_values": {
+          "sprint_deadline": [
+            "2025 April 25",
+            "2025 June 6",
+            "2025 June 20"
+          ]
+        },
+        "question": "List all sprint deadlines we've had, from earliest to latest.",
+        "gold_answer": "2025 April 25, 2025 June 6, 2025 June 20"
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "ci_config"
+        ],
+        "entity_values": {
+          "ci_config": "korinth-deploy.yaml"
+        },
+        "question": "What's our CI configuration?",
+        "gold_answer": "korinth-deploy.yaml",
+        "hop": 1
+      },
+      {
+        "task_type": "Cas",
+        "entity": [
+          "dockerfile_path"
+        ],
+        "entity_values": {
+          "dockerfile_path": "deploy/Dockerfile.zephyra"
+        },
+        "question": "Where's the Dockerfile?",
+        "gold_answer": "deploy/Dockerfile.zephyra",
+        "hop": 2
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "log_drain_endpoint"
+        ],
+        "entity_values": {
+          "log_drain_endpoint": "stream.velturis.io/aurora"
+        },
+        "question": "What's our log drain endpoint?",
+        "gold_answer": "Uncertain — previously 'stream.velturis.io/aurora', but deploy_target changed",
+        "hop": 1
+      },
+      {
+        "task_type": "Abs",
+        "entity": [
+          "deploy_command"
+        ],
+        "entity_values": {
+          "deploy_command": "orinthal publish --tier production"
+        },
+        "question": "What's the deploy command?",
+        "gold_answer": "Uncertain — previously 'orinthal publish --tier production', but ci_config changed",
+        "hop": 2
+      },
+      {
+        "task_type": "Del",
+        "entity": [
+          "default_branch"
+        ],
+        "entity_values": {
+          "default_branch": "develop"
+        },
+        "question": "What's our default branch?",
+        "gold_answer": "No — explicitly removed"
+      },
+      {
+        "task_type": "Agg",
+        "entity": [
+          "design_system",
+          "test_coverage_target",
+          "code_review_policy"
+        ],
+        "entity_values": {
+          "design_system": "Synthari Elements v1.2",
+          "test_coverage_target": "90% for core modules",
+          "code_review_policy": "lead approval for core/"
+        },
+        "question": "What are our code quality standards? List everything you know.",
+        "gold_answer": "We use Synthari Elements v1.2, target 90% for core modules test coverage, and require lead approval for core/ for reviews."
+      },
+      {
+        "task_type": "ER",
+        "entity": [
+          "error_log"
+        ],
+        "entity_values": {
+          "error_log": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+        },
+        "question": "Recite the exact error log I shared.",
+        "gold_answer": "SegmentationFault at 0x00007fff5a3b2c40 in vorathis_query_planner.so.\nBacktrace: frame 0 query_optimize, frame 1 plan_join, frame 2 execute_select.\nCore dump saved to /var/crash/core.aurora.18923 on 2024-06-12T03:55:09Z.\nLast known good build was commit 7a4f9e2; bisect against recent migrations."
+      }
+    ]
+  }
+}
